@@ -2,6 +2,19 @@
 
 October 15, 2026. Product manager: Shane Adams. This is the current handoff and supersedes the earlier local-only delivery notes.
 
+## Current checkpoint
+
+Sprint 1 library/editor implementation is complete for the scoped repository-backed catalog. QA remains open for narrow mobile and native-browser print output, plus live inspection of the final editor/recovery changes. Do not promote to production yet.
+
+- Latest application commit: `36731e3b78eb8f93b56927d0d4e743a95a312e30` on private `shanematthewadams/fe-workout-planner`, branch `develop`.
+- Its source tree `d5f8a3548658455c57e477ef720a13c91741323d` exactly matches tested local commit `b34a05a587333b947cd50359d4fb18e684633e79`. Local/remote commit ancestry differs because initial upload used GitHub Git Data on the initialized repository; source parity is checked before ref updates.
+- Prior cross-tab protection commit `64696ec40161550607e34b038b2749b288741fd6`: GitHub Checks passed.
+- Local final checks: 47 tests pass, ESLint passes, TypeScript and Vite build pass, `git diff --check` passes. GitHub Checks also passed for the latest application SHA: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38818119183.
+- Preview URL: https://develop--fe-workout-planner.netlify.app/ (Netlify team sign-in required). Final deployment and live behavior are not yet independently verified; GitHub push is verified. The Netlify project read succeeded, but looking up its reported branch deploy returned HTTP 404; no ready-state or commit match is claimed. The engineering cloud browser requires a fresh Netlify sign-in.
+- No additional account action is needed to run the bundled library/editor locally. No Supabase project, production promotion, custom domain, paid upgrade or AI service was added.
+
+The hosting/deploy IDs below are historical verified evidence, not a claim that the final code has deployed. The original typography preview was accepted visually by Shane; subsequent editor/recovery UI is awaiting live inspection.
+
 ## Repository and hosting
 
 - Private repository: https://github.com/shanematthewadams/fe-workout-planner
@@ -37,7 +50,7 @@ Netlify build: `npm run build`; publish: `dist`; Node 22. The repository include
 | Verification                                      | Result                                                                                    |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | ESLint and TypeScript                             | Pass                                                                                      |
-| Automated tests                                   | 31 pass across model, UI, and adapter tests                                               |
+| Automated tests                                   | 47 pass across model, UI, and adapter tests                                               |
 | Vite build                                        | Pass                                                                                      |
 | Dependency audit after pinned tool updates        | Zero vulnerabilities                                                                      |
 | GitHub Checks on application upload               | Pass: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38781816991    |
@@ -45,7 +58,7 @@ Netlify build: `npm run build`; publish: `dist`; Node 22. The repository include
 | Real deployed desktop library/detail/Q inspection | Pass at the available approximately 1363 CSS-pixel viewport                               |
 | Deployed interaction checks                       | Pass as described below                                                                   |
 | Narrow mobile viewport inspection                 | Not verified; available browser controls did not expose reliable resizing                 |
-| Rendered print/PDF inspection                     | Not verified; print action and checkbox were exercised but no rendered PDF was obtainable |
+| Rendered print/PDF inspection                     | Independent WeasyPrint/Poppler inspection passed; native browser output remains unverified |
 | Live Supabase query and RLS checks                | Not configured; prepared SQL has not been applied                                         |
 
 Deployed browser checks: all ten starters rendered; Coupon equipment filtering returned one workout; an unmatched search displayed the empty state; reset restored the library. Favoriting survived reload. Copying created a separate personal draft, title/raw-note edits saved with explicit success, and exact pasted text survived reload. The original source title/content remained unchanged. Q view exposed enlarged text. A no-Mary plan displayed its explicit omission note. Backup export downloaded successfully; importing that exact file required confirmation, retained the existing draft, and reported one conflict kept as a new copy (two personal drafts afterward). The Thang-only checkbox and Print action responded; rendered output remains unverified. QA drafts/favorites exist only in the cloud browser's local storage; no shared catalog was modified.
@@ -79,7 +92,11 @@ Model/UI tests also cover malformed/unknown-version/oversized imports, duplicate
 2. Sprint 2: get permission for regional backblast imports, preserve raw originals/provenance, mark ambiguous counts/timing, and implement an admin-reviewed publication flow. Provision a dedicated FE Supabase project only after organization/cost approval; apply and live-test the prepared RLS/schema/seed and anonymous read/denied-write behavior.
 3. Sprint 3: live AI and idea/pasted-plan/Surprise me starting paths. API credentials must not block the independent library/editor. Keep production promotion and domains for launch.
 
-## Regional styling pass
+## Historical implementation and QA notes
+
+The following entries retain the sequence of source and verification decisions. The current checkpoint above takes precedence.
+
+### Regional styling pass
 
 Shane requested f3thefe.com as the styling reference. The app now uses a black regional header, white background, strong geometric Tektur display headings, monochrome cards/controls, and links to the region and AO schedule. Body instructions retain DM Sans; print headings use Arial. No source data, personal-storage key, backup format, security setting, or production branch changed. Narrow-screen inputs are at least 16px to avoid unwanted mobile input zoom, card text/metadata has been enlarged, long titles wrap, primary copy actions span the phone width, and reduced-motion preferences are honored. Existing 31 automated tests, lint and type/build checks pass on the changed application. Real narrow-viewport inspection remains unavailable through the current browser API.
 
@@ -100,3 +117,22 @@ Shane confirmed visual verification of the Barlow Condensed / DM Sans update at 
 The next increment protects against stale saves across tabs. A storage event warns when another tab changes or clears saved data. Each write also checks the saved snapshot before proceeding, so a delayed/missing event cannot silently replace a newer snapshot. The user can export current work or load the latest saved workouts; loading keeps any open editor contents as a separate unsaved recovered copy with a fresh identifier. Latest favorites and drafts are retained. Malformed latest data leaves the current editor and stored bytes untouched. Backup version and storage key remain unchanged.
 
 Validation: 34 tests pass, including stale-save rejection before a storage event, recovery of open edits without changing the other tab's saved workout, preservation of latest favorites, storage clearing, and malformed external data. Lint and TypeScript/Vite build pass. Local storage offers no atomic multi-tab transaction; this is stale-snapshot detection/recovery, not a cross-tab merge or cross-device sync. New warning UI still needs live preview inspection. Production remains untouched.
+
+
+### Sprint 1 editor completion
+
+- Save & view workout saves successfully before opening the detail/Q/print path; a validation or storage failure keeps the editor open.
+- New unsaved plans show unsaved status and prompt before leaving, including plans with the default title. Saved copies remain separately editable.
+- Equipment entry preserves spaces while typing, omits empty entries, and de-duplicates exact names. Filters include equipment used by personal drafts as well as starters.
+- The editor shows known estimated block minutes, the count of untimed blocks, and a session comparison only when every block has a time. It explains explanation/rest/transitions; estimates remain adjustable and are not safety guarantees.
+- Original notes can be downloaded as exact UTF-8 plain text even when oversized or when the rest of a draft is invalid. Draft/backup text limits remain explicit. The app explains that The Thang-only print excludes original notes.
+- Copy/import/recovery suffixes keep titles within the 160-character schema limit. Backup size validation uses actual UTF-8 bytes, matching the file-import limit. Source URLs accept HTTP(S) only; malformed/unsafe links are rejected while preserving existing data.
+- Narrow-layout safeguards include wrapping storage warnings, shrinkable fieldsets/grid cells, long-text wrapping, visible mobile save status, 16px filter/search inputs, and a bounded import dialog. A keyboard skip link targets the main content. These changes are source-reviewed, not a substitute for real mobile rendering checks.
+
+Additional checks cover save-to-detail/Q/edit, failure retention, incremental multi-word equipment typing and filtering, timing unknown/under/over/equal states, unsaved-navigation cancellation, maximum-title copies/import conflicts, unsafe source URLs, UTF-8 size limits, exact oversized-note downloads, adding/omitting Mary through persistence, and explicit corrupt-storage recovery. Total: 47 passing tests.
+
+## Remaining completion work
+
+1. Restore the engineering browser's Netlify session when available, verify the latest develop deploy against the application SHA, and inspect new editor/recovery UI. Do not change team protection to gain access.
+2. Inspect library/detail/editor/Q at narrow phone widths and desktop; inspect Chrome/Safari native full and The Thang-only print output. Current tooling lacks reliable viewport resizing/native print output. jsdom tests verify behavior, not rendering.
+3. Keep Sprint 2 regional import permissions, provenance/human review and dedicated database setup separate. No consumer authentication or live AI is needed for Sprint 1.
