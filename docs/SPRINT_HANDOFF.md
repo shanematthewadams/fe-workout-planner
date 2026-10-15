@@ -103,3 +103,18 @@ This section supersedes the earlier repository-creation blocker and steps 1–2 
 ### Verified remote CI
 
 The GitHub Checks run for implementation commit `5ce28ad5ae479395e240577e274906468f9fb1ad` completed successfully: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38781816991 . This verifies npm ci, lint, tests, and production build on GitHub's runner. Later changes are documentation only. The documentation status commit `84cdf472930e974e1d7055452161ee4c88f58213` was verified as the develop head before this CI evidence addition. Main remained at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`.
+
+## Netlify connection update · October 15, 2026
+
+This section supersedes the earlier no-site/linkage blockers. Shane authorized browser-based setup. The expired GitHub OAuth handoff returned Invalid state key; after renewed approval a fresh connection succeeded using existing account permissions.
+
+- Dedicated Netlify project: `fe-workout-planner`.
+- Site/project ID: `1d2480e0-3891-41db-9574-61cb13b7ae0a`.
+- Team ID: `6a8d98d0bae1a4d6a86f48de` (shanematthewadams).
+- Dashboard: https://app.netlify.com/projects/fe-workout-planner
+- Linked repository: https://github.com/shanematthewadams/fe-workout-planner
+- Verified production branch: main. Verified additional branch deploys: develop only.
+- Build command: npm run build. Publish directory: dist. Existing netlify.toml controls the develop build and Node version.
+- Visibility remains private for production and previews; no access protection was weakened. No paid upgrade, custom domain, or production promotion was performed.
+- Netlify automatically attempted a main-branch setup build when linking. It failed at the README-only main commit `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`; deployment was skipped. Initial setup deploy ID: `6ad118f751817ebb0b39046d`. A cancel attempt encountered a detached control because the build had already finished. Main application code was not added or published.
+- This documentation push triggers the first develop branch deployment. Its result and actual URL must be verified before a working preview is claimed.
