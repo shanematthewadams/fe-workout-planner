@@ -92,3 +92,11 @@ For print QA, actual workout-detail DOM markup was exported read-only from the d
 ### Typography correction · October 15, 2026
 
 Shane rejected the geometric Tektur heading face as unreadable and selected the previously recommended Barlow/DM Sans pairing. Headings now use Google Fonts' Barlow Condensed in semibold/bold, with DM Sans retained for instructions, forms, navigation and controls. The fonts are self-hosted through Fontsource packages; no external Google font request is needed. Tektur and its font assets were removed. Hero headings use sentence case and more relaxed spacing; workout titles remain in sentence case with larger readable type. The regional black/white palette and links remain. No data model, local draft/favorite storage, backup compatibility, access controls or production branch changed.
+
+### Sprint 1 draft protection · October 15, 2026
+
+Shane confirmed visual verification of the Barlow Condensed / DM Sans update at remote commit `4e38b8230f3770b3825dea2fd165024672603004`. GitHub Checks passed for that commit. This acceptance does not assert separate narrow-mobile or native-browser print testing.
+
+The next increment protects against stale saves across tabs. A storage event warns when another tab changes or clears saved data. Each write also checks the saved snapshot before proceeding, so a delayed/missing event cannot silently replace a newer snapshot. The user can export current work or load the latest saved workouts; loading keeps any open editor contents as a separate unsaved recovered copy with a fresh identifier. Latest favorites and drafts are retained. Malformed latest data leaves the current editor and stored bytes untouched. Backup version and storage key remain unchanged.
+
+Validation: 34 tests pass, including stale-save rejection before a storage event, recovery of open edits without changing the other tab's saved workout, preservation of latest favorites, storage clearing, and malformed external data. Lint and TypeScript/Vite build pass. Local storage offers no atomic multi-tab transaction; this is stale-snapshot detection/recovery, not a cross-tab merge or cross-device sync. New warning UI still needs live preview inspection. Production remains untouched.

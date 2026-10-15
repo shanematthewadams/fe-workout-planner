@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ArrowLeft,
@@ -21,6 +21,7 @@ import {
 import { catalog } from "./catalog";
 import { SupabaseCatalog } from "./repository";
 import {
+  STORAGE_KEY,
   type Workout,
   type Section,
   type LocalState,
@@ -53,10 +54,15 @@ const formatOptions = [
 ];
 function load() {
   try {
-    return { data: readState(), error: "" };
+    return {
+      data: readState(),
+      raw: localStorage.getItem(STORAGE_KEY),
+      error: "",
+    };
   } catch {
     return {
       data: { workouts: [], favorites: [] } as LocalState,
+      raw: null,
       error:
         "Saved browser data could not be read. It has not been changed. Export recovery data before saving new work.",
     };
@@ -92,6 +98,26 @@ export default function App() {
     };
   }, []);
   const [initial] = useState(load);
+  const savedSnapshot = useRef(initial.raw);
+  const [storageChanged, setStorageChanged] = useState(false);
+  useEffect(() => {
+    const handler = (event: StorageEvent) => {
+      if (
+        event.storageArea === localStorage &&
+        (event.key === STORAGE_KEY || event.key === null)
+      ) {
+        try {
+          setStorageChanged(
+            localStorage.getItem(STORAGE_KEY) !== savedSnapshot.current,
+          );
+        } catch {
+          setStorageChanged(true);
+        }
+      }
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
   const [state, setState] = useState(initial.data),
     [notice, setNotice] = useState(initial.error),
     [blocked, setBlocked] = useState(!!initial.error),
@@ -122,7 +148,15 @@ export default function App() {
       return false;
     }
     try {
+      if (localStorage.getItem(STORAGE_KEY) !== savedSnapshot.current) {
+        setStorageChanged(true);
+        setNotice(
+          "Saved workouts changed in another tab. Load the latest saved workouts before saving. Your open edits are still here.",
+        );
+        return false;
+      }
       writeState(next);
+      savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
       setState(next);
       return true;
     } catch {
@@ -130,6 +164,34 @@ export default function App() {
         "Could not save to this browser. Your open changes are still here. Export a backup before leaving, or free storage and retry.",
       );
       return false;
+    }
+  };
+  const loadLatest = () => {
+    try {
+      const latest = readState();
+      const raw = localStorage.getItem(STORAGE_KEY);
+      setState(latest);
+      savedSnapshot.current = raw;
+      setStorageChanged(false);
+      setSelected(null);
+      setPending(null);
+      if (editing) {
+        setEditing({
+          ...structuredClone(editing),
+          id: uid(),
+          title: editing.title.slice(0, 135) + " · recovered copy",
+        });
+        setDirty(true);
+      }
+      setNotice(
+        editing
+          ? "Latest saved workouts loaded. Your open edits are a separate, unsaved recovered copy. Save it when ready."
+          : "Latest saved workouts loaded.",
+      );
+    } catch {
+      setNotice(
+        "The latest browser data could not be read. Nothing was replaced. Export your open edits before reloading.",
+      );
     }
   };
   const leave = () =>
@@ -337,6 +399,19 @@ export default function App() {
           </>
         )}
       </div>
+      {storageChanged && (
+        <aside
+          className="storage-warning no-print"
+          aria-label="Saved workouts changed"
+        >
+          <p>
+            Another tab changed saved workouts. Load the latest to continue
+            saving. Any open edits will become a separate recovered copy.
+          </p>
+          <button onClick={loadLatest}>Load latest saved workouts</button>
+          <button onClick={() => exportData()}>Export current work</button>
+        </aside>
+      )}
       {blocked && (
         <aside className="storage-warning no-print">
           <button onClick={() => exportData(true)}>
@@ -348,8 +423,10 @@ export default function App() {
                 confirm(
                   "Allow new saves to replace the unreadable browser data? Keep your recovery download first.",
                 )
-              )
+              ) {
+                savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
                 setBlocked(false);
+              }
             }}
           >
             Unlock saving

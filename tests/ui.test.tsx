@@ -5,7 +5,7 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import App from "../src/App";
 import { catalog } from "../src/catalog";
-import { copyWorkout, STORAGE_KEY } from "../src/model";
+import { copyWorkout, STORAGE_KEY, writeState, readState } from "../src/model";
 beforeEach(() => {
   localStorage.clear();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
@@ -168,5 +168,82 @@ describe("library UI", () => {
     });
     expect(await screen.findByText(/Import rejected/)).toBeVisible();
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+  it("blocks stale saves even before a storage event and recovers open edits as a copy", () => {
+    const original = copyWorkout(catalog[0]);
+    writeState({ workouts: [original], favorites: [] });
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /My workouts/ }));
+    fireEvent.click(screen.getByRole("button", { name: original.title }));
+    fireEvent.click(screen.getByRole("button", { name: "Edit workout" }));
+    fireEvent.change(screen.getByLabelText("Workout title"), {
+      target: { value: "My unsaved edits" },
+    });
+    const elsewhere = { ...original, title: "Saved in the other tab" };
+    writeState({ workouts: [elsewhere], favorites: [catalog[1].id] });
+    const latestRaw = localStorage.getItem(STORAGE_KEY);
+    fireEvent.click(screen.getAllByRole("button", { name: "Save workout" })[0]);
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(latestRaw);
+    expect(screen.getByLabelText("Workout title")).toHaveValue(
+      "My unsaved edits",
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Load latest saved workouts" }),
+    );
+    expect(screen.getByLabelText("Workout title")).toHaveValue(
+      "My unsaved edits · recovered copy",
+    );
+    fireEvent.click(screen.getAllByRole("button", { name: "Save workout" })[0]);
+    const saved = readState();
+    expect(saved.workouts).toHaveLength(2);
+    expect(saved.workouts.find((w) => w.id === original.id)?.title).toBe(
+      elsewhere.title,
+    );
+    expect(saved.workouts.find((w) => w.id !== original.id)?.title).toBe(
+      "My unsaved edits · recovered copy",
+    );
+    expect(saved.favorites).toEqual([catalog[1].id]);
+  });
+  it("detects another tab clearing storage and never restores stale favorites", () => {
+    writeState({ workouts: [], favorites: [catalog[0].id] });
+    render(<App />);
+    localStorage.clear();
+    fireEvent(
+      window,
+      new StorageEvent("storage", { key: null, storageArea: localStorage }),
+    );
+    expect(screen.getByLabelText("Saved workouts changed")).toBeVisible();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Load latest saved workouts" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Favorite Circle up, get after it" }),
+    ).toHaveAttribute("aria-pressed", "false");
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+  it("keeps current work when the latest data is unreadable", () => {
+    render(<App />);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "Create a workout" })[0],
+    );
+    fireEvent.change(screen.getByLabelText("Workout title"), {
+      target: { value: "Keep me" },
+    });
+    localStorage.setItem(STORAGE_KEY, "{bad");
+    fireEvent(
+      window,
+      new StorageEvent("storage", {
+        key: STORAGE_KEY,
+        storageArea: localStorage,
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Load latest saved workouts" }),
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Nothing was replaced",
+    );
+    expect(screen.getByLabelText("Workout title")).toHaveValue("Keep me");
+    expect(localStorage.getItem(STORAGE_KEY)).toBe("{bad");
   });
 });
