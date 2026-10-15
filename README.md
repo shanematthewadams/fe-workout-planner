@@ -41,15 +41,17 @@ Drafts and favorites are saved only to the current browser on the current device
 Private repository: https://github.com/shanematthewadams/fe-workout-planner
 Development branch: `develop`. The application source was uploaded and the branch verified at implementation commit `5ce28ad5ae479395e240577e274906468f9fb1ad`. Its tree `3ff7bc7420aac1bc179fd011eb18574858e10474` exactly matches the tested local snapshot. A subsequent documentation-only commit updates this status. `main` retains the original starter README at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`.
 
-Netlify hosting has **not** been deployed. No FE project was found in the connected inventory. The available tools expose project creation/read operations but no Git repository linkage, branch configuration, or build-file upload operation, and no CLI deploy credentials exist. No preview URL is claimed.
+Development preview: https://develop--fe-workout-planner.netlify.app/
 
-Hosting setup must connect a **new** Netlify project to this repository, use `npm run build` and `dist`, keep `main` as the eventual production branch, and enable `develop` as a branch deployment. Application code must not be promoted to main in Sprint 1. Since main contains only a README, its application build cannot succeed; the intended working app is on develop. Use a draft deploy or the develop branch deployment rather than changing the production branch to develop. `netlify.toml` includes build settings, Node version, SPA fallback, and basic headers. `.netlify` is ignored so local site linkage is never committed. Branch previews are shareable by link unless access controls are separately configured.
+Netlify project: `fe-workout-planner`; site ID: `1d2480e0-3891-41db-9574-61cb13b7ae0a`. The dedicated project is linked to this private repository. Production branch remains `main`; only `develop` is enabled as an additional branch deploy. No production application or custom domain has been published. The preview remains private to the Netlify team and may ask for Netlify sign-in; the app itself has no consumer account requirement.
 
-An authenticated Netlify CLI can instead create a draft with `npm run build` followed by `netlify deploy --dir dist` (without `--prod`) against a dedicated FE site. The earlier delivery package includes built static files, but that package itself is not a hosted preview. Never paste a personal deploy token in chat.
+Build: `npm run build`; publish: `dist`; Node 22. Settings, SPA fallback, and headers are in `netlify.toml`. `.netlify` is ignored so local site linkage is never committed. No secrets or paid upgrades were added. Push development changes to `develop` and verify Netlify's branch deployment; keep production promotion for launch.
 
 ## Verification limits
 
-Automated data, adapter, and UI interaction checks are in `tests/`. Build, type, lint, and test results are recorded in `docs/SPRINT_HANDOFF.md`. UI tests use jsdom; they are not a real browser layout check. The provided cloud browser rejected the internal preview URL with `net::ERR_BLOCKED_BY_CLIENT`. Narrow mobile/desktop screenshots and rendered print/PDF inspection remain unverified, as does a live Netlify preview. Do not promote to production until those checks pass.
+31 automated data, adapter, and UI interaction tests pass. Lint, TypeScript, production build, and GitHub Checks pass; dependency audit reports zero vulnerabilities. The deployed preview was opened in a real cloud browser. Desktop library/detail/Q layouts and filters, empty states, copy/edit/save/reload, favorite persistence, exact raw notes, backup export/reimport/conflict behavior, and omitted Mary were checked successfully. The original library source remained unchanged after editing a copy.
+
+The browser controls did not provide reliable mobile viewport resizing or rendered print/PDF inspection. Those two visual checks remain outstanding. Print action and The Thang-only selection are wired and covered by interaction tests, but final print appearance is not claimed verified. Supabase is unconfigured and its SQL has not been run against a real project. Do not promote to production until outstanding checks pass.
 
 ## Next sprint
 

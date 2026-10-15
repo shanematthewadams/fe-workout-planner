@@ -1,22 +1,26 @@
 # Sprint 1 handoff · The FE Workout Planner
 
-Date: October 15, 2026. Product manager: Shane Adams.
+October 15, 2026. Product manager: Shane Adams. This is the current handoff and supersedes the earlier local-only delivery notes.
 
-## Repository and resource evidence
+## Repository and hosting
 
-- Local checkout: `/workspace/scratch/c9d8a5aee5d8/fe-workout-planner`
-- Branch: `develop`
-- Full implementation commit: `fc12d29fbcdf7773c5c3862411068383a87087ca`
-- This handoff is a subsequent documentation-only commit. `git log -1` and the delivery package's `DELIVERY.txt` identify the packaged final commit, avoiding a self-referential commit hash in a tracked file.
-- Remote repository: **not created; not pushed**. Requested destination is a new private `shanematthewadams/fe-workout-planner`; that name is proposed, not a verified account resource.
-- Discovery: connected GitHub inventory returned only health-tracker and elsewhere; the workout repository search returned no matches. Workspace began empty, with no applicable repository instructions. No existing repository was reused.
-- Netlify: no FE site found in connected project inventory. **No FE site ID, deploy ID, or hosted preview URL exists. No deployment was attempted or claimed.** Connector exposes project creation and read operations but no deploy-file upload; no CLI auth credentials were present. Existing sites were untouched.
-- Supabase: no FE project found. Only With Application was returned; it was not read beyond project discovery or changed. **No FE Supabase project ID exists.** Provisioning requires organization selection and cost confirmation; the complete UI uses the catalog fallback instead of blocking. No purchases/upgrades.
-- A Git bundle preserves local commits. The source ZIP includes that bundle, the full project, and a separate ZIP of built static files. No node_modules or credentials are packaged.
+- Private repository: https://github.com/shanematthewadams/fe-workout-planner
+- Repository ID: `1421135917`; integration branch: `develop`.
+- Original application upload: `5ce28ad5ae479395e240577e274906468f9fb1ad`. Its tree `3ff7bc7420aac1bc179fd011eb18574858e10474` exactly matches the tested local snapshot at `e82086a446e4b7f7f10bdcee3ecfa83bb71ef9aa`. Different commit IDs reflect the new repository's initialized main parent, not different app files. Earlier local history is preserved in the delivered Git bundle.
+- Verified deployed commit: `9a514045d293743a44c45f90a2287d5cab5946b3` (application unchanged; later changes are handoff/README only). A tracked handoff cannot include its own final commit SHA; obtain the latest documentation SHA from develop's head.
+- Netlify project: `fe-workout-planner`; site ID: `1d2480e0-3891-41db-9574-61cb13b7ae0a`.
+- Netlify team ID: `6a8d98d0bae1a4d6a86f48de` (shanematthewadams).
+- Dashboard: https://app.netlify.com/projects/fe-workout-planner
+- Verified working branch preview: https://develop--fe-workout-planner.netlify.app/
+- Verified ready deploy: `6ad119747eabb5506a39a5c8`; build ID: `6ad119747eabb5506a39a5c6`; context: `branch-deploy`; framework: Vite; no deploy error; secret scan found no matches.
+- Immutable preview: https://6ad119747eabb5506a39a5c8--fe-workout-planner.netlify.app
+- Production branch remains `main` at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a` (starter README only). Additional branch deploys: `develop` only. No app promotion, custom domain, purchase, or upgrade occurred. Existing Elsewhere and With resources were untouched.
+- Both preview and production visibility remain private to the Netlify team. Opening the preview may require Netlify sign-in. This is a hosting gate; the app itself has no consumer login or OAuth. Do not weaken access controls without approval.
+- No FE Supabase project was provisioned; no FE project ID exists. The original connected inventory contained only With Application, which was not reused. Organization/cost approval is needed before provisioning a dedicated FE project.
 
-## Setup and checks
+## Run and validate
 
-Node.js 22 recommended; install the pinned packages from the lockfile:
+Requires Node.js 22 and npm. No credential or database is needed for the bundled catalog.
 
 ```sh
 npm ci
@@ -28,93 +32,49 @@ npm run build
 npm run preview
 ```
 
-No API key, sign-in, OAuth, or database is needed. Optional public database configuration is described in `.env.example` and `docs/DATABASE_ADAPTER.md`. GitHub Actions is prepared to run lint, tests, and build when a remote is connected; no remote check runs are claimed.
+Netlify build: `npm run build`; publish: `dist`; Node 22. The repository includes netlify.toml, headers, SPA fallback, .env.example, and a GitHub check workflow. `.netlify` and local environment files are ignored.
 
-Final checks on the implementation commit:
+| Verification                                      | Result                                                                                    |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ESLint and TypeScript                             | Pass                                                                                      |
+| Automated tests                                   | 31 pass across model, UI, and adapter tests                                               |
+| Vite build                                        | Pass                                                                                      |
+| Dependency audit after pinned tool updates        | Zero vulnerabilities                                                                      |
+| GitHub Checks on application upload               | Pass: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38781816991    |
+| Netlify develop deployment                        | Ready; commit and deploy IDs above                                                        |
+| Real deployed desktop library/detail/Q inspection | Pass at the available approximately 1363 CSS-pixel viewport                               |
+| Deployed interaction checks                       | Pass as described below                                                                   |
+| Narrow mobile viewport inspection                 | Not verified; available browser controls did not expose reliable resizing                 |
+| Rendered print/PDF inspection                     | Not verified; print action and checkbox were exercised but no rendered PDF was obtainable |
+| Live Supabase query and RLS checks                | Not configured; prepared SQL has not been applied                                         |
 
-| Check                                  | Result                                                                  |
-| -------------------------------------- | ----------------------------------------------------------------------- |
-| ESLint                                 | Pass, zero errors                                                       |
-| TypeScript                             | Pass, including the `tsc -b` build stage                                |
-| Vitest                                 | 31 tests pass across 3 test files                                       |
-| Vite production build                  | Pass; static output in `dist/`                                          |
-| npm audit                              | Zero vulnerabilities after updating Vite, Vitest, and typescript-eslint |
-| Git whitespace check                   | Pass                                                                    |
-| Real mobile/desktop layout inspection  | **Blocked / not verified**                                              |
-| Rendered print/PDF inspection          | **Blocked / not verified**                                              |
-| Hosted Netlify preview                 | **Not deployed / not verified**                                         |
-| Live Supabase query / RLS verification | **Not configured / not verified**                                       |
+Deployed browser checks: all ten starters rendered; Coupon equipment filtering returned one workout; an unmatched search displayed the empty state; reset restored the library. Favoriting survived reload. Copying created a separate personal draft, title/raw-note edits saved with explicit success, and exact pasted text survived reload. The original source title/content remained unchanged. Q view exposed enlarged text. A no-Mary plan displayed its explicit omission note. Backup export downloaded successfully; importing that exact file required confirmation, retained the existing draft, and reported one conflict kept as a new copy (two personal drafts afterward). The Thang-only checkbox and Print action responded; rendered output remains unverified. QA drafts/favorites exist only in the cloud browser's local storage; no shared catalog was modified.
 
-Tests cover source-copy isolation, reload persistence and raw notes, explicit save feedback and storage failures, favorite persistence, combined filters/reset/empty state, version/shape/size/duplicate import validation, confirmation before import, preserving conflicts as new IDs (including source-ID collisions), optional Mary, unknown timing, declared counts, Q mode and print-only selection, and published-catalog adapter validation/failures. UI tests run in jsdom. They prove interaction/state behavior, not layout or physical print legibility.
+Model/UI tests also cover malformed/unknown-version/oversized imports, duplicate workout/internal IDs, reserved source-ID conflicts, unknown timing, counting conventions, save failures retaining edits, schema validity, and remote catalog rejection of personal/malformed/duplicate data. UI tests use jsdom, not a browser layout engine.
 
-Browser QA evidence: the Sites preview supervisor reported `http://terminal.local:4173/`; the cloud browser rejected that address with `net::ERR_BLOCKED_BY_CLIENT`. A local HTTP request also could not reach the supervisor's server. The supervisor was stopped. No screenshots, viewport checks, or rendered PDFs were obtained, and no other browser path was used to work around the block. The print action is wired to `window.print`; media rules omit decorative backgrounds and optionally omit every section except The Thang. Their rendered appearance still needs inspection.
+## Implemented scope
 
-During development, lint/type checks caught unused imports and a test option/signature issue; these were fixed. Dependency audit findings in development tools were fixed through pinned package updates. All final checks above ran after those fixes.
+- React/TypeScript/Vite app with welcoming green/cream styling, locally bundled fonts/icons, responsive cards/filters, keyboard focus styles, and no consumer sign-in.
+- Ten original illustrative starters covering circuits, 11s, EMOM, AMRAP, ladder, partner, stations, and chipper; 30/45-minute session options, declared equipment/running, and one omitted-Mary plan. No Q, AO, event date or real-world testing history is fabricated.
+- Workout details: ordered Warmup, The Thang and optional Mary; estimated section timing; equipment; plain instructions; explicit amounts/units/optional sets/counting; provenance and adaptation notes. Timing includes explanation, recovery, and transitions and is not a safety guarantee.
+- Deep-copied personal workouts with fresh IDs and originId, explicit save feedback and reload persistence, favorites, editable titles/sections/blocks/exercises/counts/sets/units/counting/instructions/adaptation notes, and block/exercise ordering. Source workouts cannot be edited through the app.
+- Create-from-scratch and pasted-notes path. Exact raw notes stay separate and appear in Q view/full print. No automatic interpretation or live AI.
+- Large-text Q mode; plain-background print CSS; option to print only The Thang.
+- Local export/import format `fe-workout-backup`, version 1. Imports validate size/schema/IDs and require explicit confirmation. Existing drafts remain; conflicts become new IDs with an imported-copy suffix; favorite IDs are combined. Exports include a valid open draft.
+- Browser data is device-specific and can be cleared; the app explains this. Save failures retain open changes. Unreadable stored data is preserved until an explicit recovery/unlock action.
+- Read-only catalog repository interface, bundled catalog, optional Supabase Data API adapter with published-only HTTPS reads, validation and 8-second timeout/fallback. Schema and original seed SQL are prepared with RLS and SELECT-only public access. See DATABASE_ADAPTER.md; there is no browser shared-write path.
 
-## Implemented behavior
+## Limits and source decisions
 
-- Welcoming green/cream, mobile-first React/TypeScript/Vite interface with locally bundled fonts, responsive cards and filters, and accessible labels and keyboard focus styles.
-- Ten original illustrative starter plans across eight formats, including 30- and 45-minute sessions. A no-Mary plan explicitly leaves five minutes for extra recovery or an earlier finish. Equipment is declared; no wall, hill, stairs, or coupon is silently assumed.
-- Full detail view with ordered Warmup/The Thang/optional Mary, section estimates, equipment, running level, plain instructions, counts/sets/units, source status and adaptation notes. Timing is visibly estimated and includes transitions/recovery/explanation.
-- Favorites saved per browser. Personal copies deep-clone the source with distinct IDs and an originId; original provenance is retained. Sources are never editable through the UI.
-- Explicit personal saves with feedback and reload persistence; section titles, block ordering, exercises, counts, units, optional sets, counting method, instructions, and adaptation notes are editable. Warmup/Mary can be removed or added; The Thang is required. Section order remains Warmup, The Thang, Mary.
-- Create from scratch or paste exact notes. Raw notes remain separate and appear in Q view/full print. There is no automatic interpretation.
-- Large-text Q view and print action with The Thang-only checkbox. Print stylesheet uses a white page, plain text and exercise row break avoidance.
-- Versioned export/import: format `fe-workout-backup`, version 1. Personal drafts and favorites only. Validation enforces a 5 MB file limit, 200 drafts, 500 favorite IDs, field limits, allowed enum values, unique workout/internal IDs and required The Thang. Existing drafts are never silently replaced. Conflicting incoming IDs become fresh IDs with an “imported copy” suffix; favorites union by original ID.
-- Export includes the open draft if valid. Unsaved navigation prompts before discarding. Read failures preserve unreadable browser data until the user explicitly unlocks saving after recovery download; save failures keep the open draft. Browser/device-specific storage and clearing risk are explained in the app.
-- Read-only catalog repository interface and tested Supabase adapter. Bundled fallback works independently; optional remote catalog has an 8-second timeout, published-only query, schema validation, HTTPS check and duplicate/personal rejection. Prepared SQL enables RLS and grants published SELECT only. SQL and seed were not applied.
+- Mobile layout and rendered print QA remain required before launch. The original internal preview address was blocked, but the real Netlify desktop preview is now verified.
+- No regional imports, national catalog import, shared/admin editing, cross-device sync, live database, live AI, idea generation, or Surprise me in Sprint 1.
+- Backups are limited to 5 MB, 200 drafts and 500 favorite IDs. Text fields, including raw notes, have a 20,000-character validation limit; longer raw text is not silently truncated but cannot be saved/exported until shortened. Same-browser concurrent tabs have no conflict merge.
+- All starter plans and descriptions are original illustrative content. See SOURCES.md for checks of the six requested references. No national CSV descriptions, source code, logos, IronPAX workouts or actual backblasts were imported. Public visibility was not treated as reuse permission. Font redistribution licenses are included in public/licenses and the built output.
+- Netlify linked the private repository only after Shane approved browser setup. An expired sign-in returned Invalid state key; a freshly approved flow succeeded. No security protection was bypassed or weakened.
+- Linking automatically triggered README-only main build `6ad118f751817ebb0b39046d`; it failed and deployment was skipped. A cancel attempt hit a detached control because that build had already finished. The develop preview then built successfully. There is no production app to roll back.
 
-## Limits and remaining work
+## Next sprint starting point
 
-- Required visual and deployed-preview verification is outstanding; Sprint 1 is functionally implemented but not release-verified. Do not promote to production on the strength of jsdom tests.
-- No remote repository, Netlify deployment, cross-device persistence, consumer login, shared editing, admin publishing, regional imports, national catalog import, live AI, Surprise me, or idea-to-workout generation.
-- Pasted notes have a 20,000-character validation ceiling. Longer text remains open but saving/export validation rejects it until shortened; no automatic truncation or interpretation.
-- Local storage has no cross-tab merge or cloud backup. Same-browser concurrent tabs can overwrite each other's last saved local collection; exports are the recovery path. Cross-tab conflict handling is a future improvement.
-- Current duration estimates are illustrative and require Q judgment. They are not field-tested or safety guarantees.
-- Data API/RLS scripts require live verification in a dedicated FE project before activation.
-
-## Source decisions
-
-See `docs/SOURCES.md` for all six requested reference URLs and current retrieval findings. No external code, national descriptions/CSV entries, real backblasts, F3 logos, or IronPAX plans were imported. F3 Nation's monorepo page lists AGPL-3.0; no license was identified in the retrieved codex/widgets pages. Public visibility was not treated as reuse permission. All starter descriptions are original, and no Q/AO/date/testing history is fabricated. Font license files are included in `public/licenses` and the built output.
-
-## Exact unblock and next starting point
-
-1. Shane opens https://github.com/new under `shanematthewadams`, names the repository `fe-workout-planner`, chooses **Private**, checks **Add a README file**, and creates it. Return the repository URL. An initialized private repository makes source writes available through the existing connection; no PR review is needed merely to transfer source.
-2. Push the prepared application to `develop` in that new repository (do not overwrite the initialized main branch or reuse another application's resources). The prepared GitHub workflow should run; verify its actual results. A future connector commit can have a different SHA from the preserved local bundle; record both rather than invent parity.
-3. Connect a dedicated Netlify project to that repository. Build: `npm run build`; publish: `dist`. Keep production branch `main`, enable `develop` branch deploys, and do not promote application code to main. If connection setup is not exposed through the connector, Shane must perform that account action. No token needs to be pasted in chat.
-4. Obtain and verify the real preview URL, then inspect 360/390px mobile and 1280px desktop: browse/filter/reset, favorite/reload, copy/edit/save/reload, raw note persistence, backup export/reimport, conflict behavior, optional Mary, large-text Q view, and full/The Thang-only print PDF. Fix findings before release.
-5. Sprint 2 starts with regional import permissions/provenance and an admin-reviewed publication flow. Provision a dedicated Supabase project only after organization/cost confirmation, then apply/test the prepared schema and seed. Sprint 3 adds live AI and alternative starting paths. Production promotion/custom domains stay in the launch sprint.
-
-## GitHub connection update · October 15, 2026
-
-This section supersedes the earlier repository-creation blocker and steps 1–2 of the earlier unblock list. Those paragraphs describe the original local-only delivery.
-
-- Verified private remote: https://github.com/shanematthewadams/fe-workout-planner
-- GitHub repository ID: `1421135917`.
-- Verified uploaded development implementation commit: `5ce28ad5ae479395e240577e274906468f9fb1ad`.
-- Verified implementation tree: `3ff7bc7420aac1bc179fd011eb18574858e10474`, identical to the tested local handoff tree at `e82086a446e4b7f7f10bdcee3ecfa83bb71ef9aa`.
-- The remote commit is parented to the new repository's initialized main commit `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`. The original local commits remain preserved in the earlier Git bundle; their different commit SHAs are intentional, while source tree parity was verified.
-- `develop` was created at that uploaded commit. `main` was not changed. There were no remote AGENTS.md instructions; the initialized repository contained only README.md.
-- This status update is a later documentation-only commit on develop. Its final SHA can be obtained from the branch head; a tracked handoff cannot contain its own commit SHA.
-- Initial GitHub Actions query after branch creation returned zero runs. The following documentation ref update should trigger the prepared push workflow; its real status must be checked before claiming remote CI success.
-- Netlify discovery again returned no FE project. No Netlify identifiers/preview URL exist; no site was created or deployment claimed. Repository linkage, branch configuration, and file upload remain unavailable through the current connector. No existing Netlify projects were modified.
-- Next action: connect a dedicated Netlify project or authorize an authenticated draft-deploy mechanism. Preserve production branch main and deploy only the develop branch/draft. Then verify the hosted preview, actual mobile/desktop layouts, and rendered full/The Thang-only print before production promotion.
-
-### Verified remote CI
-
-The GitHub Checks run for implementation commit `5ce28ad5ae479395e240577e274906468f9fb1ad` completed successfully: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38781816991 . This verifies npm ci, lint, tests, and production build on GitHub's runner. Later changes are documentation only. The documentation status commit `84cdf472930e974e1d7055452161ee4c88f58213` was verified as the develop head before this CI evidence addition. Main remained at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`.
-
-## Netlify connection update · October 15, 2026
-
-This section supersedes the earlier no-site/linkage blockers. Shane authorized browser-based setup. The expired GitHub OAuth handoff returned Invalid state key; after renewed approval a fresh connection succeeded using existing account permissions.
-
-- Dedicated Netlify project: `fe-workout-planner`.
-- Site/project ID: `1d2480e0-3891-41db-9574-61cb13b7ae0a`.
-- Team ID: `6a8d98d0bae1a4d6a86f48de` (shanematthewadams).
-- Dashboard: https://app.netlify.com/projects/fe-workout-planner
-- Linked repository: https://github.com/shanematthewadams/fe-workout-planner
-- Verified production branch: main. Verified additional branch deploys: develop only.
-- Build command: npm run build. Publish directory: dist. Existing netlify.toml controls the develop build and Node version.
-- Visibility remains private for production and previews; no access protection was weakened. No paid upgrade, custom domain, or production promotion was performed.
-- Netlify automatically attempted a main-branch setup build when linking. It failed at the README-only main commit `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`; deployment was skipped. Initial setup deploy ID: `6ad118f751817ebb0b39046d`. A cancel attempt encountered a detached control because the build had already finished. Main application code was not added or published.
-- This documentation push triggers the first develop branch deployment. Its result and actual URL must be verified before a working preview is claimed.
+1. Verify narrow mobile library/editor/Q flows and rendered full/The Thang-only print. Fix findings before production promotion. Keep using develop; preserve personal backup compatibility and source-copy isolation.
+2. Sprint 2: get permission for regional backblast imports, preserve raw originals/provenance, mark ambiguous counts/timing, and implement an admin-reviewed publication flow. Provision a dedicated FE Supabase project only after organization/cost approval; apply and live-test the prepared RLS/schema/seed and anonymous read/denied-write behavior.
+3. Sprint 3: live AI and idea/pasted-plan/Surprise me starting paths. API credentials must not block the independent library/editor. Keep production promotion and domains for launch.
