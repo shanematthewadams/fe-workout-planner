@@ -76,8 +76,8 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "Tektur", "Arial Black", sans-serif;
-  font-weight: 800;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
   letter-spacing: -0.7px;
 }
 h2 {
@@ -113,7 +113,7 @@ header {
   font-size: 23px;
   letter-spacing: 1.8px;
   gap: 14px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .brand-sub {
   display: block;
@@ -800,7 +800,7 @@ legend {
   white-space: nowrap;
   border: 0;
 }
-/* Visual reference: f3thefe.com — monochrome, geometric display type, strong rules. */
+/* Visual reference: f3thefe.com — monochrome, readable condensed display type, strong rules. */
 .header {
   background: #050505;
   color: #fff;
@@ -808,8 +808,9 @@ legend {
 }
 .header .brand {
   color: #fff;
-  font-family: "Tektur", "Arial Black", sans-serif;
-  font-weight: 900;
+  font-size: 28px;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
   letter-spacing: -0.6px;
 }
 .header .brand:hover {
@@ -844,12 +845,11 @@ legend {
   text-decoration: underline;
 }
 .hero h1 {
-  font-family: "Tektur", "Arial Black", sans-serif;
-  font-size: clamp(40px, 4.2vw, 58px);
-  font-weight: 900;
-  text-transform: uppercase;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-size: clamp(48px, 5vw, 68px);
+  font-weight: 700;
   line-height: 1.08;
-  letter-spacing: -1.8px;
+  letter-spacing: -0.5px;
 }
 .hero h1 em {
   color: #111;
@@ -860,17 +860,17 @@ legend {
   border-color: #111;
 }
 .hero-note p {
-  font-family: "Tektur", sans-serif;
-  font-size: 27px;
-  font-weight: 800;
-  letter-spacing: -1px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
 }
 .hero-note .outline-mark {
   -webkit-text-stroke-color: #555;
 }
 .card h3 {
-  font-size: 25px;
-  font-weight: 800;
+  font-size: 30px;
+  font-weight: 700;
   letter-spacing: -0.6px;
   line-height: 1.2;
 }
@@ -897,7 +897,7 @@ legend {
 }
 .page-title {
   font-size: clamp(32px, 4.8vw, 54px);
-  font-weight: 900;
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 .detail .workout-block h3,
@@ -916,7 +916,7 @@ legend {
   letter-spacing: -0.5px;
 }
 .footer-brand {
-  font-family: "Tektur", sans-serif;
+  font-family: "Barlow Condensed", sans-serif;
 }
 @media (max-width: 760px) {
   .regional-links {
@@ -1169,7 +1169,7 @@ legend {
     padding-top: 32px;
   }
   .hero h1 {
-    font-size: clamp(29px, 8.8vw, 38px);
+    font-size: clamp(36px, 10vw, 44px);
     line-height: 1.1;
   }
   .library-head h2 {
@@ -1179,7 +1179,7 @@ legend {
     font-size: 8px;
   }
   .card h3 {
-    font-size: 25px;
+    font-size: 30px;
   }
   .detail-meta {
     font-size: 12px;
