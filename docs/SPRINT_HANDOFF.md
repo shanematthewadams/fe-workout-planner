@@ -99,3 +99,7 @@ This section supersedes the earlier repository-creation blocker and steps 1–2 
 - Initial GitHub Actions query after branch creation returned zero runs. The following documentation ref update should trigger the prepared push workflow; its real status must be checked before claiming remote CI success.
 - Netlify discovery again returned no FE project. No Netlify identifiers/preview URL exist; no site was created or deployment claimed. Repository linkage, branch configuration, and file upload remain unavailable through the current connector. No existing Netlify projects were modified.
 - Next action: connect a dedicated Netlify project or authorize an authenticated draft-deploy mechanism. Preserve production branch main and deploy only the develop branch/draft. Then verify the hosted preview, actual mobile/desktop layouts, and rendered full/The Thang-only print before production promotion.
+
+### Verified remote CI
+
+The GitHub Checks run for implementation commit `5ce28ad5ae479395e240577e274906468f9fb1ad` completed successfully: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38781816991 . This verifies npm ci, lint, tests, and production build on GitHub's runner. Later changes are documentation only. The documentation status commit `84cdf472930e974e1d7055452161ee4c88f58213` was verified as the develop head before this CI evidence addition. Main remained at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`.
