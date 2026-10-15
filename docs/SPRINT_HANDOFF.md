@@ -84,3 +84,18 @@ See `docs/SOURCES.md` for all six requested reference URLs and current retrieval
 3. Connect a dedicated Netlify project to that repository. Build: `npm run build`; publish: `dist`. Keep production branch `main`, enable `develop` branch deploys, and do not promote application code to main. If connection setup is not exposed through the connector, Shane must perform that account action. No token needs to be pasted in chat.
 4. Obtain and verify the real preview URL, then inspect 360/390px mobile and 1280px desktop: browse/filter/reset, favorite/reload, copy/edit/save/reload, raw note persistence, backup export/reimport, conflict behavior, optional Mary, large-text Q view, and full/The Thang-only print PDF. Fix findings before release.
 5. Sprint 2 starts with regional import permissions/provenance and an admin-reviewed publication flow. Provision a dedicated Supabase project only after organization/cost confirmation, then apply/test the prepared schema and seed. Sprint 3 adds live AI and alternative starting paths. Production promotion/custom domains stay in the launch sprint.
+
+## GitHub connection update · October 15, 2026
+
+This section supersedes the earlier repository-creation blocker and steps 1–2 of the earlier unblock list. Those paragraphs describe the original local-only delivery.
+
+- Verified private remote: https://github.com/shanematthewadams/fe-workout-planner
+- GitHub repository ID: `1421135917`.
+- Verified uploaded development implementation commit: `5ce28ad5ae479395e240577e274906468f9fb1ad`.
+- Verified implementation tree: `3ff7bc7420aac1bc179fd011eb18574858e10474`, identical to the tested local handoff tree at `e82086a446e4b7f7f10bdcee3ecfa83bb71ef9aa`.
+- The remote commit is parented to the new repository's initialized main commit `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`. The original local commits remain preserved in the earlier Git bundle; their different commit SHAs are intentional, while source tree parity was verified.
+- `develop` was created at that uploaded commit. `main` was not changed. There were no remote AGENTS.md instructions; the initialized repository contained only README.md.
+- This status update is a later documentation-only commit on develop. Its final SHA can be obtained from the branch head; a tracked handoff cannot contain its own commit SHA.
+- Initial GitHub Actions query after branch creation returned zero runs. The following documentation ref update should trigger the prepared push workflow; its real status must be checked before claiming remote CI success.
+- Netlify discovery again returned no FE project. No Netlify identifiers/preview URL exist; no site was created or deployment claimed. Repository linkage, branch configuration, and file upload remain unavailable through the current connector. No existing Netlify projects were modified.
+- Next action: connect a dedicated Netlify project or authorize an authenticated draft-deploy mechanism. Preserve production branch main and deploy only the develop branch/draft. Then verify the hosted preview, actual mobile/desktop layouts, and rendered full/The Thang-only print before production promotion.

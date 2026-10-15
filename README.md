@@ -38,19 +38,14 @@ Drafts and favorites are saved only to the current browser on the current device
 
 ## Development and hosting
 
-Development branch: `develop`. A private GitHub repository has **not** been created or pushed: the available connector cannot create repositories, and no local GitHub credentials exist. Netlify hosting has **not** been deployed: the connector has project creation/read operations but no build-file upload operation, and no CLI deploy credentials exist. No preview URL is claimed.
+Private repository: https://github.com/shanematthewadams/fe-workout-planner
+Development branch: `develop`. The application source was uploaded and the branch verified at implementation commit `5ce28ad5ae479395e240577e274906468f9fb1ad`. Its tree `3ff7bc7420aac1bc179fd011eb18574858e10474` exactly matches the tested local snapshot. A subsequent documentation-only commit updates this status. `main` retains the original starter README at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`.
 
-Smallest repository unblock:
+Netlify hosting has **not** been deployed. No FE project was found in the connected inventory. The available tools expose project creation/read operations but no Git repository linkage, branch configuration, or build-file upload operation, and no CLI deploy credentials exist. No preview URL is claimed.
 
-1. Open https://github.com/new under `shanematthewadams`.
-2. Name it `fe-workout-planner`, choose **Private**, check **Add a README file**, and click **Create repository**.
-3. Return its URL. With an initialized repository, the existing GitHub connection can write the prepared source to `develop`; Shane does not need to review a PR to transfer it.
+Hosting setup must connect a **new** Netlify project to this repository, use `npm run build` and `dist`, keep `main` as the eventual production branch, and enable `develop` as a branch deployment. Application code must not be promoted to main in Sprint 1. Since main contains only a README, its application build cannot succeed; the intended working app is on develop. Use a draft deploy or the develop branch deployment rather than changing the production branch to develop. `netlify.toml` includes build settings, Node version, SPA fallback, and basic headers. `.netlify` is ignored so local site linkage is never committed. Branch previews are shareable by link unless access controls are separately configured.
 
-For a developer using this source package and an authenticated Git CLI, add that repository as `origin`, fetch its initialized branch, and push `develop`. Do not force-push or replace an existing unrelated repository. The package includes a Git bundle preserving the local commit history.
-
-After GitHub setup, create a **new** Netlify project, connect only this repository, use `npm run build` and `dist`, keep `main` as the eventual production branch, and enable only `develop` as a branch deployment. Do not push application code to main in Sprint 1. `netlify.toml` includes the build, Node version, SPA fallback, and basic headers. `.netlify` is ignored so local site linkage is never committed. Branch previews are shareable by link unless access controls are separately configured. Do not change production domains or promote a deploy in Sprint 1.
-
-If doing a manual authenticated deployment instead, `npm run build` first and use `netlify deploy --dir dist` (without `--prod`) against a dedicated FE site. The separate `fe-workout-planner-preview.zip` contains built files, but this delivery itself is not a hosted preview.
+An authenticated Netlify CLI can instead create a draft with `npm run build` followed by `netlify deploy --dir dist` (without `--prod`) against a dedicated FE site. The earlier delivery package includes built static files, but that package itself is not a hosted preview. Never paste a personal deploy token in chat.
 
 ## Verification limits
 
