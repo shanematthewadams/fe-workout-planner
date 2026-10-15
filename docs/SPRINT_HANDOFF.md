@@ -54,7 +54,7 @@ Model/UI tests also cover malformed/unknown-version/oversized imports, duplicate
 
 ## Implemented scope
 
-- React/TypeScript/Vite app with welcoming green/cream styling, locally bundled fonts/icons, responsive cards/filters, keyboard focus styles, and no consumer sign-in.
+- React/TypeScript/Vite app with monochrome styling informed by f3thefe.com, locally bundled fonts/icons, responsive cards/filters, keyboard focus styles, and no consumer sign-in.
 - Ten original illustrative starters covering circuits, 11s, EMOM, AMRAP, ladder, partner, stations, and chipper; 30/45-minute session options, declared equipment/running, and one omitted-Mary plan. No Q, AO, event date or real-world testing history is fabricated.
 - Workout details: ordered Warmup, The Thang and optional Mary; estimated section timing; equipment; plain instructions; explicit amounts/units/optional sets/counting; provenance and adaptation notes. Timing includes explanation, recovery, and transitions and is not a safety guarantee.
 - Deep-copied personal workouts with fresh IDs and originId, explicit save feedback and reload persistence, favorites, editable titles/sections/blocks/exercises/counts/sets/units/counting/instructions/adaptation notes, and block/exercise ordering. Source workouts cannot be edited through the app.
@@ -78,3 +78,7 @@ Model/UI tests also cover malformed/unknown-version/oversized imports, duplicate
 1. Verify narrow mobile library/editor/Q flows and rendered full/The Thang-only print. Fix findings before production promotion. Keep using develop; preserve personal backup compatibility and source-copy isolation.
 2. Sprint 2: get permission for regional backblast imports, preserve raw originals/provenance, mark ambiguous counts/timing, and implement an admin-reviewed publication flow. Provision a dedicated FE Supabase project only after organization/cost approval; apply and live-test the prepared RLS/schema/seed and anonymous read/denied-write behavior.
 3. Sprint 3: live AI and idea/pasted-plan/Surprise me starting paths. API credentials must not block the independent library/editor. Keep production promotion and domains for launch.
+
+## Regional styling pass
+
+Shane requested f3thefe.com as the styling reference. The app now uses a black regional header, white background, strong geometric Tektur display headings, monochrome cards/controls, and links to the region and AO schedule. Body instructions retain DM Sans; print headings use Arial. No source data, personal-storage key, backup format, security setting, or production branch changed. Narrow-screen inputs are at least 16px to avoid unwanted mobile input zoom, card text/metadata has been enlarged, long titles wrap, primary copy actions span the phone width, and reduced-motion preferences are honored. Existing 31 automated tests, lint and type/build checks pass on the changed application. Real narrow-viewport inspection remains unavailable through the current browser API.

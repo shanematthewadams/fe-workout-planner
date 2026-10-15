@@ -1,7 +1,7 @@
 :root {
   font-family: "DM Sans", Arial, sans-serif;
-  color: #172d26;
-  background: #f6f5f0;
+  color: #101010;
+  background: #fcfcfc;
   font-synthesis: none;
   font-size: 15px;
 }
@@ -24,17 +24,17 @@ button,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid #d2d8ce;
-  border-radius: 5px;
+  border: 1px solid #d5d5d5;
+  border-radius: 2px;
   background: white;
-  color: #19382c;
+  color: #111111;
   padding: 11px 16px;
   min-height: 44px;
   font-weight: 600;
 }
 button:hover,
 .button:hover {
-  background: #e7eddf;
+  background: #eeeeee;
 }
 button:disabled {
   opacity: 0.45;
@@ -45,17 +45,17 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #b3cc65;
+  outline: 3px solid #777777;
   outline-offset: 3px;
 }
 input,
 textarea,
 select {
   max-width: 100%;
-  border: 1px solid #ccd2c8;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   background: #fff;
-  color: #18362b;
+  color: #171717;
   padding: 12px;
   min-height: 44px;
 }
@@ -76,15 +76,17 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: "Tektur", "Arial Black", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.7px;
 }
 h2 {
-  font-size: 34px;
+  font-size: 28px;
   line-height: 1.1;
   font-weight: 600;
 }
 h3 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
 }
 h4 {
@@ -96,7 +98,7 @@ p {
 }
 header {
   height: 100px;
-  border-bottom: 1px solid #dce0d5;
+  border-bottom: 1px solid #dddddd;
   padding: 0 5%;
   display: flex;
   align-items: center;
@@ -126,8 +128,8 @@ header {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: #183c2e;
-  color: #f3f4e9;
+  background: #080808;
+  color: #ffffff;
   font:
     700 35px "Barlow Condensed",
     sans-serif;
@@ -148,16 +150,16 @@ header {
   font-weight: 700;
 }
 .region span {
-  color: #a5ae9c;
+  color: #aaaaaa;
   margin: 0 10px;
 }
 .create {
-  background: #1a3d2f;
+  background: #080808;
   color: #fff;
-  border-color: #1a3d2f;
+  border-color: #080808;
 }
 .create:hover {
-  background: #2c523e;
+  background: #333333;
 }
 .main {
   max-width: 1280px;
@@ -184,7 +186,7 @@ header {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #647b39;
+  background: #171717;
 }
 .hero h1 {
   font-size: clamp(48px, 5.1vw, 72px);
@@ -195,18 +197,18 @@ header {
 }
 .hero h1 em {
   font-style: normal;
-  color: #6a7f5b;
+  color: #444444;
 }
 .intro {
-  color: #657063;
+  color: #555555;
   font-size: 15px;
   line-height: 1.8;
   margin-bottom: 0;
 }
 .hero-note {
-  background: #e7eadf;
-  border: 1px solid #dbe0d1;
-  border-radius: 5px;
+  background: #eeeeee;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
   padding: 24px 26px;
   position: relative;
   overflow: hidden;
@@ -237,12 +239,12 @@ header {
     sans-serif;
   letter-spacing: -10px;
   color: transparent;
-  -webkit-text-stroke: 1px #c7d0bb;
+  -webkit-text-stroke: 1px #cccccc;
   transform: rotate(-8deg);
 }
 .tabs {
   display: flex;
-  border-bottom: 1px solid #d5dacf;
+  border-bottom: 1px solid #dddddd;
   gap: 30px;
 }
 .tabs button {
@@ -250,16 +252,16 @@ header {
   border-radius: 0;
   background: none;
   padding: 14px 0 19px;
-  color: #6c7467;
+  color: #666666;
   font-size: 13px;
   border-bottom: 3px solid transparent;
 }
 .tabs button.active {
-  color: #193b2e;
-  border-bottom-color: #193b2e;
+  color: #111111;
+  border-bottom-color: #111111;
 }
 .tabs span {
-  background: #e6e9df;
+  background: #eeeeee;
   border-radius: 4px;
   font-size: 10px;
   padding: 3px 6px;
@@ -275,22 +277,22 @@ header {
 }
 .library-head .eyebrow {
   margin-bottom: 10px;
-  color: #7a826c;
+  color: #666666;
 }
 .library-head h2 {
   margin-bottom: 0;
 }
 .library-head > p {
   font-size: 11px;
-  color: #74806e;
+  color: #666666;
   margin-bottom: 3px;
 }
 .filters {
   display: flex;
   align-items: center;
-  border: 1px solid #d9ded2;
-  background: #eeefe7;
-  border-radius: 6px;
+  border: 1px solid #dddddd;
+  background: #f3f3f3;
+  border-radius: 2px;
   padding: 10px;
   gap: 12px;
 }
@@ -301,7 +303,7 @@ header {
   flex: 1;
   min-width: 140px;
   background: white;
-  border: 1px solid #d7dccf;
+  border: 1px solid #dddddd;
   border-radius: 4px;
   padding-left: 12px;
 }
@@ -319,7 +321,7 @@ header {
 }
 .filter > span {
   font-size: 10px;
-  color: #6a7463;
+  color: #666666;
 }
 .filter select {
   font-size: 11px;
@@ -329,18 +331,18 @@ header {
   max-width: 115px;
 }
 .filter-icon {
-  color: #6d7d60;
+  color: #666666;
 }
 .result-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-  color: #65705e;
+  color: #555555;
   margin: 12px 0 18px;
 }
 .muted {
-  color: #78816f;
+  color: #666666;
 }
 .text-button {
   border: 0;
@@ -355,8 +357,8 @@ header {
 }
 .card {
   background: #fff;
-  border: 1px solid #dce0d4;
-  border-radius: 6px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
   overflow: hidden;
   padding: 20px 22px 0;
   transition:
@@ -367,7 +369,7 @@ header {
 }
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px #193b2e0a;
+  box-shadow: 0 8px 20px #1111110a;
 }
 .card-top {
   display: flex;
@@ -377,8 +379,8 @@ header {
 }
 .chip {
   font-size: 10px;
-  background: #eff1e8;
-  color: #527047;
+  background: #eeeeee;
+  color: #333333;
   letter-spacing: 0.4px;
   border-radius: 3px;
   padding: 5px 9px;
@@ -389,21 +391,21 @@ header {
   padding: 4px;
   min-height: 44px;
   min-width: 44px;
-  color: #8b9481;
+  color: #777777;
 }
 .hearted {
-  color: #42653b;
+  color: #080808;
 }
 .hearted svg {
-  fill: #d1dda7;
+  fill: #bbbbbb;
 }
 .card-number {
   font-size: 8px;
-  color: #8a927e;
+  color: #777777;
   letter-spacing: 1.4px;
 }
 .card h3 {
-  font-size: 30px;
+  font-size: 24px;
   margin: 9px 0 12px;
   line-height: 1.1;
 }
@@ -418,7 +420,7 @@ header {
 }
 .card-summary {
   font-size: 12px;
-  color: #727b69;
+  color: #555555;
   margin-bottom: 22px;
   min-height: 40px;
 }
@@ -429,7 +431,7 @@ header {
   margin-top: auto;
   margin-bottom: 18px;
   font-size: 9px;
-  color: #68755d;
+  color: #555555;
 }
 .card-metrics span {
   display: flex;
@@ -442,7 +444,7 @@ header {
 }
 .card-open {
   border: 0;
-  border-top: 1px solid #edf0e5;
+  border-top: 1px solid #eeeeee;
   border-radius: 0;
   padding: 14px 0;
   justify-content: space-between;
@@ -450,14 +452,14 @@ header {
   font-size: 11px;
 }
 .card-open svg {
-  color: #728664;
+  color: #333333;
 }
 .empty {
   text-align: center;
   background: white;
   padding: 50px;
-  border: 1px dashed #bbc6b0;
-  border-radius: 6px;
+  border: 1px dashed #bbbbbb;
+  border-radius: 2px;
 }
 .empty h3 {
   margin: 16px 0 10px;
@@ -468,10 +470,10 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 25px;
-  background: #eeefe6;
+  background: #f3f3f3;
   padding: 26px;
-  border: 1px solid #dce0d4;
-  border-radius: 6px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
 }
 .backup h3 {
   font-size: 25px;
@@ -479,7 +481,7 @@ header {
 }
 .backup p {
   font-size: 11px;
-  color: #737e68;
+  color: #555555;
   max-width: 520px;
   margin-bottom: 0;
 }
@@ -501,8 +503,8 @@ header {
   gap: 20px;
   justify-content: space-between;
   font-size: 10px;
-  color: #7a846d;
-  border-top: 1px solid #dce0d4;
+  color: #555555;
+  border-top: 1px solid #dddddd;
 }
 .footer-brand {
   font-size: 10px;
@@ -511,7 +513,7 @@ header {
 }
 .footer-brand span {
   margin: 0 10px;
-  color: #a5ae99;
+  color: #aaaaaa;
 }
 .footer a {
   display: flex;
@@ -527,14 +529,14 @@ header {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: #183c2e;
+  background: #080808;
   color: white;
   z-index: 30;
   box-shadow: 0 4px 20px #0003;
   max-width: 90vw;
   min-width: 280px;
   padding: 12px 16px;
-  border-radius: 6px;
+  border-radius: 2px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -555,7 +557,7 @@ header {
   padding: 28px 0 40px;
 }
 .page-top > span {
-  color: #78816f;
+  color: #666666;
   font-size: 12px;
 }
 .page-title {
@@ -569,7 +571,7 @@ header {
 }
 .detail-summary {
   font-size: 18px;
-  color: #6f7d66;
+  color: #555555;
   max-width: 700px;
 }
 .detail-meta {
@@ -580,7 +582,7 @@ header {
   margin: 25px 0;
 }
 .detail-meta span {
-  background: #e7ebde;
+  background: #eeeeee;
   padding: 7px 12px;
   border-radius: 4px;
 }
@@ -597,15 +599,15 @@ header {
   min-height: 20px;
 }
 .timing-note {
-  background: #e9ece1;
+  background: #f0f0f0;
   padding: 16px;
   font-size: 12px;
-  border-left: 3px solid #819665;
+  border-left: 3px solid #171717;
 }
 .workout-section {
   background: white;
-  border: 1px solid #d9dfd0;
-  border-radius: 6px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
   margin-top: 25px;
   padding: 28px;
 }
@@ -621,7 +623,7 @@ header {
 }
 .section-heading .eyebrow {
   margin-bottom: 8px;
-  color: #8b977c;
+  color: #666666;
 }
 .section-time {
   display: flex;
@@ -637,13 +639,13 @@ header {
 .instructions {
   white-space: pre-wrap;
   font-size: 15px;
-  color: #5b6b51;
+  color: #444444;
 }
 .exercise {
   display: grid;
   grid-template-columns: 110px 1fr;
   gap: 20px;
-  border-top: 1px solid #e5e9dd;
+  border-top: 1px solid #eeeeee;
   padding: 18px 0;
 }
 .exercise-count {
@@ -657,25 +659,25 @@ header {
   font:
     11px "DM Sans",
     sans-serif;
-  color: #748367;
+  color: #555555;
   margin-top: 3px;
 }
 .exercise p {
   font-size: 13px;
-  color: #728068;
+  color: #555555;
   margin-bottom: 6px;
 }
 .count-label {
   font-size: 10px;
   display: inline-block;
-  background: #f0f2e8;
+  background: #f0f0f0;
   padding: 3px 6px;
   border-radius: 3px;
 }
 .provenance {
   padding: 28px 0;
   font-size: 12px;
-  color: #69795e;
+  color: #555555;
 }
 .provenance h3 {
   font-size: 24px;
@@ -685,7 +687,7 @@ header {
 }
 .raw-notes {
   padding: 28px;
-  border: 1px solid #d9dfd0;
+  border: 1px solid #dddddd;
   margin-top: 25px;
   overflow-wrap: anywhere;
 }
@@ -728,14 +730,14 @@ header {
 }
 .edit-section {
   background: white;
-  border: 1px solid #d9dfd0;
-  border-radius: 6px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
   margin: 25px 0;
   padding: 25px;
 }
 .edit-block {
   padding: 15px 0 25px;
-  border-top: 1px solid #e0e6d7;
+  border-top: 1px solid #eeeeee;
 }
 .exercise-grid {
   display: grid;
@@ -743,31 +745,31 @@ header {
   gap: 12px;
 }
 fieldset {
-  border: 1px solid #dce4d0;
-  border-radius: 5px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
   margin: 20px 0;
   padding: 15px;
 }
 legend {
   font-size: 12px;
-  color: #718263;
+  color: #555555;
   padding: 0 8px;
 }
 .hint {
   font-size: 12px;
-  color: #7b866e;
+  color: #666666;
 }
 .sticky-save {
   position: sticky;
   bottom: 0;
-  background: #f6f5f0f5;
+  background: #fcfcfcf5;
   padding: 18px 0;
-  border-top: 1px solid #d9dfd0;
+  border-top: 1px solid #dddddd;
 }
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: #102a22aa;
+  background: #101010aa;
   z-index: 40;
   display: grid;
   place-items: center;
@@ -775,7 +777,7 @@ legend {
 }
 .modal {
   max-width: 520px;
-  background: #f6f5f0;
+  background: #fcfcfc;
   border-radius: 8px;
   padding: 30px;
 }
@@ -797,6 +799,129 @@ legend {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+/* Visual reference: f3thefe.com — monochrome, geometric display type, strong rules. */
+.header {
+  background: #050505;
+  color: #fff;
+  border-bottom: 0;
+}
+.header .brand {
+  color: #fff;
+  font-family: "Tektur", "Arial Black", sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+.header .brand:hover {
+  background: none;
+}
+.header .brand-sub {
+  color: #bcbcbc;
+  letter-spacing: 2px;
+}
+.header .region {
+  color: #d4d4d4;
+}
+.header .create {
+  background: transparent;
+  border-color: #d4d4d4;
+  color: white;
+}
+.header .create:hover {
+  background: #242424;
+}
+.regional-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+.regional-links a {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+.regional-links a:hover {
+  text-decoration: underline;
+}
+.hero h1 {
+  font-family: "Tektur", "Arial Black", sans-serif;
+  font-size: clamp(40px, 4.2vw, 58px);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+}
+.hero h1 em {
+  color: #111;
+}
+.hero-note {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+.hero-note p {
+  font-family: "Tektur", sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.hero-note .outline-mark {
+  -webkit-text-stroke-color: #555;
+}
+.card h3 {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+.card-open {
+  font-size: 12px;
+}
+.card-metrics {
+  font-size: 11px;
+}
+.card-number {
+  font-size: 9px;
+}
+.filter select,
+.search input {
+  font-size: 13px;
+}
+.filter > span {
+  font-size: 11px;
+}
+.card .chip {
+  color: #222;
+  background: #efefef;
+  font-weight: 700;
+}
+.page-title {
+  font-size: clamp(32px, 4.8vw, 54px);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+.detail .workout-block h3,
+.edit-section h2 {
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+}
+.provenance h3,
+.backup h3,
+.raw-notes h2 {
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.footer-brand {
+  font-family: "Tektur", sans-serif;
+}
+@media (max-width: 760px) {
+  .regional-links {
+    display: none;
+  }
 }
 @media (max-width: 1000px) {
   .region {
@@ -830,7 +955,7 @@ legend {
     padding: 20px;
   }
   .hero h1 {
-    font-size: 55px;
+    font-size: 46px;
   }
   .backup {
     flex-direction: column;
@@ -873,7 +998,7 @@ legend {
     padding: 38px 0 32px;
   }
   .hero h1 {
-    font-size: 48px;
+    font-size: 38px;
     letter-spacing: -0.7px;
   }
   .hero-note {
@@ -902,7 +1027,7 @@ legend {
     margin-bottom: 20px;
   }
   .library-head h2 {
-    font-size: 29px;
+    font-size: 25px;
   }
   .library-head > p {
     display: none;
@@ -940,7 +1065,7 @@ legend {
     margin-bottom: 14px;
   }
   .card h3 {
-    font-size: 32px;
+    font-size: 24px;
   }
   .card-summary {
     font-size: 13px;
@@ -983,7 +1108,7 @@ legend {
     padding: 10px;
   }
   .page-title {
-    font-size: 44px;
+    font-size: 34px;
   }
   .detail-summary {
     font-size: 15px;
@@ -1020,7 +1145,7 @@ legend {
     padding: 8px;
   }
   .section-heading h2 {
-    font-size: 29px;
+    font-size: 25px;
   }
   .page-top > span {
     display: none;
@@ -1039,6 +1164,64 @@ legend {
     font-size: 34px;
   }
 }
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 32px;
+  }
+  .hero h1 {
+    font-size: clamp(29px, 8.8vw, 38px);
+    line-height: 1.1;
+  }
+  .library-head h2 {
+    font-size: 24px;
+  }
+  .brand-sub {
+    font-size: 8px;
+  }
+  .card h3 {
+    font-size: 25px;
+  }
+  .detail-meta {
+    font-size: 12px;
+  }
+  .tabs {
+    gap: 12px;
+  }
+  .tabs button {
+    gap: 5px;
+  }
+  .filter select {
+    font-size: 13px;
+  }
+  .exercise-grid label {
+    min-width: 0;
+  }
+  .editor input,
+  .editor select,
+  .editor textarea {
+    font-size: 16px;
+  }
+  .detail-actions {
+    align-items: stretch;
+  }
+  .detail-actions > .create {
+    width: 100%;
+  }
+  .sticky-save {
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+  }
+  .section-heading h2 {
+    font-size: 24px;
+  }
+  .exercise {
+    grid-template-columns: minmax(60px, 80px) minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
 @media print {
   @page {
     size: auto;
@@ -1054,6 +1237,13 @@ legend {
   .notice,
   .modal-backdrop {
     display: none !important;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: Arial, sans-serif;
+    letter-spacing: normal;
   }
   body {
     font:

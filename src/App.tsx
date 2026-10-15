@@ -295,15 +295,24 @@ export default function App() {
           onClick={() => go("library")}
           aria-label="The FE home"
         >
-          <span className="mark">
-            FE<span>↗</span>
-          </span>
           <span>
-            THE FE<span className="brand-sub">WORKOUT PLANNER</span>
+            F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
           </span>
         </button>
+        <nav className="regional-links" aria-label="F3 The FE regional links">
+          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
+            THE REGION ↗
+          </a>
+          <a
+            href="https://f3thefe.com/schedule/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            AO SCHEDULE ↗
+          </a>
+        </nav>
         <span className="region">
-          F3 THE FE <span> / </span> KANSAS CITY
+          F3 THE FE <span> / </span> OLATHE, KS
         </span>
         <button
           className="create top-create"
@@ -355,9 +364,9 @@ export default function App() {
                 <span className="dot" /> BUILT FOR THE GLOOM
               </p>
               <h1>
-                A good beatdown.
+                Your next Q.
                 <br />
-                <em>A great place to start.</em>
+                <em>Starts here.</em>
               </h1>
               <p className="intro">
                 Find a plan. Make it yours. Lead with confidence.
@@ -1186,9 +1195,18 @@ export default function App() {
       ) : null}
       <footer className="footer no-print">
         <span className="footer-brand">
-          THE FE <span>/</span> SHOW UP. STEP UP.
+          F3 THE FE <span>/</span> SHOW UP. STEP UP.
         </span>
-        <span>A little preparation goes a long way.</span>
+        <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
+          F3 The FE <ArrowUpRight size={14} />
+        </a>
+        <a
+          href="https://f3thefe.com/schedule/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          AO schedule <ArrowUpRight size={14} />
+        </a>
         <a href="https://f3nation.com/exicon" target="_blank" rel="noreferrer">
           F3 Exicon <ArrowUpRight size={14} />
         </a>

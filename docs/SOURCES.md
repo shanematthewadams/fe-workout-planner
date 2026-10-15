@@ -14,3 +14,7 @@ References checked through current web retrieval:
 Before Sprint 2 imports, verify the exact file-level license or get permission from the relevant content owner; confirm attribution and any code/data distinctions. Public visibility alone is insufficient evidence of reuse permission. Keep backblast provenance (source link, Q/AO/date only when actually supplied), import status, counting ambiguity, adaptation notes, and human review separate from the original text.
 
 Dependencies are declared and pinned in package.json/package-lock.json. Fonts are bundled from Fontsource (DM Sans and Barlow Condensed); there are no third-party font requests at runtime. Lucide provides interface icons. This app uses a custom typographic FE mark, not an imported F3 logo.
+
+## Regional styling reference
+
+Shane requested f3thefe.com as the visual reference. The live site was inspected on October 15, 2026: black header, white canvas, bold geometric headings, restrained monochrome palette, thin divider rules. Browser-computed headings used a Tektur Tight family name and body/navigation used Hezaedrus. This app uses the openly distributed Tektur font from Fontsource as a related geometric display face, with DM Sans for readable workout instructions. It does not copy the site's font binaries, photographs, logos, theme code or page content. Tektur's license is included in public/licenses. Links point to the verified regional home and AO schedule pages.
