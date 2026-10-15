@@ -1267,9 +1267,28 @@ legend {
     border-radius: 0;
     padding: 15px 0;
     margin: 12px 0;
+    break-inside: avoid;
   }
   .section-heading {
+    display: block;
     margin-bottom: 10px;
+    break-inside: avoid;
+    break-after: avoid;
+  }
+  .section-time {
+    display: block;
+    margin-top: 6px;
+    font-size: 10pt;
+  }
+  .section-time svg {
+    display: none;
+  }
+  .workout-block > h3 {
+    break-after: avoid;
+  }
+  .instructions {
+    orphans: 3;
+    widows: 3;
   }
   h2 {
     font-size: 22pt;

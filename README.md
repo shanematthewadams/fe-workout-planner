@@ -51,7 +51,7 @@ Build: `npm run build`; publish: `dist`; Node 22. Settings, SPA fallback, and he
 
 31 automated data, adapter, and UI interaction tests pass. Lint, TypeScript, production build, and GitHub Checks pass; dependency audit reports zero vulnerabilities. The deployed preview was opened in a real cloud browser. Desktop library/detail/Q layouts and filters, empty states, copy/edit/save/reload, favorite persistence, exact raw notes, backup export/reimport/conflict behavior, and omitted Mary were checked successfully. The original library source remained unchanged after editing a copy.
 
-The browser controls did not provide reliable mobile viewport resizing or rendered print/PDF inspection. Those two visual checks remain outstanding. Print action and The Thang-only selection are wired and covered by interaction tests, but final print appearance is not claimed verified. Supabase is unconfigured and its SQL has not been run against a real project. Do not promote to production until outstanding checks pass.
+The browser controls did not provide reliable mobile viewport resizing or native print-dialog output. Those checks remain outstanding. Independent print-stylesheet inspection used actual deployed workout markup, WeasyPrint and Poppler: the sample full plan and one-page The Thang-only output were visually inspected, and orphan headings were fixed. Native browser print appearance is not claimed verified. Supabase is unconfigured and its SQL has not been run against a real project. Do not promote to production until outstanding checks pass.
 
 ## Next sprint
 
