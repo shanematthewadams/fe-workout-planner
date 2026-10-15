@@ -170,3 +170,31 @@ describe("filters", () => {
     ).toBe(false);
   });
 });
+
+describe("copy and backup boundary cases", () => {
+  it("keeps maximum-length titles valid when copying or importing conflicts", () => {
+    const original = { ...catalog[0], title: "A".repeat(160) };
+    const copy = copyWorkout(original);
+    expect(copy.title).toHaveLength(160);
+    expect(workoutSchema.safeParse(copy).success).toBe(true);
+    copy.title = "B".repeat(160);
+    const imported = mergeBackup([copy], [copy]).workouts[1];
+    expect(imported.title).toHaveLength(160);
+    expect(workoutSchema.safeParse(imported).success).toBe(true);
+  });
+  it.each(["javascript:alert(1)", "data:text/html,test", "invalid"])(
+    "rejects unsafe source link %s without throwing inside safeParse",
+    (url) => {
+      const workout = {
+        ...catalog[0],
+        provenance: { ...catalog[0].provenance, url },
+      };
+      expect(workoutSchema.safeParse(workout).success).toBe(false);
+    },
+  );
+  it("uses UTF-8 byte size for the backup limit", () => {
+    expect(() => parseBackup("😀".repeat(1_300_000))).toThrow(
+      "Backup exceeds 5 MB.",
+    );
+  });
+});

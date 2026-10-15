@@ -40,6 +40,7 @@ import {
   timing,
   uid,
   workoutSchema,
+  titledCopy,
 } from "./model";
 const formatOptions = [
   "Circuit",
@@ -52,6 +53,66 @@ const formatOptions = [
   "Chipper",
   "Custom",
 ];
+function EquipmentInput({
+  workout,
+  onChange,
+}: {
+  workout: Workout;
+  onChange: (equipment: string[]) => void;
+}) {
+  const [text, setText] = useState(workout.equipment.join(", "));
+  return (
+    <label>
+      Equipment (comma separated)
+      <input
+        value={text}
+        onChange={(event) => {
+          const value = event.target.value;
+          setText(value);
+          onChange([
+            ...new Set(
+              value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            ),
+          ]);
+        }}
+      />
+    </label>
+  );
+}
+function TimingSummary({ workout }: { workout: Workout }) {
+  const blocks = workout.sections.flatMap((section) => section.blocks);
+  const unknown = blocks.filter((block) => block.minutes === null).length;
+  const known = blocks.reduce(
+    (total, block) => total + (block.minutes ?? 0),
+    0,
+  );
+  const difference =
+    workout.duration === null || unknown ? null : workout.duration - known;
+  return (
+    <aside className="timing-note" aria-label="Plan timing">
+      <strong>
+        Estimated block time: ~{known} minutes
+        {unknown
+          ? ` + ${unknown} untimed ${unknown === 1 ? "block" : "blocks"}`
+          : ""}
+        .
+      </strong>
+      <p>
+        {difference === null
+          ? "Set block times when you know them; blank times stay unknown."
+          : difference > 0
+            ? `About ${difference} minutes remain in your session estimate. Allow for explanation, rest, and transitions.`
+            : difference < 0
+              ? `Blocks run about ${-difference} minutes beyond your session estimate. Adjust the plan or session estimate.`
+              : "Block times match your session estimate. Include explanation, rest, and transitions in those times."}{" "}
+        All times are estimates; adjust to the PAX and conditions.
+      </p>
+    </aside>
+  );
+}
 function load() {
   try {
     return {
@@ -135,6 +196,7 @@ export default function App() {
     const handler = (e: BeforeUnloadEvent) => {
       if (dirty) {
         e.preventDefault();
+        e.returnValue = "";
       }
     };
     window.addEventListener("beforeunload", handler);
@@ -179,7 +241,7 @@ export default function App() {
         setEditing({
           ...structuredClone(editing),
           id: uid(),
-          title: editing.title.slice(0, 135) + " · recovered copy",
+          title: titledCopy(editing.title, " · recovered copy"),
         });
         setDirty(true);
       }
@@ -209,10 +271,13 @@ export default function App() {
     setQ(false);
     window.scrollTo(0, 0);
   };
-  const begin = (w: Workout) => {
+  const begin = (
+    w: Workout,
+    saved = state.workouts.some((item) => item.id === w.id),
+  ) => {
     setEditing(structuredClone(w));
     setSelected(null);
-    setDirty(false);
+    setDirty(!saved);
     window.scrollTo(0, 0);
   };
   const favorite = (id: string) => {
@@ -254,7 +319,15 @@ export default function App() {
       setDirty(false);
       setEditing(w);
       setNotice("Workout saved on this device.");
+      return w;
     }
+  };
+  const saveAndView = () => {
+    const saved = save();
+    if (!saved) return;
+    setEditing(null);
+    setTab("mine");
+    open(saved);
   };
   const exportData = (recovery = false) => {
     try {
@@ -297,6 +370,24 @@ export default function App() {
     } catch {
       setNotice(
         "Could not export. Check the draft for a blank title or invalid counts, and try again.",
+      );
+    }
+  };
+  const downloadNotes = () => {
+    if (!editing?.rawNotes) return;
+    try {
+      const url = URL.createObjectURL(
+        new Blob([editing.rawNotes], { type: "text/plain;charset=utf-8" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "fe-original-notes.txt";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setNotice("Original notes downloaded exactly as entered.");
+    } catch {
+      setNotice(
+        "Could not download notes. Your text is still here; select and copy it before leaving.",
       );
     }
   };
@@ -344,6 +435,11 @@ export default function App() {
       : tab === "favorites"
         ? all.filter((w) => state.favorites.includes(w.id))
         : sources;
+  const equipmentOptions = [
+    ...new Set(all.flatMap((workout) => workout.equipment)),
+  ]
+    .filter(Boolean)
+    .sort();
   const visible = base.filter((w) => matches(w, filters));
   const update = (w: Workout) => {
     setEditing(w);
@@ -351,6 +447,9 @@ export default function App() {
   };
   return (
     <>
+      <a className="skip-link no-print" href="#main">
+        Skip to workouts
+      </a>
       <header className="header no-print">
         <button
           className="brand"
@@ -424,8 +523,14 @@ export default function App() {
                   "Allow new saves to replace the unreadable browser data? Keep your recovery download first.",
                 )
               ) {
-                savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
-                setBlocked(false);
+                try {
+                  savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
+                  setBlocked(false);
+                } catch {
+                  setNotice(
+                    "Browser storage is unavailable. Export current work to keep it.",
+                  );
+                }
               }
             }}
           >
@@ -434,7 +539,7 @@ export default function App() {
         </aside>
       )}
       {!selected && !editing ? (
-        <main className="main">
+        <main id="main" className="main">
           <section className="hero">
             <div>
               <p className="eyebrow">
@@ -526,7 +631,11 @@ export default function App() {
             {(
               [
                 ["duration", "Duration", ["All", "30 or less", "31–45", "46+"]],
-                ["equipment", "Equipment", ["All", "None", "Coupon"]],
+                [
+                  "equipment",
+                  "Equipment",
+                  ["All", "None", ...equipmentOptions],
+                ],
                 ["running", "Running", ["All", "None", "Light", "Moderate"]],
                 ["format", "Format", ["All", ...formatOptions]],
               ] as [keyof Filters, string, string[]][]
@@ -662,12 +771,14 @@ export default function App() {
           </section>
         </main>
       ) : editing ? (
-        <main className="editor main">
+        <main id="main" className="editor main">
           <div className="page-top">
             <button onClick={() => go("mine")}>
               <ArrowLeft size={17} /> My workouts
             </button>
-            <span>{dirty ? "Unsaved changes" : "Personal draft"}</span>
+            <span className="editor-status">
+              {dirty ? "Unsaved changes" : "Saved on this device"}
+            </span>
             <button className="create" onClick={save}>
               <Check size={17} />
               Save workout
@@ -710,24 +821,11 @@ export default function App() {
                 }
               />
             </label>
-            <label>
-              Equipment (comma separated)
-              <input
-                value={editing.equipment.join(", ")}
-                onChange={(e) =>
-                  update({
-                    ...editing,
-                    equipment: e.target.value.split(",").map((x) => x.trim()),
-                  })
-                }
-                onBlur={() =>
-                  update({
-                    ...editing,
-                    equipment: editing.equipment.filter(Boolean),
-                  })
-                }
-              />
-            </label>
+            <EquipmentInput
+              key={editing.id}
+              workout={editing}
+              onChange={(equipment) => update({ ...editing, equipment })}
+            />
             <label>
               Running
               <select
@@ -772,8 +870,14 @@ export default function App() {
           </label>
           <p className="hint">
             Notes are included in Q view and full print. Use the sections below
-            to organize them manually.
+            to organize them manually. The Thang-only print excludes original
+            notes. Draft backups accept up to 20,000 characters of notes. Longer
+            notes stay here; download the exact text before leaving.
           </p>
+          <button onClick={downloadNotes} disabled={!editing.rawNotes}>
+            <Download size={17} /> Download original notes
+          </button>
+          <TimingSummary workout={editing} />
           {editing.sections.map((s, si) => (
             <section className="edit-section" key={s.id}>
               <div className="section-heading">
@@ -1116,6 +1220,7 @@ export default function App() {
             <button className="create" onClick={save}>
               Save workout
             </button>
+            <button onClick={saveAndView}>Save & view workout</button>
             <button onClick={() => exportData()}>
               <Download size={17} />
               Export including open draft
@@ -1124,6 +1229,7 @@ export default function App() {
         </main>
       ) : selected ? (
         <main
+          id="main"
           className={
             "main detail " +
             (q ? "q-mode " : "") +
@@ -1165,7 +1271,7 @@ export default function App() {
                 if (
                   persist({ ...state, workouts: [...state.workouts, copied] })
                 ) {
-                  begin(copied);
+                  begin(copied, true);
                   setNotice("Personal copy created. Your source is unchanged.");
                 }
               }}

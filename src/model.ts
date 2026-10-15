@@ -71,7 +71,15 @@ export const workoutSchema = z
         "regional-reviewed",
       ]),
       label: text,
-      url: z.string().url().max(2000).optional(),
+      url: z
+        .string()
+        .url()
+        .max(2000)
+        .refine(
+          (value) => /^https?:\/\//i.test(value),
+          "Source links must use http or https.",
+        )
+        .optional(),
     }),
     updatedAt: z.string().datetime(),
   })
@@ -141,12 +149,15 @@ export function newWorkout(): Workout {
     updatedAt: new Date().toISOString(),
   };
 }
+export function titledCopy(title: string, suffix: string) {
+  return title.slice(0, 160 - suffix.length) + suffix;
+}
 export function copyWorkout(w: Workout): Workout {
   return {
     ...structuredClone(w),
     id: uid(),
     originId: w.originId ?? w.id,
-    title: w.title + " · my copy",
+    title: titledCopy(w.title, " · my copy"),
     kind: "personal",
     updatedAt: new Date().toISOString(),
   };
@@ -164,7 +175,7 @@ export function matches(w: Workout, f: Filters) {
     (!f.query ||
       `${w.title} ${w.summary}`
         .toLowerCase()
-        .includes(f.query.toLowerCase())) &&
+        .includes(f.query.trim().toLowerCase())) &&
     (f.duration === "All" ||
       (w.duration !== null &&
         (f.duration === "30 or less"
@@ -202,7 +213,11 @@ const backupSchema = z.object({
 });
 export type Backup = z.infer<typeof backupSchema>;
 export function parseBackup(input: string): Backup {
-  if (input.length > 5_000_000) throw Error("Backup exceeds 5 MB.");
+  if (
+    input.length > 5_000_000 ||
+    new TextEncoder().encode(input).byteLength > 5_000_000
+  )
+    throw Error("Backup exceeds 5 MB.");
   const parsed = backupSchema.parse(JSON.parse(input));
   if (new Set(parsed.workouts.map((w) => w.id)).size !== parsed.workouts.length)
     throw Error("Duplicate workout IDs in backup.");
@@ -220,7 +235,7 @@ export function mergeBackup(
       result.push({
         ...structuredClone(w),
         id: uid(),
-        title: w.title + " · imported copy",
+        title: titledCopy(w.title, " · imported copy"),
       });
       conflicts++;
     } else result.push(structuredClone(w));
