@@ -18,9 +18,27 @@ The builder shows location and start time first, with a collapsed “Anything di
 
 Features are explicitly available, unavailable or unknown. Temporary selectors and clear Q statements can confirm features; closures such as “the field is muddy” override baseline availability for that request. Hypothetical phrases do not establish availability. These changes never edit the regional profile. Output declares requiredFeatures, and server validation also scans common facility-dependent instructions. Unavailable/unconfirmed requirements reject that provider result; automatic routing may try the next eligible free provider within the existing deadline. New generation retains the terrain-neutral offline fallback. Refinement failure preserves the current draft. Natural-language detection is conservative and bounded, not a semantic guarantee: the Q should review the plan and use explicit availability selectors for certainty.
 
+AO profiles also accept an `amenities` object using the Studio field names. Boolean values use `true` = confirmed present, `false` = confirmed absent, `null`/missing = unknown. Example format only (not facts about any named AO):
+
+```json
+{
+  "amenities": {
+    "couponsOnSite": null,
+    "hasCoveredShelter": true,
+    "hasTrack": false,
+    "hasBleachers": true,
+    "hasPullUpBars": false,
+    "surface": "turf_and_asphalt",
+    "lighting": "lit"
+  }
+}
+```
+
+Surface supports unknown, asphalt, concrete, grass, turf, gravel, dirt, mixed and turf_and_asphalt; lighting supports unknown, lit, partially_lit and unlit. Only source-backed existing facts are seeded. Stored coupons, surfaces and lighting remain unknown for current FE profiles because they have not been confirmed. Bleachers are distinct from ordinary stairs. The resolved JSON goes into `verifiedContext.site.amenities` and a readable snapshot goes into the saved workout. Regional amenities feed the existing feature guards; temporary amenities, selectors and textual closures resolve before generating that snapshot, so the two representations cannot disagree. A surface does not imply a measured field or track; shelter does not prove capacity; lighting does not prove the entire route is lit. Coupon storage never changes the requested equipment preference—Q can bring coupons. These optional details stay inside the collapsed conditions panel and reset when the AO changes or today's adjustments are reset. Regional uploads/publication remain future work.
+
 The selected start time persists in the plan/backup, drives timeline, print and live timer, and still leaves exactly 45 minutes before the physical hard stop. COT remains separate. Legacy plans default to 5:30 AM. Site summaries preserve the assumptions used when a plan was generated; changing controls requires generation/refinement to update the draft.
 
-Verification: 126 automated tests pass, plus lint, TypeScript/Vite build and mobile/desktop Chromium checks. Coverage includes unknown/custom AOs, temporary closures, unsupported facilities, next-provider retry, conditional statements, backup compatibility, custom start/hard stop and invalid-time UI handling. Mobile checks cover quick entry and offline plan/timer/library reload.
+Verification: 133 automated tests pass, plus lint, TypeScript/Vite build and mobile/desktop Chromium checks. Coverage includes unknown/custom AOs, temporary closures, unsupported facilities, next-provider retry, conditional statements, backup compatibility, custom start/hard stop and invalid-time UI handling. Mobile checks cover quick entry and offline plan/timer/library reload.
 
 ## Free-only providers
 

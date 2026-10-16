@@ -16,7 +16,16 @@
     },
     "checkedAt": "2026-10-16",
     "sourceUrl": "https://f3thefe.com/schedule/ao-gold-rush/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection."
+    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "amenities": {
+      "couponsOnSite": null,
+      "hasCoveredShelter": null,
+      "hasTrack": true,
+      "hasBleachers": null,
+      "hasPullUpBars": null,
+      "surface": "unknown",
+      "lighting": "unknown"
+    }
   },
   "fe-ao-clocktower": {
     "features": {
@@ -39,7 +48,16 @@
     },
     "checkedAt": "2026-10-16",
     "sourceUrl": "https://f3thefe.com/schedule/ao-clocktower/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection."
+    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "amenities": {
+      "couponsOnSite": null,
+      "hasCoveredShelter": true,
+      "hasTrack": null,
+      "hasBleachers": null,
+      "hasPullUpBars": null,
+      "surface": "unknown",
+      "lighting": "unknown"
+    }
   },
   "fe-ao-south-park": {
     "features": {
@@ -50,7 +68,16 @@
     },
     "checkedAt": "2026-10-16",
     "sourceUrl": "https://f3thefe.com/schedule/ao-south-park/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection."
+    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "amenities": {
+      "couponsOnSite": null,
+      "hasCoveredShelter": null,
+      "hasTrack": null,
+      "hasBleachers": null,
+      "hasPullUpBars": null,
+      "surface": "unknown",
+      "lighting": "unknown"
+    }
   },
   "fe-ao-stagecoach": {
     "features": {
@@ -69,6 +96,15 @@
     },
     "checkedAt": "2026-10-16",
     "sourceUrl": "https://f3thefe.com/schedule/ao-stagecoach/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection."
+    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "amenities": {
+      "couponsOnSite": null,
+      "hasCoveredShelter": null,
+      "hasTrack": null,
+      "hasBleachers": null,
+      "hasPullUpBars": null,
+      "surface": "unknown",
+      "lighting": "unknown"
+    }
   }
 }

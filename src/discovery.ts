@@ -1,6 +1,7 @@
 import official from "../data/ao-official.json";
 import local from "../data/ao-local.json";
 export type LocalAO = {
+  amenities?: Partial<import("./site-contract").Amenities>;
   features?: Partial<
     Record<
       import("./site-contract").Feature,

@@ -17,7 +17,7 @@ describe("source discovery", () => {
       target: { value: "Clocktower" },
     });
     expect(screen.getByRole("heading", { name: "Clocktower" })).toBeVisible();
-    expect(screen.getAllByText("Unknown")).toHaveLength(6);
+    expect(screen.getAllByText("Unknown")).toHaveLength(10);
     fireEvent.click(
       screen.getByRole("button", { name: "Workouts from this AO →" }),
     );
