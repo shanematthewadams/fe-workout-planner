@@ -56,6 +56,19 @@ describe("unified timing and fallback", () => {
     );
     expect(sessionMatches(next.workout)).toBe(true);
   });
+  it("honors plain-language exclusions when offline preferences are inferred", () => {
+    const next = fallbackPlan({
+      ...request(),
+      equipment: "From prompt",
+      running: "From prompt",
+      prompt: "Bodyweight Dora, no coupons and no running",
+    });
+    expect(next.workout.equipment).toEqual([]);
+    expect(next.plan.sections[1].blocks[0].exercises[0].name).toBe("Merkins");
+    expect(next.plan.sections[1].blocks[0].instructions).toContain(
+      "marches in place",
+    );
+  });
   it("rejects a total that fits but steals minutes from warmup", () => {
     const input = request(),
       plan = fallbackPlan(input).plan;

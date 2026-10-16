@@ -1,7 +1,7 @@
 import { siteContext, describeSite } from "./ao-context";
 import { workoutSchema } from "./model";
 import {
-  plannerRequestSchema,
+  resolveRequest,
   type PlannerRequest,
   type PlannerResponse,
   type Plan,
@@ -26,13 +26,8 @@ export const GEAR = [
   "Dumbbells / kettlebells",
 ] as const;
 export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
-  const input = plannerRequestSchema.parse(raw),
+  const input = resolveRequest(raw),
     builder = input.builder;
-  if (input.strictSchedule) input.minutes = 45;
-  if (/\b(?:no|without|skip|omit)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = false;
-  else if (/\b(?:add|include|with)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = true;
   const coupon =
     input.equipment === "Coupon" ||
     (input.equipment !== "None" && /coupon|cindy|cinder/i.test(input.prompt));

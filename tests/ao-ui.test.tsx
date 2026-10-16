@@ -21,7 +21,7 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   expect(screen.getByLabelText("Where and when")).toHaveTextContent(
     "Steps / stairs",
   );
-  fireEvent.change(screen.getByLabelText("Start time"), {
+  fireEvent.input(screen.getByLabelText("Start time"), {
     target: { value: "06:30" },
   });
   fireEvent.click(screen.getByText("Anything different today?"));

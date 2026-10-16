@@ -7,7 +7,7 @@ import {
 import { ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import {
-  plannerRequestSchema,
+  resolveRequest,
   planSchema,
   type PlannerRequest,
   type Plan,
@@ -27,33 +27,7 @@ export class PlannerError extends Error {
     super(message);
   }
 }
-export function resolveRequest(raw: unknown) {
-  const input = plannerRequestSchema.parse(raw);
-  const time = input.prompt.match(
-    /\b(20|25|30|35|40|45|50|55|60)[ -]?(?:min(?:ute)?s?)\b/i,
-  );
-  if (time && !input.strictSchedule) input.minutes = Number(time[1]);
-  if (input.strictSchedule) input.minutes = 45;
-  if (/\b(?:no|without|skip|omit)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = false;
-  else if (/\b(?:add|include|with)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = true;
-  if (
-    input.running === "From prompt" &&
-    /\b(?:no|zero|without|skip|avoid)\s+(?:the\s+)?running\b/i.test(
-      input.prompt,
-    )
-  )
-    input.running = "None";
-  if (
-    input.equipment === "From prompt" &&
-    /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:any\s+)?(?:coupons?|cinder blocks?|equipment)\b/i.test(
-      input.prompt,
-    )
-  )
-    input.equipment = "None";
-  return input;
-}
+export { resolveRequest } from "../src/planner-contract.ts";
 
 export function validatePlan(value: unknown, input: PlannerRequest) {
   const p = planSchema.parse(value),

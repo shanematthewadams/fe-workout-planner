@@ -53,6 +53,7 @@ export function AOContextPanel({
             type="time"
             value={startTime}
             disabled={disabled}
+            onInput={(e) => onTime(e.currentTarget.value)}
             onChange={(e) => onTime(e.target.value)}
           />
         </label>

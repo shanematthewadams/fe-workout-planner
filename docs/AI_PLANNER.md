@@ -20,7 +20,7 @@ Features are explicitly available, unavailable or unknown. Temporary selectors a
 
 The selected start time persists in the plan/backup, drives timeline, print and live timer, and still leaves exactly 45 minutes before the physical hard stop. COT remains separate. Legacy plans default to 5:30 AM. Site summaries preserve the assumptions used when a plan was generated; changing controls requires generation/refinement to update the draft.
 
-Verification: 125 automated tests pass, plus lint, TypeScript/Vite build and mobile/desktop Chromium checks. Coverage includes unknown/custom AOs, temporary closures, unsupported facilities, next-provider retry, conditional statements, backup compatibility, custom start/hard stop and invalid-time UI handling. Mobile checks cover quick entry and offline plan/timer/library reload.
+Verification: 126 automated tests pass, plus lint, TypeScript/Vite build and mobile/desktop Chromium checks. Coverage includes unknown/custom AOs, temporary closures, unsupported facilities, next-provider retry, conditional statements, backup compatibility, custom start/hard stop and invalid-time UI handling. Mobile checks cover quick entry and offline plan/timer/library reload.
 
 ## Free-only providers
 
