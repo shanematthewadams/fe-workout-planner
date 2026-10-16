@@ -14,7 +14,7 @@ New work is `kind:personal`, `provenance.status:personal`, clearly **AI-assisted
 
 - Direct server-to-provider calls; no Netlify AI Gateway, paid model fallback, external tools, grounding, embeddings or billable search.
 - OpenRouter uses **`openrouter/free`** plus `provider.max_price` of zero for prompt and completion. No arbitrary model/base URL is accepted from the browser. Capacity/quotas can fail, with no paid substitution.
-- Gemini uses `gemini-2.5-flash` without tools/caching and thinking budget zero. A free-capable model name alone does not prove zero billing: the project must be on Free tier.
+- Gemini uses `gemini-3.5-flash-lite` without tools/caching and minimal thinking. A free-capable model name alone does not prove zero billing: the project must be on Free tier.
 - Engineering inspected AI Studio read-only on October 16: newly created Default Gemini Project **`gen-lang-client-0481939256`** showed **Free tier**. Its masked key suffix matched the saved Netlify development key. Existing older projects showed Tier 1 and were left untouched. `server/provider-policy.ts` records this limited verification and only enables the matching key. A changed/unmatched key stays disabled until reverified. If anyone enables billing on this project, disable/reverify the Gemini route first; the API key does not expose live billing state on each request.
 - Automatic mode tries verified-free Gemini, then free OpenRouter on provider failure. Explicit provider selection is available under Session preferences; it never bypasses the free-tier guard. Total upstream deadline is 45 seconds; client deadline 55 seconds. At most one call per eligible provider, no retry loops. Malformed/incomplete results do not replace the previous draft.
 

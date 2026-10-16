@@ -1,3 +1,4 @@
+import { ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import {
   plannerRequestSchema,
@@ -99,6 +100,7 @@ export async function generatePlan(
     F3_BRIEF +
     "\nReturn ONLY JSON matching this shape (example exercises are not a required plan): " +
     JSON.stringify(OUTPUT_SHAPE) +
+    "\nUse ONLY these case-sensitive enums: running None|Light|Moderate; format Circuit|11s|EMOM|AMRAP|Ladder|Partner|Stations|Chipper|Custom; exercise unit reps|seconds|minutes|meters|rounds|instructions; counting total|1=1|2=1|per side|cadence|time|distance|not applicable. amount MUST be a string. No extra top-level fields. " +
     `\nAll block minutes MUST sum to ${input.minutes}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
   const message = JSON.stringify({ request: input, verifiedContext: context });
   const deadline = AbortSignal.any([
@@ -167,7 +169,7 @@ export async function generatePlan(
         provider = "OpenRouter";
       } else {
         const r = await fetcher(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
           {
             method: "POST",
             redirect: "error",
@@ -183,7 +185,7 @@ export async function generatePlan(
                 responseMimeType: "application/json",
                 maxOutputTokens: 4200,
                 temperature: 0.55,
-                thinkingConfig: { thinkingBudget: 0 },
+                thinkingConfig: { thinkingLevel: "minimal" },
               },
             }),
           },
@@ -201,7 +203,7 @@ export async function generatePlan(
           .filter((p: { thought?: boolean }) => !p.thought)
           .map((p: { text?: string }) => p.text ?? "")
           .join("");
-        model = "gemini-2.5-flash";
+        model = "gemini-3.5-flash-lite";
         provider = "Gemini";
       }
       if (text.length > 35000)
@@ -218,6 +220,16 @@ export async function generatePlan(
           "Free AI took too long. Your previous draft is safe. Try again.",
         );
       if (error instanceof PlannerError) throw error;
+      console.info(
+        "FE_PLANNER_INVALID",
+        JSON.stringify({
+          provider: route,
+          issues:
+            error instanceof ZodError
+              ? error.issues.map((i) => ({ path: i.path, code: i.code }))
+              : [{ code: "invalid_json_or_response" }],
+        }),
+      );
       lastStatus = 422;
     }
   }

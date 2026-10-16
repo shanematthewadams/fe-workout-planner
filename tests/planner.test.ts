@@ -160,7 +160,7 @@ describe("free-only routing and output checks", () => {
       },
       f,
     );
-    expect(String(f.mock.calls[0][0])).toContain("gemini-2.5-flash");
+    expect(String(f.mock.calls[0][0])).toContain("gemini-3.5-flash-lite");
     expect(f).toHaveBeenCalledTimes(2);
     expect(response.provider).toBe("OpenRouter");
   });
