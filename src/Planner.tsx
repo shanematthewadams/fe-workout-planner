@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { STYLES, GEAR, fallbackPlan } from "./fallback";
+import { SessionTimeline } from "./session";
+import type { PlannerRequest } from "./planner-contract";
 import { aoProfiles } from "./discovery";
 import { workoutSchema, type Workout } from "./model";
 import {
@@ -49,7 +52,9 @@ export function Planner({
   onPreview,
   onSave,
   onReference,
+  onDraft,
 }: {
+  onDraft?: (w: Workout) => void;
   onEdit: (w: Workout) => void;
   onPreview: (w: Workout) => void;
   onSave: (w: Workout) => boolean;
@@ -69,6 +74,60 @@ export function Planner({
     [error, setError] = useState(""),
     [storageError, setStorageError] = useState(""),
     [saved, setSaved] = useState(false);
+  useEffect(() => {
+    if (initial.result) onDraft?.(initial.result.workout);
+  }, []);
+  const [mode, setMode] = useState<"idea" | "formal">("idea");
+  const [focus, setFocus] = useState("Full body"),
+    [style, setStyle] = useState<(typeof STYLES)[number]>("Dora 1-2-3"),
+    [gear, setGear] = useState<string[]>([]),
+    [terrain, setTerrain] = useState("Q to confirm"),
+    [pax, setPax] = useState(12),
+    [qName, setQName] = useState(""),
+    [title, setTitle] = useState("");
+  const formal = {
+    title,
+    qName,
+    focus,
+    style,
+    gear: gear as NonNullable<PlannerRequest["builder"]>["gear"],
+    terrain,
+    pax,
+  };
+  function surprise() {
+    const pick = <T,>(values: readonly T[]) =>
+      values[Math.floor(Math.random() * values.length)];
+    const chosen = pick(STYLES),
+      theme = pick([
+        "Digging for gold",
+        "Stronger together",
+        "Keep showing up",
+        "The long road home",
+      ]);
+    // Only gear explicitly confirmed by Q can enter a wildcard roll.
+    const chosenGear = gear.length ? [pick(gear)] : [];
+    const request = {
+      prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
+      ao,
+      minutes: 45,
+      equipment: chosenGear.includes("Coupon")
+        ? ("Coupon" as const)
+        : chosenGear.length
+          ? ("From prompt" as const)
+          : ("None" as const),
+      running,
+      mary,
+      provider,
+      strictSchedule: true,
+      builder: {
+        ...formal,
+        style: chosen,
+        gear: chosenGear as NonNullable<PlannerRequest["builder"]>["gear"],
+      },
+    };
+    setPrompt(request.prompt);
+    void ask(false, request);
+  }
   const controller = useRef<AbortController | null>(null),
     epoch = useRef(0);
   useEffect(
@@ -95,17 +154,32 @@ export function Planner({
       );
     }
   }, [prompt, result, ao, minutes, equipment, running, mary, provider]);
-  async function ask(refine: boolean) {
-    const request = plannerRequestSchema.safeParse({
-      prompt: refine ? revision : prompt,
-      ao,
-      minutes,
-      equipment,
-      running,
-      mary,
-      provider,
-      ...(refine && result ? { current: result.plan } : {}),
-    });
+  async function ask(refine: boolean, override?: unknown) {
+    const request = plannerRequestSchema.safeParse(
+      override ?? {
+        prompt: refine
+          ? revision
+          : mode === "formal"
+            ? `Build ${style}. Focus: ${focus}. Terrain supplied by Q: ${terrain}. PAX: ${pax}. ${prompt}`
+            : prompt,
+        ao,
+        minutes: 45,
+        equipment:
+          mode === "formal"
+            ? gear.includes("Coupon")
+              ? "Coupon"
+              : gear.length
+                ? "From prompt"
+                : "None"
+            : equipment,
+        running,
+        mary,
+        provider,
+        strictSchedule: true,
+        ...(mode === "formal" ? { builder: formal } : {}),
+        ...(refine && result ? { current: result.plan } : {}),
+      },
+    );
     if (!request.success) {
       setError("Describe your Q or change in at least 8 characters.");
       return;
@@ -143,13 +217,22 @@ export function Planner({
       workoutSchema.parse(next.workout);
       if (sequence !== epoch.current) return;
       setResult(next);
+      onDraft?.(next.workout);
       if (next.workout.provenance.ao) setAO(next.workout.provenance.ao);
       setMinutes(next.workout.duration ?? minutes);
       setMary(next.plan.sections.some((s) => s.kind === "mary"));
       setSaved(false);
       setRevision("");
     } catch (e) {
-      if (sequence === epoch.current)
+      if (sequence === epoch.current && !refine && !abort.signal.aborted) {
+        const next = fallbackPlan(request.data);
+        setResult(next);
+        onDraft?.(next.workout);
+        setSaved(false);
+        setError(
+          "AI is unavailable. An offline template is ready below; review it and edit requests the template could not apply.",
+        );
+      } else if (sequence === epoch.current)
         setError(
           abort.signal.aborted
             ? "Generation stopped. Your previous draft is safe."
@@ -175,12 +258,137 @@ export function Planner({
         </div>
         <span className="assistant-badge">AI-assisted · free models only</span>
       </div>
+      <div className="entry-modes" aria-label="Choose how to build">
+        <button type="button" disabled={busy} onClick={surprise}>
+          <strong>Surprise Me!</strong>
+          <span>A wildcard Q, ready to shape</span>
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          aria-pressed={mode === "idea"}
+          onClick={() => setMode("idea")}
+        >
+          <strong>Enter an Idea</strong>
+          <span>Tell us what you have in mind</span>
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          aria-pressed={mode === "formal"}
+          onClick={() => setMode("formal")}
+        >
+          <strong>Formal Builder</strong>
+          <span>Choose the details of your Q</span>
+        </button>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void ask(false);
         }}
       >
+        {mode === "formal" && (
+          <fieldset disabled={busy} className="formal-builder">
+            <legend>Build your beatdown</legend>
+            <div className="assistant-grid">
+              <label>
+                Plan title
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  maxLength={120}
+                />
+              </label>
+              <label>
+                Q name
+                <input
+                  value={qName}
+                  onChange={(e) => setQName(e.target.value)}
+                  maxLength={160}
+                />
+              </label>
+              <label>
+                Fitness focus
+                <select
+                  value={focus}
+                  onChange={(e) => setFocus(e.target.value)}
+                >
+                  {[
+                    "Full body",
+                    "Upper body",
+                    "Legs",
+                    "Core",
+                    "Cardio endurance",
+                    "Ruck strength",
+                    "HIIT",
+                  ].map((x) => (
+                    <option key={x}>{x}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                F3 style
+                <select
+                  value={style}
+                  onChange={(e) => setStyle(e.target.value as typeof style)}
+                >
+                  {STYLES.map((x) => (
+                    <option key={x}>{x}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Terrain confirmed by Q
+                <select
+                  value={terrain}
+                  onChange={(e) => setTerrain(e.target.value)}
+                >
+                  {[
+                    "Q to confirm",
+                    "Flat parking lot",
+                    "Grass field",
+                    "Track / bleachers",
+                    "Playground / park",
+                    "Covered shelter",
+                    "Hills",
+                  ].map((x) => (
+                    <option key={x}>{x}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                PAX count
+                <input
+                  type="number"
+                  min={1}
+                  max={200}
+                  value={pax}
+                  onChange={(e) => setPax(Number(e.target.value))}
+                />
+              </label>
+            </div>
+            <p>Available gear · select only what you can bring or confirm</p>
+            <div className="gear-options">
+              {GEAR.map((g) => (
+                <label className="checkbox" key={g}>
+                  <input
+                    type="checkbox"
+                    checked={gear.includes(g)}
+                    onChange={() =>
+                      setGear(
+                        gear.includes(g)
+                          ? gear.filter((x) => x !== g)
+                          : [...gear, g],
+                      )
+                    }
+                  />
+                  {g}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
         <label className="assistant-prompt">
           Describe your Q
           <textarea
@@ -218,17 +426,13 @@ export function Planner({
                 ))}
               </select>
             </label>
-            <label>
-              Session minutes
-              <input
-                type="number"
-                min={20}
-                max={60}
-                value={minutes}
-                disabled={busy}
-                onChange={(e) => setMinutes(Number(e.target.value))}
-              />
-            </label>
+            <p className="schedule-fixed">
+              45-minute physical session
+              <br />2 welcome · 8 warmup ·{" "}
+              {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+              <br />
+              Fellowship follows the hard stop.
+            </p>
             <label>
               Planner equipment
               <select
@@ -285,7 +489,7 @@ export function Planner({
         <div className="assistant-actions">
           <button
             className="create"
-            disabled={busy || prompt.trim().length < 8}
+            disabled={busy || (mode === "idea" && prompt.trim().length < 8)}
             type="submit"
           >
             {busy
@@ -294,6 +498,37 @@ export function Planner({
                 ? "Make a new draft"
                 : "Build my workout"}
           </button>
+          {!busy && (
+            <button
+              type="button"
+              onClick={() => {
+                const request = plannerRequestSchema.parse({
+                  prompt: prompt.length >= 8 ? prompt : `Build ${style}`,
+                  ao,
+                  minutes: 45,
+                  equipment:
+                    mode === "formal"
+                      ? gear.includes("Coupon")
+                        ? "Coupon"
+                        : gear.length
+                          ? "From prompt"
+                          : "None"
+                      : equipment,
+                  running,
+                  mary,
+                  strictSchedule: true,
+                  ...(mode === "formal" ? { builder: formal } : {}),
+                });
+                const next = fallbackPlan(request);
+                setResult(next);
+                onDraft?.(next.workout);
+                setSaved(false);
+                setError("");
+              }}
+            >
+              Use offline template
+            </button>
+          )}
           {busy && (
             <button
               type="button"
@@ -345,6 +580,12 @@ export function Planner({
               : result.workout.running + " running"}{" "}
             · Timings are estimates
           </p>
+          {result.provider === "Template" && (
+            <p className="template-label">
+              Offline template · additional requests may need manual edits.
+            </p>
+          )}
+          <SessionTimeline workout={result.workout} />
           <div className="assistant-sections">
             {result.plan.sections.map((s, i) => (
               <article key={s.kind}>

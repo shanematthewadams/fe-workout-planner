@@ -26,7 +26,8 @@ export function resolveRequest(raw: unknown) {
   const time = input.prompt.match(
     /\b(20|25|30|35|40|45|50|55|60)[ -]?(?:min(?:ute)?s?)\b/i,
   );
-  if (time) input.minutes = Number(time[1]);
+  if (time && !input.strictSchedule) input.minutes = Number(time[1]);
+  if (input.strictSchedule) input.minutes = 45;
   if (/\b(?:no|without|skip|omit)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
     input.mary = false;
   else if (/\b(?:add|include|with)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
@@ -59,7 +60,25 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
   const minutes = p.sections
     .flatMap((s) => s.blocks)
     .reduce((n, b) => n + b.minutes, 0);
-  if (Math.abs(minutes - input.minutes) > 0.5)
+  if (input.strictSchedule) {
+    const byKind = (kind: string) =>
+      p.sections
+        .find((s) => s.kind === kind)
+        ?.blocks.reduce((n, b) => n + b.minutes, 0) ?? 0;
+    if (
+      byKind("warmup") !== 8 ||
+      byKind("thang") !== (input.mary ? 29 : 35) ||
+      (input.mary && byKind("mary") !== 6)
+    )
+      throw new PlannerError(
+        422,
+        "The AI did not fit the strict phase schedule.",
+      );
+  }
+  if (
+    Math.abs(minutes - (input.minutes - (input.strictSchedule ? 2 : 0))) >
+    (input.strictSchedule ? 0 : 0.5)
+  )
     throw new PlannerError(
       422,
       "The AI timing did not fit your session. Your previous draft is safe. Try again.",
@@ -101,10 +120,10 @@ export async function generatePlan(
     "\nReturn ONLY JSON matching this shape (example exercises are not a required plan): " +
     JSON.stringify(OUTPUT_SHAPE) +
     "\nUse ONLY these case-sensitive enums: running None|Light|Moderate; format Circuit|11s|EMOM|AMRAP|Ladder|Partner|Stations|Chipper|Custom; exercise unit reps|seconds|minutes|meters|rounds|instructions; counting total|1=1|2=1|per side|cadence|time|distance|not applicable. amount MUST be a string. No extra top-level fields. " +
-    `\nAll block minutes MUST sum to ${input.minutes}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
+    `\n${input.strictSchedule ? "STRICT SCHEDULE: 2 minutes welcome/disclaimer is reserved by the app outside these exercise sections. Warmup EXACTLY 8 minutes; The Thang EXACTLY " + (input.mary ? "29" : "35") + " minutes; Mary " + (input.mary ? "EXACTLY 6 minutes" : "OMITTED") + ". Fellowship/COT happens AFTER the 45-minute hard stop and must NOT appear in physical sections." : ""} All block minutes MUST sum to ${input.minutes - (input.strictSchedule ? 2 : 0)}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
   const message = JSON.stringify({ request: input, verifiedContext: context });
   const deadline = AbortSignal.any([
-    AbortSignal.timeout(45000),
+    AbortSignal.timeout(20000),
     ...(signal ? [signal] : []),
   ]);
   let result: Plan | undefined,
@@ -280,6 +299,7 @@ export async function generatePlan(
       status: "personal",
       label: `AI-assisted draft · ${provider} · not a reviewed regional original`,
       ao: context.ao?.name ?? (input.ao || undefined),
+      q: input.builder?.qName || undefined,
       durationBasis: "inferred",
       issues: [
         "All timings are estimates, including explanation, rest and transitions.",

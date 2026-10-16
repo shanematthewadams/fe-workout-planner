@@ -1,11 +1,21 @@
 // @vitest-environment jsdom
 import React from "react";
 import { afterEach, it, expect, vi } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import {
+  render as renderUI,
+  screen,
+  cleanup,
+  fireEvent,
+} from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import App from "../src/App";
 import { catalog } from "../src/catalog";
 import { copyWorkout, writeState, readState } from "../src/model";
+function render(element: React.ReactElement) {
+  const view = renderUI(element);
+  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  return view;
+}
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();

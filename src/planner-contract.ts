@@ -62,6 +62,40 @@ export const plannerRequestSchema = z
       .default("From prompt"),
     mary: z.boolean().default(true),
     provider: z.enum(["auto", "gemini", "openrouter"]).default("auto"),
+    strictSchedule: z.boolean().default(false),
+    builder: z
+      .object({
+        title: z.string().max(120).default(""),
+        qName: z.string().max(160).default(""),
+        focus: z.string().max(80).default("Full body"),
+        style: z.enum([
+          "Dora 1-2-3",
+          "The 11s",
+          "Four Corners",
+          "Route 66",
+          "Iron Hulk",
+          "The Grinder",
+          "Tabata",
+          "Deck of Death",
+          "IPC-inspired",
+        ]),
+        gear: z
+          .array(
+            z.enum([
+              "Coupon",
+              "Bleachers / stairs",
+              "Ruck",
+              "Pull-up bar",
+              "Cones",
+              "Dumbbells / kettlebells",
+            ]),
+          )
+          .max(6),
+        terrain: z.string().max(120).default("Q to confirm"),
+        pax: z.number().int().min(1).max(200).default(12),
+      })
+      .strict()
+      .optional(),
     current: planSchema.optional(),
   })
   .strict();
@@ -69,7 +103,7 @@ export type PlannerRequest = z.infer<typeof plannerRequestSchema>;
 export const plannerResponseSchema = z.object({
   workout: workoutSchema,
   plan: planSchema,
-  provider: z.enum(["OpenRouter", "Gemini"]),
+  provider: z.enum(["OpenRouter", "Gemini", "Template"]),
   model: z.string(),
   references: z
     .array(

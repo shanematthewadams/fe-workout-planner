@@ -1,4 +1,6 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config } from "@netlify/functions";
+import { fallbackPlan } from "../../src/fallback.ts";
+import { plannerRequestSchema } from "../../src/planner-contract.ts";
 import { ZodError } from "zod";
 import { isVerifiedFreeGeminiKey } from "../../server/provider-policy.ts";
 import { generatePlan, PlannerError } from "../../server/planner-service.ts";
@@ -41,12 +43,17 @@ export async function handlePlanner(
       bytes.set(part, offset);
       offset += part.length;
     }
-    const result = await generatePlan(
+    const input = plannerRequestSchema.parse(
       JSON.parse(new TextDecoder().decode(bytes)),
-      env,
-      fetcher,
-      req.signal,
     );
+    let result;
+    try {
+      result = await generatePlan(input, env, fetcher, req.signal);
+    } catch (error) {
+      if (!input.strictSchedule || input.current || req.signal.aborted)
+        throw error;
+      result = fallbackPlan(input);
+    }
     return send(result);
   } catch (error) {
     if (error instanceof PlannerError)
@@ -65,9 +72,7 @@ export async function handlePlanner(
     );
   }
 }
-export default async (req: Request, context: Context) => {
-  if (context.deploy.context !== "branch-deploy")
-    return new Response("Not found", { status: 404 });
+export default async (req: Request) => {
   return handlePlanner(req, {
     OPENROUTER_API_KEY: Netlify.env.get("OPENROUTER_API_KEY"),
     GEMINI_API_KEY: Netlify.env.get("GEMINI_API_KEY"),

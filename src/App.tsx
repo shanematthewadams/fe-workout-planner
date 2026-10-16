@@ -18,6 +18,11 @@ import {
   Check,
   Layers3,
 } from "lucide-react";
+import { importStudio } from "./studio/import";
+import { CloudSync } from "./CloudSync";
+import { FieldTimer } from "./FieldTimer";
+import { SessionTimeline, sessionMatches, DISCLAIMER, qSheet } from "./session";
+import { ExiconBrowser } from "./ExiconBrowser";
 import { Planner } from "./Planner";
 import { Discovery } from "./Discovery";
 import { aoProfiles, statusLabel } from "./discovery";
@@ -192,7 +197,7 @@ export default function App() {
   const [state, setState] = useState(initial.data),
     [notice, setNotice] = useState(initial.error),
     [blocked, setBlocked] = useState(!!initial.error),
-    [tab, setTab] = useState("library"),
+    [tab, setTab] = useState("builder"),
     [filters, setFilters] = useState(filtersEmpty),
     [selected, setSelected] = useState<Workout | null>(null),
     [editing, setEditing] = useState<Workout | null>(null),
@@ -212,6 +217,8 @@ export default function App() {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
+  const [lastPlan, setLastPlan] = useState<Workout | null>(null),
+    [timerOpen, setTimerOpen] = useState(false);
   const persist = (next: LocalState) => {
     if (blocked) {
       setNotice(
@@ -270,6 +277,7 @@ export default function App() {
     !dirty || window.confirm("Leave without saving these changes?");
   const go = (next: string) => {
     if (!leave()) return;
+    setTimerOpen(false);
     setEditing(null);
     setDirty(false);
     setSelected(null);
@@ -278,6 +286,8 @@ export default function App() {
   };
   const open = (w: Workout) => {
     setSelected(w);
+    setLastPlan(w);
+    setTimerOpen(false);
     setQ(false);
     window.scrollTo(0, 0);
   };
@@ -408,7 +418,25 @@ export default function App() {
       return;
     }
     try {
-      setPending(parseBackup(await file.text()));
+      const raw = await file.text();
+      let converted;
+      try {
+        converted = parseBackup(raw);
+      } catch {
+        const value: unknown = JSON.parse(raw);
+        if (!Array.isArray(value) || value.length > 200)
+          throw Error("Invalid Studio backup");
+        converted = parseBackup(
+          JSON.stringify({
+            format: "fe-workout-backup",
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            workouts: value.map(importStudio),
+            favorites: [],
+          }),
+        );
+      }
+      setPending(converted);
     } catch {
       setNotice(
         "Import rejected. Use a valid FE backup version 1 (personal drafts only, up to 200 workouts). Nothing was changed.",
@@ -494,6 +522,61 @@ export default function App() {
           <Plus size={18} /> Create a workout
         </button>
       </header>
+      <nav className="app-nav no-print" aria-label="Planner navigation">
+        <button
+          aria-current={
+            !selected && !editing && tab === "builder" ? "page" : undefined
+          }
+          onClick={() => go("builder")}
+        >
+          Builder
+        </button>
+        <button
+          disabled={!lastPlan}
+          aria-current={selected && !timerOpen ? "page" : undefined}
+          onClick={() => {
+            if (leave() && lastPlan) {
+              setEditing(null);
+              setDirty(false);
+              open(lastPlan);
+            }
+          }}
+        >
+          Plan
+        </button>
+        <button
+          disabled={!lastPlan}
+          aria-current={timerOpen ? "page" : undefined}
+          onClick={() => {
+            if (leave() && lastPlan) {
+              setEditing(null);
+              setDirty(false);
+              setSelected(lastPlan);
+              setTimerOpen(true);
+            }
+          }}
+        >
+          Field Q-Timer
+        </button>
+        <button
+          onClick={() => go("exicon")}
+          aria-current={tab === "exicon" && !selected ? "page" : undefined}
+        >
+          Exicon & Lexicon
+        </button>
+        <button
+          onClick={() => go("mine")}
+          aria-current={tab === "mine" && !selected ? "page" : undefined}
+        >
+          Saved
+        </button>
+        <button
+          onClick={() => go("library")}
+          aria-current={tab === "library" && !selected ? "page" : undefined}
+        >
+          Library
+        </button>
+      </nav>
       <div
         role="status"
         aria-live="polite"
@@ -548,326 +631,385 @@ export default function App() {
           </button>
         </aside>
       )}
-      {!selected && !editing ? (
+      {timerOpen && selected ? (
+        <FieldTimer
+          key={selected.id}
+          workout={selected}
+          onExit={() => setTimerOpen(false)}
+        />
+      ) : !selected && !editing ? (
         <main id="main" className="main">
-          <Planner
-            onEdit={(w) => begin(w)}
-            onPreview={(w) => {
-              setThangOnly(false);
-              open(w);
-            }}
-            onSave={(w) => {
-              if (state.workouts.length >= 200) {
-                setNotice(
-                  "This browser has 200 drafts. Export a backup before adding more.",
-                );
+          {tab === "builder" && (
+            <Planner
+              onDraft={setLastPlan}
+              onEdit={(w) => begin(w)}
+              onPreview={(w) => {
+                setThangOnly(false);
+                open(w);
+              }}
+              onSave={(w) => {
+                if (state.workouts.length >= 200) {
+                  setNotice(
+                    "This browser has 200 drafts. Export a backup before adding more.",
+                  );
+                  return false;
+                }
+                const copy = {
+                  ...structuredClone(w),
+                  id: uid(),
+                  originId: w.id,
+                };
+                if (
+                  persist({ ...state, workouts: [...state.workouts, copy] })
+                ) {
+                  setNotice("AI-assisted copy saved privately on this device.");
+                  return true;
+                }
                 return false;
-              }
-              const copy = { ...structuredClone(w), id: uid(), originId: w.id };
-              if (persist({ ...state, workouts: [...state.workouts, copy] })) {
-                setNotice("AI-assisted copy saved privately on this device.");
-                return true;
-              }
-              return false;
-            }}
-            onReference={(id) => {
-              const w = sources.find((w) => w.id === id);
-              if (w) open(w);
-              else
-                setNotice(
-                  "That reference is not available in the current library snapshot.",
-                );
-            }}
-          />
-          <nav className="tabs" aria-label="Workout collections">
-            {[
-              ["library", "Workout library", sources.length],
-              ["mine", "My workouts", state.workouts.length],
-              ["aos", "FE AOs", aoProfiles.length],
-              ["exercises", "Exercise guide", 9],
-              [
-                "favorites",
-                "Favorites",
-                state.favorites.filter((id) => all.some((w) => w.id === id))
-                  .length,
-              ],
-            ].map(([key, label, count]) => (
-              <button
-                key={key}
-                className={tab === key ? "active" : ""}
-                onClick={() => go(String(key))}
-              >
-                {label}
-                <span>{count}</span>
-              </button>
-            ))}
-          </nav>
-          {tab === "aos" || tab === "exercises" ? (
-            <Discovery
-              key={tab}
-              mode={tab}
-              onAO={(name) => {
-                setFilters({ ...filtersEmpty, ao: name });
-                go("library");
+              }}
+              onReference={(id) => {
+                const w = sources.find((w) => w.id === id);
+                if (w) open(w);
+                else
+                  setNotice(
+                    "That reference is not available in the current library snapshot.",
+                  );
               }}
             />
+          )}
+          {tab === "mine" && (
+            <CloudSync
+              workouts={state.workouts}
+              onMerge={(workouts) => persist({ ...state, workouts })}
+              onStudio={(workouts) => {
+                const existing = new Set(state.workouts.map((w) => w.originId));
+                const fresh = workouts.filter((w) => !existing.has(w.originId));
+                if (state.workouts.length + fresh.length > 200) {
+                  setNotice(
+                    "Import would exceed 200 plans. Export a backup and free space first.",
+                  );
+                  return false;
+                }
+                return persist({
+                  ...state,
+                  workouts: [...state.workouts, ...fresh],
+                });
+              }}
+            />
+          )}
+          {tab === "exicon" ? (
+            <ExiconBrowser />
           ) : (
-            <>
-              {tab === "library" && (
-                <aside className="catalog-status">
-                  <strong>
-                    {
-                      sources.filter(
-                        (w) => w.provenance.status === "regional-reviewed",
-                      ).length
-                    }{" "}
-                    reviewed FE workouts ·{" "}
-                    {
-                      sources.filter(
-                        (w) => w.provenance.status === "illustrative",
-                      ).length
-                    }{" "}
-                    illustrative starters
-                  </strong>
-                  <p>
-                    {catalogOrigin === "published"
-                      ? "Latest published library loaded."
-                      : "Saved library snapshot."}{" "}
-                    Regional backblasts appear only after source, reuse and
-                    workout details are reviewed. Starters are original
-                    examples.
-                  </p>
-                </aside>
-              )}
-              <section className="library-head">
-                <div>
-                  <p className="eyebrow">
-                    {tab === "library" ? "THE STARTING LINE" : "YOUR CORNER"}
-                  </p>
-                  <h2>
-                    {tab === "library"
-                      ? "Find your next workout"
-                      : tab === "mine"
-                        ? "Made yours. Ready to lead."
-                        : "Keep the good ones close."}
-                  </h2>
-                </div>
-                <p>
-                  {tab === "library"
-                    ? "Reviewed regional originals and clearly labeled starters."
-                    : "Saved in this browser, on this device."}
-                </p>
-              </section>
-              <section className="filters" aria-label="Filter workouts">
-                <label className="search">
-                  <Search size={18} />
-                  <input
-                    aria-label="Search workouts"
-                    placeholder="Search workouts…"
-                    value={filters.query}
-                    onChange={(e) =>
-                      setFilters({ ...filters, query: e.target.value })
-                    }
-                  />
-                </label>
-                <SlidersHorizontal size={18} className="filter-icon" />
-                {(
-                  [
+            tab !== "builder" && (
+              <>
+                <nav className="tabs" aria-label="Workout collections">
+                  {[
+                    ["library", "Workout library", sources.length],
+                    ["mine", "My workouts", state.workouts.length],
+                    ["aos", "FE AOs", aoProfiles.length],
+                    ["exercises", "Exercise guide", 9],
                     [
-                      "duration",
-                      "Duration",
-                      ["All", "30 or less", "31–45", "46+"],
+                      "favorites",
+                      "Favorites",
+                      state.favorites.filter((id) =>
+                        all.some((w) => w.id === id),
+                      ).length,
                     ],
-                    [
-                      "equipment",
-                      "Equipment",
-                      ["All", "None", ...equipmentOptions],
-                    ],
-                    [
-                      "running",
-                      "Running",
-                      ["All", "None", "Light", "Moderate"],
-                    ],
-                    ["format", "Format", ["All", ...formatOptions]],
-                    [
-                      "status",
-                      "Source status",
-                      ["All", "regional-reviewed", "illustrative", "personal"],
-                    ],
-                    [
-                      "ao",
-                      "Source AO",
-                      [
-                        "All",
-                        ...new Set([
-                          ...aoProfiles.map((a) => a.name),
-                          ...all.flatMap((w) =>
-                            w.provenance.ao ? [w.provenance.ao] : [],
-                          ),
-                        ]),
-                      ],
-                    ],
-                  ] as [keyof Filters, string, string[]][]
-                ).map(([key, label, options]) => (
-                  <label className="filter" key={key}>
-                    <span>{label}</span>
-                    <select
-                      aria-label={label}
-                      value={filters[key]}
-                      onChange={(e) =>
-                        setFilters({ ...filters, [key]: e.target.value })
-                      }
+                  ].map(([key, label, count]) => (
+                    <button
+                      key={key}
+                      className={tab === key ? "active" : ""}
+                      onClick={() => go(String(key))}
                     >
-                      {options.map((o) => (
-                        <option key={o} value={o}>
-                          {key === "status" && o !== "All" ? statusLabel(o) : o}
-                        </option>
+                      {label}
+                      <span>{count}</span>
+                    </button>
+                  ))}
+                </nav>
+                {tab === "aos" || tab === "exercises" ? (
+                  <Discovery
+                    key={tab}
+                    mode={tab}
+                    onAO={(name) => {
+                      setFilters({ ...filtersEmpty, ao: name });
+                      go("library");
+                    }}
+                  />
+                ) : (
+                  <>
+                    {tab === "library" && (
+                      <aside className="catalog-status">
+                        <strong>
+                          {
+                            sources.filter(
+                              (w) =>
+                                w.provenance.status === "regional-reviewed",
+                            ).length
+                          }{" "}
+                          reviewed FE workouts ·{" "}
+                          {
+                            sources.filter(
+                              (w) => w.provenance.status === "illustrative",
+                            ).length
+                          }{" "}
+                          illustrative starters
+                        </strong>
+                        <p>
+                          {catalogOrigin === "published"
+                            ? "Latest published library loaded."
+                            : "Saved library snapshot."}{" "}
+                          Regional backblasts appear only after source, reuse
+                          and workout details are reviewed. Starters are
+                          original examples.
+                        </p>
+                      </aside>
+                    )}
+                    <section className="library-head">
+                      <div>
+                        <p className="eyebrow">
+                          {tab === "library"
+                            ? "THE STARTING LINE"
+                            : "YOUR CORNER"}
+                        </p>
+                        <h2>
+                          {tab === "library"
+                            ? "Find your next workout"
+                            : tab === "mine"
+                              ? "Made yours. Ready to lead."
+                              : "Keep the good ones close."}
+                        </h2>
+                      </div>
+                      <p>
+                        {tab === "library"
+                          ? "Reviewed regional originals and clearly labeled starters."
+                          : "Saved in this browser, on this device."}
+                      </p>
+                    </section>
+                    <section className="filters" aria-label="Filter workouts">
+                      <label className="search">
+                        <Search size={18} />
+                        <input
+                          aria-label="Search workouts"
+                          placeholder="Search workouts…"
+                          value={filters.query}
+                          onChange={(e) =>
+                            setFilters({ ...filters, query: e.target.value })
+                          }
+                        />
+                      </label>
+                      <SlidersHorizontal size={18} className="filter-icon" />
+                      {(
+                        [
+                          [
+                            "duration",
+                            "Duration",
+                            ["All", "30 or less", "31–45", "46+"],
+                          ],
+                          [
+                            "equipment",
+                            "Equipment",
+                            ["All", "None", ...equipmentOptions],
+                          ],
+                          [
+                            "running",
+                            "Running",
+                            ["All", "None", "Light", "Moderate"],
+                          ],
+                          ["format", "Format", ["All", ...formatOptions]],
+                          [
+                            "status",
+                            "Source status",
+                            [
+                              "All",
+                              "regional-reviewed",
+                              "illustrative",
+                              "personal",
+                            ],
+                          ],
+                          [
+                            "ao",
+                            "Source AO",
+                            [
+                              "All",
+                              ...new Set([
+                                ...aoProfiles.map((a) => a.name),
+                                ...all.flatMap((w) =>
+                                  w.provenance.ao ? [w.provenance.ao] : [],
+                                ),
+                              ]),
+                            ],
+                          ],
+                        ] as [keyof Filters, string, string[]][]
+                      ).map(([key, label, options]) => (
+                        <label className="filter" key={key}>
+                          <span>{label}</span>
+                          <select
+                            aria-label={label}
+                            value={filters[key]}
+                            onChange={(e) =>
+                              setFilters({ ...filters, [key]: e.target.value })
+                            }
+                          >
+                            {options.map((o) => (
+                              <option key={o} value={o}>
+                                {key === "status" && o !== "All"
+                                  ? statusLabel(o)
+                                  : o}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
                       ))}
-                    </select>
-                  </label>
-                ))}
-              </section>
-              <div className="result-line">
-                <span>
-                  {visible.length}{" "}
-                  {visible.length === 1 ? "workout" : "workouts"}{" "}
-                  <span className="muted">
-                    · a starting point, not a prescription
-                  </span>
-                </span>
-                <button
-                  className="text-button"
-                  onClick={() => setFilters({ ...filtersEmpty })}
-                >
-                  Reset filters
-                </button>
-              </div>
-              <div className="cards">
-                {visible.map((w, i) => (
-                  <article className="card" key={w.id}>
-                    <div className="card-top">
-                      <span className="chip">{w.format}</span>
+                    </section>
+                    <div className="result-line">
+                      <span>
+                        {visible.length}{" "}
+                        {visible.length === 1 ? "workout" : "workouts"}{" "}
+                        <span className="muted">
+                          · a starting point, not a prescription
+                        </span>
+                      </span>
                       <button
-                        className={
-                          "heart " +
-                          (state.favorites.includes(w.id) ? "hearted" : "")
-                        }
-                        aria-label={
-                          (state.favorites.includes(w.id)
-                            ? "Unfavorite "
-                            : "Favorite ") + w.title
-                        }
-                        aria-pressed={state.favorites.includes(w.id)}
-                        onClick={() => favorite(w.id)}
+                        className="text-button"
+                        onClick={() => setFilters({ ...filtersEmpty })}
                       >
-                        <Heart size={20} />
+                        Reset filters
                       </button>
                     </div>
-                    <span className="card-number">
-                      {String(i + 1).padStart(2, "0")} /{" "}
-                      {w.kind === "personal"
-                        ? w.provenance.generation
-                          ? "AI-ASSISTED DRAFT"
-                          : "PERSONAL DRAFT"
-                        : statusLabel(w.provenance.status).toUpperCase()}
-                    </span>
-                    <h3>
-                      <button onClick={() => open(w)}>{w.title}</button>
-                    </h3>
-                    <p className="card-summary">
-                      {w.summary || "Your plan, your way."}
-                    </p>
-                    {w.provenance.ao && (
-                      <p className="source-meta">
-                        {w.provenance.ao} · {w.provenance.q ?? "Q unknown"} ·{" "}
-                        {w.provenance.eventDate ?? "Date unknown"}
-                      </p>
-                    )}
-                    {!!w.provenance.issues?.length && (
-                      <p className="source-meta">
-                        {w.provenance.issues.length} source notes · check
-                        details
-                      </p>
-                    )}
-                    <div className="card-metrics">
-                      <span>
-                        <Clock3 />
-                        {w.duration ? `~${w.duration} min` : "Time not set"}
-                      </span>
-                      <span>
-                        <Dumbbell />
-                        {w.equipment.join(", ") ||
-                          (w.provenance.issues?.some((i) =>
-                            i.startsWith("Equipment not"),
-                          )
-                            ? "Equipment unknown"
-                            : "No gear")}
-                      </span>
-                      <span>
-                        <Footprints />
-                        {w.provenance.issues?.some((i) =>
-                          i.startsWith("Running requirement"),
-                        )
-                          ? "Running unknown"
-                          : w.running === "None"
-                            ? "No running"
-                            : w.running + " running"}
-                      </span>
+                    <div className="cards">
+                      {visible.map((w, i) => (
+                        <article className="card" key={w.id}>
+                          <div className="card-top">
+                            <span className="chip">{w.format}</span>
+                            <button
+                              className={
+                                "heart " +
+                                (state.favorites.includes(w.id)
+                                  ? "hearted"
+                                  : "")
+                              }
+                              aria-label={
+                                (state.favorites.includes(w.id)
+                                  ? "Unfavorite "
+                                  : "Favorite ") + w.title
+                              }
+                              aria-pressed={state.favorites.includes(w.id)}
+                              onClick={() => favorite(w.id)}
+                            >
+                              <Heart size={20} />
+                            </button>
+                          </div>
+                          <span className="card-number">
+                            {String(i + 1).padStart(2, "0")} /{" "}
+                            {w.kind === "personal"
+                              ? w.provenance.generation
+                                ? "AI-ASSISTED DRAFT"
+                                : "PERSONAL DRAFT"
+                              : statusLabel(w.provenance.status).toUpperCase()}
+                          </span>
+                          <h3>
+                            <button onClick={() => open(w)}>{w.title}</button>
+                          </h3>
+                          <p className="card-summary">
+                            {w.summary || "Your plan, your way."}
+                          </p>
+                          {w.provenance.ao && (
+                            <p className="source-meta">
+                              {w.provenance.ao} ·{" "}
+                              {w.provenance.q ?? "Q unknown"} ·{" "}
+                              {w.provenance.eventDate ?? "Date unknown"}
+                            </p>
+                          )}
+                          {!!w.provenance.issues?.length && (
+                            <p className="source-meta">
+                              {w.provenance.issues.length} source notes · check
+                              details
+                            </p>
+                          )}
+                          <div className="card-metrics">
+                            <span>
+                              <Clock3 />
+                              {w.duration
+                                ? `~${w.duration} min`
+                                : "Time not set"}
+                            </span>
+                            <span>
+                              <Dumbbell />
+                              {w.equipment.join(", ") ||
+                                (w.provenance.issues?.some((i) =>
+                                  i.startsWith("Equipment not"),
+                                )
+                                  ? "Equipment unknown"
+                                  : "No gear")}
+                            </span>
+                            <span>
+                              <Footprints />
+                              {w.provenance.issues?.some((i) =>
+                                i.startsWith("Running requirement"),
+                              )
+                                ? "Running unknown"
+                                : w.running === "None"
+                                  ? "No running"
+                                  : w.running + " running"}
+                            </span>
+                          </div>
+                          <button className="card-open" onClick={() => open(w)}>
+                            View workout <ArrowUpRight size={20} />
+                          </button>
+                        </article>
+                      ))}
                     </div>
-                    <button className="card-open" onClick={() => open(w)}>
-                      View workout <ArrowUpRight size={20} />
+                    {!visible.length && (
+                      <section className="empty">
+                        <Layers3 size={34} />
+                        <h3>
+                          {base.length
+                            ? "No workouts match those filters."
+                            : "A little room for your next idea."}
+                        </h3>
+                        <p>
+                          {base.length
+                            ? "Try a different format or clear your filters."
+                            : "Copy a library workout, create a plan, or import your drafts."}
+                        </p>
+                        <button onClick={() => setFilters({ ...filtersEmpty })}>
+                          Reset filters
+                        </button>
+                      </section>
+                    )}
+                  </>
+                )}
+                <section className="backup">
+                  <div>
+                    <h3>Your plans travel with you.</h3>
+                    <p>
+                      Browser storage is device-specific and can be cleared.
+                      Export a backup to keep your drafts and favorites.
+                    </p>
+                  </div>
+                  <div className="actions">
+                    <button onClick={() => exportData()}>
+                      <Download size={17} />
+                      Export backup
                     </button>
-                  </article>
-                ))}
-              </div>
-              {!visible.length && (
-                <section className="empty">
-                  <Layers3 size={34} />
-                  <h3>
-                    {base.length
-                      ? "No workouts match those filters."
-                      : "A little room for your next idea."}
-                  </h3>
-                  <p>
-                    {base.length
-                      ? "Try a different format or clear your filters."
-                      : "Copy a library workout, create a plan, or import your drafts."}
-                  </p>
-                  <button onClick={() => setFilters({ ...filtersEmpty })}>
-                    Reset filters
-                  </button>
+                    <label className="button">
+                      <Upload size={17} />
+                      Import backup
+                      <input
+                        type="file"
+                        accept=".json,application/json"
+                        className="sr-only"
+                        onChange={(e) => {
+                          void importFile(e.target.files?.[0]);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                  </div>
                 </section>
-              )}
-            </>
+              </>
+            )
           )}
-          <section className="backup">
-            <div>
-              <h3>Your plans travel with you.</h3>
-              <p>
-                Browser storage is device-specific and can be cleared. Export a
-                backup to keep your drafts and favorites.
-              </p>
-            </div>
-            <div className="actions">
-              <button onClick={() => exportData()}>
-                <Download size={17} />
-                Export backup
-              </button>
-              <label className="button">
-                <Upload size={17} />
-                Import backup
-                <input
-                  type="file"
-                  accept=".json,application/json"
-                  className="sr-only"
-                  onChange={(e) => {
-                    void importFile(e.target.files?.[0]);
-                    e.target.value = "";
-                  }}
-                />
-              </label>
-            </div>
-          </section>
         </main>
       ) : editing ? (
         <main id="main" className="editor main">
@@ -1422,6 +1564,34 @@ export default function App() {
               Print only The Thang
             </label>
           </div>
+          <button
+            className="create no-print"
+            onClick={() => setTimerOpen(true)}
+          >
+            Launch Field Q-Timer
+          </button>
+          <SessionTimeline workout={selected} />
+          <button
+            className="no-print"
+            onClick={() => {
+              void navigator.clipboard
+                ?.writeText(qSheet(selected))
+                .then(() => setNotice("Q sheet copied for Slack."))
+                .catch(() =>
+                  setNotice(
+                    "Clipboard unavailable. Use Print to keep the plan.",
+                  ),
+                );
+            }}
+          >
+            Copy Slack Q sheet
+          </button>
+          {sessionMatches(selected) && (
+            <aside className="timing-note">
+              <strong>Welcome & disclaimer · 5:30–5:32 AM</strong>
+              <p>{DISCLAIMER}</p>
+            </aside>
+          )}
           <p className="timing-note">
             Section estimates:{" "}
             {timing(selected) === null
@@ -1478,6 +1648,16 @@ export default function App() {
                   ? "Mary not supplied; see source notes."
                   : "Mary omitted in this plan."}
             </p>
+          )}
+          {sessionMatches(selected) && (
+            <section className="workout-section section-cot">
+              <h2>Fellowship & trust · after 6:15 AM</h2>
+              <p>
+                Count-o-Rama · Name-o-Rama / FNG naming · Announcements · Ball
+                of Man / closing. Allow 5–10 minutes after all physical work
+                stops.
+              </p>
+            </section>
           )}
           {selected.rawNotes && (
             <section className="raw-notes">

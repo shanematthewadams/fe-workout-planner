@@ -2,7 +2,7 @@
 import React from "react";
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import {
-  render,
+  render as renderUI,
   screen,
   fireEvent,
   cleanup,
@@ -13,6 +13,11 @@ import userEvent from "@testing-library/user-event";
 import App from "../src/App";
 import { catalog } from "../src/catalog";
 import { copyWorkout, STORAGE_KEY, writeState, readState } from "../src/model";
+function render(element: React.ReactElement) {
+  const view = renderUI(element);
+  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  return view;
+}
 beforeEach(() => {
   localStorage.clear();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});

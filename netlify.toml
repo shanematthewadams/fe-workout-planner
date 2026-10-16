@@ -3,6 +3,8 @@ command = "npm run build"
 publish = "dist"
 [build.environment]
 NODE_VERSION = "22"
+VITE_SUPABASE_URL = "https://kitqovhdwzkhpxlepvfn.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_0JeYeQVmWejiGgAyYXDo9g_F-6r3IDU"
 [[redirects]]
 from = "/*"
 to = "/index.html"
@@ -14,8 +16,7 @@ X-Content-Type-Options = "nosniff"
 Referrer-Policy = "strict-origin-when-cross-origin"
 X-Frame-Options = "DENY"
 
-# Public read-only catalog connection. Applies only to the develop branch.
-# Publishable keys identify the project; RLS/grants enforce access. Never put server secrets here.
-[context.develop.environment]
-VITE_SUPABASE_URL = "https://kitqovhdwzkhpxlepvfn.supabase.co"
-VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_0JeYeQVmWejiGgAyYXDo9g_F-6r3IDU"
+[[headers]]
+for = "/sw.js"
+[headers.values]
+Cache-Control = "no-cache"
