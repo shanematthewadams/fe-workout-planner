@@ -20,7 +20,7 @@ async function main() {
   if (approved.feBackblasts?.approved !== true)
     throw Error("Approval not recorded");
   const end = new Date().toISOString().slice(0, 10),
-    start = new Date(Date.now() - 45 * 86400000).toISOString().slice(0, 10);
+    start = new Date(Date.now() - 120 * 86400000).toISOString().slice(0, 10);
   const rows = await fetchNation({
     token: process.env.F3_NATION_TOKEN ?? "",
     regionId: Number(process.env.F3_REGION_ID),
