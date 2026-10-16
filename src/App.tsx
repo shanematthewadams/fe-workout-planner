@@ -133,6 +133,7 @@ function load() {
 }
 export default function App() {
   const [sources, setSources] = useState(catalog);
+  const [catalogOrigin, setCatalogOrigin] = useState("snapshot");
   useEffect(() => {
     const url = import.meta.env.VITE_SUPABASE_URL,
       key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -148,7 +149,11 @@ export default function App() {
     const timeout = setTimeout(() => controller.abort(), 8000);
     new SupabaseCatalog(url, key)
       .list(controller.signal)
-      .then(setSources)
+      .then((rows) => {
+        if (disposed) return;
+        setSources(rows);
+        setCatalogOrigin("published");
+      })
       .catch(() => {
         if (!disposed)
           setNotice(
@@ -630,6 +635,9 @@ export default function App() {
                     illustrative starters
                   </strong>
                   <p>
+                    {catalogOrigin === "published"
+                      ? "Latest published library loaded."
+                      : "Saved library snapshot."}{" "}
                     Regional backblasts appear only after source, reuse and
                     workout details are reviewed. Starters are original
                     examples.

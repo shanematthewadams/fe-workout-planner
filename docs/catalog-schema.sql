@@ -1,5 +1,5 @@
 -- Prepared for a dedicated FE project ONLY. Never apply to With or Elsewhere.
--- Fresh install; Supabase has not been provisioned for FE.
+-- Fresh install; applied to the dedicated F3 Workout Planner project on 2026-10-16.
 begin;
 create table public.workouts (
   id text primary key,
