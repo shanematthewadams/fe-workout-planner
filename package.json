@@ -9,7 +9,10 @@
     "typecheck": "tsc -b",
     "lint": "eslint .",
     "test": "vitest run",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "catalog:import": "node --experimental-strip-types scripts/import-catalog.ts",
+    "catalog:sync-aos": "node scripts/sync-aos.mjs",
+    "catalog:export-sql": "node --experimental-strip-types scripts/export-regional-sql.ts"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "5.3.0",
@@ -20,10 +23,12 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.3.16",
     "@eslint/js": "9.36.0",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
     "@testing-library/user-event": "14.6.8",
+    "@types/node": "22.18.6",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
     "eslint": "9.36.0",

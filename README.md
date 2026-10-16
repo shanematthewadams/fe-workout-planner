@@ -57,3 +57,7 @@ The browser controls did not provide reliable mobile viewport resizing or native
 ## Next sprint
 
 See `docs/SPRINT_HANDOFF.md`, `docs/SOURCES.md`, and `docs/DATABASE_ADAPTER.md`. Regional backblast imports are Sprint 2; live AI and idea/Surprise me starting paths are Sprint 3. No national catalog import is required to use Sprint 1.
+
+## Sprint 2: regional catalog preparation
+
+16 official AO profiles, nine exercise references, source-aware search, and a repeatable admin import/review/export workflow are implemented. **There are currently zero reviewed regional backblasts and ten illustrative starters.** No live F3 Nation narrative integration or FE Supabase database is configured. See [IMPORT_WORKFLOW.md](docs/IMPORT_WORKFLOW.md), [SOURCES.md](docs/SOURCES.md), and [SPRINT_HANDOFF.md](docs/SPRINT_HANDOFF.md) for exact evidence, commands and blockers.

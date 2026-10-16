@@ -1412,3 +1412,82 @@ fieldset,
     overflow-y: auto;
   }
 }
+
+/* Discovery stays readable on phones and works from a saved snapshot. */
+.catalog-status {
+  border: 1px solid #bfc3c7;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+.catalog-status p {
+  margin-bottom: 0;
+}
+.discovery {
+  margin: 2rem 0;
+}
+.discovery > label {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 32rem;
+  margin: 1.5rem 0;
+}
+.discovery input {
+  min-height: 44px;
+  font-size: 16px;
+  width: 100%;
+}
+.discovery .card {
+  gap: 0.8rem;
+}
+.discovery .card p {
+  margin: 0.3rem 0;
+}
+.discovery .card a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+.discovery dl > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  padding: 0.3rem 0;
+}
+.discovery dd {
+  margin: 0;
+}
+.discovery summary {
+  cursor: pointer;
+  padding: 0.7rem 0;
+}
+.day-label {
+  text-transform: capitalize;
+}
+.source-meta {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.tabs {
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .tabs button {
+    flex: 1 1 44%;
+  }
+  .discovery .card {
+    min-width: 0;
+  }
+}
+.filters {
+  flex-wrap: wrap;
+}
+.filter {
+  min-width: 0;
+}
+.filter select {
+  max-width: 220px;
+}
+@media (max-width: 600px) {
+  .filter select {
+    max-width: 145px;
+  }
+}

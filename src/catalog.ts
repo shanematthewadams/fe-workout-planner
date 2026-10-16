@@ -1,4 +1,5 @@
-import { type Workout, type Exercise } from "./model";
+import regional from "../data/regional-workouts.json";
+import { workoutSchema, type Workout, type Exercise } from "./model";
 const e = (
   id: string,
   name: string,
@@ -277,7 +278,7 @@ const definitions: [
     ],
   ],
 ];
-export const catalog: Workout[] = definitions.map(
+export const starters: Workout[] = definitions.map(
   ([id, title, format, running, equipment, instructions, exercises], i) => ({
     schemaVersion: 1,
     id: "fe-template-" + id,
@@ -403,19 +404,38 @@ export const catalog: Workout[] = definitions.map(
   }),
 );
 // Exercise IDs are scoped to the workout; normalize to guarantee uniqueness across its sections.
-for (const w of catalog)
+for (const w of starters)
   for (const s of w.sections)
     for (const b of s.blocks)
       for (const x of b.exercises) x.id = `${b.id}-${x.id}`;
 
 // Shorter sessions give the library a useful option beyond the usual 45 minutes.
-const emom = catalog.find((w) => w.id === "fe-template-clock")!;
+const emom = starters.find((w) => w.id === "fe-template-clock")!;
 emom.duration = 30;
 emom.sections[1].blocks[0].minutes = 20;
 emom.sections[1].blocks[0].instructions =
   emom.sections[1].blocks[0].instructions.replace("seven times", "four times");
-const circuit = catalog[0];
+const circuit = starters[0];
 circuit.duration = 30;
 circuit.sections[1].blocks[0].minutes = 20;
 circuit.sections[1].blocks[0].instructions =
   "Allow 2 minutes to explain and demonstrate. Four rounds of about 4 minutes each, including 60 seconds of recovery after each round. Use 2 minutes to regroup and reset. Stop at 20 minutes, even if rounds are unfinished.";
+
+// Only reviewed, approved exports are checked in. Personal drafts never enter here.
+export const catalog: Workout[] = [
+  ...starters,
+  ...regional.map((value) => {
+    const w = workoutSchema.parse(value);
+    if (
+      w.kind !== "source" ||
+      w.provenance.status !== "regional-reviewed" ||
+      !w.provenance.sourceId ||
+      w.id !== w.provenance.sourceId
+    )
+      throw Error("Invalid reviewed regional export");
+    return w;
+  }),
+];
+
+if (new Set(catalog.map((w) => w.id)).size !== catalog.length)
+  throw Error("Duplicate catalog IDs");

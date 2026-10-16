@@ -6,3 +6,5 @@ qa/
 *.tsbuildinfo
 
 !.env.example
+
+.imports/

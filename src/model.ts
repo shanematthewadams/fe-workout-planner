@@ -71,6 +71,16 @@ export const workoutSchema = z
         "regional-reviewed",
       ]),
       label: text,
+      sourceId: z.string().max(100).optional(),
+      q: z.string().max(160).optional(),
+      ao: z.string().max(160).optional(),
+      eventDate: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/)
+        .optional(),
+      checkedAt: z.string().datetime().optional(),
+      issues: z.array(z.string().max(500)).max(30).optional(),
+      durationBasis: z.enum(["source", "inferred", "unknown"]).optional(),
       url: z
         .string()
         .url()
@@ -168,12 +178,14 @@ export const filtersEmpty = {
   equipment: "All",
   running: "All",
   format: "All",
+  status: "All",
+  ao: "All",
 };
 export type Filters = typeof filtersEmpty;
 export function matches(w: Workout, f: Filters) {
   return (
     (!f.query ||
-      `${w.title} ${w.summary}`
+      `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${w.sections.flatMap((s) => s.blocks.flatMap((b) => b.exercises.map((e) => e.name))).join(" ")}`
         .toLowerCase()
         .includes(f.query.trim().toLowerCase())) &&
     (f.duration === "All" ||
@@ -188,7 +200,11 @@ export function matches(w: Workout, f: Filters) {
         ? w.equipment.length === 0
         : w.equipment.includes(f.equipment))) &&
     (f.running === "All" || w.running === f.running) &&
-    (f.format === "All" || w.format === f.format)
+    (f.format === "All" || w.format === f.format) &&
+    (f.status === "All" ||
+      (w.kind === "personal" ? "personal" : w.provenance.status) ===
+        f.status) &&
+    (f.ao === "All" || w.provenance.ao === f.ao)
   );
 }
 export function timing(w: Workout) {
