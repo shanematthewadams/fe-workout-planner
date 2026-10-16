@@ -17,18 +17,18 @@ The 20–30 real-workout goal needs authorized narrative access and reuse eviden
 ## Exact repository, branch and deployment
 
 - Private repository: `shanematthewadams/fe-workout-planner`, ID `1421135917`.
-- Integration branch: `develop`; application commit **`1a5ea82097119745dadb8348540ae1019a510659`**.
-- Application tree: **`2ba95820ed065bded5a281da11aa3c1248655cd8`**. It exactly matches locally tested commit `67acbf1b38ebfb8951e4bf6b3534b8ae04214675`. As in Sprint 1, local and GitHub ancestry differ because upload uses Git Data; tree parity is verified before ref updates with an expected-head lease.
+- Integration branch: `develop`; application commit **`f15640bab9acbbae6f12efc76f9d963f2125b59c`**.
+- Application tree: **`2d287907ea0c2ec6ab6e9916285564f2bc741dfe`**. It exactly matches locally tested commit `ecace45754bf1dee836f716627b5ee1b2dfcffa5`. As in Sprint 1, local and GitHub ancestry differ because upload uses Git Data; tree parity is verified before ref updates with an expected-head lease.
 - Initial inspected remote head: `275c3477e1aaeb1527418c47d08cf4cfb6fdeb0e`, tree `8aa0b65c13e94dd16db7f1b25b776736a14d9b43`, exactly matching the initial clean local tree.
 - This handoff is a later documentation-only commit; the exact application/deployment SHA above is authoritative. The documentation commit uses `[skip netlify]`; deployed app files are unchanged. The commit containing this file is the documentation head (a file cannot contain its own commit SHA).
 - Netlify project: `fe-workout-planner`; site ID **`1d2480e0-3891-41db-9574-61cb13b7ae0a`**; team ID `6a8d98d0bae1a4d6a86f48de`.
 - Development preview: **https://develop--fe-workout-planner.netlify.app/**.
-- Verified ready deploy: **`6ad188460cf7652879373031`**; build **`6ad188460cf765287937302f`**, `branch-deploy`, branch `develop`, commit matches the application SHA, no error, no secret-scan matches.
-- Immutable preview: https://6ad188460cf7652879373031--fe-workout-planner.netlify.app.
-- Deploy record: https://app.netlify.com/projects/fe-workout-planner/deploys/6ad188460cf7652879373031.
+- Verified ready deploy: **`6ad18daa1654730b8cb1fd5f`**; build **`6ad18daa1654730b8cb1fd5d`**, `branch-deploy`, branch `develop`, commit matches the application SHA, no error, no secret-scan matches.
+- Immutable preview: https://6ad18daa1654730b8cb1fd5f--fe-workout-planner.netlify.app.
+- Deploy record: https://app.netlify.com/projects/fe-workout-planner/deploys/6ad18daa1654730b8cb1fd5f.
 - Deployed script **`/assets/index-DpxYatG7.js`** matches the locally built artifact; CSS `/assets/index-BeB5N7Fm.css`.
 - Netlify's project-summary adapter returned an incorrect/incomplete branch deploy reference. The real deploy ID was read from the authenticated Deploys UI, then confirmed through the scoped deploy API with state `ready` and full SHA. Do not use the summary's synthetic-looking branch ID as evidence.
-- GitHub Checks passed: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38839313773 (59 tests, lint and build in CI).
+- GitHub Checks passed: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38841289604 (63 tests, lint and build in CI).
 - Production branch remains `main` at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`, starter README only. No production promotion, DNS change, purchase, duplicate hosting/database project or With/Elsewhere modification occurred.
 - Hosting retains Netlify team sign-in on all deploys. The app itself has no consumer sign-in. Engineering's browser session was restored through secure Google sign-in and the actual preview inspected. No access controls were weakened.
 
@@ -83,7 +83,7 @@ The SQL is executed in an isolated PGlite/Postgres test with separate anon/authe
 
 Full findings: `docs/SOURCES.md`. All 23 visible F3-Nation org repositories were inspected beyond pinned projects. f3-nation, Website-Widgets, the-codex and pax-vault are unarchived and recently pushed. The monorepo is AGPL-3.0; no repository license was detected for the other three. No upstream code or bulk description content was copied. Software licensing does not establish rights to underlying backblasts.
 
-Live `https://api.f3nation.com/docs/openapi.json` confirms `pageIndex` / `pageSize` maximum 100 and detail `/v1/event-instance/id/{id}`; older widget `limit`/`hasBackblast` examples differ. Upstream handler includes narrative fields in details, while lists are metadata. Actual unauthenticated list request returned 401. **No authenticated FE narrative response has been inspected**, so detail shape/content and Q mapping remain contract-fixture-tested only. Q is left unknown, not inferred from attendance.
+Live `https://api.f3nation.com/docs/openapi.json` confirms `pageIndex` / `pageSize` maximum 100 and detail `/v1/event-instance/id/{id}`; older widget `limit`/`hasBackblast` examples differ. Upstream handler includes narrative fields in details, while lists are metadata. Unauthenticated requests return 401. The development-build probe now authenticates successfully: 143 regional event records in the last 45 days; three sampled public, active event details all match event/region/privacy fields and include nonempty plaintext and rich narratives plus recognized workout headings. Only counts/status were logged, never narrative text. This verifies access and sampled detail shape, not narrative completeness, exact counts/order, Q mapping, or the complete paginated importer. Q remains unknown, not inferred from attendance.
 
 Current upstream API README identifies **https://admin.f3nation.com/api-keys** → **New API Key**. Older widget documentation points to map admin region ID and Settings → API. Current credential UI instructions are code/documentation-verified, not a logged-in F3 admin walkthrough. API keys have per-org Editor/Admin assignments; do not request Nation-wide access. This connector performs GET requests only.
 
@@ -95,10 +95,10 @@ Connected Supabase inventory has only With Application; it was not reused or que
 
 ## Verification summary and Sprint 3 priorities
 
-- **59 automated tests pass** across model, UI, source import, pagination, discovery, repository adapter and isolated database policy checks.
+- **63 automated tests pass** across model, UI, source import, pagination, discovery, repository adapter and isolated database policy checks.
 - Lint, TypeScript/Vite build, `git diff --check`, reviewed-source empty export and SQL generation pass.
 - Real local mobile/desktop Chromium and print verification pass as detailed above; deployed build identity and representative interactions live-verified.
-- **Implemented with synthetic fixtures:** authenticated F3 Nation adapter, full narrative import/review lifecycle and changed-source/archive cases.
+- **Implemented with synthetic fixtures:** full paginated F3 Nation importer, narrative extraction/review lifecycle and changed-source/archive cases. Authenticated access and three real list/detail reads are now live-verified through the private development build.
 - **Live verified:** public source/API documentation, AO source retrieval/snapshot, GitHub CI, Netlify develop deploy/commit/artifact and browser smoke checks.
 - **Still blocked:** real FE backblast collection and fidelity comparisons, narrative completeness, content reuse permission, dedicated Supabase project and live REST/RLS checks. Zero real extracted cards means no original-versus-card comparison can yet be claimed.
 
@@ -108,4 +108,4 @@ Sprint 3: (1) unlock authorized narrative access and establish reuse evidence, t
 
 Shane confirmed both Netlify variables are saved. Connector metadata confirms the token is secret, available in branch-deploy context, and scoped to Builds/Functions/Runtime; the numeric region ID is configured. The token also has other deploy-context values; no production code uses it, and the new diagnostic explicitly skips production and other branches. Metadata reads conceal the actual credential, so a request made with the masked representation is inconclusive and must not be reported as an invalid key.
 
-Added `scripts/nation-probe.mjs` and a development-only postbuild entry point to check API access from Netlify's server build environment. It prints only status/counts/narrative-availability flags. No raw backblast or credential is logged or saved, no public API endpoint is added, and no record is published. The build check needs Builds scope (present in current configuration), in addition to the previously described Functions scope. Source collection and reuse approval remain separate. Live check result will be recorded after deployment verification.
+Added `scripts/nation-probe.mjs` and a development-only postbuild entry point to check API access from Netlify's server build environment. It prints only status/counts/narrative-availability flags. No raw backblast or credential is logged or saved, no public API endpoint is added, and no record is published. The build check needs Builds scope (present in current configuration), in addition to the previously described Functions scope. Source collection and reuse approval remain separate. Live result: `FE_SOURCE_PROBE {"status":"ok","totalEvents":143,"sampledPublicEvents":3,"detailReads":3,"plaintextNarratives":3,"richNarratives":3,"recognizedWorkoutSections":3,"detailFailures":[]}`. Netlify deploy `6ad18daa1654730b8cb1fd5f`, build `6ad18daa1654730b8cb1fd5d`, commit `f15640bab9acbbae6f12efc76f9d963f2125b59c` is ready; 48 files scanned, no secret matches. GitHub CI passed with 63 tests. Frontend artifacts are byte-identical to the prior verified build; no UI/personal-storage changes were made. Remaining material decision: which backblast instructions the content owners authorize for publication. Credential entry alone does not authorize reuse. Full privileged import/review retrieval still needs a secure server/admin path; do not attempt to use a masked token in the local CLI.
