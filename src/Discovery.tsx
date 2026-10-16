@@ -1,3 +1,4 @@
+import { FEATURES, type Feature } from "./site-contract";
 import { useState } from "react";
 import { aoProfiles, exercises } from "./discovery";
 export function Discovery({
@@ -16,7 +17,7 @@ export function Discovery({
       <h2>{mode === "aos" ? "Find your AO" : "Know the movement"}</h2>
       <p>
         {mode === "aos"
-          ? "Official schedule snapshot. Check the regional site for changes. Local terrain and equipment stay unknown until confirmed."
+          ? "Official schedule snapshot. Check the regional site for changes. Website-described features show their source and review date. Unlisted features stay unknown; confirm today's access."
           : "Nine names checked against the Exicon CSV. These short instructions were written for this app; confirm variations and counts with your Q."}
       </p>
       <label>
@@ -45,20 +46,20 @@ export function Discovery({
                   <details>
                     <summary>Terrain & local details</summary>
                     <dl>
-                      {(
-                        [
-                          ["walls", "Walls"],
-                          ["hills", "Hills"],
-                          ["stairs", "Stairs"],
-                          ["distances", "Distances"],
-                          ["lighting", "Lighting"],
-                          ["coupons", "Coupon availability"],
-                          ["weather", "Weather alternatives"],
-                        ] as const
-                      ).map(([k, label]) => (
-                        <div key={k}>
-                          <dt>{label}</dt>
-                          <dd>{a.local[k] ?? "Unknown"}</dd>
+                      {(Object.keys(FEATURES) as Feature[]).map((feature) => (
+                        <div key={feature}>
+                          <dt>{FEATURES[feature]}</dt>
+                          <dd>
+                            {a.local.features?.[feature]?.state === "available"
+                              ? "Available"
+                              : a.local.features?.[feature]?.state ===
+                                  "unavailable"
+                                ? "Unavailable"
+                                : "Unknown"}
+                            {a.local.features?.[feature]?.detail && (
+                              <p>{a.local.features[feature]!.detail}</p>
+                            )}
+                          </dd>
                         </div>
                       ))}
                     </dl>

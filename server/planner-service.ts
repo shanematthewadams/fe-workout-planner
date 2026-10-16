@@ -1,3 +1,9 @@
+import {
+  siteContext,
+  blockedFeatures,
+  detectFeatures,
+  describeSite,
+} from "../src/ao-context.ts";
 import { ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import {
@@ -100,6 +106,19 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
     !p.equipment.some((e) => /coupon|cinder block/i.test(e))
   )
     throw new PlannerError(422, "The AI left out your coupons. Try again.");
+  if (input.strictSchedule) {
+    const blocked = blockedFeatures(
+      p,
+      siteContext(input.ao, input.prompt, input.site),
+    );
+    if (blocked.length)
+      throw new PlannerError(
+        422,
+        "The draft needs unconfirmed or unavailable site features: " +
+          blocked.join(", ") +
+          ". Your previous draft is safe.",
+      );
+  }
   return p;
 }
 function parseJSON(text: string) {
@@ -238,7 +257,13 @@ export async function generatePlan(
           504,
           "Free AI took too long. Your previous draft is safe. Try again.",
         );
-      if (error instanceof PlannerError) throw error;
+      if (error instanceof PlannerError) {
+        if (error.status === 422 && /site features/.test(error.message)) {
+          lastStatus = 422;
+          continue;
+        }
+        throw error;
+      }
       console.info(
         "FE_PLANNER_INVALID",
         JSON.stringify({
@@ -278,6 +303,16 @@ export async function generatePlan(
     equipment: result.equipment,
     running: result.running,
     format: result.format,
+    schedule: {
+      startTime: input.startTime,
+      requiredFeatures: [
+        ...new Set([
+          ...(result.requiredFeatures ?? []),
+          ...detectFeatures(result),
+        ]),
+      ],
+      siteSummary: describeSite(context.site),
+    },
     sections: result.sections.map((s, si) => ({
       ...s,
       id: `s-${si}`,

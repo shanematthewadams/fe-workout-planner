@@ -38,7 +38,8 @@ export function sessionPhases(mary = true, cot = 10): Phase[] {
             name: "Mary / 6MOM",
             start: 2340,
             end: 2700,
-            detail: "Closing core; stop all physical work at 6:15 AM.",
+            detail:
+              "Closing core; stop all physical work at the scheduled hard stop.",
           },
         ]
       : []),
@@ -52,9 +53,16 @@ export function sessionPhases(mary = true, cot = 10): Phase[] {
     },
   ];
 }
+export function sessionStart(w: Workout) {
+  const [hours, minutes] = (w.schedule?.startTime ?? "05:30")
+    .split(":")
+    .map(Number);
+  return hours * 60 + minutes;
+}
 export function clockLabel(seconds: number, startMinutes = 330) {
-  const total = startMinutes + Math.floor(seconds / 60);
-  return `${Math.floor(total / 60) % 12 || 12}:${String(total % 60).padStart(2, "0")} AM`;
+  const total = (startMinutes + Math.floor(seconds / 60)) % (24 * 60),
+    hours = Math.floor(total / 60);
+  return `${hours % 12 || 12}:${String(total % 60).padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
 }
 export function sessionMatches(w: Workout) {
   const minutes = (kind: string) =>
@@ -74,16 +82,23 @@ export function SessionTimeline({ workout }: { workout: Workout }) {
   return (
     <SessionTimelineContent
       mary={workout.sections.some((s) => s.kind === "mary")}
+      start={sessionStart(workout)}
     />
   );
 }
-function SessionTimelineContent({ mary }: { mary: boolean }) {
+function SessionTimelineContent({
+  mary,
+  start,
+}: {
+  mary: boolean;
+  start: number;
+}) {
   return (
     <section className="session-timeline" aria-label="45-minute Q timeline">
       {sessionPhases(mary).map((p) => (
         <div key={p.id} className={`phase-${p.id}`}>
           <small>
-            {clockLabel(p.start)} – {clockLabel(p.end)}
+            {clockLabel(p.start, start)} – {clockLabel(p.end, start)}
           </small>
           <strong>{p.name}</strong>
           <span>
@@ -92,7 +107,7 @@ function SessionTimelineContent({ mary }: { mary: boolean }) {
           </span>
         </div>
       ))}
-      <p>6:15 AM whistle · All physical work stops.</p>
+      <p>{clockLabel(2700, start)} whistle · All physical work stops.</p>
     </section>
   );
 }
@@ -104,9 +119,11 @@ export function qSheet(w: Workout) {
     w.provenance.q ? `Q: ${w.provenance.q}` : "",
     "Q PLAN · not a completed backblast",
     sessionMatches(w)
-      ? "5:30 welcome · 5:32 warmup · 5:40 The Thang · " +
-        (w.sections.some((s) => s.kind === "mary") ? "6:09 Mary · " : "") +
-        "6:15 physical hard stop"
+      ? sessionPhases(w.sections.some((s) => s.kind === "mary"))
+          .filter((p) => p.id !== "cot")
+          .map((p) => `${clockLabel(p.start, sessionStart(w))} ${p.name}`)
+          .join(" · ") +
+        ` · ${clockLabel(2700, sessionStart(w))} physical hard stop`
       : "Review session timing before leading.",
     ...w.sections.flatMap((s) => [
       `\n*${s.title}*`,

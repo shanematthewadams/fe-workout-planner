@@ -1,3 +1,4 @@
+import { siteContext, describeSite } from "./ao-context";
 import { workoutSchema } from "./model";
 import {
   plannerRequestSchema,
@@ -252,6 +253,13 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     equipment: plan.equipment,
     running,
     format,
+    schedule: {
+      startTime: input.startTime,
+      requiredFeatures: [],
+      siteSummary: describeSite(
+        siteContext(input.ao, input.prompt, input.site),
+      ),
+    },
     sections: plan.sections.map((s, si) => ({
       ...s,
       id: `s${si}`,

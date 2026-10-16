@@ -1,3 +1,8 @@
+import {
+  featureSchema,
+  siteInputSchema,
+  startTimeSchema,
+} from "./site-contract";
 import { z } from "zod";
 import { exerciseSchema, workoutSchema } from "./model";
 const short = z.string().trim().min(1).max(3000);
@@ -47,13 +52,14 @@ export const planSchema = z
       )
       .min(2)
       .max(3),
+    requiredFeatures: z.array(featureSchema).max(10).optional(),
     notes: z.array(z.string().min(1).max(400)).max(10),
   })
   .strict();
 export type Plan = z.infer<typeof planSchema>;
 export const plannerRequestSchema = z
   .object({
-    prompt: z.string().trim().min(8).max(1800),
+    prompt: z.string().trim().min(3).max(1800),
     ao: z.string().max(160).default(""),
     minutes: z.number().int().min(20).max(60).default(45),
     equipment: z.enum(["From prompt", "Coupon", "None"]).default("From prompt"),
@@ -63,6 +69,8 @@ export const plannerRequestSchema = z
     mary: z.boolean().default(true),
     provider: z.enum(["auto", "gemini", "openrouter"]).default("auto"),
     strictSchedule: z.boolean().default(false),
+    startTime: startTimeSchema.default("05:30"),
+    site: siteInputSchema.optional(),
     builder: z
       .object({
         title: z.string().max(120).default(""),

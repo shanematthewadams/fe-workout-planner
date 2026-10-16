@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import { SessionTimeline } from "./session";
 import type { PlannerRequest } from "./planner-contract";
-import { aoProfiles } from "./discovery";
+import { findAO } from "./ao-context";
+import { AOContextPanel } from "./AOContextPanel";
+import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
 import {
   GOLD_RUSH_EXAMPLE,
@@ -13,7 +15,14 @@ import {
 const SESSION_KEY = "fe-planner:assistant:v1";
 type Preferences = Pick<
   import("./planner-contract").PlannerRequest,
-  "ao" | "minutes" | "equipment" | "running" | "mary" | "provider"
+  | "ao"
+  | "minutes"
+  | "equipment"
+  | "running"
+  | "mary"
+  | "provider"
+  | "startTime"
+  | "site"
 >;
 type Session = {
   prompt: string;
@@ -27,6 +36,7 @@ const defaultPreferences: Preferences = {
   running: "From prompt",
   mary: true,
   provider: "auto",
+  startTime: "05:30",
 };
 function restore(): Session {
   try {
@@ -69,7 +79,11 @@ export function Planner({
     [equipment, setEquipment] = useState(initial.preferences.equipment),
     [running, setRunning] = useState(initial.preferences.running),
     [mary, setMary] = useState(initial.preferences.mary),
-    [provider, setProvider] = useState(initial.preferences.provider),
+    [provider] = useState(initial.preferences.provider),
+    [startTime, setStartTime] = useState(initial.preferences.startTime),
+    [site, setSite] = useState<SiteInput>(
+      initial.preferences.site ?? { overrides: {}, notes: "" },
+    ),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [storageError, setStorageError] = useState(""),
@@ -81,7 +95,6 @@ export function Planner({
   const [focus, setFocus] = useState("Full body"),
     [style, setStyle] = useState<(typeof STYLES)[number]>("Dora 1-2-3"),
     [gear, setGear] = useState<string[]>([]),
-    [terrain, setTerrain] = useState("Q to confirm"),
     [pax, setPax] = useState(12),
     [qName, setQName] = useState(""),
     [title, setTitle] = useState("");
@@ -91,7 +104,7 @@ export function Planner({
     focus,
     style,
     gear: gear as NonNullable<PlannerRequest["builder"]>["gear"],
-    terrain,
+    terrain: "Use confirmed AO features and today's overrides only",
     pax,
   };
   function surprise() {
@@ -105,10 +118,22 @@ export function Planner({
         "The long road home",
       ]);
     // Only gear explicitly confirmed by Q can enter a wildcard roll.
-    const chosenGear = gear.length ? [pick(gear)] : [];
+    const availableGear =
+      mode === "formal"
+        ? gear
+        : equipment === "Coupon"
+          ? ["Coupon"]
+          : equipment === "None"
+            ? []
+            : /coupon|cindy/i.test(prompt)
+              ? ["Coupon"]
+              : [];
+    const chosenGear = availableGear.length ? [pick(availableGear)] : [];
     const request = {
       prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
-      ao,
+      ao: ao || findAO("", prompt)?.name || "",
+      startTime,
+      site,
       minutes: 45,
       equipment: chosenGear.includes("Coupon")
         ? ("Coupon" as const)
@@ -144,7 +169,16 @@ export function Planner({
         JSON.stringify({
           prompt,
           result,
-          preferences: { ao, minutes, equipment, running, mary, provider },
+          preferences: {
+            ao,
+            minutes,
+            equipment,
+            running,
+            mary,
+            provider,
+            startTime,
+            site,
+          },
         }),
       );
       setStorageError("");
@@ -153,16 +187,29 @@ export function Planner({
         "This browser could not keep the assistant session. Save a copy or print before leaving.",
       );
     }
-  }, [prompt, result, ao, minutes, equipment, running, mary, provider]);
+  }, [
+    prompt,
+    result,
+    ao,
+    minutes,
+    equipment,
+    running,
+    mary,
+    provider,
+    startTime,
+    site,
+  ]);
   async function ask(refine: boolean, override?: unknown) {
     const request = plannerRequestSchema.safeParse(
       override ?? {
         prompt: refine
           ? revision
           : mode === "formal"
-            ? `Build ${style}. Focus: ${focus}. Terrain supplied by Q: ${terrain}. PAX: ${pax}. ${prompt}`
+            ? `Build ${style}. Focus: ${focus}. PAX: ${pax}. ${prompt}`
             : prompt,
         ao,
+        startTime,
+        site,
         minutes: 45,
         equipment:
           mode === "formal"
@@ -181,7 +228,11 @@ export function Planner({
       },
     );
     if (!request.success) {
-      setError("Describe your Q or change in at least 8 characters.");
+      setError(
+        request.error.issues.some((i) => i.path[0] === "startTime")
+          ? "Choose a start time."
+          : "Add a short idea and check your details.",
+      );
       return;
     }
     const sequence = ++epoch.current;
@@ -250,18 +301,15 @@ export function Planner({
       <div className="assistant-intro">
         <div>
           <p className="eyebrow">YOUR NEXT Q STARTS HERE</p>
-          <h1>What do you have in mind?</h1>
-          <p>
-            Tell us where you’re leading, what you want to use, and the idea
-            you’re chasing.
-          </p>
+          <h1>Plan your next Q.</h1>
+          <p>An AO, an idea, a plan you can lead.</p>
         </div>
         <span className="assistant-badge">AI-assisted · free models only</span>
       </div>
       <div className="entry-modes" aria-label="Choose how to build">
         <button type="button" disabled={busy} onClick={surprise}>
           <strong>Surprise Me!</strong>
-          <span>A wildcard Q, ready to shape</span>
+          <span>Uses your AO and preferences</span>
         </button>
         <button
           type="button"
@@ -288,6 +336,21 @@ export function Planner({
           void ask(false);
         }}
       >
+        <AOContextPanel
+          ao={ao}
+          prompt={prompt}
+          startTime={startTime}
+          site={site}
+          disabled={busy}
+          onTime={setStartTime}
+          onSite={setSite}
+          onAO={(value) => {
+            setAO(value);
+            setSite({ overrides: {}, notes: "" });
+            const matched = findAO(value);
+            if (matched) setStartTime(matched.sessions[0]?.time ?? "05:30");
+          }}
+        />
         {mode === "formal" && (
           <fieldset disabled={busy} className="formal-builder">
             <legend>Build your beatdown</legend>
@@ -339,25 +402,6 @@ export function Planner({
                 </select>
               </label>
               <label>
-                Terrain confirmed by Q
-                <select
-                  value={terrain}
-                  onChange={(e) => setTerrain(e.target.value)}
-                >
-                  {[
-                    "Q to confirm",
-                    "Flat parking lot",
-                    "Grass field",
-                    "Track / bleachers",
-                    "Playground / park",
-                    "Covered shelter",
-                    "Hills",
-                  ].map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
                 PAX count
                 <input
                   type="number"
@@ -375,13 +419,25 @@ export function Planner({
                   <input
                     type="checkbox"
                     checked={gear.includes(g)}
-                    onChange={() =>
+                    onChange={() => {
+                      if (
+                        !gear.includes(g) &&
+                        (g === "Bleachers / stairs" || g === "Pull-up bar")
+                      )
+                        setSite({
+                          ...site,
+                          overrides: {
+                            ...site.overrides,
+                            [g === "Pull-up bar" ? "pullupBars" : "stairs"]:
+                              "available",
+                          },
+                        });
                       setGear(
                         gear.includes(g)
                           ? gear.filter((x) => x !== g)
                           : [...gear, g],
-                      )
-                    }
+                      );
+                    }}
                   />
                   {g}
                 </label>
@@ -408,24 +464,74 @@ export function Planner({
         >
           Try the Gold Rush idea
         </button>
+        <div className="assistant-actions">
+          <button
+            className="create"
+            disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
+            type="submit"
+          >
+            {busy
+              ? "Working on your Q…"
+              : result
+                ? "Make a new draft"
+                : "Build my workout"}
+          </button>
+          {!busy && (
+            <button
+              type="button"
+              onClick={() => {
+                const request = plannerRequestSchema.safeParse({
+                  prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
+                  ao,
+                  startTime,
+                  site,
+                  minutes: 45,
+                  equipment:
+                    mode === "formal"
+                      ? gear.includes("Coupon")
+                        ? "Coupon"
+                        : gear.length
+                          ? "From prompt"
+                          : "None"
+                      : equipment,
+                  running,
+                  mary,
+                  strictSchedule: true,
+                  ...(mode === "formal" ? { builder: formal } : {}),
+                });
+                if (!request.success) {
+                  setError("Choose a start time and check your details.");
+                  return;
+                }
+                const next = fallbackPlan(request.data);
+                setResult(next);
+                onDraft?.(next.workout);
+                setSaved(false);
+                setError("");
+              }}
+            >
+              Use offline template
+            </button>
+          )}
+          {busy && (
+            <button
+              type="button"
+              onClick={() => {
+                epoch.current++;
+                controller.current?.abort();
+                setBusy(false);
+                setError("Generation stopped. Your previous draft is safe.");
+              }}
+            >
+              Cancel generation
+            </button>
+          )}
+        </div>
         <details className="assistant-preferences">
           <summary>
             Session preferences <span>45 minutes by default</span>
           </summary>
           <div className="assistant-grid">
-            <label>
-              Q location
-              <select
-                value={ao}
-                disabled={busy}
-                onChange={(e) => setAO(e.target.value)}
-              >
-                <option value="">Use my description</option>
-                {aoProfiles.map((a) => (
-                  <option key={a.id}>{a.name}</option>
-                ))}
-              </select>
-            </label>
             <p className="schedule-fixed">
               45-minute physical session
               <br />2 welcome · 8 warmup ·{" "}
@@ -461,20 +567,6 @@ export function Planner({
                 ))}
               </select>
             </label>
-            <label>
-              Free AI service
-              <select
-                disabled={busy}
-                value={provider}
-                onChange={(e) =>
-                  setProvider(e.target.value as Preferences["provider"])
-                }
-              >
-                <option value="auto">Automatic · free only</option>
-                <option value="gemini">Gemini · free tier</option>
-                <option value="openrouter">OpenRouter · free models</option>
-              </select>
-            </label>
             <label className="checkbox">
               <input
                 type="checkbox"
@@ -486,68 +578,9 @@ export function Planner({
             </label>
           </div>
         </details>
-        <div className="assistant-actions">
-          <button
-            className="create"
-            disabled={busy || (mode === "idea" && prompt.trim().length < 8)}
-            type="submit"
-          >
-            {busy
-              ? "Working on your Q…"
-              : result
-                ? "Make a new draft"
-                : "Build my workout"}
-          </button>
-          {!busy && (
-            <button
-              type="button"
-              onClick={() => {
-                const request = plannerRequestSchema.parse({
-                  prompt: prompt.length >= 8 ? prompt : `Build ${style}`,
-                  ao,
-                  minutes: 45,
-                  equipment:
-                    mode === "formal"
-                      ? gear.includes("Coupon")
-                        ? "Coupon"
-                        : gear.length
-                          ? "From prompt"
-                          : "None"
-                      : equipment,
-                  running,
-                  mary,
-                  strictSchedule: true,
-                  ...(mode === "formal" ? { builder: formal } : {}),
-                });
-                const next = fallbackPlan(request);
-                setResult(next);
-                onDraft?.(next.workout);
-                setSaved(false);
-                setError("");
-              }}
-            >
-              Use offline template
-            </button>
-          )}
-          {busy && (
-            <button
-              type="button"
-              onClick={() => {
-                epoch.current++;
-                controller.current?.abort();
-                setBusy(false);
-                setError("Generation stopped. Your previous draft is safe.");
-              }}
-            >
-              Cancel generation
-            </button>
-          )}
-        </div>
         <p className="assistant-privacy">
-          Your description and, when refining, this draft go to our AI providers
-          with an F3 briefing and selected reviewed workout references. Other
-          saved workouts are not sent. Free limits may pause generation. New
-          plans stay private until you choose to share them.
+          Your idea, site details and current draft go to our free AI providers.
+          Other saved workouts are not sent. Offline templates work without AI.
         </p>
       </form>
       {error && (
@@ -669,7 +702,7 @@ export function Planner({
                 </button>
               ))}
             </div>
-            <button type="submit" disabled={busy || revision.trim().length < 8}>
+            <button type="submit" disabled={busy || revision.trim().length < 3}>
               Refine this draft
             </button>
           </form>

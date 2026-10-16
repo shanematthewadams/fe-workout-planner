@@ -21,7 +21,14 @@ import {
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
-import { SessionTimeline, sessionMatches, DISCLAIMER, qSheet } from "./session";
+import {
+  SessionTimeline,
+  sessionStart,
+  clockLabel,
+  sessionMatches,
+  DISCLAIMER,
+  qSheet,
+} from "./session";
 import { ExiconBrowser } from "./ExiconBrowser";
 import { Planner } from "./Planner";
 import { Discovery } from "./Discovery";
@@ -1571,6 +1578,12 @@ export default function App() {
             Launch Field Q-Timer
           </button>
           <SessionTimeline workout={selected} />
+          {selected.schedule?.siteSummary && (
+            <details className="site-context-note">
+              <summary>Site details used for this plan</summary>
+              <p className="source-text">{selected.schedule.siteSummary}</p>
+            </details>
+          )}
           <button
             className="no-print"
             onClick={() => {
@@ -1588,7 +1601,10 @@ export default function App() {
           </button>
           {sessionMatches(selected) && (
             <aside className="timing-note">
-              <strong>Welcome & disclaimer · 5:30–5:32 AM</strong>
+              <strong>
+                Welcome & disclaimer · {clockLabel(0, sessionStart(selected))}–
+                {clockLabel(120, sessionStart(selected))}
+              </strong>
               <p>{DISCLAIMER}</p>
             </aside>
           )}
@@ -1651,7 +1667,10 @@ export default function App() {
           )}
           {sessionMatches(selected) && (
             <section className="workout-section section-cot">
-              <h2>Fellowship & trust · after 6:15 AM</h2>
+              <h2>
+                Fellowship & trust · after{" "}
+                {clockLabel(2700, sessionStart(selected))}
+              </h2>
               <p>
                 Count-o-Rama · Name-o-Rama / FNG naming · Announcements · Ball
                 of Man / closing. Allow 5–10 minutes after all physical work

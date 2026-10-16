@@ -1,6 +1,13 @@
 import official from "../data/ao-official.json";
 import local from "../data/ao-local.json";
 export type LocalAO = {
+  features?: Partial<
+    Record<
+      import("./site-contract").Feature,
+      { state: import("./site-contract").Availability; detail?: string }
+    >
+  >;
+  reviewBasis?: string;
   walls?: string;
   hills?: string;
   stairs?: string;

@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { Workout } from "./model";
-import { sessionPhases, sessionMatches, clockLabel } from "./session";
+import {
+  sessionPhases,
+  sessionMatches,
+  clockLabel,
+  sessionStart,
+} from "./session";
 import { playCadenceBeep, playSectionWhistle } from "./utils/sound";
 type TimerState = {
   elapsed: number;
@@ -17,9 +22,14 @@ export function elapsedAt(state: TimerState, now: number) {
     ),
   );
 }
-export function liveTimer(now: number, cot = 10): TimerState {
+export function liveTimer(
+  now: number,
+  cot = 10,
+  startTime = "05:30",
+): TimerState {
   const start = new Date(now);
-  start.setHours(5, 30, 0, 0);
+  const [hours, minutes] = startTime.split(":").map(Number);
+  start.setHours(hours, minutes, 0, 0);
   return {
     elapsed: Math.min(
       2700 + cot * 60,
@@ -37,7 +47,9 @@ export function FieldTimer({
   workout: Workout;
   onExit: () => void;
 }) {
-  const key = "fe-field-timer:v1:" + workout.id;
+  const startMinutes = sessionStart(workout),
+    startTime = workout.schedule?.startTime ?? "05:30";
+  const key = "fe-field-timer:v1:" + workout.id + ":" + startTime;
   const [timer, setTimer] = useState<TimerState>(() => {
     try {
       const raw = JSON.parse(localStorage.getItem(key) ?? "null");
@@ -138,7 +150,7 @@ export function FieldTimer({
     const current = Date.now();
     update(
       wall
-        ? liveTimer(current, timer.cot)
+        ? liveTimer(current, timer.cot, startTime)
         : { ...timer, anchor: current, wall: false },
     );
   }
@@ -164,8 +176,11 @@ export function FieldTimer({
       )}
       <h1>{elapsed >= total ? "COT complete" : phase.name}</h1>
       <p>
-        {timer.wall ? "Live 5:30 AM schedule" : "Practice / elapsed time"} ·{" "}
-        {clockLabel(phase.start)} – {clockLabel(phase.end)}
+        {timer.wall
+          ? `Live ${clockLabel(0, startMinutes)} schedule`
+          : "Practice / elapsed time"}{" "}
+        · {clockLabel(phase.start, startMinutes)} –{" "}
+        {clockLabel(phase.end, startMinutes)}
       </p>
       <div className="field-clock" role="timer" aria-label="Time remaining">
         {fmt((elapsed < 2700 ? 2700 : total) - elapsed)}
@@ -199,7 +214,7 @@ export function FieldTimer({
               {timer.elapsed ? "Resume" : "Start practice timer"}
             </button>
             <button onClick={() => start(true)}>
-              Join live 5:30 AM schedule
+              Join live {clockLabel(0, startMinutes)} schedule
             </button>
           </>
         )}
@@ -231,7 +246,7 @@ export function FieldTimer({
           <div className={p.id === phase.id ? "active" : ""} key={p.id}>
             <strong>{p.name}</strong>
             <span>
-              {fmt(p.end - p.start)} · {clockLabel(p.start)}
+              {fmt(p.end - p.start)} · {clockLabel(p.start, startMinutes)}
             </span>
           </div>
         ))}
