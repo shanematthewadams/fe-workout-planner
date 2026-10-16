@@ -1,4 +1,4 @@
-import { aoProfiles } from "./discovery";
+import { aoProfiles } from "./discovery.ts";
 import { aoKey } from "./model";
 import {
   FEATURES,
