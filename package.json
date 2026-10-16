@@ -12,7 +12,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "catalog:import": "node --experimental-strip-types scripts/import-catalog.ts",
     "catalog:sync-aos": "node scripts/sync-aos.mjs",
-    "catalog:export-sql": "node --experimental-strip-types scripts/export-regional-sql.ts"
+    "catalog:export-sql": "node --experimental-strip-types scripts/export-regional-sql.ts",
+    "postbuild": "node scripts/probe-nation.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "5.3.0",
