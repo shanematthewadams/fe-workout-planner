@@ -3,7 +3,7 @@
 One planner for F3 The FE in Olathe, Kansas: describe a Q, roll a wildcard, or use the formal builder. Shape the result, save it, and lead it in the field.
 
 - **Builder:** Surprise Me, Enter an Idea, Formal Builder, natural-language refinement and labeled offline templates.
-- **AO context:** choose an FE AO or type a downrange location, set your start time, and optionally adjust today’s available features. Casual idea entry stays the default.
+- **AO context:** choose an FE AO or type a downrange location, set your start time, and optionally adjust today’s available features, stored coupons, surface and lighting. Casual idea entry stays the default.
 - **Plan:** ordered instructions, counting rules, 45-minute timeline, welcome/disclaimer, separate COT, Slack Q-sheet copy and full/Thang-only print.
 - **Field Q-Timer:** live countdown from the selected start time (5:30 AM default) or practice countdown, 45-minute physical hard stop, optional Mary, 5/10-minute COT, whistle and four-count cadence.
 - **Exicon & Lexicon:** Studio movement/term/style guide, plus source-checked exercise references and FE AO schedule snapshots.

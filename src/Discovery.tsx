@@ -1,4 +1,5 @@
-import { FEATURES, type Feature } from "./site-contract";
+import { siteContext } from "./ao-context";
+import { FEATURES, SURFACES, LIGHTING, type Feature } from "./site-contract";
 import { useState } from "react";
 import { aoProfiles, exercises } from "./discovery";
 export function Discovery({
@@ -32,50 +33,71 @@ export function Discovery({
                   .toLowerCase()
                   .includes(query.toLowerCase()),
               )
-              .map((a) => (
-                <article className="card" key={a.id}>
-                  <h3>{a.name}</h3>
-                  {a.sessions.map((s) => (
-                    <p key={s.day}>
-                      <strong className="day-label">{s.day}</strong> · {s.time}{" "}
-                      · {s.minutes} minutes · {s.format}
-                      <br />
-                      {s.location}
-                    </p>
-                  ))}
-                  <details>
-                    <summary>Terrain & local details</summary>
-                    <dl>
-                      {(Object.keys(FEATURES) as Feature[]).map((feature) => (
-                        <div key={feature}>
-                          <dt>{FEATURES[feature]}</dt>
+              .map((a) => {
+                const context = siteContext(a.name);
+                return (
+                  <article className="card" key={a.id}>
+                    <h3>{a.name}</h3>
+                    {a.sessions.map((s) => (
+                      <p key={s.day}>
+                        <strong className="day-label">{s.day}</strong> ·{" "}
+                        {s.time} · {s.minutes} minutes · {s.format}
+                        <br />
+                        {s.location}
+                      </p>
+                    ))}
+                    <details>
+                      <summary>Terrain & local details</summary>
+                      <dl>
+                        {(Object.keys(FEATURES) as Feature[]).map((feature) => (
+                          <div key={feature}>
+                            <dt>{FEATURES[feature]}</dt>
+                            <dd>
+                              {context.features[feature] === "available"
+                                ? "Available"
+                                : context.features[feature] === "unavailable"
+                                  ? "Unavailable"
+                                  : "Unknown"}
+                              {a.local.features?.[feature]?.detail && (
+                                <p>{a.local.features[feature]!.detail}</p>
+                              )}
+                            </dd>
+                          </div>
+                        ))}
+                        <div>
+                          <dt>Coupons stored on site</dt>
                           <dd>
-                            {a.local.features?.[feature]?.state === "available"
-                              ? "Available"
-                              : a.local.features?.[feature]?.state ===
-                                  "unavailable"
-                                ? "Unavailable"
-                                : "Unknown"}
-                            {a.local.features?.[feature]?.detail && (
-                              <p>{a.local.features[feature]!.detail}</p>
-                            )}
+                            {context.amenities.couponsOnSite === null
+                              ? "Unknown"
+                              : context.amenities.couponsOnSite
+                                ? "Yes — confirm access and supply"
+                                : "No — bring your own if needed"}
                           </dd>
                         </div>
-                      ))}
-                    </dl>
-                    {a.local.checkedAt && (
-                      <p>Local details checked: {a.local.checkedAt}</p>
-                    )}
-                  </details>
-                  <p className="muted">
-                    Schedule checked {a.checkedAt.slice(0, 10)} · saved snapshot
-                  </p>
-                  <a href={a.sourceUrl}>Official schedule ↗</a>
-                  <button className="card-open" onClick={() => onAO(a.name)}>
-                    Workouts from this AO →
-                  </button>
-                </article>
-              ))
+                        <div>
+                          <dt>Surface</dt>
+                          <dd>{SURFACES[context.amenities.surface]}</dd>
+                        </div>
+                        <div>
+                          <dt>Lighting</dt>
+                          <dd>{LIGHTING[context.amenities.lighting]}</dd>
+                        </div>
+                      </dl>
+                      {a.local.checkedAt && (
+                        <p>Local details checked: {a.local.checkedAt}</p>
+                      )}
+                    </details>
+                    <p className="muted">
+                      Schedule checked {a.checkedAt.slice(0, 10)} · saved
+                      snapshot
+                    </p>
+                    <a href={a.sourceUrl}>Official schedule ↗</a>
+                    <button className="card-open" onClick={() => onAO(a.name)}>
+                      Workouts from this AO →
+                    </button>
+                  </article>
+                );
+              })
           : exercises
               .filter((e) =>
                 `${e.name} ${e.aliases.join(" ")}`

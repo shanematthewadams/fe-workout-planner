@@ -2,6 +2,9 @@ import { aoProfiles } from "./discovery";
 import { siteContext, findAO } from "./ao-context";
 import {
   FEATURES,
+  SURFACES,
+  LIGHTING,
+  type Amenities,
   type Feature,
   type SiteInput,
   type Availability,
@@ -101,6 +104,85 @@ export function AOContextPanel({
                 {profile?.local.features?.[feature]?.detail && (
                   <small>{profile.local.features[feature]!.detail}</small>
                 )}
+              </label>
+            ))}
+          </div>
+          <div className="feature-grid">
+            <label>
+              Coupons stored on site
+              <select
+                aria-label="Coupons stored on site today"
+                value={
+                  site.amenities?.couponsOnSite === undefined
+                    ? ""
+                    : site.amenities.couponsOnSite === null
+                      ? "unknown"
+                      : String(site.amenities.couponsOnSite)
+                }
+                onChange={(e) => {
+                  const amenities = { ...site.amenities };
+                  if (!e.target.value) delete amenities.couponsOnSite;
+                  else
+                    amenities.couponsOnSite =
+                      e.target.value === "unknown"
+                        ? null
+                        : e.target.value === "true";
+                  onSite({ ...site, amenities });
+                }}
+              >
+                <option value="">
+                  Regional:{" "}
+                  {profile?.local.amenities?.couponsOnSite == null
+                    ? "unknown"
+                    : profile.local.amenities.couponsOnSite
+                      ? "yes"
+                      : "no"}
+                </option>
+                <option value="true">Yes today</option>
+                <option value="false">No today</option>
+                <option value="unknown">Unknown today</option>
+              </select>
+              <small>
+                Storage only. Bring your own when needed; check supply and
+                access.
+              </small>
+            </label>
+            {(
+              [
+                ["surface", "Surface", SURFACES],
+                ["lighting", "Lighting", LIGHTING],
+              ] as const
+            ).map(([key, label, options]) => (
+              <label key={key}>
+                {label}
+                <select
+                  aria-label={`${label} today`}
+                  value={site.amenities?.[key] ?? ""}
+                  onChange={(e) => {
+                    const amenities = { ...site.amenities };
+                    if (!e.target.value) delete amenities[key];
+                    else
+                      Object.assign(amenities, {
+                        [key]: e.target.value as Amenities[typeof key],
+                      });
+                    onSite({ ...site, amenities });
+                  }}
+                >
+                  <option value="">
+                    Regional:{" "}
+                    {
+                      options[
+                        (profile?.local.amenities?.[key] ??
+                          "unknown") as keyof typeof options
+                      ]
+                    }
+                  </option>
+                  {Object.entries(options).map(([value, text]) => (
+                    <option key={value} value={value}>
+                      {text}
+                    </option>
+                  ))}
+                </select>
               </label>
             ))}
           </div>

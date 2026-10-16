@@ -1,5 +1,6 @@
+import { contextFor } from "../server/planner-context";
 import { describe, it, expect, vi } from "vitest";
-import { siteContext, blockedFeatures } from "../src/ao-context";
+import { siteContext, blockedFeatures, describeSite } from "../src/ao-context";
 import { plannerRequestSchema } from "../src/planner-contract";
 import { fallbackPlan } from "../src/fallback";
 import { validatePlan, generatePlan } from "../server/planner-service";
@@ -148,5 +149,110 @@ describe("start time follows the saved plan", () => {
     expect(elapsedAt(timer, early)).toBe(0);
     expect(elapsedAt(timer, start)).toBe(0);
     expect(elapsedAt(timer, stop)).toBe(2700);
+  });
+});
+
+describe("structured AO amenities", () => {
+  it("accepts the Studio JSON shape and supplies it in AI context without inventing other features", () => {
+    const amenities = {
+      couponsOnSite: true,
+      hasCoveredShelter: true,
+      hasTrack: false,
+      hasBleachers: true,
+      hasPullUpBars: false,
+      surface: "turf_and_asphalt" as const,
+      lighting: "lit" as const,
+    };
+    const input = plannerRequestSchema.parse({
+      ...request(),
+      ao: "Custom AO",
+      site: { amenities },
+    });
+    const context = contextFor(input).site;
+    expect(context.amenities).toEqual(amenities);
+    expect(context.features).toMatchObject({
+      shelter: "available",
+      track: "unavailable",
+      bleachers: "available",
+      pullupBars: "unavailable",
+      field: "unknown",
+      stairs: "unknown",
+    });
+    expect(describeSite(context)).toContain(
+      "Surface: Turf and asphalt. Lighting: Lit.",
+    );
+  });
+  it("keeps missing facts unknown and distinguishes confirmed absence", () => {
+    expect(siteContext("Gold Rush").amenities).toMatchObject({
+      hasTrack: true,
+      hasBleachers: null,
+      couponsOnSite: null,
+      surface: "unknown",
+      lighting: "unknown",
+    });
+    expect(siteContext("Clocktower").amenities.hasCoveredShelter).toBe(true);
+    expect(siteContext("Custom").amenities.hasTrack).toBeNull();
+    expect(
+      siteContext("Custom", "", {
+        overrides: {},
+        notes: "",
+        amenities: { hasTrack: false },
+      }).features.track,
+    ).toBe("unavailable");
+  });
+  it("keeps amenities and facility guards consistent after temporary closures", () => {
+    const context = siteContext("Custom", "The bleachers are closed.", {
+      overrides: {},
+      notes: "",
+      amenities: { hasBleachers: true },
+    });
+    expect(context.amenities.hasBleachers).toBe(false);
+    expect(context.features.bleachers).toBe("unavailable");
+    expect(
+      siteContext("Gold Rush", "", {
+        overrides: { track: "unavailable" },
+        notes: "",
+      }).amenities.hasTrack,
+    ).toBe(false);
+    expect(siteContext("Gold Rush").amenities.hasTrack).toBe(true);
+  });
+  it("does not treat stairs as confirmed bleachers", () => {
+    const input = { ...request(), ao: "Clocktower" },
+      plan = fallbackPlan(input).plan;
+    plan.sections[1].blocks[0].instructions = "Use the bleachers for repeats.";
+    expect(() => validatePlan(plan, input)).toThrow("site features");
+    expect(() =>
+      validatePlan(plan, {
+        ...input,
+        site: { overrides: {}, notes: "", amenities: { hasBleachers: true } },
+      }),
+    ).not.toThrow();
+  });
+  it("permits brought coupons even when none are stored on site", () => {
+    const input = {
+      ...request(),
+      equipment: "Coupon" as const,
+      site: { overrides: {}, notes: "", amenities: { couponsOnSite: false } },
+    };
+    const next = fallbackPlan(input);
+    expect(next.workout.equipment).toEqual(["Coupon"]);
+    expect(next.workout.schedule?.siteSummary).toContain(
+      "no; bring your own if needed",
+    );
+    expect(() => validatePlan(next.plan, input)).not.toThrow();
+  });
+  it("rejects invalid amenity values at the request boundary", () => {
+    expect(
+      plannerRequestSchema.safeParse({
+        ...request(),
+        site: { amenities: { hasTrack: "yes" } },
+      }).success,
+    ).toBe(false);
+    expect(
+      plannerRequestSchema.safeParse({
+        ...request(),
+        site: { amenities: { lighting: "probably" } },
+      }).success,
+    ).toBe(false);
   });
 });

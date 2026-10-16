@@ -62,3 +62,35 @@ it("allows an unfamiliar AO and handles an empty time without losing the app", (
     screen.getByRole("button", { name: "Use offline template" }),
   ).toBeVisible();
 });
+
+it("keeps amenity controls optional and carries temporary details into a plan", () => {
+  vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+  const view = render(<App />);
+  fireEvent.change(screen.getByLabelText("Q location"), {
+    target: { value: "Custom AO" },
+  });
+  expect(screen.getByLabelText("Surface today")).not.toBeVisible();
+  fireEvent.click(screen.getByText("Anything different today?"));
+  fireEvent.change(screen.getByLabelText("Surface today"), {
+    target: { value: "turf_and_asphalt" },
+  });
+  fireEvent.change(screen.getByLabelText("Lighting today"), {
+    target: { value: "lit" },
+  });
+  fireEvent.change(screen.getByLabelText("Coupons stored on site today"), {
+    target: { value: "false" },
+  });
+  view.unmount();
+  render(<App />);
+  expect(screen.getByLabelText("Surface today")).toHaveValue(
+    "turf_and_asphalt",
+  );
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: { value: "Dora with coupons" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
+  fireEvent.click(screen.getByRole("button", { name: "Plan" }));
+  expect(
+    screen.getByText(/Surface: Turf and asphalt. Lighting: Lit./),
+  ).toHaveTextContent("Coupons stored on site: no; bring your own if needed");
+});

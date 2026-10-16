@@ -52,7 +52,7 @@ export const planSchema = z
       )
       .min(2)
       .max(3),
-    requiredFeatures: z.array(featureSchema).max(10).optional(),
+    requiredFeatures: z.array(featureSchema).max(11).optional(),
     notes: z.array(z.string().min(1).max(400)).max(10),
   })
   .strict();

@@ -2,6 +2,10 @@ import { aoProfiles } from "./discovery.ts";
 import { aoKey } from "./model";
 import {
   FEATURES,
+  amenitiesSchema,
+  AMENITY_FEATURES,
+  SURFACES,
+  LIGHTING,
   type Feature,
   type Availability,
   type SiteInput,
@@ -20,10 +24,24 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
       ao?.local.features?.[key as Feature]?.state ?? "unknown",
     ]),
   ) as Record<Feature, Availability>;
+  // JSON booleans are explicit facts; missing/null stays unknown. Temporary values never publish.
+  const amenities = amenitiesSchema.parse({
+    ...ao?.local.amenities,
+    ...site?.amenities,
+  });
+  for (const source of [ao?.local.amenities, site?.amenities]) {
+    for (const [key, feature] of Object.entries(AMENITY_FEATURES)) {
+      const value = source?.[key as keyof typeof AMENITY_FEATURES];
+      if (value !== undefined)
+        features[feature] =
+          value === null ? "unknown" : value ? "available" : "unavailable";
+    }
+  }
   const notes = site?.notes ?? "";
   const terms: Record<Feature, string> = {
     track: "track",
-    stairs: "(?:stairs|steps|bleachers)",
+    stairs: "(?:stairs|steps)",
+    bleachers: "bleachers",
     parkingLot: "parking lot",
     shelter: "(?:shelter|pavilion|covered garage)",
     hills: "hills?",
@@ -85,7 +103,15 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
   // A closure stated in text always wins over availability for this request.
   for (const [key, value] of Object.entries(claims))
     if (value === "unavailable") features[key as Feature] = value;
+  // Keep the JSON amenities and the guarded feature map consistent after closures/overrides.
+  for (const [key, feature] of Object.entries(AMENITY_FEATURES)) {
+    amenities[key as keyof typeof AMENITY_FEATURES] =
+      features[feature] === "unknown"
+        ? null
+        : features[feature] === "available";
+  }
   return {
+    amenities,
     ao: ao?.name ?? aoName,
     features,
     available: (Object.keys(FEATURES) as Feature[]).filter(
@@ -130,7 +156,8 @@ export function detectFeatures(plan: {
     .replace(/\bwall[ -]clock\b/gi, "clock");
   const patterns: Partial<Record<Feature, RegExp>> = {
     track: /\btrack\b|\b400[ -]?(?:m|meter|metre)\s+(?:oval|lap)/i,
-    stairs: /\bstairs?\b|\bbleachers?\b|\bstaircase\b|\bstep[ -]?ups?\b/i,
+    stairs: /\bstairs?\b|\bstaircase\b|\bstep[ -]?ups?\b/i,
+    bleachers: /\bbleachers?\b/i,
     parkingLot: /\bparking\s+lot\b|\bcar\s+park\b/i,
     shelter: /\bshelter\b|\bpavilion\b|\bcovered\s+(?:garage|space|area)/i,
     hills: /\bhills?\b|\bincline\s+(?:run|sprint|repeat)/i,
@@ -169,6 +196,8 @@ export function describeSite(context: ReturnType<typeof siteContext>) {
           .map(([key, state]) => FEATURES[key as Feature] + " " + state)
           .join(", ")}`
       : "",
+    `Coupons stored on site: ${context.amenities.couponsOnSite === null ? "unknown; bring your own if needed" : context.amenities.couponsOnSite ? "yes; Q checks access and supply" : "no; bring your own if needed"}`,
+    `Surface: ${SURFACES[context.amenities.surface]}. Lighting: ${LIGHTING[context.amenities.lighting]}.`,
     context.todayNotes ? `For this Q: ${context.todayNotes}` : "",
     "Unlisted features remain unknown.",
   ]
