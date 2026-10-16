@@ -1,0 +1,1813 @@
+[
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:1404368",
+    "title": "One Year Today! Anniversary Q.  · 2026-07-25",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Willie Mays Hays \nSSH\nMichael Phelps \nGood Morning Good Night",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "365 total reps of the below exercises. We broke them up into 25 rep sets (15 for merkins) \n100 Curls \n100 heavy squats \n50 coupon swings \n50 overhead press \n65 merkins \nMoseyed a few times around the parking lot. Did some murder bunnies and bear crawls.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "365 seconds of abs. 73 seconds of each XO using a timer: \n\nFlutter Kicks\nAmerican Hammers \nPickle Pointers \nMichael Phelps \nLeg Lifts \n\n5 minutes of Bro-ga led by Vana  recover recover.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:1404368",
+      "ao": "The Gathering",
+      "eventDate": "2026-07-25",
+      "checkedAt": "2026-10-16T16:03:58.565Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "365 main reps include 65 merkins split into 15-rep sets; handling of the final partial set is not stated. Mary uses 73 seconds per exercise.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/1404368"
+    },
+    "updatedAt": "2026-10-16T16:03:58.565Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:1404370",
+    "title": "The Hills and Hollers of The Gathering · 2026-08-08",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Good Morning Good Night\nWorshing Machines\nWMH\nBig Baby Arm Circles\nRaise the Roofs\nSSH",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "Station 1: Reverse King of the Hill\nOne PAX double farmer carry down the hill and back the rest banking 200 of\nOHP\nCurls\nBent over Rows\nLawn Mowers\nSkull Crushers\n\nStation 2: Hills and Hollers\nDORA with one pax running down the hill and up to the next doing 3 burpees at the top the other PAX doing Big Boy Sit-ups and Imperial Walkers\n\nStation 3: Stand By Me\n5s on the train access ramp Burpees and Jump Squats",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Mary Go Round:\nLBCs\nFlutter Kicks\nMonkey Humpers\nHello Dolly",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:1404370",
+      "ao": "The Gathering",
+      "eventDate": "2026-08-08",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Station 1 banks 200 of each listed movement; whether totals are shared across partners is unclear. Station 2 totals and station timing are missing.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/1404370"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:1404375",
+    "title": "let’s get a saturday sweat in! · 2026-09-12",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "grabbed coupons and moved to shelter house did 3 min AMRAP rounds of:\n- curls \n- dips\n- reverse lawn mowers \n- big boysi\n- mericans\n- inclimerin\n- bent over rows\n- motivators from five\n- sitting overhead chest press",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:1404375",
+      "ao": "The Gathering",
+      "eventDate": "2026-09-12",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Each listed movement has a 3-minute AMRAP round. Source spellings big boysi and inclimerin are retained; confirm regional names before leading.",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Warmup not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/1404375"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:1404376",
+    "title": "The Gathering Bootcamp · 2026-09-19",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "“The Climb” - 3 rounds\n- Step Ups x 8 each leg\n- Walking lunges x 20 total \n- Bear Crawl - 20 yards\n\n“Deadfall Crossing” - 3 rounds\n- High Plank - 45 Seconds\n- Carolina Dry Dock x 15\n- Bear Crawl or Crab Walk x 20 yards\n- Side Plank - 20 sec/ each side\n\n“Spot and Stalk” - 3 Rounds \n- Farmers Carry - 50 yards (one coupon/switch halfway)\n- Air Squats x 20\n\n“The Pack Out” - 3 Rounds\n- Step Ups - 8 each leg\n- Bear crawl/15 Merkins\n- Walking Lunges\n- Flutter kicks x20\n\nBonus Work! \nEMOM- but the PAX were too hard so we didn’t take a full minute\n1 - Air Squats x10\n2 - Merkins x 15\n3 - Lunges x 20\n4 - Mountain Climbers x 20\n5 - Plank 60 sec",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:1404376",
+      "ao": "The Gathering",
+      "eventDate": "2026-09-19",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Pack Out lunge count and bear-crawl distance are missing. Bonus says EMOM but records shorter intervals; exact intervals unspecified.",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Warmup not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/1404376"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:2142864",
+    "title": "NFL Combine (FOOTBALL IS BACK!)  · 2026-09-14",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Football"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Tree Milk led us in a long warm up. We did some sprinting and some stretching and various other fun things.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "Quarter 1: Route trees. Pax took turns running routes and throwing the ball as a QB. When a pass was incomplete pax did 5 burpees or 10 merkins (pax choice). Did a few rounds. \n\nQuarter 2: 20 yard sprint. 5 burpees. 30 yard sprint. 10 jump squats. 40 yard sprint. 15 Big boy sit ups. \n\nHalftime: 40 yard bear crawl \n\nQuarter 3: Kicking Drill. Pax took turns attempting to make a field goal through the uprights from the 10 yard line. Difficult in the dark. We made one field goal. Every time we missed we did 15 Carolina Dry Docks. When we made it we did 10. \n\nQuarter 4: Football Hot Potato. Pax were in a circle in a continuous Al Gore. Pax with the ball threw it to another Pax at random. If caught, that pax chose an xo and led it. If dropped, pax did bonny blaires. We did the following xo's in differing reps: \nBonny Blaires, pickle pointers, jump squats, squats, imperial walkers, plank jacks, mountain climbers, Arm-o-Rama, LBC's... A few other ones.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Tree Milk led us in a bunch of stretching until recover recover.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:2142864",
+      "ao": "Blackops",
+      "eventDate": "2026-09-14",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Quarter 1 round count, quarter 4 reps, some exercises and stretch details are unspecified; PAX choice is part of the original format.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/2142864"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:2149027",
+    "title": "Blackops Bootcamp · 2026-09-09",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "-Imperial Walker ic\n     -Toy Soldier ic\n     -Runners stretch oyo\n     -WMH oyo\n     -BIG arm circles ic\n     -MP oyo",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "•Shoulders x3\n       -Shoulder press x10\n       -Front raise x10\nMosey\n     •Arms x3\n       -Curls x 10\n       -Extensions x10\nMosey\n     •Chest x3\n       -Urkin x10\n       -Derkin x10\nMosey",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "-Heavy Gravediggers x10\n     -Heavy Flutterkicks x10\n     -WW3 x10\n     -Mosey",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:2149027",
+      "ao": "Blackops",
+      "eventDate": "2026-09-09",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Three sets per muscle-group pair are written. IC warmup counts and heavy equipment weight are not supplied.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/2149027"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:2158539",
+    "title": "TC guys at the ARC · 2026-09-16",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "-Runners Stretch oyo\n    -WMH oyo\n    -MP oyo",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "-Shoulder Press x15\n    -5 light mosey\n    - Burpees x10\n    -5 light mosey (return)\n    -Bicep curl x15\n    -5 light mosey\n    -Jump squats x10\n    -5 light mosey (return)\n    -Chest press x15\n    - Heavy flutter kicks x15\n    -5 light mosey\n    -Burpees x10\n    -5 light mosey (return)\nRinse and repeat 3 times",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "-Suicide sprints ( 5 lights)\n    -Plank 1 min",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:2158539",
+      "ao": "Blackops",
+      "eventDate": "2026-09-16",
+      "checkedAt": "2026-10-16T16:03:58.567Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Five-light travel distance is site-dependent; source says repeat 3 times without clarifying whether this includes the initial pass. Rep cadence mostly unspecified.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/2158539"
+    },
+    "updatedAt": "2026-10-16T16:03:58.567Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:2174330",
+    "title": "TC guys @ ARC · 2026-09-30",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "-Motivator from 5",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "-High knee x19\n    -Ranger merkin x19\n    -Standing lunge x15\n    -Jumping lunge x16\n    -Mountain climber x25\n    -Plank Jack x25\n    -Burpee x25\n    -American Hammer x25\n    -Alternating side squat x14\n    -High plank (90 seconds)\n    -Lunge walk (100 m)\n    -Sprint (200 m)\n    -Monkey humpers x25\n    -Low & slow squat (3 seconds) x19\n    -Hand release merkin x15\n    -SSH x100\n    -Derkin x 17\n    -Merkin x 17\n    -Calf raise x100 (50 per side)",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:2174330",
+      "ao": "Blackops",
+      "eventDate": "2026-09-30",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Calf raises explicitly 50 per side; low-and-slow squat 3 seconds; plank 90 seconds. Most other alternating counts are unspecified.",
+        "Mary explicitly omitted in source",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/2174330"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:2182558",
+    "title": "TC guys @ ARC · 2026-10-07",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "-SSH ic x15\n    -Imperial Walker ic x15\n    -BAC ic x15\n    -BBAC ic x15",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "-Round 1\n      •2 burpees, 2 Dry docks, 2 squats \n        Down and back 1 time (50ish yards)\n    -Round 2\n      •4 burpees, 4 dry docks, 4 squats\n        Down and back 2 times\n    -Round 3\n      •6 burpees, 6 dry docks, 6 squats\n        Down and back 3 times\n    -Round 4\n      •8 burpees, 8 dry docks, 8 squats\n        Down and back 4 times\n    -Round 5\n      •10 burpees, 10 dry docks, 10 squats\n        Down and back 5 times\n    -Round 6\n      •12 burpees, 12 dry docks, 12 squats\n        Down and back 6 times\n    -Round 7\n      •14 burpees, 14 dry docks, 14 squats\n        Down and back 7 times",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "-Flutter kicks ic x15\n    -BB’s x15",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:2182558",
+      "ao": "Blackops",
+      "eventDate": "2026-10-07",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Rounds increase 2 to 14 reps of each exercise. Travel is 50ish yards per down-and-back; explicit IC retained in warmup/Mary.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/2182558"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472714",
+    "title": "5x5 Field Trip · 2026-06-30",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Longer stretching time: WMH, Michael Phelps, grass grabbers, SSH, calf stretch, deep squat, 90/90. Mosey to a park close by.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "5x5 on the basketball court. One XO for 10 reps in between some basketball suicides. 50 reps each round. \n\nAmerican Hammer\nMerkins\nSquats \nBig boys\nBurpees (5 each round)\n\nMosey back to the flag.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Each pax led a core XO. LBC’s, flutter kicks, J Lo’s, big boys, ABC’s, American hammers, SSH.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472714",
+      "ao": "Clocktower",
+      "eventDate": "2026-06-30",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Main 5x5 says 10 reps / 50 per round, but burpees are 5 each round; retain this exception. Mary counts not supplied.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472714"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472715",
+    "title": "Lightpoles · 2026-07-07",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Grassgrabbers, WMH, Michael Phelps, SSH, quad stretch, calf stretch, and a short mosey.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "Light pole workout. Clocktower has an excessive amount of light poles. We ran to every other light pole and did an XO at each. 8 poles in total each round for 6 rounds. \n\nMerkins, squats, American hammers, burpees, sprints and sprints again. \n\n10 reps each on the first 4 rounds. Burpees started at 1 and grew incrementally at each stop.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Grave diggers, ABC’s, big boys, leg lifts, and flutter kicks.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472715",
+      "ao": "Clocktower",
+      "eventDate": "2026-07-07",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "10 reps apply to first four rounds; burpees increase at each stop. Exact sprint distance and final-round counts are not supplied.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472715"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472820",
+    "title": "The Caterpillar Run (heavy) · 2026-07-10",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Philipino Nightclub IC 10x\nAbe  Vigoda IC 10x\nHillbilly IC 10x\nLittle Baby arm circle IC 10X",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "The Heavy Caterpillar - travel single file, with a coupon, behind the Q. When the Q stops to do an Exo, the next person passes before starting Exo. The line continues until all PAX are doing the Exo. \n\nThe Q does at least 10 reps (more if the 6 hasn’t started the Exo) before traveling past the line of exercising PAX. Encourage PAX as you travel past them. \n\nRepeato until time. Ending up at the flag. (This is a string of pearls variation)\n\nDiamond Merkin\nSumo Squat\nAmerican hammer\nSkull crusher\nBurpee jump over\nRainbow\nMerkin pull through\nApollo Ono\nWindshield wiper\nAussie merkin\nSmurf jack\nV-Up\nDry dock\nThruster\nE2K\nCurl\nStar jump\nImperial walker\nWelsh merkin\nDead lift\nLBC\nDiamond Merkin\nSumo Squat\nAmerican hammer\nSkull crusher",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Low plank lifting 1 leg at a time until time.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472820",
+      "ao": "Pretty Bird",
+      "eventDate": "2026-07-10",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Q performs at least 10 reps, waiting for the six; other PAX start as the line passes. Total route/time cap not supplied.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472820"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472827",
+    "title": "5 year Q · 2026-08-28",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "- 10 Burpee\n- Goalposts ic\n- Willie Mays Hayes ic\n- Michael Phelps ic\n- Toy soldiers ic\n- LBACs ic",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "- Mercy Rifle Carry to back parking lot\n- Leg lifts when Mercy is called\n- 5 Rings\n- Curl and Press IC\n- Runway Models (Elevated Single Leg Lift + Chest Press) IC (each leg)\n- Lion Kings\n- Spider Derkins\n- Block Jump Burpees\n- After each XO we take one step back to signify the 5 “tree rings” of my years in F3.\n- Repeat the whole thing but take steps back toward the center\n- DORA windsprints: \n- Pax 1 does wind sprints as Pax 2 starts bank of core XOs\n- 100 Mountain Climbers IC\n- Hold plank for the 6\n- One minute merkin\n- 20 seconds down\n- 20 seconds low plank hold\n- 20 seconds slow up\n- Welsh Dragon\n- Bear crawl to every parking space line, then do merkin, shoulder tap, plank jack.\n- Core Relay\n- Break into 2 teams.\n- Coupon push down and back while your team holds Superman. Tap next guy to coupon push and the team switches to a boat hold.\n- Piston Mike Tysons\n- Break into two teams\n- Team 1 does all odd reps and Team 2 does all even reps\n- 50 total\n- 5 Rings\n- Circle up in plank. Pull coupon through to the pax next to you.\n- Go around 5 times\n- Mosey back to flag",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "- 90/90s",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472827",
+      "ao": "Pretty Bird",
+      "eventDate": "2026-08-28",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Several 5 Rings exercise counts, relay distances, timing and the second DORA partner core movements are unspecified. Detailed listed counts/order retained.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472827"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472833",
+    "title": "It's a workout · 2026-10-09",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "- Side Straddle Hops\n- Imperial Walkers\n- Good Morning, Good Night\n- Armorama",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "11s over the barrier, 2 rounds\n- Heavy Squats -> Merkins\n- Slow Curls -> WWIs\n\nAfter each round was completed, plank or Al Gore for the 6. Then Wall Sit and Balls to the Wall.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472833",
+      "ao": "Pretty Bird",
+      "eventDate": "2026-10-09",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Two 11s pairings over a barrier; initial split and later wall-sit/Balls-to-the-Wall hold times not supplied. Confirm 11s convention before leading.",
+        "No usable Mary instructions supplied",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472833"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472929",
+    "title": "‼️VQ‼️ - Build the Foundation · 2026-08-10",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "- SSH (x15)\n- Seated Toe Touches\n- WMH\n- Imperial walkers (x15)",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "- .5 mile indian run (everyone in a line—last person sprints to the front)\n- Groiners (x15)\n- Riffle Carry (~50 yards)\n- Weighted or unweighted jump squats (x15)\n- Green Sally Up - Merkins then Squats until the song ended\n- Blockees (x7)\n- Coupon Rows (x25)\n- Groiners (x15)\n- Riffle Carry (~50 yards)\n- Weighted or unweighted jump squats (x15)\n- .5 mile indian run (everyone in a line—last person sprints to the front)\n- Coupon Rows (x20)",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "- Plank (1.5 mins)\n- The maggie (chest press w/ coupon + flutter kicks)\n- Mountain Climber (x15)\n- Various stretching XOs\n- 60s push-up",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472929",
+      "ao": "Dysentery",
+      "eventDate": "2026-08-10",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Counts and distances retained; cadence is not specified for most reps. Song duration and Maggie rep target are unspecified.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472929"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:472938",
+    "title": "9 Car Pileup · 2026-10-12",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "SSH\nGMGN\nWorshing Machine\nToy Soldiers\nRTR\nMoroccan Night Clubs\nMichael Phelps",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "XO on each end of 9 parking spots with MOT between\n\n25 Curls\n25m Lunge Walk\n25 SSH IC\n25m Dan Taylor - 1:4 Squat:Lunge Walk\n25 Chest Press\n25m Sprint\n25 Merkins\n25m Flying Nuns - LBAC lunge walk\n25 Heavy Pickle\n25m Bear Crawl\n25 WW1\n25m Monkey Crawl\n25 Heavy Squat\n25m Crab Walk\n25 Flutter Kicks IC\n25m Mongo Squat walk\n25 Heavy Shoulder Shrug\n25m Broad Jump\n25 Burpees\n25m Duck Walk\n\nMosey",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Side shuffle to jump squat down and back 2x and then high knees to merkin down and back 2x",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:472938",
+      "ao": "Dysentery",
+      "eventDate": "2026-10-12",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Exercise/25m travel order preserved. Dan Taylor explicitly 1 squat:4 lunge steps; flutter kicks/SSH IC. Mary-go-round portion unspecified.",
+        "Mary-go-round mentioned without exercises/counts; only the specified closing sequence retained",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/472938"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473028",
+    "title": "RUGBURNOUT · 2026-07-02",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "- A Star is Born (a requirement when Bumble is present)\n- Michael Phelps\n- Grass Grabbers with a behind the back clap (Ass Grabbers?)\n- Merkivators from 6\n- Coupon Mosey to Mahaffie Heritage Center Parking Lot",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "The RUGBURNOUT workout. 10 Exos. 3 minutes each. 30 seconds of rest between. If you burnout during the 3 minutes, run the width of the parking lot and keep going.\n\nRussian Twists (American Hammers)\nUp Downs (Heavy Squats)\nGrocery Cart (Coupon Curl Hold)\nBurpees\nUpright Rows\nReverse Lunges\nNever Cross Dolly (Hello Dolly in Iron Cross position)\nOverhead Press\nUpright Row\nTie Fighters (aka Flying Nuns)",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473028",
+      "ao": "Stagecoach",
+      "eventDate": "2026-07-02",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Main is 10 work intervals of 3 minutes with 30-second rests; no rep target. Warmup counts partly unspecified.",
+        "No usable Mary instructions supplied",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473028"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473030",
+    "title": "2 Minutes · 2026-07-16",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "GMGN\nBig Baby Arm Circles\nToy Soldiers\nMichael Phelps\nCalf stretches",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "2 min of an XO and 30s rest. Goal is not AMRAP or To failure, but focus on form, consistency and endurance. \n\nMerkins\nGoblet Squats\nSSH\nFlutter Kicks\nBear Crawl/Crawl Bear\nCurl to OHP\nAround the World Lunges\nMountain Climbers\nBig Boys\nFarmer Carry\nShoulder Taps\nJump Squats\nShuttle Sprints\nFreddy Mercs\nLunge Walk\nBurpees",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473030",
+      "ao": "Stagecoach",
+      "eventDate": "2026-07-16",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Work 2 minutes, rest 30 seconds; the source explicitly says this is not AMRAP or to failure. Total session duration not supplied.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473030"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473033",
+    "title": "F3 Poker · 2026-08-06",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "Grass grabbers, Michael Phelps, SSH and WMH. Explained the poker game set up.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "4 teams of 2. One member of each team would grab a card from the pile and the team would then run to the corresponding sign for that card and do the XO there. Reps were based on the card number. Face cards were 11 reps and aces were 12 reps. Repeat until you had 5 cards. Did allow one trade at the end but still had to do the new XO. \n\nWe compared hands at the end of each round. Winners had 5 burpees and losers had 10 burpees. \n\nWe did two rounds. XO’s as follows:\n2’s: bear crawl back to the flag\n3’s: lap around goose poop island\n4’s: Carolina dry docks\n5’s: burpees\n6’s: jump squats\n7’s: mountain climbers (IC)\n8’s: sprint back to the flag\n9’s: LBC’s (IC)\n10’s: Merkins\nFace cards: 11 reps of squats\nAces: 12 reps of SSH (IC)",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Mary go round. Each pax led an XO.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473033",
+      "ao": "Stagecoach",
+      "eventDate": "2026-08-06",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Card number determines reps, except face cards = 11 and aces = 12. IC is explicit only for the listed movements. Mary exercises/counts not supplied.",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473033"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473040",
+    "title": "In honor of Wendell Berry · 2026-09-24",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "GMGN, WMH, SSH, LBAC and RTR",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "Start with first XO then run a loop and then repeat that XO and add the next XO each round:\n\n10 Merkins\n10 Squats\n10 Big Boys\n10 Mountain Climbers IC\n5 Burpees\n10 OH Press\n10 Heavy Squat\n10 Heavy Big Boy\n10 Firecrackers\n5 Blockees\n\nTotals:\nMerkins 100\nSquats\t90\nBig Boys 80\nMountain Climbers IC 70\nBurpees 30\nOH Press 50\nHeavy Squat 40\nHeavy Big Boy\t30\nFirecrackers 20\nBlockees 5",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-2",
+            "title": "From the backblast",
+            "instructions": "Cora - one partner do the core XO and the other double farmer carry\nFreddie Mercs\nLBCs\nPlank",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473040",
+      "ao": "Stagecoach",
+      "eventDate": "2026-09-24",
+      "checkedAt": "2026-10-16T16:03:58.568Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Source burpee total says 30, while 6 rounds of 5 would total 30; all source totals retained. Loop distance, warmup reps and partner core counts are missing.",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473040"
+    },
+    "updatedAt": "2026-10-16T16:03:58.568Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473134",
+    "title": "Yippee Ki-Yay · 2026-07-15",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "SSH\nWMH\nGG's\nBurpees\nThrusters\nShould stretch\nMerkins\nWinshield wipers\nMosey to track.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "10 thrusters, sprint/run 200m.\n15 raggedy anne, sprint/run 200m.\n10 thruster, 15 jungle boi's, sprint/run 200m.\n15 raggedy anne, 10 superman's, sprint/run 200m.\n10 thrusters, 15 jungle bois's, 10 heavy squats, sprint/run 200m.\n15 raggedy anne, 10 supermans, 15 toe stackers, sprint/run 200m.\n10 thrusters, 15 jungle bois, 10 heavy squats, 15 cadence curls, sprint/run 200m.\n15 raggedy anne, 10 supermans, 15 toe stackers, 15 buzzsaw, sprint/run 200m.\n10 thrusters, 15 jungle bois, 10 heavy squats, 15 cadence curls, 15 OHP, sprint/run 200m.\n10 raggedy anne, 10 supermans, 10 toe stackers, 10 buzzsaw, 10 WW1, sprint/run 200m.\n5 thrusters, 10 jungle boi's, 10 heavy squats, 10 cadence curls, 10 OHP, 6 coupon swings, mosey to flag.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473134",
+      "ao": "Yippee Ki-Yay",
+      "eventDate": "2026-07-15",
+      "checkedAt": "2026-10-16T16:03:58.569Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Each written line is a separate 200m leg. Later raggedy-anne counts change from 15 to 10; retained exactly. Counting conventions mostly unspecified.",
+        "No usable Mary instructions supplied",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473134"
+    },
+    "updatedAt": "2026-10-16T16:03:58.569Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473243",
+    "title": "SouthPark · 2026-08-14",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "7’s shoulder taps/merkins with 5 yard bear crawl/crawl bear. Q ejected at 3. \n\nCooper from 7 of four corners of parking lot:\nFoxhole merkins\nSquats\nWW1\nBurpees\n\nMosey to do Rocky Balboa x 15 IC\nStep ups IC x 15\n\nMosey to flag for Arm-o-Rama",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "25 flutters IC\n20 star crunches\n15 slutty frogs \n10 leg ext ea\n5 leg climbs ea",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473243",
+      "ao": "SouthPark",
+      "eventDate": "2026-08-14",
+      "checkedAt": "2026-10-16T16:03:58.569Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Source says Q stopped the 7s at 3. Cooper-from-7 convention and travel distances are not explained; confirm before leading.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Warmup not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473243"
+    },
+    "updatedAt": "2026-10-16T16:03:58.569Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473346",
+    "title": "A hard upper body BD · 2026-08-04",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "SSH\nWMH\nMichael Phelps\nBurpee - 5\nMerkin - 10\nOHP - 10\nBentover Row - 10",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "4 cones - there is a mode of transport to each cone with reps of 5,10,15,20 then back to 15, 10, 5, finish with a burnout\nMerkin – Bear Crawl – Crawl Bear – Burnout Diamond Merkin in cadence - 10\nOHP – Rifle Carry - Burnout - close grip OHP in cadence\nCurl – Curl Walk - went up to 25 - Burnout - Close grip curl in cadence\nBent over row – Farmer carry - went to 25 - Burnout, BOR IC\nBurpee to 15 -  Murder Bunny – reverse murder bunny – Blockees on way back 10, 5 - Burnout Welsh Blockee - 7\nMerkin IC - 10\nMARY: no time",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473346",
+      "ao": "SouthPark",
+      "eventDate": "2026-08-04",
+      "checkedAt": "2026-10-16T16:03:58.569Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Descending rep ladder and exercise-specific exceptions retained; several burnout rep targets and counting rules are unspecified.",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Mary not supplied; omission not confirmed",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473346"
+    },
+    "updatedAt": "2026-10-16T16:03:58.569Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473355",
+    "title": "REHOPE, but it’s also a workout · 2026-10-06",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": ["Coupon"],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "warmup",
+        "title": "Warmup",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "- SSH x 10 IC\n- Imperial Walkers x 10 IC\n- Merkins x 10 OMD\n- Arm-o-rama",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "MOTHERFEEKS\nBased on the https://f3greenwood.org/all/ironpax-challenge/feeks-wod-ipc-2025-week-1, but modified so that instead of increasing one exercise every round, we added a new exercise while keeping everything that came before it. We didn't go the full 100 yards, more like 50 so each down and back was about 100.\n\nRound 1: 2 Blockees + 1 Down and Back\nRound 2: 2 Blockees + 4 WW3s + 2 Down and Backs\nRound 3: 2 Blockees + 4 WW3s + 6 Derkins + 3 Down and Backs\nRound 4: + 8 Goblet Squats + 4 Down and Backs\nRound 5: + 10 Curls + 5 Down and Backs\nRound 6: + 12 Overhead Presses + 6 Down and Backs\nRound 7: + 14 Coupon Rows + 7 Down and Backs\nRound 8: + 16 Coupon Lunges (1 is 1) + 8 Down and Backs\nRound 9: + 18 Chest Presses + 9 Down and Backs\nRound 10: + 20 American Hammers (2 is 1) + 10 Down and Backs\n\nEach round included every exercise from the previous rounds.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473355",
+      "ao": "SouthPark",
+      "eventDate": "2026-10-06",
+      "checkedAt": "2026-10-16T16:03:58.569Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Regional adaptation of linked IronPAX workout. Every round retains previous exercises; ~50-yard leg, ~100-yard down-and-back. Lunges 1 is 1; American Hammers 2 is 1.",
+        "Mary explicitly omitted in source",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473355"
+    },
+    "updatedAt": "2026-10-16T16:03:58.569Z"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "f3nation:event:473565",
+    "title": "Rain or shine, always outside! · 2026-10-14",
+    "summary": "Regional backblast · original workout instructions",
+    "kind": "source",
+    "duration": null,
+    "equipment": [],
+    "running": "None",
+    "format": "Custom",
+    "sections": [
+      {
+        "id": "section-0",
+        "kind": "thang",
+        "title": "The Thang",
+        "blocks": [
+          {
+            "id": "block-0",
+            "title": "From the backblast",
+            "instructions": "we linked up two EXO’s, and regressive and progressive sets.\n1.  30 merkins + 10 heavy squats\n2. 25 merkins + 15 heavy squats\n3. 20 merkins + 20 heavy squats\n4. 15 merkins + 25 heavy squats\n5. 10 + 30….\n\nThen curls + heavy calf raises… same format\n\nThen bent over rows + walking lunges… same format\n\nIn between each set, we did short moseys, side shuffles, balancing act on parking curbs, toy soldiers, stretches, etc.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      },
+      {
+        "id": "section-1",
+        "kind": "mary",
+        "title": "Mary",
+        "blocks": [
+          {
+            "id": "block-1",
+            "title": "From the backblast",
+            "instructions": "10 of each EXO, focus on form.  Pumpkin head neck stretching.",
+            "minutes": null,
+            "exercises": []
+          }
+        ]
+      }
+    ],
+    "rawNotes": "",
+    "adaptationNotes": "Imported original. No missing exercises or sections have been filled in. Check source notes before leading.",
+    "provenance": {
+      "status": "regional-reviewed",
+      "label": "Reviewed by Engineering source and privacy review",
+      "sourceId": "f3nation:event:473565",
+      "ao": "Airfield",
+      "eventDate": "2026-10-14",
+      "checkedAt": "2026-10-16T16:03:58.570Z",
+      "issues": [
+        "Q not resolved from source; no attendance inference",
+        "Source API link may require F3 Nation access",
+        "Five decreasing/increasing pairs repeat for each listed pairing. Final 10 + 30 refers to the first pair. Later walking-lunge counting and short-mosey distances unspecified.",
+        "Unrelated asides removed and inline Mary headings separated; workout instructions/counts otherwise retained",
+        "Warmup/Mary counts or counting conventions may be incomplete; source text is authoritative",
+        "Q not supplied",
+        "Warmup not supplied",
+        "Duration unknown",
+        "Running requirement not supplied; inspect instructions",
+        "Equipment not specified; inspect instructions",
+        "Counts and exercise order retained as source text; verify counting rules before leading"
+      ],
+      "durationBasis": "unknown",
+      "url": "https://api.f3nation.com/v1/event-instance/id/473565"
+    },
+    "updatedAt": "2026-10-16T16:03:58.570Z"
+  }
+]

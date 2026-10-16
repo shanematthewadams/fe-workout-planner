@@ -1,0 +1,249 @@
+[
+  {
+    "id": "fe-ao-baywatch",
+    "name": "Baywatch",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "monday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Black Bob Park (SW Parking Lot) / 14500 W 151st St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-dysentery",
+    "name": "Dysentery",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "monday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Oregon Trail Park / 1100 S Robinson St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-you-ll-be-fine",
+    "name": "You'll Be Fine",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "monday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Run / ruck",
+        "location": "Scooter’s Coffee / 12551 Pflumm Rd. Overland Park, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-clocktower",
+    "name": "Clocktower",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "tuesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Johnson County Square / Santa Fe & N. Cherry Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-south-park",
+    "name": "South Park",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "tuesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "(CURRENT: Fall/Winter) Brougham Elementary / 15500 S. Brougham Dr. Olathe, KS(Summer) Heritage Park / 16240 Pflumm Rd. Olathe, KS"
+      },
+      {
+        "day": "friday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "(CURRENT: Winter) Brougham Elementary / 15500 S. Brougham Dr. Olathe, KS(Summer) Heritage Park / 16240 Pflumm Rd. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-sunnyside-up",
+    "name": "Sunnyside Up",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "tuesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Sunnyside Elementary / 16025 S Lindenwood Dr, Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-airfield",
+    "name": "Airfield",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "wednesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Black Bob Park (N Parking Lot) / 14500 W 151st St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-heartland",
+    "name": "Heartland",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "wednesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Heartland Community Church / 12175 S. Strang Line Rd. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-yippee-ki-yay",
+    "name": "Yippee Ki Yay",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "wednesday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Frontier Trail Middle School / 15300 W 143rd St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-gold-rush",
+    "name": "Gold Rush",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "thursday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "California Trail Middle School / 13775 W 133rd St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-overdraft",
+    "name": "Overdraft",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "thursday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Run / ruck",
+        "location": "Commerce Bank / 15910 S. Mur-Len Rd"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-stagecoach",
+    "name": "Stagecoach",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "thursday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Olathe Community Center / 1205 E Kansas City Rd. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-vagabonds",
+    "name": "Vagabonds",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "thursday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Ruck",
+        "location": "Meets at Different Locations in Olathe"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-pretty-bird",
+    "name": "Pretty Bird",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "friday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Olathe South High School (E Parking Lot) / 1640 E 151st St. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-the-gathering",
+    "name": "The Gathering",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "saturday",
+        "time": "05:30",
+        "minutes": 45,
+        "format": "Bootcamp",
+        "location": "Olathe Community Center / 1205 E Kansas City Rd. Olathe, KS"
+      }
+    ]
+  },
+  {
+    "id": "fe-ao-southstride",
+    "name": "SouthStride",
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-16T01:59:41.828Z",
+    "sessions": [
+      {
+        "day": "sunday",
+        "time": "06:45",
+        "minutes": 60,
+        "format": "Ruck",
+        "location": "Heritage Park / 16240 Pflumm Rd. Olathe, KS"
+      }
+    ]
+  }
+]
