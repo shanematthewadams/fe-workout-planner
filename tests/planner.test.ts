@@ -28,7 +28,8 @@ describe("F3 context and private draft boundary", () => {
   it("supplies terms, explicit counting, verified Gold Rush facts and approved workout-only references", () => {
     const ctx = contextFor(input());
     expect(ctx.ao?.name).toBe("Gold Rush");
-    expect(ctx.ao?.local).toEqual({});
+    expect(ctx.ao?.local.features?.track?.state).toBe("available");
+    expect(ctx.site.features.stairs).toBe("unknown");
     expect(F3_BRIEF).toContain("2=1");
     expect(F3_BRIEF).toContain("Q = workout leader");
     expect(F3_BRIEF).toContain("No tools");

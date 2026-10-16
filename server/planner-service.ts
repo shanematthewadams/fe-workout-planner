@@ -1,7 +1,13 @@
+import {
+  siteContext,
+  blockedFeatures,
+  detectFeatures,
+  describeSite,
+} from "../src/ao-context.ts";
 import { ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import {
-  plannerRequestSchema,
+  resolveRequest,
   planSchema,
   type PlannerRequest,
   type Plan,
@@ -21,33 +27,7 @@ export class PlannerError extends Error {
     super(message);
   }
 }
-export function resolveRequest(raw: unknown) {
-  const input = plannerRequestSchema.parse(raw);
-  const time = input.prompt.match(
-    /\b(20|25|30|35|40|45|50|55|60)[ -]?(?:min(?:ute)?s?)\b/i,
-  );
-  if (time && !input.strictSchedule) input.minutes = Number(time[1]);
-  if (input.strictSchedule) input.minutes = 45;
-  if (/\b(?:no|without|skip|omit)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = false;
-  else if (/\b(?:add|include|with)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
-    input.mary = true;
-  if (
-    input.running === "From prompt" &&
-    /\b(?:no|zero|without|skip|avoid)\s+(?:the\s+)?running\b/i.test(
-      input.prompt,
-    )
-  )
-    input.running = "None";
-  if (
-    input.equipment === "From prompt" &&
-    /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:any\s+)?(?:coupons?|cinder blocks?|equipment)\b/i.test(
-      input.prompt,
-    )
-  )
-    input.equipment = "None";
-  return input;
-}
+export { resolveRequest } from "../src/planner-contract.ts";
 
 export function validatePlan(value: unknown, input: PlannerRequest) {
   const p = planSchema.parse(value),
@@ -100,6 +80,19 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
     !p.equipment.some((e) => /coupon|cinder block/i.test(e))
   )
     throw new PlannerError(422, "The AI left out your coupons. Try again.");
+  if (input.strictSchedule) {
+    const blocked = blockedFeatures(
+      p,
+      siteContext(input.ao, input.prompt, input.site),
+    );
+    if (blocked.length)
+      throw new PlannerError(
+        422,
+        "The draft needs unconfirmed or unavailable site features: " +
+          blocked.join(", ") +
+          ". Your previous draft is safe.",
+      );
+  }
   return p;
 }
 function parseJSON(text: string) {
@@ -238,7 +231,13 @@ export async function generatePlan(
           504,
           "Free AI took too long. Your previous draft is safe. Try again.",
         );
-      if (error instanceof PlannerError) throw error;
+      if (error instanceof PlannerError) {
+        if (error.status === 422 && /site features/.test(error.message)) {
+          lastStatus = 422;
+          continue;
+        }
+        throw error;
+      }
       console.info(
         "FE_PLANNER_INVALID",
         JSON.stringify({
@@ -278,6 +277,16 @@ export async function generatePlan(
     equipment: result.equipment,
     running: result.running,
     format: result.format,
+    schedule: {
+      startTime: input.startTime,
+      requiredFeatures: [
+        ...new Set([
+          ...(result.requiredFeatures ?? []),
+          ...detectFeatures(result),
+        ]),
+      ],
+      siteSummary: describeSite(context.site),
+    },
     sections: result.sections.map((s, si) => ({
       ...s,
       id: `s-${si}`,

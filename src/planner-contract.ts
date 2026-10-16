@@ -1,3 +1,8 @@
+import {
+  featureSchema,
+  siteInputSchema,
+  startTimeSchema,
+} from "./site-contract";
 import { z } from "zod";
 import { exerciseSchema, workoutSchema } from "./model";
 const short = z.string().trim().min(1).max(3000);
@@ -47,13 +52,14 @@ export const planSchema = z
       )
       .min(2)
       .max(3),
+    requiredFeatures: z.array(featureSchema).max(10).optional(),
     notes: z.array(z.string().min(1).max(400)).max(10),
   })
   .strict();
 export type Plan = z.infer<typeof planSchema>;
 export const plannerRequestSchema = z
   .object({
-    prompt: z.string().trim().min(8).max(1800),
+    prompt: z.string().trim().min(3).max(1800),
     ao: z.string().max(160).default(""),
     minutes: z.number().int().min(20).max(60).default(45),
     equipment: z.enum(["From prompt", "Coupon", "None"]).default("From prompt"),
@@ -63,6 +69,8 @@ export const plannerRequestSchema = z
     mary: z.boolean().default(true),
     provider: z.enum(["auto", "gemini", "openrouter"]).default("auto"),
     strictSchedule: z.boolean().default(false),
+    startTime: startTimeSchema.default("05:30"),
+    site: siteInputSchema.optional(),
     builder: z
       .object({
         title: z.string().max(120).default(""),
@@ -114,3 +122,31 @@ export const plannerResponseSchema = z.object({
 export type PlannerResponse = z.infer<typeof plannerResponseSchema>;
 export const GOLD_RUSH_EXAMPLE =
   "I have a Q at Gold Rush. I want to use coupons. I’d like the theme to be something about digging for gold.";
+
+export function resolveRequest(raw: unknown) {
+  const input = plannerRequestSchema.parse(raw);
+  const time = input.prompt.match(
+    /\b(20|25|30|35|40|45|50|55|60)[ -]?(?:min(?:ute)?s?)\b/i,
+  );
+  if (time && !input.strictSchedule) input.minutes = Number(time[1]);
+  if (input.strictSchedule) input.minutes = 45;
+  if (/\b(?:no|without|skip|omit)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
+    input.mary = false;
+  else if (/\b(?:add|include|with)\s+(?:closing\s+)?mary\b/i.test(input.prompt))
+    input.mary = true;
+  if (
+    input.running === "From prompt" &&
+    /\b(?:no|zero|without|skip|avoid)\s+(?:the\s+)?running\b/i.test(
+      input.prompt,
+    )
+  )
+    input.running = "None";
+  if (
+    input.equipment === "From prompt" &&
+    /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:any\s+)?(?:coupons?|cinder blocks?|equipment)\b/i.test(
+      input.prompt,
+    )
+  )
+    input.equipment = "None";
+  return input;
+}

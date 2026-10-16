@@ -1,3 +1,4 @@
+import { scheduleSchema } from "./site-contract";
 import { z } from "zod";
 const text = z.string().max(20000);
 export const exerciseSchema = z.object({
@@ -98,6 +99,7 @@ export const workoutSchema = z
         )
         .optional(),
     }),
+    schedule: scheduleSchema.optional(),
     updatedAt: z.string().datetime(),
   })
   .superRefine((w, ctx) => {

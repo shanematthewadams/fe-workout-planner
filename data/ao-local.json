@@ -1,1 +1,74 @@
-{}
+{
+  "fe-ao-gold-rush": {
+    "features": {
+      "track": {
+        "state": "available",
+        "detail": "Website describes a 400 m track; access and surface need a current check."
+      },
+      "hills": {
+        "state": "available",
+        "detail": "Hills described; gradients and distances are unspecified."
+      },
+      "parkingLot": {
+        "state": "available",
+        "detail": "East parking lot meeting point; other lots also described."
+      }
+    },
+    "checkedAt": "2026-10-16",
+    "sourceUrl": "https://f3thefe.com/schedule/ao-gold-rush/",
+    "reviewBasis": "Website description reviewed; not an on-site inspection."
+  },
+  "fe-ao-clocktower": {
+    "features": {
+      "shelter": {
+        "state": "available",
+        "detail": "Covered garage described; current public access and capacity not verified."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Large grassy area described; drainage is unknown."
+      },
+      "runningRoute": {
+        "state": "available",
+        "detail": "Running loop described; distance is not supplied."
+      },
+      "stairs": {
+        "state": "available",
+        "detail": "Stairs described; count and access restrictions are unknown."
+      }
+    },
+    "checkedAt": "2026-10-16",
+    "sourceUrl": "https://f3thefe.com/schedule/ao-clocktower/",
+    "reviewBasis": "Website description reviewed; not an on-site inspection."
+  },
+  "fe-ao-south-park": {
+    "features": {
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lots described at both seasonal locations. Confirm which location is in use."
+      }
+    },
+    "checkedAt": "2026-10-16",
+    "sourceUrl": "https://f3thefe.com/schedule/ao-south-park/",
+    "reviewBasis": "Website description reviewed; not an on-site inspection."
+  },
+  "fe-ao-stagecoach": {
+    "features": {
+      "runningRoute": {
+        "state": "available",
+        "detail": "Lake loop described; route distance not supplied."
+      },
+      "stairs": {
+        "state": "available",
+        "detail": "Stairs described; count and access restrictions are unknown."
+      },
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lot described."
+      }
+    },
+    "checkedAt": "2026-10-16",
+    "sourceUrl": "https://f3thefe.com/schedule/ao-stagecoach/",
+    "reviewBasis": "Website description reviewed; not an on-site inspection."
+  }
+}
