@@ -1349,7 +1349,11 @@ export default function App() {
           <h1 className="page-title">{selected.title}</h1>
           <p className="detail-summary">{selected.summary}</p>
           <div className="detail-meta">
-            <span>~{selected.duration ?? "?"} minute session</span>
+            <span>
+              {selected.duration === null
+                ? "Session duration unknown"
+                : `~${selected.duration} minute session`}
+            </span>
             <span>
               {selected.equipment.join(", ") ||
                 (selected.provenance.issues?.some((i) =>
@@ -1459,9 +1463,13 @@ export default function App() {
           ))}
           {!selected.sections.some((s) => s.kind === "mary") && (
             <p className="optional-mary">
-              {selected.provenance.sourceId
-                ? "Mary not supplied; see source notes."
-                : "Mary omitted in this plan."}
+              {selected.provenance.issues?.includes(
+                "Mary explicitly omitted in source",
+              )
+                ? "Mary omitted in source."
+                : selected.provenance.sourceId
+                  ? "Mary not supplied; see source notes."
+                  : "Mary omitted in this plan."}
             </p>
           )}
           {selected.rawNotes && (

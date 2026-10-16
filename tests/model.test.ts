@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { catalog } from "../src/catalog";
+import { catalog, starters } from "../src/catalog";
 import {
   workoutSchema,
   copyWorkout,
@@ -22,9 +22,9 @@ const backup = (workouts = [copyWorkout(catalog[0])]) =>
   });
 describe("catalog and timing", () => {
   it("provides ten valid, distinct, honest templates", () => {
-    expect(catalog).toHaveLength(10);
-    expect(new Set(catalog.map((w) => w.id)).size).toBe(10);
-    for (const w of catalog) {
+    expect(starters).toHaveLength(10);
+    expect(new Set(catalog.map((w) => w.id)).size).toBe(catalog.length);
+    for (const w of starters) {
       expect(workoutSchema.safeParse(w).success).toBe(true);
       expect(w.kind).toBe("source");
       expect(w.provenance.status).toBe("illustrative");
@@ -164,7 +164,9 @@ describe("filters", () => {
     ).toEqual([]);
   });
   it("resets to all and excludes unknown durations when filtered", () => {
-    expect(catalog.filter((w) => matches(w, filtersEmpty))).toHaveLength(10);
+    expect(catalog.filter((w) => matches(w, filtersEmpty))).toHaveLength(
+      catalog.length,
+    );
     expect(
       matches(newWorkout(), { ...filtersEmpty, duration: "30 or less" }),
     ).toBe(false);

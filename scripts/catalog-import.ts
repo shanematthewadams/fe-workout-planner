@@ -97,7 +97,8 @@ export function sourceIssues(s: Source): string[] {
       ...(!s.sections.some((x) => x.kind === "warmup")
         ? ["Warmup not supplied"]
         : []),
-      ...(!s.sections.some((x) => x.kind === "mary")
+      ...(!s.sections.some((x) => x.kind === "mary") &&
+      !s.issues.includes("Mary explicitly omitted in source")
         ? ["Mary not supplied; omission not confirmed"]
         : []),
       ...(s.duration === null

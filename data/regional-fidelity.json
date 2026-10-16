@@ -1,0 +1,152 @@
+[
+  {
+    "sourceId": "f3nation:event:472714",
+    "capturedSectionsSha256": "9bbdef55cb4ddd6f9482ac327bd7212072efb2313c6b1c257820d93fc3128777",
+    "editorialNote": "Main 5x5 says 10 reps / 50 per round, but burpees are 5 each round; retain this exception. Mary counts not supplied.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:473028",
+    "capturedSectionsSha256": "94cf8395a774b30c0a57847a53fc9dd1860a453bbcb97193cce3b63ee7275541",
+    "editorialNote": "Main is 10 work intervals of 3 minutes with 30-second rests; no rep target. Warmup counts partly unspecified.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:472715",
+    "capturedSectionsSha256": "a8af868b2a19c983429ff1a2a4f3c112980c456747ff1562c798c86555085b77",
+    "editorialNote": "10 reps apply to first four rounds; burpees increase at each stop. Exact sprint distance and final-round counts are not supplied.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:472820",
+    "capturedSectionsSha256": "fcd0b45ba5c6539fba181789deb8c6072693926d49ccc1391de603821ed437ab",
+    "editorialNote": "Q performs at least 10 reps, waiting for the six; other PAX start as the line passes. Total route/time cap not supplied.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:473134",
+    "capturedSectionsSha256": "05d5b97c3fd555056e55066192c1023bcf675209e3e79745e209296bdfbbf8d8",
+    "editorialNote": "Each written line is a separate 200m leg. Later raggedy-anne counts change from 15 to 10; retained exactly. Counting conventions mostly unspecified.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:473030",
+    "capturedSectionsSha256": "6a907322b65f4d2976c997672cf98a2907a346795b1167698a3c0163b4015801",
+    "editorialNote": "Work 2 minutes, rest 30 seconds; the source explicitly says this is not AMRAP or to failure. Total session duration not supplied.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:1404368",
+    "capturedSectionsSha256": "f1aa11c2a31f1542fdae1355bf8b6ec6743f6f954e0db0a11346f6f05fc6883b",
+    "editorialNote": "365 main reps include 65 merkins split into 15-rep sets; handling of the final partial set is not stated. Mary uses 73 seconds per exercise.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:473346",
+    "capturedSectionsSha256": "7aa08f9e6b8badffa03f4f836a3f986d3ba4c2f0350bcc88a03c2cae236b8d37",
+    "editorialNote": "Descending rep ladder and exercise-specific exceptions retained; several burnout rep targets and counting rules are unspecified.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:473033",
+    "capturedSectionsSha256": "b0549dae116deb5ca6d5c5a36a841463cc7c67244b384830a3f428d99b3246ed",
+    "editorialNote": "Card number determines reps, except face cards = 11 and aces = 12. IC is explicit only for the listed movements. Mary exercises/counts not supplied.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:1404370",
+    "capturedSectionsSha256": "929b5b2b1a39432b9589af6fa1ea4647466cd7d5eea60a76c493f39052b0f228",
+    "editorialNote": "Station 1 banks 200 of each listed movement; whether totals are shared across partners is unclear. Station 2 totals and station timing are missing.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:472929",
+    "capturedSectionsSha256": "dc83922e18f2325151be38a4078612c3f8de754b9ee4bfa55e9c95d9a4a0704e",
+    "editorialNote": "Counts and distances retained; cadence is not specified for most reps. Song duration and Maggie rep target are unspecified.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:473243",
+    "capturedSectionsSha256": "35024819bced5a26a4bb869723ce8bc14b001273d64b4e351ea79b7ff483d33a",
+    "editorialNote": "Source says Q stopped the 7s at 3. Cooper-from-7 convention and travel distances are not explained; confirm before leading.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:472827",
+    "capturedSectionsSha256": "92f1fbad76e9601c49f81b870bd58302d045ebd830266a4529d3e4a372b061f3",
+    "editorialNote": "Several 5 Rings exercise counts, relay distances, timing and the second DORA partner core movements are unspecified. Detailed listed counts/order retained.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:2149027",
+    "capturedSectionsSha256": "0651c72a397c3ad74416239216a19fa47800385e10b09dc56e18d66487e745ad",
+    "editorialNote": "Three sets per muscle-group pair are written. IC warmup counts and heavy equipment weight are not supplied.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:1404375",
+    "capturedSectionsSha256": "04eb1ab17a476a2765992e37441b06a53bce378a8607f973b41a74c4db0c5ca2",
+    "editorialNote": "Each listed movement has a 3-minute AMRAP round. Source spellings big boysi and inclimerin are retained; confirm regional names before leading.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:2142864",
+    "capturedSectionsSha256": "5e7cee6b5fb3666ba476ce0749b634dc817f1b6779b0dcab72b3e12d48cbb19f",
+    "editorialNote": "Quarter 1 round count, quarter 4 reps, some exercises and stretch details are unspecified; PAX choice is part of the original format.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:2158539",
+    "capturedSectionsSha256": "28320191dd443e8899f7cc304b8d68ebc4dd0889de8adc2538cecb617a35418f",
+    "editorialNote": "Five-light travel distance is site-dependent; source says repeat 3 times without clarifying whether this includes the initial pass. Rep cadence mostly unspecified.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:1404376",
+    "capturedSectionsSha256": "58044f8c2e38322e9946bf384b10937c83c68f7e201c01477c325057f02a6528",
+    "editorialNote": "Pack Out lunge count and bear-crawl distance are missing. Bonus says EMOM but records shorter intervals; exact intervals unspecified.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:473040",
+    "capturedSectionsSha256": "ac23c1a7f122a4fb5713de938fc003df939d8d4b01568a4d75759136502f90ef",
+    "editorialNote": "Source burpee total says 30, while 6 rounds of 5 would total 30; all source totals retained. Loop distance, warmup reps and partner core counts are missing.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:2174330",
+    "capturedSectionsSha256": "3640b84d932cf0c27bec27f409cb36a3d3c635ee46d77d9b197bdb91607071db",
+    "editorialNote": "Calf raises explicitly 50 per side; low-and-slow squat 3 seconds; plank 90 seconds. Most other alternating counts are unspecified.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:473355",
+    "capturedSectionsSha256": "f908ecc3f311431863cdcaf8b88cd91659e2a00c7dd3644dddd750bc91e3f867",
+    "editorialNote": "Regional adaptation of linked IronPAX workout. Every round retains previous exercises; ~50-yard leg, ~100-yard down-and-back. Lunges 1 is 1; American Hammers 2 is 1.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:2182558",
+    "capturedSectionsSha256": "c1771552003d201d30bb1d334c00cfdd11a80a58a56af628309553e85f60a881",
+    "editorialNote": "Rounds increase 2 to 14 reps of each exercise. Travel is 50ish yards per down-and-back; explicit IC retained in warmup/Mary.",
+    "sectionEdits": false
+  },
+  {
+    "sourceId": "f3nation:event:472833",
+    "capturedSectionsSha256": "ff7ca838da246d8e4cba5f4fe66216c53c8eca3f839b56947c729fefba2c7c81",
+    "editorialNote": "Two 11s pairings over a barrier; initial split and later wall-sit/Balls-to-the-Wall hold times not supplied. Confirm 11s convention before leading.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:472938",
+    "capturedSectionsSha256": "181dd2b89932e9614481514267458d21d74c0bc75a5fc89aee83e7b16c80a4ba",
+    "editorialNote": "Exercise/25m travel order preserved. Dan Taylor explicitly 1 squat:4 lunge steps; flutter kicks/SSH IC. Mary-go-round portion unspecified.",
+    "sectionEdits": true
+  },
+  {
+    "sourceId": "f3nation:event:473565",
+    "capturedSectionsSha256": "9a1101eac27bc7c56dc4c17b3539f550c554105f082737f96c5fbf510cf64e2a",
+    "editorialNote": "Five decreasing/increasing pairs repeat for each listed pairing. Final 10 + 30 refers to the first pair. Later walking-lunge counting and short-mosey distances unspecified.",
+    "sectionEdits": true
+  }
+]

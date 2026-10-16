@@ -43,7 +43,7 @@ describe("library UI", () => {
     );
     expect(
       screen.getAllByRole("button", { name: "View workout" }),
-    ).toHaveLength(10);
+    ).toHaveLength(catalog.length);
   });
   it("persists favorites across reload", () => {
     const first = render(<App />);

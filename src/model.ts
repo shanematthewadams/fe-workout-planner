@@ -185,7 +185,7 @@ export type Filters = typeof filtersEmpty;
 export function matches(w: Workout, f: Filters) {
   return (
     (!f.query ||
-      `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${w.sections.flatMap((s) => s.blocks.flatMap((b) => b.exercises.map((e) => e.name))).join(" ")}`
+      `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${w.sections.flatMap((s) => s.blocks.flatMap((b) => [b.instructions, ...b.exercises.map((e) => e.name)])).join(" ")}`
         .toLowerCase()
         .includes(f.query.trim().toLowerCase())) &&
     (f.duration === "All" ||
@@ -197,9 +197,16 @@ export function matches(w: Workout, f: Filters) {
             : w.duration > 45))) &&
     (f.equipment === "All" ||
       (f.equipment === "None"
-        ? w.equipment.length === 0
+        ? w.equipment.length === 0 &&
+          !w.provenance.issues?.some((i) =>
+            i.startsWith("Equipment not specified"),
+          )
         : w.equipment.includes(f.equipment))) &&
-    (f.running === "All" || w.running === f.running) &&
+    (f.running === "All" ||
+      (w.running === f.running &&
+        !w.provenance.issues?.some((i) =>
+          i.startsWith("Running requirement not supplied"),
+        ))) &&
     (f.format === "All" || w.format === f.format) &&
     (f.status === "All" ||
       (w.kind === "personal" ? "personal" : w.provenance.status) ===

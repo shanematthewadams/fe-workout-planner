@@ -22,6 +22,9 @@ async function main() {
     existing = JSON.parse(await readFile(file, "utf8"));
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+    existing = JSON.parse(
+      await readFile(new URL("data/regional-review.json", root), "utf8"),
+    );
   }
   const [command, input, hash, reviewer] = process.argv.slice(2);
   if (command === "nation") {
@@ -34,7 +37,7 @@ async function main() {
     // Only recognized workout sections survive. Never persist the full narrative or attendance.
     const candidates = records.map((r) => ({
       sourceId: `f3nation:event:${r.id}`,
-      url: `https://map.f3nation.com/`,
+      url: `https://api.f3nation.com/v1/event-instance/id/${r.id}`,
       title: (r.name || "Untitled backblast").slice(0, 160),
       ao: r.org?.name,
       eventDate: r.startDate?.slice(0, 10),
@@ -42,7 +45,7 @@ async function main() {
       reuse: { basis: "unresolved", evidence: "" },
       issues: [
         "Privacy review required; heading extraction is not a privacy guarantee",
-        "Source URL is map home; event deep link unverified",
+        "Source API link may require F3 Nation access",
       ],
     }));
     // Do not overwrite approved records based on an unreviewed automatic extraction.
@@ -74,6 +77,11 @@ async function main() {
   } else if (command === "export") {
     const records = publishedWorkouts(existing);
     await atomic(new URL("data/regional-workouts.json", root), records);
+    const publishedIds = new Set(records.map((w) => w.id));
+    await atomic(
+      new URL("data/regional-review.json", root),
+      existing.filter((r) => publishedIds.has(r.sourceId)),
+    );
     console.log(
       `${records.length} reviewed originals exported. Review diff before commit.`,
     );
