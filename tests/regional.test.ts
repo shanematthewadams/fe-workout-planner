@@ -44,6 +44,16 @@ describe("reviewed FE collection", () => {
     expect(matches(w, { ...filtersEmpty, running: "None" })).toBe(false);
     expect(matches(w, { ...filtersEmpty, equipment: "None" })).toBe(false);
   });
+  it("links official AO labels to punctuation and spacing variants without changing source metadata", () => {
+    expect(
+      catalog.filter((w) => matches(w, { ...filtersEmpty, ao: "South Park" })),
+    ).toHaveLength(3);
+    expect(
+      catalog.filter((w) =>
+        matches(w, { ...filtersEmpty, ao: "Yippee Ki Yay" }),
+      ),
+    ).toHaveLength(1);
+  });
   it("keeps personal copies independent of real-source refreshes", () => {
     const w = catalog.find((w) => w.id === entries[0].sourceId)!;
     const original = JSON.stringify(w),

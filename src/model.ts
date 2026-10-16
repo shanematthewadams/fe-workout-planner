@@ -182,6 +182,9 @@ export const filtersEmpty = {
   ao: "All",
 };
 export type Filters = typeof filtersEmpty;
+export function aoKey(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
 export function matches(w: Workout, f: Filters) {
   return (
     (!f.query ||
@@ -211,7 +214,8 @@ export function matches(w: Workout, f: Filters) {
     (f.status === "All" ||
       (w.kind === "personal" ? "personal" : w.provenance.status) ===
         f.status) &&
-    (f.ao === "All" || w.provenance.ao === f.ao)
+    (f.ao === "All" ||
+      (!!w.provenance.ao && aoKey(w.provenance.ao) === aoKey(f.ao)))
   );
 }
 export function timing(w: Workout) {
