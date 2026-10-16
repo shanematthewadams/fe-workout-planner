@@ -1,125 +1,100 @@
 # The FE Workout Planner · Sprint 2 handoff
 
-October 16, 2026 (UTC). Product manager: Shane Adams. This document supersedes the Sprint 1 checkpoint; earlier evidence remains in Git history.
+October 16, 2026 (UTC). Shane Adams owns product; engineering owns technical verification. This replaces the earlier access-blocked checkpoint; Git history retains it.
 
-## Actual result and scope impact
+## Actual result and scope
 
-**Sprint 2 infrastructure is implemented and development-deployed. The regional collection target is blocked, not complete.**
+**25 reviewed, distinct real FE workouts are published in the development catalog**, alongside the unchanged 10 illustrative starters. There are 16 official AO profiles / 17 weekly sessions and 9 source-linked exercise guide entries. The collection goal of 20–30 was reached without fabricating regional workouts. Several source narratives omit rep conventions, timing or sections; each card exposes its gaps. “Reviewed” means reviewed against available source instructions and for privacy, not that every card is fully specified or field-tested.
 
-- Usable illustrative starters: **10**, all unchanged source IDs and still explicitly illustrative.
-- Reviewed real FE backblast workouts: **0**. No regional workout was fabricated to reach 20–30.
-- Official FE AO profiles: **16** unique AOs / **17** weekly sessions, from the public official schedule.
-- Exercise guide: **9** names verified in visible Exicon CSV, with original concise instructions, aliases, equipment/counting guidance and source links. Bulk national descriptions were not imported.
-- Published database records: none; there is **no FE Supabase project**. Repository-backed catalog remains fully functional.
+A 45-day live import produced 22 candidates, including name-only/sparse records. Engineering extended collection to 120 days (June 18–October 16), producing 59 distinct candidate section sets, with 277 excluded by conservative section/privacy checks. These counts are candidate processing results, not the number of all regional events or proof excluded sources are unusable. The selected cards cover June 30–October 14 across 9 AOs:
 
-The 20–30 real-workout goal needs authorized narrative access and reuse evidence. This is a content/access dependency, not an engineering estimate that the missing workouts are ready. Sprint 3 should finish the regional collection before dependent AI/library expansion work.
+| AO | Cards |
+|---|---:|
+| Airfield | 1 |
+| Blackops | 5 |
+| Clocktower | 2 |
+| Dysentery | 2 |
+| Pretty Bird | 3 |
+| SouthPark | 3 |
+| Stagecoach | 4 |
+| The Gathering | 4 |
+| Yippee Ki-Yay | 1 |
 
-## Exact repository, branch and deployment
+Scope impact: independent import/publishing infrastructure is now exercised on real content; Q names remain unknown because the inspected detail shape does not support reliable Q attribution. No Q was inferred from attendance. No FE Supabase project is available; repository publishing is the supported fallback. No purchase, duplicate project, production promotion, DNS change or With/Elsewhere modification occurred.
 
-- Private repository: `shanematthewadams/fe-workout-planner`, ID `1421135917`.
-- Integration branch: `develop`; application commit **`f15640bab9acbbae6f12efc76f9d963f2125b59c`**.
-- Application tree: **`2d287907ea0c2ec6ab6e9916285564f2bc741dfe`**. It exactly matches locally tested commit `ecace45754bf1dee836f716627b5ee1b2dfcffa5`. As in Sprint 1, local and GitHub ancestry differ because upload uses Git Data; tree parity is verified before ref updates with an expected-head lease.
-- Initial inspected remote head: `275c3477e1aaeb1527418c47d08cf4cfb6fdeb0e`, tree `8aa0b65c13e94dd16db7f1b25b776736a14d9b43`, exactly matching the initial clean local tree.
-- This handoff is a later documentation-only commit; the exact application/deployment SHA above is authoritative. The documentation commit uses `[skip netlify]`; deployed app files are unchanged. The commit containing this file is the documentation head (a file cannot contain its own commit SHA).
-- Netlify project: `fe-workout-planner`; site ID **`1d2480e0-3891-41db-9574-61cb13b7ae0a`**; team ID `6a8d98d0bae1a4d6a86f48de`.
-- Development preview: **https://develop--fe-workout-planner.netlify.app/**.
-- Verified ready deploy: **`6ad18daa1654730b8cb1fd5f`**; build **`6ad18daa1654730b8cb1fd5d`**, `branch-deploy`, branch `develop`, commit matches the application SHA, no error, no secret-scan matches.
-- Immutable preview: https://6ad18daa1654730b8cb1fd5f--fe-workout-planner.netlify.app.
-- Deploy record: https://app.netlify.com/projects/fe-workout-planner/deploys/6ad18daa1654730b8cb1fd5f.
-- Deployed script **`/assets/index-DpxYatG7.js`** matches the locally built artifact; CSS `/assets/index-BeB5N7Fm.css`.
-- Netlify's project-summary adapter returned an incorrect/incomplete branch deploy reference. The real deploy ID was read from the authenticated Deploys UI, then confirmed through the scoped deploy API with state `ready` and full SHA. Do not use the summary's synthetic-looking branch ID as evidence.
-- GitHub Checks passed: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38841289604 (63 tests, lint and build in CI).
-- Production branch remains `main` at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a`, starter README only. No production promotion, DNS change, purchase, duplicate hosting/database project or With/Elsewhere modification occurred.
-- Hosting retains Netlify team sign-in on all deploys. The app itself has no consumer sign-in. Engineering's browser session was restored through secure Google sign-in and the actual preview inspected. No access controls were weakened.
+## Exact repository and resources
 
-## Sprint 1 gaps addressed before publication work
+- Repository: private `shanematthewadams/fe-workout-planner`, ID `1421135917`; integration branch `develop`.
+- Application commit: `e8b8cd24b2aad902acca0f134f06418a822d7e14`; tree `8369fc09cbcd8d6350bad27485b8d0365775249b`, exactly matching tested local commit `18f4897`. Local and remote ancestry differ because updates use Git Data; exact tree equality and expected-head lease were verified before every ref update.
+- This document will be a later documentation-only `[skip netlify]` commit. Its containing commit is the documentation head; the application SHA above is authoritative for deployment.
+- Production remains `main` at `f293071740044c1f9b700e5bc70d9ee6cf28ce2a` (README starter). Production was not promoted.
+- Netlify project `fe-workout-planner`; site `1d2480e0-3891-41db-9574-61cb13b7ae0a`; team `6a8d98d0bae1a4d6a86f48de`.
+- Existing development preview: https://develop--fe-workout-planner.netlify.app/.
+- Deployment verification: ready deploy `6ad24cd683371dd3e2dae218`, build `6ad24cd683371dd3e2dae216`; branch-deploy/develop, exact application SHA confirmed through scoped API, no error. Immutable URL https://6ad24cd683371dd3e2dae218--fe-workout-planner.netlify.app/. JS `/assets/index-BVYEvgFx.js`, CSS `/assets/index-BeB5N7Fm.css`..
+- GitHub Checks: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38930059047; 68 tests, lint and build passed (job `117071446826`)..
+- Hosting retains existing Netlify team sign-in. App functionality requires no consumer account. No security controls were weakened.
+- Netlify project-summary adapter has returned incorrect branch-deploy references. Read the real deploy ID from authenticated Deploys UI, then validate its state/SHA through scoped deploy API.
 
-The initial handoff accurately left mobile, native browser print and final editor inspection open. These were not assumed complete.
+## Live source access and reuse
 
-- Local **Chromium 153** at **390px and 1365px**: library, combined source filters, AO detail/link-to-workouts, exercise alias search, workout detail, Q view, editor, copy/save/view/reload and original-source isolation passed; no horizontal overflow or page errors.
-- Screenshots of phone/desktop library, AO, Q and editor inspected. Source status and expanded filters wrap on phones. The Barlow Condensed / DM Sans styling remains.
-- Chromium's native print engine generated the full representative workout in **3 US Letter pages** and The Thang-only in **1 page**. All pages rendered through Poppler and inspected; readable plain output with no clipping. Text assertions confirm Warmup/Mary/source notes are retained in full output and excluded in Thang-only output. This is actual Chromium print-to-PDF, not the earlier independent WeasyPrint approximation. Safari and physical-printer output remain unverified.
-- Deployed browser verified zero reviewed regional workouts / ten starters, regional-status empty state, AO search and exact source AO filtering, and exercise alias/source-link behavior. No shared catalog write or existing personal draft mutation was needed for this deployed smoke test.
+All 23 visible F3-Nation repositories were inspected beyond pinned projects. `f3-nation`, `Website-Widgets`, `the-codex`, and `pax-vault` were active/unarchived. Monorepo code is AGPL-3.0; no repository license was found for the other three. No upstream implementation or bulk national description corpus was copied. Public code does not grant reuse rights to underlying records. Full source links and findings: `docs/SOURCES.md`.
 
-QA outputs are temporary ignored files under `qa/sprint2`, not deliverables or repository data. The browser dependency used for QA was installed in scratch only, not the application bundle. A direct Playwright browser download failed; npm-packaged Chromium enabled the completed local browser checks.
+Live OpenAPI `https://api.f3nation.com/docs/openapi.json` specifies zero-based `pageIndex`, `pageSize` max 100, list `/v1/event-instance` with `regionOrgId`, `startDate`, `startDateTo`; result `{eventInstances,totalCount}`. Details are GET `/v1/event-instance/id/{id}`, direct objects with narrative and privacy/status fields. Required Client/Bearer headers stay server-side. Older widget limit/hasBackblast examples differ. List metadata alone is not a narrative integration.
 
-## Implemented boundaries and repeatable workflow
+`F3_NATION_TOKEN` is secret and `F3_REGION_ID` configured in the existing Netlify project. Builds scope is required for the current privileged development-build collector; configured scopes also include Functions/Runtime. Contexts include branch-deploy and others, but code runs only on `develop` / `branch-deploy`, skipping production/local/CI. Connector reads mask the token; never use the masked representation for a request or report it as invalid. No credentials are printed, bundled, committed or exposed by an endpoint. Current key creation is documented at https://admin.f3nation.com/api-keys → New API Key; this path was upstream-documentation verified, not a logged-in F3 admin walkthrough.
 
-- `scripts/nation-adapter.ts`: admin-only GET adapter, fixed official HTTPS origin, Client + Bearer headers, 15-second per-request timeout, region/identity/privacy validation, documented 100-row zero-based pagination, duplicate prevention, incomplete/repeated/changed-page failure, 1,000-page safety cap. No browser import route or shared-write path exists.
-- `scripts/catalog-import.ts`: strict workout-only export format; stable IDs; canonical SHA-256 fingerprints; idempotent merges; changed content invalidates review; explicit archival; current-hash approval requires reviewer, privacy attestation, reuse evidence and The Thang. Missing Q/AO/date/sections/time/equipment/running are recorded as source notes. Exercise order, reps and counting text remain verbatim, not guessed into structured counts.
-- `scripts/import-catalog.ts`: candidates and review registry stay in ignored `.imports/`, mode 0600 files / 0700 directory, atomic writes. Extraction retains recognized workout sections only; privacy review is still mandatory because personal material may occur inline. No raw backblast, attendance, prayer request, health disclosure, contact list or AI submission is stored in GitHub.
-- Only approved non-archived originals export to `data/regional-workouts.json`. Current checked-in export is `[]`. Source changes/reuse changes/archive changes require a new review. Missing records or outages do not delete existing records. A second identical import does not duplicate or invalidate review.
-- Browser storage key `fe-planner:v1` and backup version 1 remain unchanged. Personal copies retain independent IDs/content and lineage. Import/refresh never reads or replaces personal storage.
-- Public search now includes exercise names, Q and AO plus source-status and source-AO filters. Provenance distinguishes illustrative starters, reviewed originals and personal adaptations; missing imported Mary is reported as missing, not claimed omitted.
-- `scripts/sync-aos.mjs`: repeatable public official-schedule snapshot, 16 stable name-derived AO IDs, timestamps and fail-without-replacement on malformed structure. `data/ao-local.json` is separate; all terrain, distances, lighting, coupons and weather alternatives are currently unknown. No inference from AO names. AO names changing upstream require explicit ID migration.
-- Read-only Supabase adapter retains the bundled snapshot on upstream failure; no persistent personal data leaves the browser. The snapshot is dated, not a claim of live upstream freshness.
+Live probe verified 143 recent event records and three public, active details with matching event/region fields and both plaintext/rich narratives. The complete 120-day paginated collection subsequently succeeded through the actual adapter. Collector commit `21146dfeb95231edb98ac896294012fa6b5e583c`, deploy `6ad249b5107e14587f922b11`, build `6ad249b5107e14587f922b0f`, produced `FE_PRIVATE_REVIEW_EXPORT {"candidates":59,"excluded":277,"published":0}`. The authenticated Blobs UI showed/downloaded the 84.3 KB candidate JSON in deploy-specific store `deploy:6ad249b5107e14587f922b11`, key `fe-review/candidates.json`, region `us-east-2`. The earlier 45-day deploy `6ad1f4511b8f857c06544d74` produced 22 candidates. Both were successful; file upload and retrieval are now live-verified. Candidate Blobs are outside `dist`, with no public serving endpoint. Browser download-event notification timed out, but the actual synchronized file was present, parsed and kept only in ignored `.imports/`.
 
-## Commands and schema / migration path
+Shane explicitly approved FE backblast reuse (“Fe backblasts approved”), recorded in `data/source-permissions.json` on October 16. Scope covers workout instructions and supported provenance, excluding unrelated personal material. Do not ask again. No Slack reads/posts occurred; this does not authorize unrelated private Slack data. Prayer/health/contact/attendance material is not in the published collection or AI context. The collector strips non-workout sections and rejects suspicious inline content; engineering then reviewed every selected section, removed unrelated asides and split inline Mary headings. No full raw backblast belongs in GitHub.
 
-Node 22.18+ or 24; npm. Engineering owns these commands.
+25/25 selected-source comparisons verified every retained numeric token unchanged and in source order; retained instruction text is a subsequence of the captured sections after documented omissions. Original workout intent/order remains. No total duration, missing warmup, Mary or Q was invented. `data/regional-fidelity.json` records captured-section hashes and per-card review notes; `data/regional-review.json` stores approved workout-only sources and exact reviewed fingerprints. The source API URLs may require F3 access. Regional adaptations of IronPAX remain explicit in notes.
+
+Public FE schedule supplied AO facts; empty RSS / unavailable WordPress API and focused searches did not provide a complete narrative corpus. AO local terrain, distances, lighting, coupons and weather alternatives remain separate and unknown, with no inference from AO names. Nine exercise names were checked against visible Exicon CSV; original concise guide instructions and links avoid bulk reuse while national content terms remain unresolved.
+
+## Implementation and repeatable commands
+
+`nation-adapter.ts` validates official origin, identities, region/privacy/activity, response shapes and complete pagination, caps pages/timeouts, deduplicates IDs, fails repeated/incomplete/changing totals and retains catalog through upstream failure. Collector runs only during privileged develop builds, logs safe counts only and creates private, unreviewed candidates. It never auto-publishes.
+
+`catalog-import.ts` uses stable source IDs and canonical SHA-256 fingerprints. Identical imports preserve approval; content/metadata/reuse/archive changes invalidate it. Approval requires current hash, reviewer, privacy attestation, reuse evidence and The Thang. Explicit archive withdraws on export; missing results/outages never delete records. `data/regional-review.json` initializes the ignored local registry on a fresh checkout and preserves approvals across workspaces. Only approved sources are committed; unreviewed candidates stay ignored. Compare source section hashes/metadata and perform documented curation before merging future automatic candidates over curated records.
+
+Public search includes imported instruction text as well as structured exercise names, title, Q and AO. Unknown running/equipment cannot match “None” filters. Source-status/AO filters, provenance issues and AO-to-workout links work with the bundled catalog during outages. Unknown timing is labeled clearly. AO matching ignores spacing/punctuation, so official South Park and Yippee Ki Yay labels match backblast variants without changing original provenance. Browser storage `fe-planner:v1`, backup version 1, starter IDs and personal-copy independence remain unchanged; importer never reads personal storage.
+
+Node 22.18+ or 24 / npm:
 
 ```sh
 npm ci
-npm test
+npm test -- --maxWorkers=1
 npm run lint
 npm run typecheck
 npm run build
 npm run catalog:sync-aos
 node --env-file=.env.import --experimental-strip-types scripts/import-catalog.ts nation START_DATE END_DATE
-npm run catalog:import -- merge /absolute/path/to/workout-only-export.json
+npm run catalog:import -- merge /absolute/path/to/reviewed-workout-only-export.json
 npm run catalog:import -- approve SOURCE_ID CURRENT_SHA256 'Reviewer name'
 npm run catalog:import -- export
 npm run catalog:export-sql
-node scripts/export-seed.mjs
 ```
 
-See `docs/IMPORT_WORKFLOW.md` for exact format, review safeguards and secure configuration. `npm run dev -- --host 127.0.0.1` works around this environment's network-interface enumeration error with the default 0.0.0.0 host.
+Do not paste secrets into chat or add VITE_* secrets. Local source credentials must be loaded privately server-side; Netlify's saved token is not readable as plaintext through the connector. Engineering can retrieve build candidates via authenticated Data & storage → Blobs instead. `.imports/` files use 0600 and directory 0700, atomic registry writes. Workflow details, source schema and captured-hash serialization: `docs/IMPORT_WORKFLOW.md`. Vite can use `--host 127.0.0.1` in this environment.
 
-No database migration was applied to any connected project. A future dedicated FE project's fresh install uses `docs/catalog-schema.sql`, then optional `docs/starter-seed.sql`. SQL enables RLS, revokes browser/public writes, grants public SELECT only, requires approval before publication and limits published statuses. Service-role access is server/admin only. Regional publication SQL is generated into ignored `.imports/publish.sql`: withdraw managed regional rows, then upsert reviewed originals under unchanged IDs in a transaction. Unmanaged rows are not overwritten. Keep repository snapshot withdrawals synchronized with database publication.
+No migration was applied to a connected database. Dedicated FE Supabase fresh install: `docs/catalog-schema.sql`, optional `docs/starter-seed.sql`; generated `.imports/publish.sql` transaction withdraws managed regional records then upserts 25 approved records using stable IDs, preserving unmanaged rows. Schema enables RLS, public SELECT for approved/published only, anonymous/authenticated write denial and privileged server/admin imports. No consumer accounts are required. Existing Supabase inventory contains With Application only, untouched. Apply only after explicit authorization of a dedicated FE project/cost; current repository fallback works.
 
-The SQL is executed in an isolated PGlite/Postgres test with separate anon/authenticated roles: unpublished/unapproved rows hidden, anonymous/authenticated INSERT/UPDATE/DELETE denied, invalid JSON/publish-without-approval rejected. This is **not** a live Supabase Data API or credential test.
+## Verification and limits
 
-## Source findings and remaining access
+- 68 automated tests pass: model/UI/import/discovery/repository, malformed/sparse sources, duplicate/paginated/repeated/incomplete pages, changed-source invalidation, archive/outage retention, personal independence and isolated database policies. Two old hardcoded ten-card assertions were updated to catalog size while retaining explicit ten-starter validation.
+- Lint, TypeScript/Vite build, diff check and 25-record publication SQL generation pass. Local/remote tree parity checked before push.
+- Real 25-source identical reimport preserved registry exactly; changed-source test invalidated only that approval. Fresh-checkout durable registry reproduces published cards byte-for-byte as objects, including provenance. A real CLI check with the ignored registry absent also initialized all 25 approvals and preserved them on a no-op merge.
+- Chromium 153 at 390px and 1365px: 35-card catalog, 25 regional filter, Clocktower AO→2 real cards, guide, real regional detail/Q, copy/edit/save/reload and original isolation pass; no overflow/page errors. Existing personal drafts were not touched (QA uses isolated fresh browser contexts).
+- Representative real workout native Chromium print: full 3 Letter pages and Thang-only 1 page. Poppler rendered inspection found readable complete counts/order, no clipping. Safari/physical-printer behavior is not verified. Earlier Sprint 1 gaps in responsive/editor/native print QA were completed before this publishing work.
+- Isolated PGlite/Postgres verifies public approved/published-only reads, anonymous/authenticated write denial and invalid/unapproved publish rejection. **No live Supabase REST/RLS test** is claimed.
+- Deployed browser: 35 total cards / 25 regional; instruction search found the expected single card; checked exact round counts and counting rules in REHOPE; official South Park AO link returns 3 source cards. Deployed JS asset matches the local build. Actual Netlify deploy and GitHub Checks SHAs above were verified; production main SHA was read again and remains unchanged.
+- Live verified: server-side auth, actual narrative fields, complete paginated adapter run, private candidate upload/download, reviewed source content, official AO snapshot, GitHub/Netlify deployment. Rich-only extraction and failure/archival variants are tested with fixtures; not all such cases have occurred live.
+- Remaining limits: Q metadata unresolved; several source rep/timing/section gaps explicit; 8/16 scheduled AO names represented, plus Blackops (not listed on the public schedule snapshot); no complete regional history or full national description license; no FE Supabase project. Library is a versioned snapshot, not an automatic live-publishing promise.
 
-Full findings: `docs/SOURCES.md`. All 23 visible F3-Nation org repositories were inspected beyond pinned projects. f3-nation, Website-Widgets, the-codex and pax-vault are unarchived and recently pushed. The monorepo is AGPL-3.0; no repository license was detected for the other three. No upstream code or bulk description content was copied. Software licensing does not establish rights to underlying backblasts.
+## Sprint 3 priorities and product review
 
-Live `https://api.f3nation.com/docs/openapi.json` confirms `pageIndex` / `pageSize` maximum 100 and detail `/v1/event-instance/id/{id}`; older widget `limit`/`hasBackblast` examples differ. Upstream handler includes narrative fields in details, while lists are metadata. Unauthenticated requests return 401. The development-build probe now authenticates successfully: 143 regional event records in the last 45 days; three sampled public, active event details all match event/region/privacy fields and include nonempty plaintext and rich narratives plus recognized workout headings. Only counts/status were logged, never narrative text. This verifies access and sampled detail shape, not narrative completeness, exact counts/order, Q mapping, or the complete paginated importer. Q remains unknown, not inferred from attendance.
+1. Improve source completeness/Q metadata through supported upstream fields or an authorized workout-only export; expand underrepresented AOs and resolve source ambiguities with author-provided details, preserving original IDs and distinguishing adaptations.
+2. Add practical local AO attributes only with verified local evidence/date; maintain separate official/local freshness and outage fallback. Revisit national content licensing before bulk Exicon ingestion.
+3. Optionally authorize a dedicated FE Supabase project and run live schema/RLS/public read/anonymous-write checks. Keep production promotion/DNS and dependent AI work out of scope until separately authorized.
 
-Current upstream API README identifies **https://admin.f3nation.com/api-keys** → **New API Key**. Older widget documentation points to map admin region ID and Settings → API. Current credential UI instructions are code/documentation-verified, not a logged-in F3 admin walkthrough. API keys have per-org Editor/Admin assignments; do not request Nation-wide access. This connector performs GET requests only.
-
-Smallest secure action: Shane can put `F3_NATION_TOKEN` (secret) and `F3_REGION_ID` into the **existing FE Netlify project**, development-branch context, server-only Functions scope, never `VITE_*` and never chat. This does not automatically activate sync or publication; engineering must securely load those values into the admin process, inspect an actual FE detail response, obtain content reuse authorization and review sanitized workout sections. An authorized workout-only export can use the same merge/review path if live narratives are absent. Private Slack content needs separate reuse permission; no Slack reads/posts were made.
-
-Public FE schedule/AO pages were available. The RSS feed contained no items, the WordPress posts endpoint returned 404, and focused public searches found no complete reusable regional narratives. IronPAX and national descriptions were not substitutes for regional source material.
-
-Connected Supabase inventory has only With Application; it was not reused or queried. If persistent publishing is desired, Shane must select/authorize a dedicated FE project and its organization/cost; none is assumed or purchased. Until then, the repository catalog is the supported fallback, not a simulated live database.
-
-## Verification summary and Sprint 3 priorities
-
-- **63 automated tests pass** across model, UI, source import, pagination, discovery, repository adapter and isolated database policy checks.
-- Lint, TypeScript/Vite build, `git diff --check`, reviewed-source empty export and SQL generation pass.
-- Real local mobile/desktop Chromium and print verification pass as detailed above; deployed build identity and representative interactions live-verified.
-- **Implemented with synthetic fixtures:** full paginated F3 Nation importer, narrative extraction/review lifecycle and changed-source/archive cases. Authenticated access and three real list/detail reads are now live-verified through the private development build.
-- **Live verified:** public source/API documentation, AO source retrieval/snapshot, GitHub CI, Netlify develop deploy/commit/artifact and browser smoke checks.
-- **Still blocked:** real FE backblast collection and fidelity comparisons, narrative completeness, content reuse permission, dedicated Supabase project and live REST/RLS checks. Zero real extracted cards means no original-versus-card comparison can yet be claimed.
-
-Sprint 3: (1) unlock authorized narrative access and establish reuse evidence, then curate 20–30 distinct usable cards where sources permit; (2) verify live response schema, Q/AO/date mapping, counts/order and updates/archival with actual sources; (3) optionally provision dedicated Supabase only after project/cost authorization, apply schema and live-test public reads/denied writes; (4) retain personal draft/backup compatibility and independent copies while expanding the library. Defer production promotion, DNS and dependent live AI work until these foundations are trustworthy.
-
-## Credential configuration follow-up · October 16 UTC
-
-Shane confirmed both Netlify variables are saved. Connector metadata confirms the token is secret, available in branch-deploy context, and scoped to Builds/Functions/Runtime; the numeric region ID is configured. The token also has other deploy-context values; no production code uses it, and the new diagnostic explicitly skips production and other branches. Metadata reads conceal the actual credential, so a request made with the masked representation is inconclusive and must not be reported as an invalid key.
-
-Added `scripts/nation-probe.mjs` and a development-only postbuild entry point to check API access from Netlify's server build environment. It prints only status/counts/narrative-availability flags. No raw backblast or credential is logged or saved, no public API endpoint is added, and no record is published. The build check needs Builds scope (present in current configuration), in addition to the previously described Functions scope. Source collection and reuse approval remain separate. Live result: `FE_SOURCE_PROBE {"status":"ok","totalEvents":143,"sampledPublicEvents":3,"detailReads":3,"plaintextNarratives":3,"richNarratives":3,"recognizedWorkoutSections":3,"detailFailures":[]}`. Netlify deploy `6ad18daa1654730b8cb1fd5f`, build `6ad18daa1654730b8cb1fd5d`, commit `f15640bab9acbbae6f12efc76f9d963f2125b59c` is ready; 48 files scanned, no secret matches. GitHub CI passed with 63 tests. Frontend artifacts are byte-identical to the prior verified build; no UI/personal-storage changes were made. Remaining material decision: which backblast instructions the content owners authorize for publication. Credential entry alone does not authorize reuse. Full privileged import/review retrieval still needs a secure server/admin path; do not attempt to use a masked token in the local CLI.
-
-## Approved FE collection follow-up · October 16, 2026
-
-Shane explicitly approved FE backblast reuse: “Fe backblasts approved.” Approval is recorded in `data/source-permissions.json` and covers workout instructions and supported Q/AO/date provenance; unrelated personal content remains excluded. Reuse permission is no longer a blocker and must not be requested again.
-
-- Latest collector application commit on GitHub `develop`: `42c6a8604da0761f4ef34180424cf5f93f62f564`; tree `31f01bc05b0dff3e1059a0aebfda2ca48d064540`, exactly matching local commit `03f93c1`.
-- GitHub CI passed: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/38883657031.
-- Local checks: 63 tests pass when run serially, lint passes, TypeScript/Vite build passes, diff check passes. First parallel test attempt had one existing UI test timeout on the slow local host; serial rerun passed without changing assertions or timeout limits. Frontend JS/CSS artifacts are unchanged.
-- `scripts/collect-nation.ts` runs only in the existing FE develop branch build, uses the paginated read-only adapter and produces an unreviewed workout-section export under ignored `.netlify/blobs/deploy/fe-review/candidates.json`. Netlify file-based uploads target a private deploy-specific store, not `dist` or GitHub. Whole narratives are not saved; candidates with detected personal/ambiguous section content are conservatively excluded. Exact section order/count text is preserved for review; normalized section hashes suppress exact-content duplicate events. No card is automatically approved/published.
-- Collection deployment status, private export count and stored bytes are **not yet verified**. Netlify's summary connector again supplies an unusable deploy reference; do not infer ready state or a candidate count from it. The authenticated dashboard is needed to inspect the true deployment ID and retrieve the private file.
-- The engineering browser's Netlify session expired. The secure browser-auth request timed out, and a fresh canonical dashboard navigation still showed Log in. No credential failure or API-token problem was established. No password/token should be pasted into chat, and access protections must remain in place.
-- Published real FE cards remain **0**; illustrative starters remain **10**. Personal drafts and source IDs remain untouched. No Supabase/With/Elsewhere resources or production/DNS settings were changed.
-
-Next exact steps: restore the engineering cloud browser's Netlify session through secure/manual sign-in; inspect develop deployment for `42c6a86`, read the `FE_PRIVATE_REVIEW_EXPORT` summary and verify the private store upload; retrieve the candidate JSON through **Data & storage → Blobs**, keeping it in ignored `.imports`; inspect workout-only sections for fidelity/privacy and curate 20–30 distinct usable originals if the sources permit. Then merge, approve exact hashes, export to the repository catalog, verify representative cards against retained source sections, run catalog regressions/mobile/print checks, push/deploy develop and update this handoff. If private export fails, read the actual build logs before changing the adapter. Do not claim this collector is live-verified until those steps succeed.
+Shane product review only: browse the regional library for FE usefulness; try one favorite card's wording/Q view; identify any material source correction through product feedback. Engineering retains technical testing. No new credential entry is required for the completed repository-backed preview.
