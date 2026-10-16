@@ -18,6 +18,7 @@ import {
   Check,
   Layers3,
 } from "lucide-react";
+import { Planner } from "./Planner";
 import { Discovery } from "./Discovery";
 import { aoProfiles, statusLabel } from "./discovery";
 import { catalog } from "./catalog";
@@ -549,41 +550,35 @@ export default function App() {
       )}
       {!selected && !editing ? (
         <main id="main" className="main">
-          <section className="hero">
-            <div>
-              <p className="eyebrow">
-                <span className="dot" /> BUILT FOR THE GLOOM
-              </p>
-              <h1>
-                Your next Q.
-                <br />
-                <em>Starts here.</em>
-              </h1>
-              <p className="intro">
-                Find a plan. Make it yours. Lead with confidence.
-                <br />
-                Your next Q starts right here.
-              </p>
-              <button
-                className="create mobile-create"
-                onClick={() => begin(newWorkout())}
-              >
-                <Plus size={18} /> Create a workout
-              </button>
-            </div>
-            <aside className="hero-note">
-              <span className="note-top">LESS PLANNING. MORE LEADING.</span>
-              <div className="outline-mark">FE</div>
-              <p>
-                For the men who
-                <br />
-                show up for each other.
-              </p>
-              <span className="note-bottom">
-                FREE TO USE. NO SIGN-UP. ALL IN. <ArrowUpRight size={18} />
-              </span>
-            </aside>
-          </section>
+          <Planner
+            onEdit={(w) => begin(w)}
+            onPreview={(w) => {
+              setThangOnly(false);
+              open(w);
+            }}
+            onSave={(w) => {
+              if (state.workouts.length >= 200) {
+                setNotice(
+                  "This browser has 200 drafts. Export a backup before adding more.",
+                );
+                return false;
+              }
+              const copy = { ...structuredClone(w), id: uid(), originId: w.id };
+              if (persist({ ...state, workouts: [...state.workouts, copy] })) {
+                setNotice("AI-assisted copy saved privately on this device.");
+                return true;
+              }
+              return false;
+            }}
+            onReference={(id) => {
+              const w = sources.find((w) => w.id === id);
+              if (w) open(w);
+              else
+                setNotice(
+                  "That reference is not available in the current library snapshot.",
+                );
+            }}
+          />
           <nav className="tabs" aria-label="Workout collections">
             {[
               ["library", "Workout library", sources.length],
@@ -771,7 +766,9 @@ export default function App() {
                     <span className="card-number">
                       {String(i + 1).padStart(2, "0")} /{" "}
                       {w.kind === "personal"
-                        ? "PERSONAL DRAFT"
+                        ? w.provenance.generation
+                          ? "AI-ASSISTED DRAFT"
+                          : "PERSONAL DRAFT"
                         : statusLabel(w.provenance.status).toUpperCase()}
                     </span>
                     <h3>
@@ -1352,7 +1349,9 @@ export default function App() {
             {selected.format} /{" "}
             {selected.kind === "source"
               ? statusLabel(selected.provenance.status).toUpperCase()
-              : "MY WORKOUT"}
+              : selected.provenance.generation
+                ? "AI-ASSISTED DRAFT"
+                : "MY WORKOUT"}
           </p>
           <h1 className="page-title">{selected.title}</h1>
           <p className="detail-summary">{selected.summary}</p>
@@ -1490,10 +1489,26 @@ export default function App() {
             <h3>Plan notes & source</h3>
             <p>{selected.adaptationNotes}</p>
             <p>
-              {selected.kind === "personal"
-                ? "Personal adaptation · source original stays independent"
-                : selected.provenance.label}
+              {selected.provenance.generation
+                ? selected.provenance.label
+                : selected.kind === "personal"
+                  ? "Personal adaptation · source original stays independent"
+                  : selected.provenance.label}
             </p>
+            {selected.provenance.generation && (
+              <div>
+                <p>
+                  AO: {selected.provenance.ao ?? "To confirm"} · All timing is
+                  estimated.
+                </p>
+                <p>
+                  Workout references supplied:{" "}
+                  {selected.provenance.generation.referenceSourceIds
+                    .map((id) => sources.find((w) => w.id === id)?.title ?? id)
+                    .join("; ")}
+                </p>
+              </div>
+            )}
             {selected.provenance.sourceId && (
               <p>
                 Source ID: {selected.provenance.sourceId}

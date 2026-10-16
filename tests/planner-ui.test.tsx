@@ -1,0 +1,125 @@
+// @vitest-environment jsdom
+import React from "react";
+import { it, expect, vi, afterEach } from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
+import "@testing-library/jest-dom/vitest";
+import { Planner } from "../src/Planner";
+import { generatePlan } from "../server/planner-service";
+import { GOLD_RUSH_EXAMPLE } from "../src/planner-contract";
+import { planFixture } from "./fixtures/plan";
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+  sessionStorage.clear();
+});
+async function responseFixture() {
+  return generatePlan(
+    { prompt: GOLD_RUSH_EXAMPLE },
+    { OPENROUTER_API_KEY: "fixture" },
+    vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            model: "fixture:free",
+            choices: [{ message: { content: JSON.stringify(planFixture) } }],
+          }),
+        ),
+      ),
+  );
+}
+it("creates, refines without losing the last good draft, saves and previews private work", async () => {
+  const result = await responseFixture();
+  const f = vi
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce(new Response(JSON.stringify(result)))
+    .mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ error: "Free AI has reached its current limit." }),
+        { status: 429 },
+      ),
+    );
+  const onSave = vi.fn(() => true),
+    onPreview = vi.fn(),
+    onEdit = vi.fn();
+  render(
+    <Planner
+      onSave={onSave}
+      onPreview={onPreview}
+      onEdit={onEdit}
+      onReference={() => {}}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Try the Gold Rush idea" }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
+  expect(
+    await screen.findByRole("heading", { name: "Stake Your Claim" }),
+  ).toBeVisible();
+  fireEvent.change(screen.getByLabelText("What would you change?"), {
+    target: { value: "Less running, keep everything else." },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Refine this draft" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent("current limit");
+  expect(
+    screen.getByRole("heading", { name: "Stake Your Claim" }),
+  ).toBeVisible();
+  const body = JSON.parse(String(f.mock.calls[1][1]?.body));
+  expect(body.current).toEqual(result.plan);
+  expect(body.prompt).toContain("Less running");
+  fireEvent.click(screen.getByRole("button", { name: "Save a private copy" }));
+  expect(onSave).toHaveBeenCalledWith(result.workout);
+  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  expect(onPreview).toHaveBeenCalledWith(result.workout);
+  fireEvent.click(screen.getByRole("button", { name: "Edit the details" }));
+  expect(onEdit).toHaveBeenCalledWith(result.workout);
+  cleanup();
+  render(
+    <Planner
+      onSave={onSave}
+      onPreview={onPreview}
+      onEdit={onEdit}
+      onReference={() => {}}
+    />,
+  );
+  expect(
+    screen.getByRole("heading", { name: "Stake Your Claim" }),
+  ).toBeVisible();
+});
+it("ignores a cancelled stale response and does not persist it over a later session", async () => {
+  const result = await responseFixture();
+  let resolve!: (r: Response) => void;
+  vi.spyOn(globalThis, "fetch").mockImplementation(
+    () =>
+      new Promise((r) => {
+        resolve = r;
+      }),
+  );
+  render(
+    <Planner
+      onSave={() => true}
+      onPreview={() => {}}
+      onEdit={() => {}}
+      onReference={() => {}}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Try the Gold Rush idea" }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
+  fireEvent.click(screen.getByRole("button", { name: "Cancel generation" }));
+  resolve(new Response(JSON.stringify(result)));
+  await waitFor(() =>
+    expect(
+      screen.queryByRole("heading", { name: "Stake Your Claim" }),
+    ).toBeNull(),
+  );
+  expect(screen.getByRole("alert")).toHaveTextContent("previous draft is safe");
+});

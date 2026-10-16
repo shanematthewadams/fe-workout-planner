@@ -81,6 +81,13 @@ export const workoutSchema = z
       checkedAt: z.string().datetime().optional(),
       issues: z.array(z.string().max(500)).max(30).optional(),
       durationBasis: z.enum(["source", "inferred", "unknown"]).optional(),
+      generation: z
+        .object({
+          provider: z.enum(["OpenRouter", "Gemini"]),
+          model: z.string().max(200),
+          referenceSourceIds: z.array(z.string().max(100)).max(3),
+        })
+        .optional(),
       url: z
         .string()
         .url()

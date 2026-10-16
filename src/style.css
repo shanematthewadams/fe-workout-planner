@@ -1491,3 +1491,49 @@ fieldset,
     max-width: 145px;
   }
 }
+
+/* The assistant is the front door; the reviewed library remains supporting material. */
+.assistant { margin: 0 0 2.5rem; padding: clamp(1.2rem, 4vw, 2.5rem); border: 1px solid #d7dce1; background: #fff; }
+.assistant-intro, .assistant-result-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1.5rem; }
+.assistant h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2.3rem,5vw,4rem); line-height:1.05; margin:.5rem 0 .8rem; }
+.assistant-intro p { max-width:44rem; }
+.assistant-badge { padding:.6rem .8rem; background:#f1f3f4; font-size:.75rem; white-space:nowrap; }
+.assistant form { margin-top:1.25rem; }
+.assistant label { display:flex; flex-direction:column; gap:.5rem; font-weight:600; font-size:.85rem; }
+.assistant textarea, .assistant input, .assistant select { font:inherit; width:100%; min-width:0; border:1px solid #b8c0c6; padding:.8rem; background:#fff; color:#151719; border-radius:0; }
+.assistant textarea { resize:vertical; line-height:1.6; font-weight:400; }
+.assistant textarea:focus, .assistant input:focus, .assistant select:focus { outline:2px solid #151719; outline-offset:2px; }
+.assistant button { white-space:normal; }
+.assistant .example-prompt { border:0; background:transparent; text-decoration:underline; padding:.6rem 0; font-size:.8rem; }
+.assistant-preferences { border-top:1px solid #e1e4e7; border-bottom:1px solid #e1e4e7; padding:1rem 0; margin:.3rem 0 1.1rem; }
+.assistant summary { cursor:pointer; font-size:.85rem; font-weight:600; }
+.assistant summary span { font-size:.75rem; font-weight:400; margin-left:.7rem; color:#525c65; }
+.assistant-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; margin-top:1rem; }
+.assistant .checkbox { flex-direction:row; align-items:center; grid-column:1/-1; }
+.assistant .checkbox input { width:auto; }
+.assistant-actions { display:flex; flex-wrap:wrap; gap:.7rem; margin:1rem 0; }
+.assistant-actions button,.assistant-refine > button { padding:.8rem 1rem; }
+.assistant-privacy { color:#5b646d; font-size:.75rem; line-height:1.6; max-width:62rem; }
+.assistant-error { border-left:3px solid #ad3c28; padding:.8rem 1rem; background:#fff3ee; }
+.assistant-result { border-top:2px solid #141719; margin-top:2rem; padding-top:1.6rem; }
+.assistant-result h2 { font-family:'Barlow Condensed',sans-serif; font-size:2.2rem; margin:.5rem 0; }
+.assistant-result-heading > span { flex-shrink:0; font-size:.8rem; padding-top:.7rem; }
+.assistant-result-meta { font-size:.8rem; color:#56616a; }
+.assistant-sections { display:grid; gap:1.2rem; margin:1.6rem 0; }
+.assistant-sections article { border:1px solid #dce0e4; padding:1.3rem; min-width:0; }
+.assistant-sections header { display:flex; justify-content:space-between; gap:1rem; font-size:.75rem; letter-spacing:.08em; }
+.assistant-sections h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.8rem; margin:.7rem 0 1rem; }
+.assistant-block h4 { margin:1rem 0 .6rem; }
+.assistant-block h4 span { font-size:.75rem; font-weight:400; }
+.assistant-block p { white-space:pre-wrap; line-height:1.65; }
+.assistant-block ul { padding-left:1.1rem; }
+.assistant-block li { padding:.4rem 0; line-height:1.55; }
+.assistant-block li p { font-size:.85rem; margin:.3rem 0; }
+.count-label { display:inline-block; margin-left:.7rem; padding:.15rem .4rem; font-size:.7rem; background:#f0f2f4; }
+.assistant-notes { background:#f5f6f7; padding:1rem 1.2rem; font-size:.85rem; line-height:1.65; }
+.assistant-refine { border:1px solid #ced4d9; padding:1.2rem; }
+.refine-chips { display:flex; flex-wrap:wrap; gap:.5rem; margin:.8rem 0; }
+.refine-chips button { font-size:.75rem; padding:.5rem .7rem; }
+.assistant-references { border-top:1px solid #dce0e4; padding-top:1rem; margin-top:1.5rem; font-size:.8rem; line-height:1.6; }
+.assistant-references button { border:0; text-decoration:underline; background:transparent; padding:.25rem 0; text-align:left; }
+@media(max-width:700px) { .assistant-intro,.assistant-result-heading { flex-direction:column; gap:.5rem; } .assistant-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .assistant-badge { white-space:normal; } .assistant-actions { flex-direction:column; } .assistant-actions button { width:100%; } .assistant-sections article {padding:1rem;} }
