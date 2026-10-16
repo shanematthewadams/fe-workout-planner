@@ -17,6 +17,19 @@ export function elapsedAt(state: TimerState, now: number) {
     ),
   );
 }
+export function liveTimer(now: number, cot = 10): TimerState {
+  const start = new Date(now);
+  start.setHours(5, 30, 0, 0);
+  return {
+    elapsed: Math.min(
+      2700 + cot * 60,
+      Math.max(0, (now - start.getTime()) / 1000),
+    ),
+    anchor: Math.max(now, start.getTime()),
+    wall: true,
+    cot,
+  };
+}
 export function FieldTimer({
   workout,
   onExit,
@@ -123,13 +136,11 @@ export function FieldTimer({
   function start(wall: boolean) {
     playCadenceBeep();
     const current = Date.now();
-    let base = timer.elapsed;
-    if (wall) {
-      const start = new Date(current);
-      start.setHours(5, 30, 0, 0);
-      base = Math.max(0, (current - start.getTime()) / 1000);
-    }
-    update({ ...timer, elapsed: Math.min(total, base), anchor: current, wall });
+    update(
+      wall
+        ? liveTimer(current, timer.cot)
+        : { ...timer, anchor: current, wall: false },
+    );
   }
   const fmt = (n: number) => {
     const seconds = Math.ceil(Math.max(0, n));

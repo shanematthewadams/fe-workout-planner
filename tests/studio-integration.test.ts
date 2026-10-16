@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { fallbackPlan, STYLES } from "../src/fallback";
 import { plannerRequestSchema } from "../src/planner-contract";
 import { sessionPhases, sessionMatches } from "../src/session";
-import { elapsedAt } from "../src/FieldTimer";
+import { elapsedAt, liveTimer } from "../src/FieldTimer";
 import { mergeCloud } from "../src/cloud";
 import { importStudio } from "../src/studio/import";
 import { validatePlan } from "../server/planner-service";
@@ -71,6 +71,17 @@ describe("unified timing and fallback", () => {
       40,
     );
   });
+});
+it("live mode waits for 5:30 when started early and always reaches the 6:15 hard stop", () => {
+  const early = new Date(2026, 9, 16, 5, 25).getTime(),
+    start = new Date(2026, 9, 16, 5, 30).getTime(),
+    stop = new Date(2026, 9, 16, 6, 15).getTime();
+  const state = liveTimer(early);
+  expect(elapsedAt(state, early)).toBe(0);
+  expect(elapsedAt(state, start)).toBe(0);
+  expect(elapsedAt(state, stop)).toBe(2700);
+  const late = liveTimer(start + 1800000);
+  expect(elapsedAt(late, stop)).toBe(2700);
 });
 describe("cloud reconciliation protects independent work", () => {
   const original = copyWorkout(fallbackPlan(request()).workout);
