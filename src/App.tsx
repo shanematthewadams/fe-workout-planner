@@ -5,7 +5,6 @@ import {
   Heart,
   Plus,
   Search,
-  SlidersHorizontal,
   Clock3,
   Footprints,
   Dumbbell,
@@ -224,8 +223,8 @@ export default function App() {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
-  const [lastPlan, setLastPlan] = useState<Workout | null>(null),
-    [timerOpen, setTimerOpen] = useState(false);
+  const [timerOpen, setTimerOpen] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const persist = (next: LocalState) => {
     if (blocked) {
       setNotice(
@@ -293,7 +292,6 @@ export default function App() {
   };
   const open = (w: Workout) => {
     setSelected(w);
-    setLastPlan(w);
     setTimerOpen(false);
     setQ(false);
     window.scrollTo(0, 0);
@@ -474,18 +472,16 @@ export default function App() {
     }
   };
   const all = [...sources, ...state.workouts];
-  const base =
-    tab === "mine"
-      ? state.workouts
-      : tab === "favorites"
-        ? all.filter((w) => state.favorites.includes(w.id))
-        : sources;
+  const base = tab === "mine" ? state.workouts : sources;
   const equipmentOptions = [
     ...new Set(all.flatMap((workout) => workout.equipment)),
   ]
     .filter(Boolean)
     .sort();
-  const visible = base.filter((w) => matches(w, filters));
+  const visible = base.filter(
+    (w) =>
+      matches(w, filters) && (!favoritesOnly || state.favorites.includes(w.id)),
+  );
   const update = (w: Workout) => {
     setEditing(w);
     setDirty(true);
@@ -498,91 +494,58 @@ export default function App() {
       <header className="header no-print">
         <button
           className="brand"
-          onClick={() => go("library")}
+          onClick={() => go("builder")}
           aria-label="The FE home"
         >
           <span>
             F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
           </span>
         </button>
-        <nav className="regional-links" aria-label="F3 The FE regional links">
-          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
-            THE REGION ↗
-          </a>
-          <a
-            href="https://f3thefe.com/schedule/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            AO SCHEDULE ↗
-          </a>
-        </nav>
-        <span className="region">
-          F3 THE FE <span> / </span> OLATHE, KS
-        </span>
-        <button
-          className="create top-create"
-          onClick={() => {
-            if (leave()) begin(newWorkout());
-          }}
-        >
-          <Plus size={18} /> Create a workout
-        </button>
+        <div className="header-meta">
+          <span className="rug-burn-tag">Created by Rug Burn</span>
+          <span className="region">
+            F3 THE FE <span> / </span> OLATHE, KS
+          </span>
+        </div>
       </header>
       <nav className="app-nav no-print" aria-label="Planner navigation">
-        <button
-          aria-current={
-            !selected && !editing && tab === "builder" ? "page" : undefined
-          }
-          onClick={() => go("builder")}
-        >
-          Builder
-        </button>
-        <button
-          disabled={!lastPlan}
-          aria-current={selected && !timerOpen ? "page" : undefined}
-          onClick={() => {
-            if (leave() && lastPlan) {
-              setEditing(null);
-              setDirty(false);
-              open(lastPlan);
+        {[
+          ["builder", "Build"],
+          ["library", "Library"],
+          ["mine", "My Workouts"],
+        ].map(([key, label]) => (
+          <button
+            key={key}
+            aria-current={
+              !selected && !editing && tab === key ? "page" : undefined
             }
-          }}
-        >
-          Plan
-        </button>
-        <button
-          disabled={!lastPlan}
-          aria-current={timerOpen ? "page" : undefined}
-          onClick={() => {
-            if (leave() && lastPlan) {
-              setEditing(null);
-              setDirty(false);
-              setSelected(lastPlan);
-              setTimerOpen(true);
-            }
-          }}
-        >
-          Field Q-Timer
-        </button>
-        <button
-          onClick={() => go("exicon")}
-          aria-current={tab === "exicon" && !selected ? "page" : undefined}
-        >
-          Exicon & Lexicon
-        </button>
-        <button
-          onClick={() => go("mine")}
-          aria-current={tab === "mine" && !selected ? "page" : undefined}
-        >
-          Saved
-        </button>
-        <button
-          onClick={() => go("library")}
-          aria-current={tab === "library" && !selected ? "page" : undefined}
-        >
-          Library
-        </button>
+            onClick={() => go(key)}
+          >
+            {label}
+          </button>
+        ))}
+        <details className="more-nav">
+          <summary>More</summary>
+          <div className="more-menu">
+            {[
+              ["aos", "AO Directory"],
+              ["exicon", "Exicon & Lexicon"],
+              ["data", "Sync & backups"],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                onClick={(event) => {
+                  go(key);
+                  event.currentTarget
+                    .closest("details")
+                    ?.removeAttribute("open");
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </details>
       </nav>
       <div
         role="status"
@@ -648,7 +611,11 @@ export default function App() {
         <main id="main" className="main">
           {tab === "builder" && (
             <Planner
-              onDraft={setLastPlan}
+              onLead={(w) => {
+                open(w);
+                setNotice("");
+                setTimerOpen(true);
+              }}
               onEdit={(w) => begin(w)}
               onPreview={(w) => {
                 setThangOnly(false);
@@ -684,7 +651,7 @@ export default function App() {
               }}
             />
           )}
-          {tab === "mine" && (
+          {tab === "data" && (
             <CloudSync
               workouts={state.workouts}
               onMerge={(workouts) => persist({ ...state, workouts })}
@@ -709,30 +676,6 @@ export default function App() {
           ) : (
             tab !== "builder" && (
               <>
-                <nav className="tabs" aria-label="Workout collections">
-                  {[
-                    ["library", "Workout library", sources.length],
-                    ["mine", "My workouts", state.workouts.length],
-                    ["aos", "FE AOs", aoProfiles.length],
-                    ["exercises", "Exercise guide", 9],
-                    [
-                      "favorites",
-                      "Favorites",
-                      state.favorites.filter((id) =>
-                        all.some((w) => w.id === id),
-                      ).length,
-                    ],
-                  ].map(([key, label, count]) => (
-                    <button
-                      key={key}
-                      className={tab === key ? "active" : ""}
-                      onClick={() => go(String(key))}
-                    >
-                      {label}
-                      <span>{count}</span>
-                    </button>
-                  ))}
-                </nav>
                 {tab === "aos" || tab === "exercises" ? (
                   <Discovery
                     key={tab}
@@ -742,7 +685,7 @@ export default function App() {
                       go("library");
                     }}
                   />
-                ) : (
+                ) : tab === "data" ? null : (
                   <>
                     {tab === "library" && (
                       <aside className="catalog-status">
@@ -765,9 +708,9 @@ export default function App() {
                           {catalogOrigin === "published"
                             ? "Latest published library loaded."
                             : "Saved library snapshot."}{" "}
-                          Regional backblasts appear only after source, reuse
-                          and workout details are reviewed. Starters are
-                          original examples.
+                          Backblasts may have timing or exercise gaps; check
+                          source notes before leading. Starters are illustrative
+                          examples.
                         </p>
                       </aside>
                     )}
@@ -786,12 +729,25 @@ export default function App() {
                               : "Keep the good ones close."}
                         </h2>
                       </div>
-                      <p>
-                        {tab === "library"
-                          ? "Reviewed regional originals and clearly labeled starters."
-                          : "Saved in this browser, on this device."}
-                      </p>
+                      <div className="library-head-actions">
+                        <button
+                          className="create"
+                          onClick={() => {
+                            if (leave()) begin(newWorkout());
+                          }}
+                        >
+                          <Plus size={16} /> Create a workout
+                        </button>
+                      </div>
                     </section>
+                    <label className="checkbox favorites-filter">
+                      <input
+                        type="checkbox"
+                        checked={favoritesOnly}
+                        onChange={(e) => setFavoritesOnly(e.target.checked)}
+                      />{" "}
+                      Favorites only
+                    </label>
                     <section className="filters" aria-label="Filter workouts">
                       <label className="search">
                         <Search size={18} />
@@ -804,69 +760,76 @@ export default function App() {
                           }
                         />
                       </label>
-                      <SlidersHorizontal size={18} className="filter-icon" />
-                      {(
-                        [
-                          [
-                            "duration",
-                            "Duration",
-                            ["All", "30 or less", "31–45", "46+"],
-                          ],
-                          [
-                            "equipment",
-                            "Equipment",
-                            ["All", "None", ...equipmentOptions],
-                          ],
-                          [
-                            "running",
-                            "Running",
-                            ["All", "None", "Light", "Moderate"],
-                          ],
-                          ["format", "Format", ["All", ...formatOptions]],
-                          [
-                            "status",
-                            "Source status",
+                      <details className="filter-details">
+                        <summary>Filter workouts</summary>
+                        <div className="filter-options">
+                          {(
                             [
-                              "All",
-                              "regional-reviewed",
-                              "illustrative",
-                              "personal",
-                            ],
-                          ],
-                          [
-                            "ao",
-                            "Source AO",
-                            [
-                              "All",
-                              ...new Set([
-                                ...aoProfiles.map((a) => a.name),
-                                ...all.flatMap((w) =>
-                                  w.provenance.ao ? [w.provenance.ao] : [],
-                                ),
-                              ]),
-                            ],
-                          ],
-                        ] as [keyof Filters, string, string[]][]
-                      ).map(([key, label, options]) => (
-                        <label className="filter" key={key}>
-                          <span>{label}</span>
-                          <select
-                            aria-label={label}
-                            value={filters[key]}
-                            onChange={(e) =>
-                              setFilters({ ...filters, [key]: e.target.value })
-                            }
-                          >
-                            {options.map((o) => (
-                              <option key={o} value={o}>
-                                {key === "status" && o !== "All"
-                                  ? statusLabel(o)
-                                  : o}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      ))}
+                              [
+                                "duration",
+                                "Duration",
+                                ["All", "30 or less", "31–45", "46+"],
+                              ],
+                              [
+                                "equipment",
+                                "Equipment",
+                                ["All", "None", ...equipmentOptions],
+                              ],
+                              [
+                                "running",
+                                "Running",
+                                ["All", "None", "Light", "Moderate"],
+                              ],
+                              ["format", "Format", ["All", ...formatOptions]],
+                              [
+                                "status",
+                                "Source status",
+                                [
+                                  "All",
+                                  "regional-reviewed",
+                                  "illustrative",
+                                  "personal",
+                                ],
+                              ],
+                              [
+                                "ao",
+                                "Source AO",
+                                [
+                                  "All",
+                                  ...new Set([
+                                    ...aoProfiles.map((a) => a.name),
+                                    ...all.flatMap((w) =>
+                                      w.provenance.ao ? [w.provenance.ao] : [],
+                                    ),
+                                  ]),
+                                ],
+                              ],
+                            ] as [keyof Filters, string, string[]][]
+                          ).map(([key, label, options]) => (
+                            <label className="filter" key={key}>
+                              <span>{label}</span>
+                              <select
+                                aria-label={label}
+                                value={filters[key]}
+                                onChange={(e) =>
+                                  setFilters({
+                                    ...filters,
+                                    [key]: e.target.value,
+                                  })
+                                }
+                              >
+                                {options.map((o) => (
+                                  <option key={o} value={o}>
+                                    {key === "status" && o !== "All"
+                                      ? statusLabel(o)
+                                      : o}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          ))}
+                        </div>
+                      </details>
                     </section>
                     <div className="result-line">
                       <span>
@@ -986,34 +949,36 @@ export default function App() {
                     )}
                   </>
                 )}
-                <section className="backup">
-                  <div>
-                    <h3>Your plans travel with you.</h3>
-                    <p>
-                      Browser storage is device-specific and can be cleared.
-                      Export a backup to keep your drafts and favorites.
-                    </p>
-                  </div>
-                  <div className="actions">
-                    <button onClick={() => exportData()}>
-                      <Download size={17} />
-                      Export backup
-                    </button>
-                    <label className="button">
-                      <Upload size={17} />
-                      Import backup
-                      <input
-                        type="file"
-                        accept=".json,application/json"
-                        className="sr-only"
-                        onChange={(e) => {
-                          void importFile(e.target.files?.[0]);
-                          e.target.value = "";
-                        }}
-                      />
-                    </label>
-                  </div>
-                </section>
+                {tab === "data" && (
+                  <section className="backup">
+                    <div>
+                      <h3>Your plans travel with you.</h3>
+                      <p>
+                        Browser storage is device-specific and can be cleared.
+                        Export a backup to keep your drafts and favorites.
+                      </p>
+                    </div>
+                    <div className="actions">
+                      <button onClick={() => exportData()}>
+                        <Download size={17} />
+                        Export backup
+                      </button>
+                      <label className="button">
+                        <Upload size={17} />
+                        Import backup
+                        <input
+                          type="file"
+                          accept=".json,application/json"
+                          className="sr-only"
+                          onChange={(e) => {
+                            void importFile(e.target.files?.[0]);
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </section>
+                )}
               </>
             )
           )}
@@ -1573,7 +1538,10 @@ export default function App() {
           </div>
           <button
             className="create no-print"
-            onClick={() => setTimerOpen(true)}
+            onClick={() => {
+              setNotice("");
+              setTimerOpen(true);
+            }}
           >
             Launch Field Q-Timer
           </button>
@@ -1687,13 +1655,7 @@ export default function App() {
           <section className="provenance">
             <h3>Plan notes & source</h3>
             <p>{selected.adaptationNotes}</p>
-            <p>
-              {selected.provenance.generation
-                ? selected.provenance.label
-                : selected.kind === "personal"
-                  ? "Personal adaptation · source original stays independent"
-                  : selected.provenance.label}
-            </p>
+            <p>{selected.provenance.label}</p>
             {selected.provenance.generation && (
               <div>
                 <p>
@@ -1710,8 +1672,6 @@ export default function App() {
             )}
             {selected.provenance.sourceId && (
               <p>
-                Source ID: {selected.provenance.sourceId}
-                <br />
                 Q: {selected.provenance.q ?? "Unknown"} · AO:{" "}
                 {selected.provenance.ao ?? "Unknown"} · Date:{" "}
                 {selected.provenance.eventDate ?? "Unknown"}
@@ -1728,10 +1688,6 @@ export default function App() {
                 ))}
               </ul>
             )}
-            <p>
-              Status: {selected.provenance.status}
-              {selected.originId ? ` · Copied from ${selected.originId}` : ""}
-            </p>
             {selected.provenance.url && (
               <a href={selected.provenance.url}>View source</a>
             )}
@@ -1744,22 +1700,33 @@ export default function App() {
         </main>
       ) : null}
       <footer className="footer no-print">
-        <span className="footer-brand">
-          F3 THE FE <span>/</span> SHOW UP. STEP UP.
-        </span>
-        <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
-          F3 The FE <ArrowUpRight size={14} />
-        </a>
-        <a
-          href="https://f3thefe.com/schedule/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          AO schedule <ArrowUpRight size={14} />
-        </a>
-        <a href="https://f3nation.com/exicon" target="_blank" rel="noreferrer">
-          F3 Exicon <ArrowUpRight size={14} />
-        </a>
+        <div className="footer-credits">
+          <span className="footer-brand">
+            F3 THE FE <span>/</span> SHOW UP. STEP UP.
+          </span>
+          <span className="rug-burn-footer-credit">
+            Created by <strong>Rug Burn</strong> · F3 The FE · Olathe, KS
+          </span>
+        </div>
+        <div className="footer-links">
+          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
+            The Region <ArrowUpRight size={14} />
+          </a>
+          <a
+            href="https://f3thefe.com/schedule/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            AO schedule <ArrowUpRight size={14} />
+          </a>
+          <a
+            href="https://f3nation.com/exicon"
+            target="_blank"
+            rel="noreferrer"
+          >
+            F3 Exicon <ArrowUpRight size={14} />
+          </a>
+        </div>
       </footer>
       {pending && (
         <div className="modal-backdrop">

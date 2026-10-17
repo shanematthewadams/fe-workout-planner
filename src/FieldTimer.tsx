@@ -73,6 +73,7 @@ export function FieldTimer({
     [beat, setBeat] = useState(0),
     [bpm, setBpm] = useState(80),
     [storageError, setStorageError] = useState("");
+  const [cursor, setCursor] = useState({ phase: "", index: 0 });
   const elapsed = elapsedAt(timer, now),
     total = 2700 + timer.cot * 60;
   const phases = sessionPhases(
@@ -81,6 +82,18 @@ export function FieldTimer({
   );
   const phase =
     phases.find((p) => elapsed < p.end) ?? phases[phases.length - 1];
+  const phaseExercises = workout.sections
+    .filter((s) => s.kind === phase.id)
+    .flatMap((s) =>
+      s.blocks.flatMap((b) =>
+        b.exercises.map((exercise) => ({ exercise, block: b })),
+      ),
+    );
+  const exerciseIndex =
+    cursor.phase === phase.id
+      ? Math.min(cursor.index, Math.max(0, phaseExercises.length - 1))
+      : 0;
+  const currentExercise = phaseExercises[exerciseIndex];
   const previous = useRef(elapsed);
   useEffect(() => {
     const tick = () => setNow(Date.now());
@@ -125,18 +138,21 @@ export function FieldTimer({
   useEffect(() => {
     if (timer.anchor === null) return;
     let lock: WakeLockSentinel | undefined;
+    let disposed = false;
     const wake = () => {
       if (document.visibilityState === "visible")
         navigator.wakeLock
           ?.request("screen")
           .then((v) => {
-            lock = v;
+            if (disposed) void v.release();
+            else lock = v;
           })
           .catch(() => {});
     };
     wake();
     document.addEventListener("visibilitychange", wake);
     return () => {
+      disposed = true;
       document.removeEventListener("visibilitychange", wake);
       void lock?.release();
     };
@@ -146,7 +162,7 @@ export function FieldTimer({
     setTimer(next);
   };
   function start(wall: boolean) {
-    playCadenceBeep();
+    if (sound) playCadenceBeep();
     const current = Date.now();
     update(
       wall
@@ -190,19 +206,23 @@ export function FieldTimer({
           ? "Physical work is over. Circle up."
           : "until the physical hard stop"}
       </h2>
-      <progress value={elapsed} max={total} />
+      <progress aria-label="Session progress" value={elapsed} max={total} />
       <p>{phase.detail}</p>
       <div className="actions">
         {timer.anchor !== null && elapsed < total ? (
           <button
             className="create"
-            disabled={timer.wall}
             onClick={() => {
-              update({ ...timer, elapsed, anchor: null });
+              update({
+                ...timer,
+                elapsed: elapsedAt(timer, Date.now()),
+                anchor: null,
+                wall: false,
+              });
               setCadence(false);
             }}
           >
-            Pause
+            {timer.wall ? "Stop live timer" : "Pause"}
           </button>
         ) : (
           <>
@@ -230,27 +250,71 @@ export function FieldTimer({
           Reset
         </button>
       </div>
-      <label>
-        COT length
-        <select
-          disabled={timer.anchor !== null}
-          value={timer.cot}
-          onChange={(e) => update({ ...timer, cot: Number(e.target.value) })}
-        >
-          <option value={5}>5 minutes</option>
-          <option value={10}>10 minutes</option>
-        </select>
-      </label>
-      <div className="field-phases">
-        {phases.map((p) => (
-          <div className={p.id === phase.id ? "active" : ""} key={p.id}>
-            <strong>{p.name}</strong>
-            <span>
-              {fmt(p.end - p.start)} · {clockLabel(p.start, startMinutes)}
-            </span>
-          </div>
-        ))}
-      </div>
+      {currentExercise && (
+        <section aria-label="Lead this phase">
+          <h2>Lead this phase</h2>
+          {currentExercise && (
+            <article className="workout-block">
+              <div className="field-exercise-nav">
+                <button
+                  disabled={exerciseIndex === 0}
+                  onClick={() =>
+                    setCursor({ phase: phase.id, index: exerciseIndex - 1 })
+                  }
+                >
+                  Previous
+                </button>
+                <span>
+                  {exerciseIndex + 1} of {phaseExercises.length}
+                </span>
+                <button
+                  disabled={exerciseIndex >= phaseExercises.length - 1}
+                  onClick={() =>
+                    setCursor({ phase: phase.id, index: exerciseIndex + 1 })
+                  }
+                >
+                  Next exercise
+                </button>
+              </div>
+              <h3>{currentExercise.block.title}</h3>
+              <p>{currentExercise.block.instructions}</p>
+              <div className="field-exercise" aria-live="polite">
+                <strong>
+                  {currentExercise.exercise.name} ·{" "}
+                  {currentExercise.exercise.amount}{" "}
+                  {currentExercise.exercise.unit}
+                </strong>
+                <p>{currentExercise.exercise.instructions}</p>
+                <span>{currentExercise.exercise.counting}</span>
+              </div>
+            </article>
+          )}
+        </section>
+      )}
+      <details className="field-overview">
+        <summary>Session timeline & COT settings</summary>
+        <label>
+          COT length
+          <select
+            disabled={timer.anchor !== null}
+            value={timer.cot}
+            onChange={(e) => update({ ...timer, cot: Number(e.target.value) })}
+          >
+            <option value={5}>5 minutes</option>
+            <option value={10}>10 minutes</option>
+          </select>
+        </label>
+        <div className="field-phases">
+          {phases.map((p) => (
+            <div className={p.id === phase.id ? "active" : ""} key={p.id}>
+              <strong>{p.name}</strong>
+              <span>
+                {fmt(p.end - p.start)} · {clockLabel(p.start, startMinutes)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </details>
       <section className="cadence">
         <h2>Four-count cadence</h2>
         <p className="cadence-count">
@@ -275,7 +339,7 @@ export function FieldTimer({
           disabled={elapsed >= 2700}
           aria-pressed={cadence}
           onClick={() => {
-            playCadenceBeep();
+            if (sound) playCadenceBeep();
             setCadence(!cadence);
           }}
         >
@@ -285,27 +349,6 @@ export function FieldTimer({
           Three lead counts, then the group rep. Audio may be suspended when a
           phone locks; keep the timer visible.
         </p>
-      </section>
-      <section>
-        <h2>Lead this phase</h2>
-        {workout.sections
-          .filter((s) => s.kind === phase.id)
-          .flatMap((s) => s.blocks)
-          .map((b) => (
-            <article className="workout-block" key={b.id}>
-              <h3>{b.title}</h3>
-              <p>{b.instructions}</p>
-              {b.exercises.map((e) => (
-                <p key={e.id}>
-                  <strong>
-                    {e.name} · {e.amount} {e.unit}
-                  </strong>
-                  <br />
-                  {e.instructions} · {e.counting}
-                </p>
-              ))}
-            </article>
-          ))}
       </section>
       {storageError && <p role="alert">{storageError}</p>}
     </main>

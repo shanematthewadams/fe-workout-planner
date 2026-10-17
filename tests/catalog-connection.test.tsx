@@ -60,7 +60,7 @@ it("keeps the bundled library and private saved copy when configured upstream fa
   expect(screen.getAllByRole("button", { name: "View workout" })).toHaveLength(
     35,
   );
-  fireEvent.click(screen.getByRole("button", { name: /My workouts/ }));
+  fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
   expect(
     screen.getByRole("button", { name: "Private offline plan" }),
   ).toBeVisible();

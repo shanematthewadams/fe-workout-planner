@@ -1,7 +1,7 @@
 # FE planner development
 
 - This is one application: `shanematthewadams/fe-workout-planner`. Keep AI Studio and other editors on this repository. Never create a parallel planner or a replacement repository.
-- Read `docs/STUDIO_SYNC.md` before Studio integration changes. Main is production; inspect its current head before editing and preserve unpushed work. Use tested feature branches/PRs for release.
+- Read `docs/STUDIO_SYNC.md` before Studio integration changes. Main is production; inspect its current head before editing and preserve unpushed work. Use `studio/ux-streamline` as the single active development branch and a tested PR to `main` for release. Do not create more working branches.
 - Reuse the shared planner handler, F3 context, schemas and provider policy. Vite previews and Netlify must not grow separate generators.
 - Keep provider credentials server-side and preserve free-only routing. Never use an unverified/paid key or print secrets/private sync codes.
 - Preserve strict timing, unknown AO facts, explicit temporary closures, version 1 backups, local saved workouts and private opt-in sync. Do not overwrite reviewed regional originals with generated drafts.

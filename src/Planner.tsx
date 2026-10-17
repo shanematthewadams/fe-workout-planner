@@ -3,12 +3,14 @@ import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import { SessionTimeline } from "./session";
 import type { PlannerRequest } from "./planner-contract";
 import { findAO } from "./ao-context";
+import { withLocalAO, retainQContext } from "./ao-drafts";
 import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
 import {
   GOLD_RUSH_EXAMPLE,
   plannerRequestSchema,
+  resolveRequest,
   plannerResponseSchema,
   type PlannerResponse,
 } from "./planner-contract";
@@ -63,8 +65,10 @@ export function Planner({
   onSave,
   onReference,
   onDraft,
+  onLead,
 }: {
   onDraft?: (w: Workout) => void;
+  onLead?: (w: Workout) => void;
   onEdit: (w: Workout) => void;
   onPreview: (w: Workout) => void;
   onSave: (w: Workout) => boolean;
@@ -118,22 +122,30 @@ export function Planner({
         "The long road home",
       ]);
     // Only gear explicitly confirmed by Q can enter a wildcard roll.
+    const resolvedEquipment = resolveRequest({
+      prompt: prompt.trim().length >= 3 ? prompt : "Surprise me",
+      equipment,
+    }).equipment;
     const availableGear =
       mode === "formal"
         ? gear
-        : equipment === "Coupon"
+        : resolvedEquipment === "Coupon"
           ? ["Coupon"]
-          : equipment === "None"
+          : resolvedEquipment === "None"
             ? []
             : /coupon|cindy/i.test(prompt)
               ? ["Coupon"]
               : [];
+    const chosenAO = ao || findAO("", prompt)?.name || "";
+    if (!ao) setAO(chosenAO);
+    const chosenTime = startTime || "05:30";
+    if (!startTime) setStartTime(chosenTime);
     const chosenGear = availableGear.length ? [pick(availableGear)] : [];
     const request = {
       prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
-      ao: ao || findAO("", prompt)?.name || "",
-      startTime,
-      site,
+      ao: chosenAO,
+      startTime: chosenTime,
+      site: retainQContext(chosenAO, prompt, site),
       minutes: 45,
       equipment: chosenGear.includes("Coupon")
         ? ("Coupon" as const)
@@ -154,7 +166,21 @@ export function Planner({
     void ask(false, request);
   }
   const controller = useRef<AbortController | null>(null),
-    epoch = useRef(0);
+    epoch = useRef(0),
+    resultRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView?.({
+        behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
+          .matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+    }
+  }, [result]);
+
   useEffect(
     () => () => {
       epoch.current++;
@@ -209,7 +235,9 @@ export function Planner({
             : prompt,
         ao,
         startTime,
-        site,
+        site: refine
+          ? retainQContext(ao, prompt, site)
+          : withLocalAO(ao, prompt, site),
         minutes: 45,
         equipment:
           mode === "formal"
@@ -280,9 +308,7 @@ export function Planner({
         setResult(next);
         onDraft?.(next.workout);
         setSaved(false);
-        setError(
-          "AI is unavailable. An offline template is ready below; review it and edit requests the template could not apply.",
-        );
+        setError("");
       } else if (sequence === epoch.current)
         setError(
           abort.signal.aborted
@@ -300,288 +326,302 @@ export function Planner({
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
       <div className="assistant-intro">
         <div>
-          <p className="eyebrow">YOUR NEXT Q STARTS HERE</p>
-          <h1>Plan your next Q.</h1>
-          <p>An AO, an idea, a plan you can lead.</p>
+          <p className="eyebrow">THE FE / OUTSIDE. TOGETHER.</p>
+          <h1>
+            Good mornings.
+            <br />
+            <em>Great beatdowns.</em>
+          </h1>
+          <p className="assistant-subhead">
+            From an idea to a beatdown worth leading.
+          </p>
         </div>
-        <span className="assistant-badge">AI-assisted · free models only</span>
+        <div className="terrain-art" aria-hidden="true">
+          <span>
+            THE NEXT Q<br />
+            IS YOURS.
+          </span>
+          <b>
+            35+<small>ways to get started</small>
+          </b>
+        </div>
       </div>
-      <div className="entry-modes" aria-label="Choose how to build">
-        <button type="button" disabled={busy} onClick={surprise}>
-          <strong>Surprise Me!</strong>
-          <span>Uses your AO and preferences</span>
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          aria-pressed={mode === "idea"}
-          onClick={() => setMode("idea")}
-        >
-          <strong>Enter an Idea</strong>
-          <span>Tell us what you have in mind</span>
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          aria-pressed={mode === "formal"}
-          onClick={() => setMode("formal")}
-        >
-          <strong>Formal Builder</strong>
-          <span>Choose the details of your Q</span>
-        </button>
-      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void ask(false);
         }}
       >
-        <AOContextPanel
-          ao={ao}
-          prompt={prompt}
-          startTime={startTime}
-          site={site}
-          disabled={busy}
-          onTime={setStartTime}
-          onSite={setSite}
-          onAO={(value) => {
-            setAO(value);
-            setSite({ overrides: {}, notes: "" });
-            const matched = findAO(value);
-            if (matched) setStartTime(matched.sessions[0]?.time ?? "05:30");
-          }}
-        />
-        {mode === "formal" && (
-          <fieldset disabled={busy} className="formal-builder">
-            <legend>Build your beatdown</legend>
-            <div className="assistant-grid">
-              <label>
-                Plan title
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  maxLength={120}
-                />
-              </label>
-              <label>
-                Q name
-                <input
-                  value={qName}
-                  onChange={(e) => setQName(e.target.value)}
-                  maxLength={160}
-                />
-              </label>
-              <label>
-                Fitness focus
-                <select
-                  value={focus}
-                  onChange={(e) => setFocus(e.target.value)}
-                >
-                  {[
-                    "Full body",
-                    "Upper body",
-                    "Legs",
-                    "Core",
-                    "Cardio endurance",
-                    "Ruck strength",
-                    "HIIT",
-                  ].map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                F3 style
-                <select
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value as typeof style)}
-                >
-                  {STYLES.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                PAX count
-                <input
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={pax}
-                  onChange={(e) => setPax(Number(e.target.value))}
-                />
-              </label>
-            </div>
-            <p>Available gear · select only what you can bring or confirm</p>
-            <div className="gear-options">
-              {GEAR.map((g) => (
-                <label className="checkbox" key={g}>
-                  <input
-                    type="checkbox"
-                    checked={gear.includes(g)}
-                    onChange={() => {
-                      if (
-                        !gear.includes(g) &&
-                        (g === "Bleachers / stairs" || g === "Pull-up bar")
-                      )
-                        setSite({
-                          ...site,
-                          overrides: {
-                            ...site.overrides,
-                            [g === "Pull-up bar" ? "pullupBars" : "stairs"]:
-                              "available",
-                          },
-                        });
-                      setGear(
-                        gear.includes(g)
-                          ? gear.filter((x) => x !== g)
-                          : [...gear, g],
-                      );
-                    }}
-                  />
-                  {g}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        )}
-        <label className="assistant-prompt">
-          Describe your Q
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            maxLength={1800}
-            rows={3}
+        <div className="planner-location">
+          <AOContextPanel
+            ao={ao}
+            prompt={prompt}
+            startTime={startTime}
+            site={site}
             disabled={busy}
-            placeholder={GOLD_RUSH_EXAMPLE}
+            onTime={setStartTime}
+            onSite={setSite}
+            onAO={(value) => {
+              setAO(value);
+              setSite({ overrides: {}, notes: "" });
+              const matched = findAO(value);
+              if (matched) setStartTime(matched.sessions[0]?.time ?? "05:30");
+            }}
           />
-        </label>
-        <button
-          type="button"
-          className="example-prompt"
-          disabled={busy}
-          onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
-        >
-          Try the Gold Rush idea
-        </button>
-        <div className="assistant-actions">
-          <button
-            className="create"
-            disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
-            type="submit"
-          >
-            {busy
-              ? "Working on your Q…"
-              : result
-                ? "Make a new draft"
-                : "Build my workout"}
-          </button>
-          {!busy && (
-            <button
-              type="button"
-              onClick={() => {
-                const request = plannerRequestSchema.safeParse({
-                  prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
-                  ao,
-                  startTime,
-                  site,
-                  minutes: 45,
-                  equipment:
-                    mode === "formal"
-                      ? gear.includes("Coupon")
-                        ? "Coupon"
-                        : gear.length
-                          ? "From prompt"
-                          : "None"
-                      : equipment,
-                  running,
-                  mary,
-                  strictSchedule: true,
-                  ...(mode === "formal" ? { builder: formal } : {}),
-                });
-                if (!request.success) {
-                  setError("Choose a start time and check your details.");
-                  return;
-                }
-                const next = fallbackPlan(request.data);
-                setResult(next);
-                onDraft?.(next.workout);
-                setSaved(false);
-                setError("");
-              }}
-            >
-              Use offline template
-            </button>
-          )}
-          {busy && (
-            <button
-              type="button"
-              onClick={() => {
-                epoch.current++;
-                controller.current?.abort();
-                setBusy(false);
-                setError("Generation stopped. Your previous draft is safe.");
-              }}
-            >
-              Cancel generation
-            </button>
-          )}
         </div>
-        <details className="assistant-preferences">
-          <summary>
-            Session preferences <span>45 minutes by default</span>
-          </summary>
-          <div className="assistant-grid">
-            <p className="schedule-fixed">
-              45-minute physical session
-              <br />2 welcome · 8 warmup ·{" "}
-              {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
-              <br />
-              Fellowship follows the hard stop.
-            </p>
-            <label>
-              Planner equipment
-              <select
-                value={equipment}
-                disabled={busy}
-                onChange={(e) =>
-                  setEquipment(e.target.value as Preferences["equipment"])
-                }
-              >
-                {["From prompt", "Coupon", "None"].map((v) => (
-                  <option key={v}>{v}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Planner running
-              <select
-                value={running}
-                disabled={busy}
-                onChange={(e) =>
-                  setRunning(e.target.value as Preferences["running"])
-                }
-              >
-                {["From prompt", "None", "Light", "Moderate"].map((v) => (
-                  <option key={v}>{v}</option>
-                ))}
-              </select>
-            </label>
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                checked={mary}
-                disabled={busy}
-                onChange={(e) => setMary(e.target.checked)}
-              />{" "}
-              Include closing Mary
-            </label>
+
+        <div className="planner-idea">
+          <div className="entry-modes" aria-label="Choose how to build">
+            <button
+              type="button"
+              disabled={busy}
+              aria-pressed={mode === "idea"}
+              onClick={() => setMode("idea")}
+            >
+              Enter an Idea
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              aria-pressed={mode === "formal"}
+              onClick={() => setMode("formal")}
+            >
+              Formal Builder
+            </button>
           </div>
-        </details>
-        <p className="assistant-privacy">
-          Your idea, site details and current draft go to our free AI providers.
-          Other saved workouts are not sent. Offline templates work without AI.
-        </p>
+          {mode === "formal" && (
+            <fieldset disabled={busy} className="formal-builder">
+              <legend>Build your beatdown</legend>
+              <div className="assistant-grid">
+                <label>
+                  Plan title
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={120}
+                  />
+                </label>
+                <label>
+                  Q name
+                  <input
+                    value={qName}
+                    onChange={(e) => setQName(e.target.value)}
+                    maxLength={160}
+                  />
+                </label>
+                <label>
+                  Fitness focus
+                  <select
+                    value={focus}
+                    onChange={(e) => setFocus(e.target.value)}
+                  >
+                    {[
+                      "Full body",
+                      "Upper body",
+                      "Legs",
+                      "Core",
+                      "Cardio endurance",
+                      "Ruck strength",
+                      "HIIT",
+                    ].map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  F3 style
+                  <select
+                    value={style}
+                    onChange={(e) => setStyle(e.target.value as typeof style)}
+                  >
+                    {STYLES.map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  PAX count
+                  <input
+                    type="number"
+                    min={1}
+                    max={200}
+                    value={pax}
+                    onChange={(e) => setPax(Number(e.target.value))}
+                  />
+                </label>
+              </div>
+              <p>Available gear · select only what you can bring or confirm</p>
+              <div className="gear-options">
+                {GEAR.map((g) => (
+                  <label className="checkbox" key={g}>
+                    <input
+                      type="checkbox"
+                      checked={gear.includes(g)}
+                      onChange={() => {
+                        setGear(
+                          gear.includes(g)
+                            ? gear.filter((x) => x !== g)
+                            : [...gear, g],
+                        );
+                      }}
+                    />
+                    {g}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
+          <label className="assistant-prompt">
+            {mode === "formal"
+              ? "Additional instructions (optional)"
+              : "Describe your Q"}
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              maxLength={1800}
+              rows={3}
+              disabled={busy}
+              placeholder={
+                mode === "formal"
+                  ? "Any specific exercises, theme, or special instructions..."
+                  : GOLD_RUSH_EXAMPLE
+              }
+            />
+          </label>
+          <div className="prompt-inspiration-bar">
+            <button
+              type="button"
+              className="example-prompt"
+              disabled={busy}
+              onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
+            >
+              Try the Gold Rush idea
+            </button>
+            <button type="button" disabled={busy} onClick={surprise}>
+              Surprise Me!
+            </button>
+          </div>
+          <div className="assistant-actions">
+            <button
+              className="create"
+              disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
+              type="submit"
+            >
+              {busy
+                ? "Working on your Q…"
+                : result
+                  ? "Make a new draft"
+                  : "Build my workout"}
+            </button>
+            {!busy && (
+              <button
+                type="button"
+                onClick={() => {
+                  const request = plannerRequestSchema.safeParse({
+                    prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
+                    ao,
+                    startTime,
+                    site: withLocalAO(ao, prompt, site),
+                    minutes: 45,
+                    equipment:
+                      mode === "formal"
+                        ? gear.includes("Coupon")
+                          ? "Coupon"
+                          : gear.length
+                            ? "From prompt"
+                            : "None"
+                        : equipment,
+                    running,
+                    mary,
+                    strictSchedule: true,
+                    ...(mode === "formal" ? { builder: formal } : {}),
+                  });
+                  if (!request.success) {
+                    setError("Choose a start time and check your details.");
+                    return;
+                  }
+                  const next = fallbackPlan(request.data);
+                  setResult(next);
+                  onDraft?.(next.workout);
+                  setSaved(false);
+                  setError("");
+                }}
+              >
+                Use offline template
+              </button>
+            )}
+            {busy && (
+              <button
+                type="button"
+                onClick={() => {
+                  epoch.current++;
+                  controller.current?.abort();
+                  setBusy(false);
+                  setError("Generation stopped. Your previous draft is safe.");
+                }}
+              >
+                Cancel generation
+              </button>
+            )}
+          </div>
+          <details className="assistant-preferences">
+            <summary>
+              Session preferences <span>45 minutes by default</span>
+            </summary>
+            <div className="assistant-grid">
+              <p className="schedule-fixed">
+                45-minute physical session
+                <br />2 welcome · 8 warmup ·{" "}
+                {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+                <br />
+                Fellowship follows the hard stop.
+              </p>
+              <label>
+                Planner equipment
+                <select
+                  value={equipment}
+                  disabled={busy}
+                  onChange={(e) =>
+                    setEquipment(e.target.value as Preferences["equipment"])
+                  }
+                >
+                  {["From prompt", "Coupon", "None"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Planner running
+                <select
+                  value={running}
+                  disabled={busy}
+                  onChange={(e) =>
+                    setRunning(e.target.value as Preferences["running"])
+                  }
+                >
+                  {["From prompt", "None", "Light", "Moderate"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={mary}
+                  disabled={busy}
+                  onChange={(e) => setMary(e.target.checked)}
+                />{" "}
+                Include closing Mary
+              </label>
+            </div>
+          </details>
+          <p className="assistant-privacy">
+            Your idea, site details and current draft go to our free AI
+            providers. Other saved workouts are not sent. Offline templates work
+            without AI.
+          </p>
+        </div>
       </form>
       {error && (
         <p className="assistant-error" role="alert">
@@ -594,7 +634,12 @@ export function Planner({
         </p>
       )}
       {result && (
-        <div className="assistant-result" aria-label="Generated workout draft">
+        <div
+          ref={resultRef}
+          tabIndex={-1}
+          className="assistant-result"
+          aria-label="Generated workout draft"
+        >
           <div className="assistant-result-heading">
             <div>
               <p className="eyebrow">YOUR DRAFT · REVIEW BEFORE LEADING</p>
@@ -621,7 +666,7 @@ export function Planner({
           <SessionTimeline workout={result.workout} />
           <div className="assistant-sections">
             {result.plan.sections.map((s, i) => (
-              <article key={s.kind}>
+              <article className={"draft-section draft-" + s.kind} key={s.kind}>
                 <header>
                   <span>
                     {String(i + 1).padStart(2, "0")} /{" "}
@@ -717,6 +762,14 @@ export function Planner({
             >
               {saved ? "Copy saved on this device" : "Save a private copy"}
             </button>
+            {onLead && (
+              <button
+                type="button"
+                onClick={() => onLead(structuredClone(result.workout))}
+              >
+                Launch Field Q-Timer
+              </button>
+            )}
             <button
               type="button"
               onClick={() => onEdit(structuredClone(result.workout))}

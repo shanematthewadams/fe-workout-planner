@@ -29,14 +29,21 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     ...ao?.local.amenities,
     ...site?.amenities,
   });
-  for (const source of [ao?.local.amenities, site?.amenities]) {
+  const applyAmenities = (
+    source: Partial<import("./site-contract").Amenities> | undefined,
+  ) => {
     for (const [key, feature] of Object.entries(AMENITY_FEATURES)) {
       const value = source?.[key as keyof typeof AMENITY_FEATURES];
       if (value !== undefined)
         features[feature] =
           value === null ? "unknown" : value ? "available" : "unavailable";
     }
-  }
+  };
+  applyAmenities(ao?.local.amenities);
+  // Unpublished device edits are Q context, not a regional publication.
+  for (const [feature, value] of Object.entries(site?.localDraft ?? {}))
+    if (value) features[feature as Feature] = value.state;
+  applyAmenities(site?.amenities);
   const notes = site?.notes ?? "";
   const terms: Record<Feature, string> = {
     track: "track",
@@ -123,7 +130,8 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     unknown: (Object.keys(FEATURES) as Feature[]).filter(
       (f) => features[f] === "unknown",
     ),
-    details: ao?.local.features ?? {},
+    details: { ...ao?.local.features, ...site?.localDraft },
+    localDraft: site?.localDraft ?? {},
     sourceUrl: ao?.local.sourceUrl,
     reviewedAt: ao?.local.checkedAt,
     todayNotes: notes,
@@ -198,6 +206,16 @@ export function describeSite(context: ReturnType<typeof siteContext>) {
       : "",
     `Coupons stored on site: ${context.amenities.couponsOnSite === null ? "unknown; bring your own if needed" : context.amenities.couponsOnSite ? "yes; Q checks access and supply" : "no; bring your own if needed"}`,
     `Surface: ${SURFACES[context.amenities.surface]}. Lighting: ${LIGHTING[context.amenities.lighting]}.`,
+    Object.keys(context.localDraft).length
+      ? `Unpublished device edits (Q supplied, not regionally verified): ${Object.entries(
+          context.localDraft,
+        )
+          .map(
+            ([key, value]) =>
+              `${FEATURES[key as Feature]} ${value?.state}${value?.detail ? ": " + value.detail : ""}`,
+          )
+          .join("; ")}`
+      : "",
     context.todayNotes ? `For this Q: ${context.todayNotes}` : "",
     "Unlisted features remain unknown.",
   ]
