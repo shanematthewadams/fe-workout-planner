@@ -613,6 +613,7 @@ export default function App() {
             <Planner
               onLead={(w) => {
                 open(w);
+                setNotice("");
                 setTimerOpen(true);
               }}
               onEdit={(w) => begin(w)}
@@ -1537,7 +1538,10 @@ export default function App() {
           </div>
           <button
             className="create no-print"
-            onClick={() => setTimerOpen(true)}
+            onClick={() => {
+              setNotice("");
+              setTimerOpen(true);
+            }}
           >
             Launch Field Q-Timer
           </button>

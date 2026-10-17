@@ -108,13 +108,25 @@ test("create, refine, edit, save, print, lead and reopen", async ({
       printBackground: true,
     });
   await page.emulateMedia({ media: "screen" });
+  await page.clock.install();
   await page.getByRole("button", { name: "Launch Field Q-Timer" }).click();
   await expect(page.getByRole("timer")).toHaveText("45:00");
   await page.getByRole("button", { name: "Mute audio" }).click();
   await page.getByRole("button", { name: "Start practice timer" }).click();
+  await page.clock.fastForward(1000);
   await expect(page.getByRole("timer")).not.toHaveText("45:00");
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(page.getByRole("button", { name: "Resume" })).toBeEnabled();
+  await page.getByRole("button", { name: "Resume", exact: true }).click();
+  await page.clock.fastForward(10 * 60 * 1000);
+  await expect(
+    page.getByRole("heading", { name: "The Thang", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Next exercise", exact: true })
+    .click();
+  await expect(page.getByText("2 of 4", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Pause", exact: true }).click();
   await page.screenshot({
     path: `${pictures}/${info.project.name}-timer.png`,
     fullPage: true,

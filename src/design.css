@@ -882,3 +882,17 @@ footer {
 .count-label {
   font-size: 0.75rem;
 }
+.field-overview {
+  border-block: 1px solid #557363;
+  margin-block: 24px;
+}
+.field-overview summary {
+  padding-block: 16px;
+  font-weight: 600;
+}
+.field-overview label {
+  margin-top: 12px;
+}
+.field-timer input[type="range"] {
+  accent-color: #dbc6a1;
+}

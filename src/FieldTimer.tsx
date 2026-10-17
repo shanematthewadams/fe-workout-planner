@@ -250,66 +250,71 @@ export function FieldTimer({
           Reset
         </button>
       </div>
-      <label>
-        COT length
-        <select
-          disabled={timer.anchor !== null}
-          value={timer.cot}
-          onChange={(e) => update({ ...timer, cot: Number(e.target.value) })}
-        >
-          <option value={5}>5 minutes</option>
-          <option value={10}>10 minutes</option>
-        </select>
-      </label>
-      <div className="field-phases">
-        {phases.map((p) => (
-          <div className={p.id === phase.id ? "active" : ""} key={p.id}>
-            <strong>{p.name}</strong>
-            <span>
-              {fmt(p.end - p.start)} · {clockLabel(p.start, startMinutes)}
-            </span>
-          </div>
-        ))}
-      </div>
-      <section aria-label="Lead this phase">
-        <h2>Lead this phase</h2>
-        {currentExercise && (
-          <article className="workout-block">
-            <div className="field-exercise-nav">
-              <button
-                disabled={exerciseIndex === 0}
-                onClick={() =>
-                  setCursor({ phase: phase.id, index: exerciseIndex - 1 })
-                }
-              >
-                Previous
-              </button>
+      {currentExercise && (
+        <section aria-label="Lead this phase">
+          <h2>Lead this phase</h2>
+          {currentExercise && (
+            <article className="workout-block">
+              <div className="field-exercise-nav">
+                <button
+                  disabled={exerciseIndex === 0}
+                  onClick={() =>
+                    setCursor({ phase: phase.id, index: exerciseIndex - 1 })
+                  }
+                >
+                  Previous
+                </button>
+                <span>
+                  {exerciseIndex + 1} of {phaseExercises.length}
+                </span>
+                <button
+                  disabled={exerciseIndex >= phaseExercises.length - 1}
+                  onClick={() =>
+                    setCursor({ phase: phase.id, index: exerciseIndex + 1 })
+                  }
+                >
+                  Next exercise
+                </button>
+              </div>
+              <h3>{currentExercise.block.title}</h3>
+              <p>{currentExercise.block.instructions}</p>
+              <div className="field-exercise" aria-live="polite">
+                <strong>
+                  {currentExercise.exercise.name} ·{" "}
+                  {currentExercise.exercise.amount}{" "}
+                  {currentExercise.exercise.unit}
+                </strong>
+                <p>{currentExercise.exercise.instructions}</p>
+                <span>{currentExercise.exercise.counting}</span>
+              </div>
+            </article>
+          )}
+        </section>
+      )}
+      <details className="field-overview">
+        <summary>Session timeline & COT settings</summary>
+        <label>
+          COT length
+          <select
+            disabled={timer.anchor !== null}
+            value={timer.cot}
+            onChange={(e) => update({ ...timer, cot: Number(e.target.value) })}
+          >
+            <option value={5}>5 minutes</option>
+            <option value={10}>10 minutes</option>
+          </select>
+        </label>
+        <div className="field-phases">
+          {phases.map((p) => (
+            <div className={p.id === phase.id ? "active" : ""} key={p.id}>
+              <strong>{p.name}</strong>
               <span>
-                {exerciseIndex + 1} of {phaseExercises.length}
+                {fmt(p.end - p.start)} · {clockLabel(p.start, startMinutes)}
               </span>
-              <button
-                disabled={exerciseIndex >= phaseExercises.length - 1}
-                onClick={() =>
-                  setCursor({ phase: phase.id, index: exerciseIndex + 1 })
-                }
-              >
-                Next exercise
-              </button>
             </div>
-            <h3>{currentExercise.block.title}</h3>
-            <p>{currentExercise.block.instructions}</p>
-            <div className="field-exercise" aria-live="polite">
-              <strong>
-                {currentExercise.exercise.name} ·{" "}
-                {currentExercise.exercise.amount}{" "}
-                {currentExercise.exercise.unit}
-              </strong>
-              <p>{currentExercise.exercise.instructions}</p>
-              <span>{currentExercise.exercise.counting}</span>
-            </div>
-          </article>
-        )}
-      </section>
+          ))}
+        </div>
+      </details>
       <section className="cadence">
         <h2>Four-count cadence</h2>
         <p className="cadence-count">
