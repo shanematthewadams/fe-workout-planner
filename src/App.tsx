@@ -511,12 +511,12 @@ export default function App() {
             F3 THE FE <span> / </span> OLATHE, KS
           </span>
           <button
-            className="create top-create"
+            className="sr-only"
             onClick={() => {
               if (leave()) begin(newWorkout());
             }}
           >
-            <Plus size={18} /> Create a workout
+            Create a workout
           </button>
         </div>
       </header>
@@ -529,33 +529,35 @@ export default function App() {
         >
           Builder
         </button>
-        <button
-          disabled={!lastPlan}
-          aria-current={selected && !timerOpen ? "page" : undefined}
-          onClick={() => {
-            if (leave() && lastPlan) {
-              setEditing(null);
-              setDirty(false);
-              open(lastPlan);
-            }
-          }}
-        >
-          Plan
-        </button>
-        <button
-          disabled={!lastPlan}
-          aria-current={timerOpen ? "page" : undefined}
-          onClick={() => {
-            if (leave() && lastPlan) {
-              setEditing(null);
-              setDirty(false);
-              setSelected(lastPlan);
-              setTimerOpen(true);
-            }
-          }}
-        >
-          Field Q-Timer
-        </button>
+        {lastPlan && (
+          <>
+            <button
+              aria-current={selected && !timerOpen ? "page" : undefined}
+              onClick={() => {
+                if (leave() && lastPlan) {
+                  setEditing(null);
+                  setDirty(false);
+                  open(lastPlan);
+                }
+              }}
+            >
+              Plan
+            </button>
+            <button
+              aria-current={timerOpen ? "page" : undefined}
+              onClick={() => {
+                if (leave() && lastPlan) {
+                  setEditing(null);
+                  setDirty(false);
+                  setSelected(lastPlan);
+                  setTimerOpen(true);
+                }
+              }}
+            >
+              Field Q-Timer
+            </button>
+          </>
+        )}
         <button
           onClick={() => go("library")}
           aria-current={tab === "library" && !selected ? "page" : undefined}
@@ -567,12 +569,6 @@ export default function App() {
           aria-current={tab === "mine" && !selected ? "page" : undefined}
         >
           Saved
-        </button>
-        <button
-          onClick={() => go("aos")}
-          aria-current={tab === "aos" && !selected ? "page" : undefined}
-        >
-          AO Directory
         </button>
         <button
           onClick={() => go("exicon")}
@@ -783,11 +779,16 @@ export default function App() {
                               : "Keep the good ones close."}
                         </h2>
                       </div>
-                      <p>
-                        {tab === "library"
-                          ? "Reviewed regional originals and clearly labeled starters."
-                          : "Saved in this browser, on this device."}
-                      </p>
+                      <div className="library-head-actions">
+                        <button
+                          className="create"
+                          onClick={() => {
+                            if (leave()) begin(newWorkout());
+                          }}
+                        >
+                          <Plus size={16} /> Create a workout
+                        </button>
+                      </div>
                     </section>
                     <section className="filters" aria-label="Filter workouts">
                       <label className="search">
