@@ -13,6 +13,7 @@ import {
   type Plan,
 } from "../src/planner-contract.ts";
 import { workoutSchema } from "../src/model.ts";
+import { movementConflicts } from "../src/plan-constraints.ts";
 import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
 export type AIEnvironment = {
   OPENROUTER_API_KEY?: string;
@@ -73,6 +74,8 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
       422,
       "The AI added equipment to a no-equipment plan. Try again.",
     );
+  const conflicts = movementConflicts(p, input);
+  if (conflicts.length) throw new PlannerError(422, conflicts.join(" "));
   if (
     (input.equipment === "Coupon" ||
       (input.equipment === "From prompt" &&

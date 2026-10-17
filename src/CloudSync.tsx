@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import type { Workout } from "./model";
 import { workoutSchema } from "./model";
-import { cloudKey, cloudRequest, mergeCloud } from "./cloud";
+import {
+  cloudKey,
+  cloudRequest,
+  mergeCloud,
+  CloudSnapshotError,
+} from "./cloud";
 import { importStudio } from "./studio/import";
 const SETTINGS = "fe-sync:v1";
 type Settings = { code: string; base: Workout[] };
@@ -28,6 +33,7 @@ export function CloudSync({
   onStudio: (w: Workout[]) => boolean;
 }) {
   const [config, setConfig] = useState(settings),
+    [recovery, setRecovery] = useState<unknown>(null),
     [code, setCode] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
@@ -51,6 +57,7 @@ export function CloudSync({
     const captured = JSON.stringify(workouts);
     setBusy(true);
     setMessage("Syncing…");
+    setRecovery(null);
     try {
       const remote = await cloudRequest(
         current.code,
@@ -88,6 +95,8 @@ export function CloudSync({
         `Synced ${next.workouts.length} plans.${merged.conflicts ? " Conflicting edits were kept as separate copies." : ""}`,
       );
     } catch (e) {
+      if (seq === sequence.current && e instanceof CloudSnapshotError)
+        setRecovery(e.snapshot);
       if (seq === sequence.current)
         setMessage(
           e instanceof Error
@@ -201,6 +210,29 @@ export function CloudSync({
           Import saved Studio cloud plans
         </button>
       </div>
+      {recovery !== null && (
+        <button
+          onClick={() => {
+            const url = URL.createObjectURL(
+              new Blob([JSON.stringify(recovery, null, 2)], {
+                type: "application/json",
+              }),
+            );
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "fe-cloud-recovery.json";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }}
+        >
+          Download cloud recovery file
+        </button>
+      )}
+      <p className="muted">
+        Workout backups include saved plans and favorites. AO notes have their
+        own export in the AO Directory. The current builder and timer are
+        recovered on this device.
+      </p>
       {!config && (
         <details>
           <summary>Connect another device</summary>

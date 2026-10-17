@@ -59,6 +59,7 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     runningRoute: "(?:measured route|running loop|measured running route)",
   };
   const claims: Partial<Record<Feature, Availability>> = {};
+  const closures = new Set<Feature>();
   const clauses = (notes + "\n" + prompt).split(/[,!.;\n]|\bbut\b/i);
   for (const clause of clauses) {
     const uncertain =
@@ -84,9 +85,10 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
             noun,
           "i",
         ).test(clause)
-      )
+      ) {
         claims[feature] = "unavailable";
-      else if (
+        closures.add(feature);
+      } else if (
         !negative &&
         !uncertain &&
         (new RegExp(
@@ -102,6 +104,7 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
         claims[feature] = "available";
     }
   }
+  for (const feature of closures) claims[feature] = "unavailable";
   // A Q statement is temporary task context, never a regional publication.
   for (const [key, value] of Object.entries(claims))
     if (value) features[key as Feature] = value;

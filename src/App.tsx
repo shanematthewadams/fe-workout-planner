@@ -20,6 +20,7 @@ import {
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
+import { OfflineStatus } from "./OfflineStatus";
 import {
   SessionTimeline,
   sessionStart,
@@ -491,62 +492,66 @@ export default function App() {
       <a className="skip-link no-print" href="#main">
         Skip to workouts
       </a>
-      <header className="header no-print">
-        <button
-          className="brand"
-          onClick={() => go("builder")}
-          aria-label="The FE home"
-        >
-          <span>
-            F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
-          </span>
-        </button>
-        <div className="header-meta">
-          <span className="rug-burn-tag">Created by Rug Burn</span>
-          <span className="region">
-            F3 THE FE <span> / </span> OLATHE, KS
-          </span>
-        </div>
-      </header>
-      <nav className="app-nav no-print" aria-label="Planner navigation">
-        {[
-          ["builder", "Build"],
-          ["library", "Library"],
-          ["mine", "My Workouts"],
-        ].map(([key, label]) => (
-          <button
-            key={key}
-            aria-current={
-              !selected && !editing && tab === key ? "page" : undefined
-            }
-            onClick={() => go(key)}
-          >
-            {label}
-          </button>
-        ))}
-        <details className="more-nav">
-          <summary>More</summary>
-          <div className="more-menu">
+      {!timerOpen && (
+        <>
+          <header className="header no-print">
+            <button
+              className="brand"
+              onClick={() => go("builder")}
+              aria-label="The FE home"
+            >
+              <span>
+                F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
+              </span>
+            </button>
+            <div className="header-meta">
+              <span className="rug-burn-tag">Created by Rug Burn</span>
+              <span className="region">
+                F3 THE FE <span> / </span> OLATHE, KS
+              </span>
+            </div>
+          </header>
+          <nav className="app-nav no-print" aria-label="Planner navigation">
             {[
-              ["aos", "AO Directory"],
-              ["exicon", "Exicon & Lexicon"],
-              ["data", "Sync & backups"],
+              ["builder", "Build"],
+              ["library", "Library"],
+              ["mine", "My Workouts"],
             ].map(([key, label]) => (
               <button
                 key={key}
-                onClick={(event) => {
-                  go(key);
-                  event.currentTarget
-                    .closest("details")
-                    ?.removeAttribute("open");
-                }}
+                aria-current={
+                  !selected && !editing && tab === key ? "page" : undefined
+                }
+                onClick={() => go(key)}
               >
                 {label}
               </button>
             ))}
-          </div>
-        </details>
-      </nav>
+            <details className="more-nav">
+              <summary>More</summary>
+              <div className="more-menu">
+                {[
+                  ["aos", "AO Directory"],
+                  ["exicon", "Exicon & Lexicon"],
+                  ["data", "Sync & backups"],
+                ].map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={(event) => {
+                      go(key);
+                      event.currentTarget
+                        .closest("details")
+                        ?.removeAttribute("open");
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </details>
+          </nav>
+        </>
+      )}
       <div
         role="status"
         aria-live="polite"
@@ -1699,35 +1704,38 @@ export default function App() {
           </section>
         </main>
       ) : null}
-      <footer className="footer no-print">
-        <div className="footer-credits">
-          <span className="footer-brand">
-            F3 THE FE <span>/</span> SHOW UP. STEP UP.
-          </span>
-          <span className="rug-burn-footer-credit">
-            Created by <strong>Rug Burn</strong> · F3 The FE · Olathe, KS
-          </span>
-        </div>
-        <div className="footer-links">
-          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
-            The Region <ArrowUpRight size={14} />
-          </a>
-          <a
-            href="https://f3thefe.com/schedule/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            AO schedule <ArrowUpRight size={14} />
-          </a>
-          <a
-            href="https://f3nation.com/exicon"
-            target="_blank"
-            rel="noreferrer"
-          >
-            F3 Exicon <ArrowUpRight size={14} />
-          </a>
-        </div>
-      </footer>
+      {!timerOpen && (
+        <footer className="footer no-print">
+          <div className="footer-credits">
+            <OfflineStatus />
+            <span className="footer-brand">
+              F3 THE FE <span>/</span> SHOW UP. STEP UP.
+            </span>
+            <span className="rug-burn-footer-credit">
+              Created by <strong>Rug Burn</strong> · F3 The FE · Olathe, KS
+            </span>
+          </div>
+          <div className="footer-links">
+            <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
+              The Region <ArrowUpRight size={14} />
+            </a>
+            <a
+              href="https://f3thefe.com/schedule/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              AO schedule <ArrowUpRight size={14} />
+            </a>
+            <a
+              href="https://f3nation.com/exicon"
+              target="_blank"
+              rel="noreferrer"
+            >
+              F3 Exicon <ArrowUpRight size={14} />
+            </a>
+          </div>
+        </footer>
+      )}
       {pending && (
         <div className="modal-backdrop">
           <section

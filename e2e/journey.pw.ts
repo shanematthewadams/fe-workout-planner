@@ -40,18 +40,29 @@ test("create, refine, edit, save, print, lead and reopen", async ({
     const result = structuredClone(fixture);
     result.provider = "OpenRouter";
     result.model = "fixture:free";
+    result.workout.provenance.generation = {
+      provider: "OpenRouter",
+      model: "fixture:free",
+      referenceSourceIds: [],
+    };
     result.workout.provenance.label =
       "AI-assisted personal draft (browser fixture)";
     if (input.current) {
       result.plan.title = "Partner Gold";
       result.workout.title = "Partner Gold";
+      result.plan.running = "None";
+      result.workout.running = "None";
+      result.plan.sections[1].blocks[0].instructions =
+        "Partners alternate stations in place with recovery between turns.";
+      result.workout.sections[1].blocks[0].instructions =
+        result.plan.sections[1].blocks[0].instructions;
     }
     apiCalls++;
     await route.fulfill({ json: result });
   });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /Good mornings/ }),
+    page.getByRole("heading", { name: /Build your next Q/ }),
   ).toBeVisible();
   await page.screenshot({
     path: `${pictures}/${info.project.name}-after.png`,
@@ -66,6 +77,12 @@ test("create, refine, edit, save, print, lead and reopen", async ({
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
   expect(firstAudit.violations).toEqual([]);
+  const buildAction = await page
+    .getByRole("button", { name: "Build my workout", exact: true })
+    .boundingBox();
+  expect(buildAction!.y + buildAction!.height).toBeLessThan(
+    info.project.use.viewport!.height,
+  );
   await page.getByLabel("Q location", { exact: true }).fill("Gold Rush");
   await page
     .getByLabel("Describe your Q", { exact: true })
@@ -79,17 +96,23 @@ test("create, refine, edit, save, print, lead and reopen", async ({
   ).toHaveCount(0);
   await page
     .getByLabel("What would you change?")
-    .fill("Less running, keep everything else.");
+    .fill("No running, keep everything else.");
   await page.getByRole("button", { name: "Refine this draft" }).click();
   await expect(
     page.getByRole("heading", { name: "Partner Gold", exact: true }),
   ).toBeVisible();
   expect(apiCalls).toBe(2);
+  await expect(page.getByText("No running", { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Build my workout", exact: true }),
+  ).toHaveCount(0);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
     path: `${pictures}/${info.project.name}-workout.png`,
     fullPage: true,
   });
   await page.getByRole("button", { name: "Edit the details" }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page
     .getByLabel("Workout title", { exact: true })
     .fill("Gold Rush Morning");
@@ -127,6 +150,13 @@ test("create, refine, edit, save, print, lead and reopen", async ({
     .click();
   await expect(page.getByText("2 of 4", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Pause", exact: true }).click();
+  await page
+    .getByRole("button", { name: "← Back to plan", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Launch Field Q-Timer", exact: true })
+    .click();
+  await expect(page.getByText("2 of 4", { exact: true })).toBeVisible();
   await page.screenshot({
     path: `${pictures}/${info.project.name}-timer.png`,
     fullPage: true,
@@ -135,6 +165,9 @@ test("create, refine, edit, save, print, lead and reopen", async ({
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
   expect(timerAudit.violations).toEqual([]);
+  await page
+    .getByRole("button", { name: "← Back to plan", exact: true })
+    .click();
   await page.getByRole("button", { name: "My Workouts", exact: true }).click();
   await page.reload();
   await page.getByRole("button", { name: "My Workouts", exact: true }).click();
@@ -146,6 +179,7 @@ test("create, refine, edit, save, print, lead and reopen", async ({
   ).toBeVisible();
   // Already installed service worker + bundled fonts/assets must support a fresh offline navigation.
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
+  await expect(page.getByText(/Ready offline/)).toBeVisible();
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: "My Workouts", exact: true }).click();
@@ -153,6 +187,9 @@ test("create, refine, edit, save, print, lead and reopen", async ({
     page.getByRole("button", { name: "Gold Rush Morning", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Build", exact: true }).click();
+  await page
+    .getByRole("button", { name: "← Back to setup", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
@@ -239,4 +276,27 @@ test("library favorites and AO edits stay consistent with the builder", async ({
       exact: true,
     }),
   ).toBeVisible();
+});
+
+test("formal setup survives navigation and reload", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Formal Builder", exact: true })
+    .click();
+  await page
+    .getByLabel("Plan title", { exact: true })
+    .fill("Recovered partner Q");
+  await page.getByLabel("Q name", { exact: true }).fill("Rug Burn");
+  await page.getByLabel("Coupon", { exact: true }).check();
+  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await expect(page.getByLabel("Plan title", { exact: true })).toHaveValue(
+    "Recovered partner Q",
+  );
+  await page.reload();
+  await expect(page.getByLabel("Q name", { exact: true })).toHaveValue(
+    "Rug Burn",
+  );
+  await expect(page.getByLabel("Coupon", { exact: true })).toBeChecked();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });

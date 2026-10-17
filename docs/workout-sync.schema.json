@@ -1,0 +1,380 @@
+{
+  "$ref": "#/definitions/Workout",
+  "definitions": {
+    "Workout": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "originId": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "kind": {
+          "const": "personal"
+        },
+        "duration": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 300
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "equipment": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "maxItems": 20
+        },
+        "running": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Light",
+            "Moderate"
+          ]
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "Circuit",
+            "11s",
+            "EMOM",
+            "AMRAP",
+            "Ladder",
+            "Partner",
+            "Stations",
+            "Chipper",
+            "Custom"
+          ]
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "warmup",
+                  "thang",
+                  "mary"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "title": {
+                      "type": "string",
+                      "maxLength": 20000
+                    },
+                    "instructions": {
+                      "type": "string",
+                      "maxLength": 20000
+                    },
+                    "minutes": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 300
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "exercises": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "name": {
+                            "type": "string",
+                            "maxLength": 20000
+                          },
+                          "amount": {
+                            "type": "string",
+                            "maxLength": 20000
+                          },
+                          "unit": {
+                            "type": "string",
+                            "enum": [
+                              "reps",
+                              "seconds",
+                              "minutes",
+                              "meters",
+                              "rounds",
+                              "instructions"
+                            ]
+                          },
+                          "sets": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                          },
+                          "counting": {
+                            "type": "string",
+                            "enum": [
+                              "total",
+                              "1=1",
+                              "2=1",
+                              "per side",
+                              "cadence",
+                              "time",
+                              "distance",
+                              "not applicable"
+                            ]
+                          },
+                          "instructions": {
+                            "type": "string",
+                            "maxLength": 20000
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "amount",
+                          "unit",
+                          "counting",
+                          "instructions"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 100
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "instructions",
+                    "minutes",
+                    "exercises"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 50
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "blocks"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "rawNotes": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "adaptationNotes": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "illustrative",
+                "personal",
+                "imported-unreviewed",
+                "regional-reviewed"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 20000
+            },
+            "sourceId": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "q": {
+              "type": "string",
+              "maxLength": 160
+            },
+            "ao": {
+              "type": "string",
+              "maxLength": 160
+            },
+            "eventDate": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "checkedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "issues": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "maxItems": 30
+            },
+            "durationBasis": {
+              "type": "string",
+              "enum": [
+                "source",
+                "inferred",
+                "unknown"
+              ]
+            },
+            "generation": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "OpenRouter",
+                    "Gemini"
+                  ]
+                },
+                "model": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "referenceSourceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "maxItems": 3
+                }
+              },
+              "required": [
+                "provider",
+                "model",
+                "referenceSourceIds"
+              ],
+              "additionalProperties": false
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "status",
+            "label"
+          ],
+          "additionalProperties": false
+        },
+        "schedule": {
+          "type": "object",
+          "properties": {
+            "startTime": {
+              "type": "string",
+              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+            },
+            "requiredFeatures": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "track",
+                  "stairs",
+                  "bleachers",
+                  "parkingLot",
+                  "shelter",
+                  "hills",
+                  "field",
+                  "pullupBars",
+                  "benches",
+                  "walls",
+                  "runningRoute"
+                ]
+              },
+              "maxItems": 11,
+              "default": []
+            },
+            "siteSummary": {
+              "type": "string",
+              "maxLength": 1600
+            }
+          },
+          "required": [
+            "startTime"
+          ],
+          "additionalProperties": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "title",
+        "summary",
+        "kind",
+        "duration",
+        "equipment",
+        "running",
+        "format",
+        "sections",
+        "rawNotes",
+        "adaptationNotes",
+        "provenance",
+        "updatedAt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

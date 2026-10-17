@@ -1,0 +1,46 @@
+import { build } from "esbuild";
+import { writeFile } from "node:fs/promises";
+const result = await build({
+  stdin: {
+    contents:
+      'import {workoutSchema} from "./src/model.ts"; import {zodToJsonSchema} from "zod-to-json-schema"; export default zodToJsonSchema(workoutSchema, {name:"Workout",$refStrategy:"none"});',
+    resolveDir: process.cwd(),
+  },
+  bundle: true,
+  platform: "node",
+  format: "esm",
+  write: false,
+});
+const { default: schema } = await import(
+  "data:text/javascript;base64," +
+    Buffer.from(result.outputFiles[0].text).toString("base64")
+);
+schema.definitions.Workout.properties.kind = { const: "personal" };
+await writeFile(
+  "docs/workout-sync.schema.json",
+  JSON.stringify(schema, null, 2) + "\n",
+);
+const sql = `-- Generated from src/model.ts by npm run sync:schema. Existing rows remain untouched.
+create extension if not exists pg_jsonschema with schema extensions;
+create or replace function fe_private.valid_plan_payload(payload jsonb)
+returns boolean language plpgsql immutable security invoker set search_path = '' as $fn$
+declare item jsonb; kinds text[]; identifiers text[];
+begin
+  if jsonb_typeof(payload) is distinct from 'array' or jsonb_array_length(payload)>200 then return false; end if;
+  for item in select value from jsonb_array_elements(payload) loop
+    if not extensions.jsonb_matches_schema($schema$${JSON.stringify(schema)}$schema$::json,item) then return false; end if;
+    select array_agg(value->>'kind') into kinds from jsonb_array_elements(item->'sections');
+    if not ('thang'=any(kinds)) or cardinality(kinds)<>(select count(distinct k) from unnest(kinds) k) then return false; end if;
+    select array_agg(id) into identifiers from (
+      select s->>'id' as id from jsonb_array_elements(item->'sections') s
+      union all select b->>'id' from jsonb_array_elements(item->'sections') s cross join lateral jsonb_array_elements(s->'blocks') b
+      union all select e->>'id' from jsonb_array_elements(item->'sections') s cross join lateral jsonb_array_elements(s->'blocks') b cross join lateral jsonb_array_elements(b->'exercises') e
+    ) ids;
+    if cardinality(identifiers)<>(select count(distinct id) from unnest(identifiers) id) then return false; end if;
+  end loop;
+  return true;
+end $fn$;
+revoke all on function fe_private.valid_plan_payload(jsonb) from public,anon,authenticated;
+alter table fe_private.fe_plan_vault add constraint valid_workout_payload check (fe_private.valid_plan_payload(workouts)) not valid;
+`;
+await writeFile("docs/plan-sync-hardening.sql", sql);
