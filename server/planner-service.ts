@@ -80,7 +80,8 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
     !p.equipment.some((e) => /coupon|cinder block/i.test(e))
   )
     throw new PlannerError(422, "The AI left out your coupons. Try again.");
-  if (input.strictSchedule) {
+  {
+    // Terrain safety applies to every caller, including non-strict API requests.
     const blocked = blockedFeatures(
       p,
       siteContext(input.ao, input.prompt, input.site),

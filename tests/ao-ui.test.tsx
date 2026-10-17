@@ -13,7 +13,7 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
   render(<App />);
   expect(
-    screen.getByRole("heading", { name: "Plan your next Q." }),
+    screen.getByRole("heading", { name: /Good mornings/ }),
   ).toBeVisible();
   fireEvent.change(screen.getByLabelText("Q location"), {
     target: { value: "Clocktower" },
@@ -38,7 +38,7 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "7:15 AM",
   );
-  fireEvent.click(screen.getByRole("button", { name: "Plan" }));
+  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
   expect(
     screen.getByText(/Steps \/ stairs, Grass \/ turf field/),
   ).toBeInTheDocument();
@@ -89,7 +89,7 @@ it("keeps amenity controls optional and carries temporary details into a plan", 
     target: { value: "Dora with coupons" },
   });
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
-  fireEvent.click(screen.getByRole("button", { name: "Plan" }));
+  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
   expect(
     screen.getByText(/Surface: Turf and asphalt. Lighting: Lit./),
   ).toHaveTextContent("Coupons stored on site: no; bring your own if needed");

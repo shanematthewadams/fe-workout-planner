@@ -1,3 +1,4 @@
+import { withLocalAO } from "./ao-drafts";
 import { aoProfiles } from "./discovery";
 import { siteContext, findAO } from "./ao-context";
 import {
@@ -28,7 +29,7 @@ export function AOContextPanel({
   onSite: (v: SiteInput) => void;
   disabled: boolean;
 }) {
-  const context = siteContext(ao, prompt, site),
+  const context = siteContext(ao, prompt, withLocalAO(ao, prompt, site)),
     profile = findAO(ao, prompt);
   return (
     <section className="ao-context" aria-label="Where and when">
@@ -64,9 +65,14 @@ export function AOContextPanel({
       <p className="ao-quick-summary">
         {profile ? `${profile.name} · ` : ao ? "Custom AO · " : ""}
         {context.available.length
-          ? `Website / Q-confirmed: ${context.available.map((f) => FEATURES[f]).join(", ")}.`
+          ? `Available for this Q: ${context.available.map((f) => FEATURES[f]).join(", ")}.`
           : "No site features confirmed yet. A bodyweight or portable-gear plan still works."}
       </p>
+      {Object.keys(context.localDraft).length > 0 && (
+        <p className="ao-quick-summary">
+          Includes unpublished AO notes from this device.
+        </p>
+      )}
       <details className="today-details">
         <summary>
           Anything different today? <span>Optional site details</span>
@@ -94,8 +100,14 @@ export function AOContextPanel({
                   }}
                 >
                   <option value="">
-                    Regional:{" "}
-                    {profile?.local.features?.[feature]?.state ?? "unknown"}
+                    Profile:{" "}
+                    {
+                      siteContext(
+                        ao,
+                        prompt,
+                        withLocalAO(ao, prompt, { overrides: {}, notes: "" }),
+                      ).features[feature]
+                    }
                   </option>
                   <option value="available">Available today</option>
                   <option value="unavailable">Unavailable today</option>

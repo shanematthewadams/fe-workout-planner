@@ -19,9 +19,7 @@ export const STYLES = [
 ] as const;
 export const GEAR = [
   "Coupon",
-  "Bleachers / stairs",
   "Ruck",
-  "Pull-up bar",
   "Cones",
   "Dumbbells / kettlebells",
 ] as const;

@@ -6,18 +6,9 @@ import {
   type Feature,
   type Availability,
 } from "./site-contract";
+import { readTerrainDrafts, TERRAIN_KEY, SITE_Q_KEY } from "./ao-drafts";
 import { useState } from "react";
 import { aoProfiles, exercises } from "./discovery";
-
-const SITE_Q_KEY = "fe_ao_site_qs";
-const TERRAIN_KEY = "fe_ao_terrain_overrides";
-const DEFAULT_SITE_QS: Record<string, string> = {
-  "fe-ao-clocktower": "Rug Burn",
-  "fe-ao-gold-rush": "YHC",
-  "fe-ao-baywatch": "Bacon",
-  "fe-ao-dysentery": "Slapshot",
-  "fe-ao-south-park": "Hotline",
-};
 
 type TerrainOverride = Partial<
   Record<Feature, { state: Availability; detail?: string }>
@@ -35,22 +26,20 @@ export function Discovery({
   const [siteQs, setSiteQs] = useState<Record<string, string>>(() => {
     try {
       const raw = localStorage.getItem(SITE_Q_KEY);
-      return raw ? { ...DEFAULT_SITE_QS, ...JSON.parse(raw) } : DEFAULT_SITE_QS;
-    } catch {
-      return DEFAULT_SITE_QS;
-    }
-  });
-
-  const [terrainOverrides, setTerrainOverrides] = useState<
-    Record<string, TerrainOverride>
-  >(() => {
-    try {
-      const raw = localStorage.getItem(TERRAIN_KEY);
-      return raw ? JSON.parse(raw) : {};
+      const parsed = raw ? JSON.parse(raw) : {};
+      return Object.fromEntries(
+        Object.entries(parsed).filter(
+          (entry): entry is [string, string] => typeof entry[1] === "string",
+        ),
+      );
     } catch {
       return {};
     }
   });
+
+  const [terrainOverrides, setTerrainOverrides] =
+    useState<Record<string, TerrainOverride>>(readTerrainDrafts);
+  const [storageError, setStorageError] = useState("");
 
   const exportAdminData = () => {
     const exportPayload = {
@@ -89,7 +78,7 @@ export function Discovery({
             className={`ao-admin-toggle-btn ${adminMode ? "active" : ""}`}
             onClick={() => setAdminMode(!adminMode)}
           >
-            {adminMode ? "✓ Done Editing Admin" : "⚙️ Site Q & Terrain Admin"}
+            {adminMode ? "Done editing" : "Edit local AO notes"}
           </button>
         )}
       </div>
@@ -97,7 +86,10 @@ export function Discovery({
         <aside className="ao-admin-banner">
           <div>
             <p>
-              <strong>Site Q & Terrain Admin Active:</strong> Update the Site Q leader or verify fixed terrain features (track, stairs, shelter, hills, etc.) below. Changes save to this device.
+              <strong>Unpublished device notes:</strong> Your changes inform
+              plans on this device. They are Q-supplied context, not verified
+              regional updates. Export them for a regional administrator to
+              review.
             </p>
           </div>
           <div className="ao-admin-banner-actions">
@@ -115,7 +107,7 @@ export function Discovery({
                 ) {
                   localStorage.removeItem(SITE_Q_KEY);
                   localStorage.removeItem(TERRAIN_KEY);
-                  setSiteQs(DEFAULT_SITE_QS);
+                  setSiteQs({});
                   setTerrainOverrides({});
                 }
               }}
@@ -125,6 +117,7 @@ export function Discovery({
           </div>
         </aside>
       )}
+      {storageError && <p role="alert">{storageError}</p>}
       <label>
         Search {mode === "aos" ? "AOs" : "exercises"}
         <input value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -138,27 +131,37 @@ export function Discovery({
                   .includes(query.toLowerCase()),
               )
               .map((a) => {
-                const context = siteContext(a.name);
+                const context = siteContext(a.name, "", {
+                  overrides: {},
+                  notes: "",
+                  localDraft: terrainOverrides[a.id],
+                });
                 return (
                   <article className="card" key={a.id}>
                     <div className="card-top-row">
                       <h3>{a.name}</h3>
                       {!adminMode && (
                         <span className="site-q-pill">
-                          <strong>Site Q:</strong> {siteQs[a.id] || "Open"}
+                          <strong>Site Q:</strong>{" "}
+                          {siteQs[a.id]
+                            ? `${siteQs[a.id]} (local, unverified)`
+                            : "Unknown"}
                         </span>
                       )}
                     </div>
                     {adminMode && (
                       <div className="ao-admin-card-fields">
                         <label className="site-q-input-label">
-                          Site Q Leader:
+                          Site Q (local, unverified):
                           <input
                             type="text"
                             value={siteQs[a.id] || ""}
                             placeholder="e.g. Rug Burn"
                             onChange={(e) => {
-                              const next = { ...siteQs, [a.id]: e.target.value };
+                              const next = {
+                                ...siteQs,
+                                [a.id]: e.target.value,
+                              };
                               setSiteQs(next);
                               try {
                                 localStorage.setItem(
@@ -166,7 +169,9 @@ export function Discovery({
                                   JSON.stringify(next),
                                 );
                               } catch {
-                                // ignore
+                                setStorageError(
+                                  "Could not save AO notes. Export your updates before leaving.",
+                                );
                               }
                             }}
                           />
@@ -220,11 +225,15 @@ export function Discovery({
                                             JSON.stringify(next),
                                           );
                                         } catch {
-                                          // ignore
+                                          setStorageError(
+                                            "Could not save AO notes. Export your updates before leaving.",
+                                          );
                                         }
                                       }}
                                     >
-                                      <option value="available">Available</option>
+                                      <option value="available">
+                                        Available
+                                      </option>
                                       <option value="unavailable">
                                         Unavailable
                                       </option>
@@ -233,6 +242,7 @@ export function Discovery({
                                     <input
                                       type="text"
                                       placeholder={`Notes…`}
+                                      maxLength={400}
                                       value={detail}
                                       onChange={(e) => {
                                         const nextDetail = e.target.value;
@@ -253,7 +263,9 @@ export function Discovery({
                                             JSON.stringify(next),
                                           );
                                         } catch {
-                                          // ignore
+                                          setStorageError(
+                                            "Could not save AO notes. Export your updates before leaving.",
+                                          );
                                         }
                                       }}
                                     />
@@ -288,6 +300,7 @@ export function Discovery({
                             <div key={feature}>
                               <dt>{FEATURES[feature]}</dt>
                               <dd>
+                                {override && <small>Local draft · </small>}
                                 {state === "available"
                                   ? "Available"
                                   : state === "unavailable"

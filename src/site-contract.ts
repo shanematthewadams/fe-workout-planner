@@ -82,8 +82,20 @@ export const AMENITY_FEATURES = {
   hasBleachers: "bleachers",
   hasPullUpBars: "pullupBars",
 } as const;
+export const localFeaturesSchema = z.record(
+  featureSchema,
+  z
+    .object({
+      state: availabilitySchema,
+      detail: z.string().max(400).optional(),
+    })
+    .strict(),
+);
+export type LocalFeatures = z.infer<typeof localFeaturesSchema>;
 export const siteInputSchema = z
   .object({
+    // Unpublished device edits are Q context, never regional facts.
+    localDraft: localFeaturesSchema.optional(),
     overrides: z.record(featureSchema, availabilitySchema).default({}),
     notes: z.string().max(800).default(""),
     amenities: amenitiesPatchSchema.optional(),

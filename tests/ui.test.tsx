@@ -62,7 +62,7 @@ describe("library UI", () => {
         name: "Unfavorite Circle up, get after it",
       }),
     ).toHaveAttribute("aria-pressed", "true");
-    fireEvent.click(screen.getByRole("button", { name: /Favorites/ }));
+    fireEvent.click(screen.getByLabelText("Favorites only"));
     expect(
       screen.getAllByRole("button", { name: "View workout" }),
     ).toHaveLength(1);
@@ -84,7 +84,7 @@ describe("library UI", () => {
     expect(JSON.stringify(catalog[0])).toBe(before);
     app.unmount();
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /My workouts/ }));
+    fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
     expect(
       screen.getByRole("button", { name: "My changed workout" }),
     ).toBeVisible();
@@ -157,6 +157,8 @@ describe("library UI", () => {
           favorites: [],
         }),
     });
+    fireEvent.click(screen.getByText("More", { selector: "summary" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -175,6 +177,8 @@ describe("library UI", () => {
     render(<App />);
     const file = new File([""], "bad.json");
     Object.defineProperty(file, "text", { value: async () => "{bad" });
+    fireEvent.click(screen.getByText("More", { selector: "summary" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -185,7 +189,7 @@ describe("library UI", () => {
     const original = copyWorkout(catalog[0]);
     writeState({ workouts: [original], favorites: [] });
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /My workouts/ }));
+    fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
     fireEvent.click(screen.getByRole("button", { name: original.title }));
     fireEvent.click(screen.getByRole("button", { name: "Edit workout" }));
     fireEvent.change(screen.getByLabelText("Workout title"), {
@@ -361,7 +365,7 @@ describe("library UI", () => {
       screen.getAllByRole("button", { name: "Create a workout" })[0],
     );
     vi.mocked(window.confirm).mockReturnValue(false);
-    fireEvent.click(screen.getByRole("button", { name: "My workouts" }));
+    fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
     expect(screen.getByLabelText("Workout title")).toBeVisible();
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });

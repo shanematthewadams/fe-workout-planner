@@ -28,17 +28,19 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
     "29 min",
   );
   fireEvent.click(screen.getByRole("button", { name: "Save a private copy" }));
-  fireEvent.click(screen.getByRole("button", { name: "Plan" }));
+  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
   expect(
     screen.getByRole("heading", { name: "Digging for gold" }),
   ).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Launch Field Q-Timer" }));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
   expect(screen.getByRole("button", { name: "Start cadence" })).toBeVisible();
-  fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+  fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
   expect(
     screen.getByRole("button", { name: "Digging for gold" }),
   ).toBeVisible();
+  fireEvent.click(screen.getByText("More", { selector: "summary" }));
+  fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
   expect(
     screen.getByRole("button", { name: "Enable cloud sync" }),
   ).toBeVisible();
@@ -51,6 +53,7 @@ it("skipping Mary yields 35 minutes of The Thang and searchable reference terms"
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "35 min",
   );
+  fireEvent.click(screen.getByText("More", { selector: "summary" }));
   fireEvent.click(screen.getByRole("button", { name: "Exicon & Lexicon" }));
   fireEvent.click(screen.getByRole("button", { name: "Lexicon" }));
   fireEvent.change(screen.getByLabelText("Search reference"), {

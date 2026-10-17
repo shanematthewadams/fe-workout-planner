@@ -2,14 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import { SessionTimeline } from "./session";
 import type { PlannerRequest } from "./planner-contract";
-import { findAO } from "./ao-context";
-import { aoProfiles } from "./discovery";
+import { findAO, siteContext } from "./ao-context";
+import { withLocalAO } from "./ao-drafts";
 import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
 import {
   GOLD_RUSH_EXAMPLE,
   plannerRequestSchema,
+  resolveRequest,
   plannerResponseSchema,
   type PlannerResponse,
 } from "./planner-contract";
@@ -64,8 +65,10 @@ export function Planner({
   onSave,
   onReference,
   onDraft,
+  onLead,
 }: {
   onDraft?: (w: Workout) => void;
+  onLead?: (w: Workout) => void;
   onEdit: (w: Workout) => void;
   onPreview: (w: Workout) => void;
   onSave: (w: Workout) => boolean;
@@ -119,17 +122,21 @@ export function Planner({
         "The long road home",
       ]);
     // Only gear explicitly confirmed by Q can enter a wildcard roll.
+    const resolvedEquipment = resolveRequest({
+      prompt: prompt.trim().length >= 3 ? prompt : "Surprise me",
+      equipment,
+    }).equipment;
     const availableGear =
       mode === "formal"
         ? gear
-        : equipment === "Coupon"
+        : resolvedEquipment === "Coupon"
           ? ["Coupon"]
-          : equipment === "None"
+          : resolvedEquipment === "None"
             ? []
             : /coupon|cindy/i.test(prompt)
               ? ["Coupon"]
               : [];
-    const chosenAO = ao || findAO("", prompt)?.name || (aoProfiles[0]?.name ?? "Clocktower");
+    const chosenAO = ao || findAO("", prompt)?.name || "";
     if (!ao) setAO(chosenAO);
     const chosenTime = startTime || "05:30";
     if (!startTime) setStartTime(chosenTime);
@@ -138,7 +145,7 @@ export function Planner({
       prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
       ao: chosenAO,
       startTime: chosenTime,
-      site,
+      site: withLocalAO(chosenAO, prompt, site),
       minutes: 45,
       equipment: chosenGear.includes("Coupon")
         ? ("Coupon" as const)
@@ -164,7 +171,13 @@ export function Planner({
 
   useEffect(() => {
     if (result && resultRef.current) {
-      resultRef.current.scrollIntoView?.({ behavior: "smooth", block: "start" });
+      resultRef.current.scrollIntoView?.({
+        behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
+          .matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
     }
   }, [result]);
 
@@ -222,7 +235,19 @@ export function Planner({
             : prompt,
         ao,
         startTime,
-        site,
+        site: withLocalAO(
+          ao,
+          prompt,
+          refine
+            ? {
+                ...site,
+                overrides: {
+                  ...site.overrides,
+                  ...siteContext(ao, prompt, site).qStatements,
+                },
+              }
+            : site,
+        ),
         minutes: 45,
         equipment:
           mode === "formal"
@@ -311,36 +336,24 @@ export function Planner({
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
       <div className="assistant-intro">
         <div>
-          <p className="eyebrow">YOUR NEXT Q STARTS HERE</p>
-          <h1>Plan your next Q.</h1>
-          <p className="assistant-subhead">An AO, an idea, a balanced 45-minute plan you can lead with confidence.</p>
+          <p className="eyebrow">THE FE / OUTSIDE. TOGETHER.</p>
+          <h1>
+            Good mornings.
+            <br />
+            <em>Great beatdowns.</em>
+          </h1>
+          <p className="assistant-subhead">
+            From an idea to a beatdown worth leading.
+          </p>
         </div>
-        <span className="assistant-badge">AI-assisted · free models only</span>
-      </div>
-
-      <div className="planner-quickstart-banner" aria-label="How planning works">
-        <div className="quickstart-step">
-          <span className="quickstart-num">1</span>
-          <div>
-            <strong>Pick Where & When</strong>
-            <span>Select your AO location</span>
-          </div>
-        </div>
-        <div className="quickstart-divider" aria-hidden="true">→</div>
-        <div className="quickstart-step">
-          <span className="quickstart-num">2</span>
-          <div>
-            <strong>Choose Your Style</strong>
-            <span>Surprise, custom idea, or formal</span>
-          </div>
-        </div>
-        <div className="quickstart-divider" aria-hidden="true">→</div>
-        <div className="quickstart-step">
-          <span className="quickstart-num">3</span>
-          <div>
-            <strong>Lead on the Field</strong>
-            <span>Timer, cadence & Q-sheet ready</span>
-          </div>
+        <div className="terrain-art" aria-hidden="true">
+          <span>
+            THE NEXT Q<br />
+            IS YOURS.
+          </span>
+          <b>
+            35+<small>ways to get started</small>
+          </b>
         </div>
       </div>
 
@@ -350,14 +363,7 @@ export function Planner({
           void ask(false);
         }}
       >
-        <div className="planner-step-box step-1-box">
-          <div className="step-box-header">
-            <span className="step-box-badge">STEP 1</span>
-            <div>
-              <h3>Pick Where & When</h3>
-              <p className="step-box-sub">Choose your AO and start time so exercises match verified site terrain.</p>
-            </div>
-          </div>
+        <div className="planner-location">
           <AOContextPanel
             ao={ao}
             prompt={prompt}
@@ -375,307 +381,256 @@ export function Planner({
           />
         </div>
 
-        <div className="planner-step-box step-2-box">
-          <div className="step-box-header">
-            <span className="step-box-badge">STEP 2</span>
-            <div>
-              <h3>Choose Your Style & Build</h3>
-              <p className="step-box-sub">Pick a mode: 1-tap roll, custom idea, or structured beatdown.</p>
-            </div>
-          </div>
-
+        <div className="planner-idea">
           <div className="entry-modes" aria-label="Choose how to build">
             <button
               type="button"
               disabled={busy}
-              className="mode-btn mode-surprise"
-              onClick={surprise}
-            >
-              <span className="mode-badge">🎲 Quick Roll</span>
-              <strong>Surprise Me!</strong>
-              <span>1-tap balanced plan for your AO</span>
-            </button>
-            <button
-              type="button"
-              disabled={busy}
-              className={`mode-btn ${mode === "idea" ? "mode-selected" : ""}`}
               aria-pressed={mode === "idea"}
               onClick={() => setMode("idea")}
             >
-              <span className="mode-badge">💡 Freeform</span>
-              <strong>Enter an Idea</strong>
-              <span>Tell us your theme, gear, or vision</span>
+              Enter an Idea
             </button>
             <button
               type="button"
               disabled={busy}
-              className={`mode-btn ${mode === "formal" ? "mode-selected" : ""}`}
               aria-pressed={mode === "formal"}
               onClick={() => setMode("formal")}
             >
-              <span className="mode-badge">📋 Structured</span>
-              <strong>Formal Builder</strong>
-              <span>Choose focus, style, gear & PAX</span>
+              Formal Builder
             </button>
           </div>
-        {mode === "formal" && (
-          <fieldset disabled={busy} className="formal-builder">
-            <legend>Build your beatdown</legend>
-            <div className="assistant-grid">
-              <label>
-                Plan title
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  maxLength={120}
-                />
-              </label>
-              <label>
-                Q name
-                <input
-                  value={qName}
-                  onChange={(e) => setQName(e.target.value)}
-                  maxLength={160}
-                />
-              </label>
-              <label>
-                Fitness focus
-                <select
-                  value={focus}
-                  onChange={(e) => setFocus(e.target.value)}
-                >
-                  {[
-                    "Full body",
-                    "Upper body",
-                    "Legs",
-                    "Core",
-                    "Cardio endurance",
-                    "Ruck strength",
-                    "HIIT",
-                  ].map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                F3 style
-                <select
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value as typeof style)}
-                >
-                  {STYLES.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                PAX count
-                <input
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={pax}
-                  onChange={(e) => setPax(Number(e.target.value))}
-                />
-              </label>
-            </div>
-            <p>Available gear · select only what you can bring or confirm</p>
-            <div className="gear-options">
-              {GEAR.map((g) => (
-                <label className="checkbox" key={g}>
+          {mode === "formal" && (
+            <fieldset disabled={busy} className="formal-builder">
+              <legend>Build your beatdown</legend>
+              <div className="assistant-grid">
+                <label>
+                  Plan title
                   <input
-                    type="checkbox"
-                    checked={gear.includes(g)}
-                    onChange={() => {
-                      if (
-                        !gear.includes(g) &&
-                        (g === "Bleachers / stairs" || g === "Pull-up bar")
-                      )
-                        setSite({
-                          ...site,
-                          overrides: {
-                            ...site.overrides,
-                            [g === "Pull-up bar" ? "pullupBars" : "stairs"]:
-                              "available",
-                          },
-                        });
-                      setGear(
-                        gear.includes(g)
-                          ? gear.filter((x) => x !== g)
-                          : [...gear, g],
-                      );
-                    }}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={120}
                   />
-                  {g}
                 </label>
-              ))}
-            </div>
-          </fieldset>
-        )}
-        <label className="assistant-prompt">
-          {mode === "formal" ? "Additional instructions (optional)" : "Describe your Q"}
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            maxLength={1800}
-            rows={3}
-            disabled={busy}
-            placeholder={mode === "formal" ? "Any specific exercises, theme, or special instructions..." : GOLD_RUSH_EXAMPLE}
-          />
-        </label>
-        <div className="prompt-inspiration-bar">
-          <span className="inspiration-label">Need inspiration?</span>
-          <button
-            type="button"
-            className="example-prompt"
-            disabled={busy}
-            onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
-          >
-            Try the Gold Rush idea
-          </button>
-          <button
-            type="button"
-            className="inspiration-pill"
-            disabled={busy}
-            onClick={() => setPrompt("Dora 1-2-3 with coupons: 100 Merkins, 200 Big Boys, 300 Squats while partner runs.")}
-          >
-            Dora 1-2-3
-          </button>
-          <button
-            type="button"
-            className="inspiration-pill"
-            disabled={busy}
-            onClick={() => setPrompt("11s Ladder on the hill: Burpees at the bottom, Carolina Dry Docks at the top.")}
-          >
-            11s Hill Ladder
-          </button>
-          <button
-            type="button"
-            className="inspiration-pill"
-            disabled={busy}
-            onClick={() => setPrompt("Full body grinder: Bear crawls, lunges, and plank variations.")}
-          >
-            Bodyweight Grinder
-          </button>
-        </div>
-        <div className="assistant-actions">
-          <button
-            className="create"
-            disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
-            type="submit"
-          >
-            {busy
-              ? "Working on your Q…"
-              : result
-                ? "Make a new draft"
-                : "Build my workout"}
-          </button>
-          {!busy && (
+                <label>
+                  Q name
+                  <input
+                    value={qName}
+                    onChange={(e) => setQName(e.target.value)}
+                    maxLength={160}
+                  />
+                </label>
+                <label>
+                  Fitness focus
+                  <select
+                    value={focus}
+                    onChange={(e) => setFocus(e.target.value)}
+                  >
+                    {[
+                      "Full body",
+                      "Upper body",
+                      "Legs",
+                      "Core",
+                      "Cardio endurance",
+                      "Ruck strength",
+                      "HIIT",
+                    ].map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  F3 style
+                  <select
+                    value={style}
+                    onChange={(e) => setStyle(e.target.value as typeof style)}
+                  >
+                    {STYLES.map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  PAX count
+                  <input
+                    type="number"
+                    min={1}
+                    max={200}
+                    value={pax}
+                    onChange={(e) => setPax(Number(e.target.value))}
+                  />
+                </label>
+              </div>
+              <p>Available gear · select only what you can bring or confirm</p>
+              <div className="gear-options">
+                {GEAR.map((g) => (
+                  <label className="checkbox" key={g}>
+                    <input
+                      type="checkbox"
+                      checked={gear.includes(g)}
+                      onChange={() => {
+                        setGear(
+                          gear.includes(g)
+                            ? gear.filter((x) => x !== g)
+                            : [...gear, g],
+                        );
+                      }}
+                    />
+                    {g}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
+          <label className="assistant-prompt">
+            {mode === "formal"
+              ? "Additional instructions (optional)"
+              : "Describe your Q"}
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              maxLength={1800}
+              rows={3}
+              disabled={busy}
+              placeholder={
+                mode === "formal"
+                  ? "Any specific exercises, theme, or special instructions..."
+                  : GOLD_RUSH_EXAMPLE
+              }
+            />
+          </label>
+          <div className="prompt-inspiration-bar">
             <button
               type="button"
-              onClick={() => {
-                const request = plannerRequestSchema.safeParse({
-                  prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
-                  ao,
-                  startTime,
-                  site,
-                  minutes: 45,
-                  equipment:
-                    mode === "formal"
-                      ? gear.includes("Coupon")
-                        ? "Coupon"
-                        : gear.length
-                          ? "From prompt"
-                          : "None"
-                      : equipment,
-                  running,
-                  mary,
-                  strictSchedule: true,
-                  ...(mode === "formal" ? { builder: formal } : {}),
-                });
-                if (!request.success) {
-                  setError("Choose a start time and check your details.");
-                  return;
-                }
-                const next = fallbackPlan(request.data);
-                setResult(next);
-                onDraft?.(next.workout);
-                setSaved(false);
-                setError("");
-              }}
+              className="example-prompt"
+              disabled={busy}
+              onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
             >
-              Use offline template
+              Try the Gold Rush idea
             </button>
-          )}
-          {busy && (
-            <button
-              type="button"
-              onClick={() => {
-                epoch.current++;
-                controller.current?.abort();
-                setBusy(false);
-                setError("Generation stopped. Your previous draft is safe.");
-              }}
-            >
-              Cancel generation
+            <button type="button" disabled={busy} onClick={surprise}>
+              Surprise Me!
             </button>
-          )}
-        </div>
-        <details className="assistant-preferences">
-          <summary>
-            Session preferences <span>45 minutes by default</span>
-          </summary>
-          <div className="assistant-grid">
-            <p className="schedule-fixed">
-              45-minute physical session
-              <br />2 welcome · 8 warmup ·{" "}
-              {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
-              <br />
-              Fellowship follows the hard stop.
-            </p>
-            <label>
-              Planner equipment
-              <select
-                value={equipment}
-                disabled={busy}
-                onChange={(e) =>
-                  setEquipment(e.target.value as Preferences["equipment"])
-                }
-              >
-                {["From prompt", "Coupon", "None"].map((v) => (
-                  <option key={v}>{v}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Planner running
-              <select
-                value={running}
-                disabled={busy}
-                onChange={(e) =>
-                  setRunning(e.target.value as Preferences["running"])
-                }
-              >
-                {["From prompt", "None", "Light", "Moderate"].map((v) => (
-                  <option key={v}>{v}</option>
-                ))}
-              </select>
-            </label>
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                checked={mary}
-                disabled={busy}
-                onChange={(e) => setMary(e.target.checked)}
-              />{" "}
-              Include closing Mary
-            </label>
           </div>
-        </details>
-        <p className="assistant-privacy">
-          Your idea, site details and current draft go to our free AI providers.
-          Other saved workouts are not sent. Offline templates work without AI.
-        </p>
+          <div className="assistant-actions">
+            <button
+              className="create"
+              disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
+              type="submit"
+            >
+              {busy
+                ? "Working on your Q…"
+                : result
+                  ? "Make a new draft"
+                  : "Build my workout"}
+            </button>
+            {!busy && (
+              <button
+                type="button"
+                onClick={() => {
+                  const request = plannerRequestSchema.safeParse({
+                    prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
+                    ao,
+                    startTime,
+                    site: withLocalAO(ao, prompt, site),
+                    minutes: 45,
+                    equipment:
+                      mode === "formal"
+                        ? gear.includes("Coupon")
+                          ? "Coupon"
+                          : gear.length
+                            ? "From prompt"
+                            : "None"
+                        : equipment,
+                    running,
+                    mary,
+                    strictSchedule: true,
+                    ...(mode === "formal" ? { builder: formal } : {}),
+                  });
+                  if (!request.success) {
+                    setError("Choose a start time and check your details.");
+                    return;
+                  }
+                  const next = fallbackPlan(request.data);
+                  setResult(next);
+                  onDraft?.(next.workout);
+                  setSaved(false);
+                  setError("");
+                }}
+              >
+                Use offline template
+              </button>
+            )}
+            {busy && (
+              <button
+                type="button"
+                onClick={() => {
+                  epoch.current++;
+                  controller.current?.abort();
+                  setBusy(false);
+                  setError("Generation stopped. Your previous draft is safe.");
+                }}
+              >
+                Cancel generation
+              </button>
+            )}
+          </div>
+          <details className="assistant-preferences">
+            <summary>
+              Session preferences <span>45 minutes by default</span>
+            </summary>
+            <div className="assistant-grid">
+              <p className="schedule-fixed">
+                45-minute physical session
+                <br />2 welcome · 8 warmup ·{" "}
+                {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+                <br />
+                Fellowship follows the hard stop.
+              </p>
+              <label>
+                Planner equipment
+                <select
+                  value={equipment}
+                  disabled={busy}
+                  onChange={(e) =>
+                    setEquipment(e.target.value as Preferences["equipment"])
+                  }
+                >
+                  {["From prompt", "Coupon", "None"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Planner running
+                <select
+                  value={running}
+                  disabled={busy}
+                  onChange={(e) =>
+                    setRunning(e.target.value as Preferences["running"])
+                  }
+                >
+                  {["From prompt", "None", "Light", "Moderate"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={mary}
+                  disabled={busy}
+                  onChange={(e) => setMary(e.target.checked)}
+                />{" "}
+                Include closing Mary
+              </label>
+            </div>
+          </details>
+          <p className="assistant-privacy">
+            Your idea, site details and current draft go to our free AI
+            providers. Other saved workouts are not sent. Offline templates work
+            without AI.
+          </p>
         </div>
       </form>
       {error && (
@@ -688,37 +643,13 @@ export function Planner({
           {storageError}
         </p>
       )}
-      {!result && !busy && (
-        <div className="planner-discovery-callout" aria-label="Library suggestion">
-          <span className="callout-tag">NEED PROVEN INSPIRATION?</span>
-          <p>
-            You don't have to start from scratch. Switch to the <strong>Library</strong> tab to lead from 35+ battle-tested F3 workouts with complete timing and exercises, or browse the <strong>Exicon & Lexicon</strong> to discover new movements.
-          </p>
-        </div>
-      )}
       {result && (
         <div
           ref={resultRef}
           tabIndex={-1}
-          className="assistant-result planner-step-box step-3-box"
+          className="assistant-result"
           aria-label="Generated workout draft"
         >
-          <div className="step-box-header step-3-header-bar">
-            <span className="step-box-badge step-badge-ready">STEP 3 · FIELD READY</span>
-            <div>
-              <h3>Lead on the Field</h3>
-              <p className="step-box-sub">Your custom beatdown is ready for the gloom. Review, print, or launch the live timer.</p>
-            </div>
-            <div className="step-3-quick-actions no-print">
-              <button
-                type="button"
-                className="step-print-btn"
-                onClick={() => window.print()}
-              >
-                🖨️ Print Q-Sheet
-              </button>
-            </div>
-          </div>
           <div className="assistant-result-heading">
             <div>
               <p className="eyebrow">YOUR DRAFT · REVIEW BEFORE LEADING</p>
@@ -745,7 +676,7 @@ export function Planner({
           <SessionTimeline workout={result.workout} />
           <div className="assistant-sections">
             {result.plan.sections.map((s, i) => (
-              <article key={s.kind}>
+              <article className={"draft-section draft-" + s.kind} key={s.kind}>
                 <header>
                   <span>
                     {String(i + 1).padStart(2, "0")} /{" "}
@@ -841,6 +772,14 @@ export function Planner({
             >
               {saved ? "Copy saved on this device" : "Save a private copy"}
             </button>
+            {onLead && (
+              <button
+                type="button"
+                onClick={() => onLead(structuredClone(result.workout))}
+              >
+                Launch Field Q-Timer
+              </button>
+            )}
             <button
               type="button"
               onClick={() => onEdit(structuredClone(result.workout))}
