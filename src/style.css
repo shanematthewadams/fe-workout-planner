@@ -2565,6 +2565,93 @@ fieldset,
   font-size: 0.85rem;
 }
 
+.ao-admin-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ao-admin-reset-btn {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+.ao-admin-reset-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.ao-admin-card-fields {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 10px 0 14px;
+}
+
+.ao-admin-terrain-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.ao-admin-terrain-title {
+  display: block;
+  font-size: 0.85rem;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.admin-feature-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-feature-row {
+  display: grid;
+  grid-template-columns: 140px 120px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-feature-row .feature-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-feature-row select {
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.admin-feature-row input {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  width: 100%;
+}
+
+@media (max-width: 650px) {
+  .admin-feature-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px;
+  }
+}
+
 /* Mobile Cleanliness */
 @media (max-width: 650px) {
   .planner-step-box {

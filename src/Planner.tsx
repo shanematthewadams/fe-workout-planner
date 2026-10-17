@@ -159,7 +159,15 @@ export function Planner({
     void ask(false, request);
   }
   const controller = useRef<AbortController | null>(null),
-    epoch = useRef(0);
+    epoch = useRef(0),
+    resultRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView?.({ behavior: "smooth", block: "start" });
+    }
+  }, [result]);
+
   useEffect(
     () => () => {
       epoch.current++;
@@ -689,7 +697,12 @@ export function Planner({
         </div>
       )}
       {result && (
-        <div className="assistant-result planner-step-box step-3-box" aria-label="Generated workout draft">
+        <div
+          ref={resultRef}
+          tabIndex={-1}
+          className="assistant-result planner-step-box step-3-box"
+          aria-label="Generated workout draft"
+        >
           <div className="step-box-header step-3-header-bar">
             <span className="step-box-badge step-badge-ready">STEP 3 · FIELD READY</span>
             <div>
