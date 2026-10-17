@@ -203,3 +203,14 @@ it("keeps Q confirmations through refinement without overriding today's unknown"
     }).overrides.benches,
   ).toBe("unknown");
 });
+
+it("keeps offline provenance visible when reopening the printable plan", () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
+  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  expect(
+    screen.getByText(
+      "Template-generated personal draft · not AI-generated or a reviewed regional original",
+    ),
+  ).toBeVisible();
+});

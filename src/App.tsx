@@ -1651,13 +1651,7 @@ export default function App() {
           <section className="provenance">
             <h3>Plan notes & source</h3>
             <p>{selected.adaptationNotes}</p>
-            <p>
-              {selected.provenance.generation
-                ? selected.provenance.label
-                : selected.kind === "personal"
-                  ? "Personal adaptation · source original stays independent"
-                  : selected.provenance.label}
-            </p>
+            <p>{selected.provenance.label}</p>
             {selected.provenance.generation && (
               <div>
                 <p>
@@ -1674,8 +1668,6 @@ export default function App() {
             )}
             {selected.provenance.sourceId && (
               <p>
-                Source ID: {selected.provenance.sourceId}
-                <br />
                 Q: {selected.provenance.q ?? "Unknown"} · AO:{" "}
                 {selected.provenance.ao ?? "Unknown"} · Date:{" "}
                 {selected.provenance.eventDate ?? "Unknown"}
@@ -1692,10 +1684,6 @@ export default function App() {
                 ))}
               </ul>
             )}
-            <p>
-              Status: {selected.provenance.status}
-              {selected.originId ? ` · Copied from ${selected.originId}` : ""}
-            </p>
             {selected.provenance.url && (
               <a href={selected.provenance.url}>View source</a>
             )}
