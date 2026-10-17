@@ -29,6 +29,11 @@ export function AOContextPanel({
   onSite: (v: SiteInput) => void;
   disabled: boolean;
 }) {
+  const baseContext = siteContext(
+    ao,
+    "",
+    withLocalAO(ao, "", { overrides: {}, notes: "" }),
+  );
   const context = siteContext(ao, prompt, withLocalAO(ao, prompt, site)),
     profile = findAO(ao, prompt);
   return (
@@ -100,21 +105,14 @@ export function AOContextPanel({
                   }}
                 >
                   <option value="">
-                    Profile:{" "}
-                    {
-                      siteContext(
-                        ao,
-                        prompt,
-                        withLocalAO(ao, prompt, { overrides: {}, notes: "" }),
-                      ).features[feature]
-                    }
+                    Profile: {baseContext.features[feature]}
                   </option>
                   <option value="available">Available today</option>
                   <option value="unavailable">Unavailable today</option>
                   <option value="unknown">Unknown today</option>
                 </select>
-                {profile?.local.features?.[feature]?.detail && (
-                  <small>{profile.local.features[feature]!.detail}</small>
+                {baseContext.details[feature]?.detail && (
+                  <small>{baseContext.details[feature]!.detail}</small>
                 )}
               </label>
             ))}

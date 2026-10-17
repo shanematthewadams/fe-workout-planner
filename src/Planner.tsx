@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import { SessionTimeline } from "./session";
 import type { PlannerRequest } from "./planner-contract";
-import { findAO, siteContext } from "./ao-context";
-import { withLocalAO } from "./ao-drafts";
+import { findAO } from "./ao-context";
+import { withLocalAO, retainQContext } from "./ao-drafts";
 import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
@@ -145,7 +145,7 @@ export function Planner({
       prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
       ao: chosenAO,
       startTime: chosenTime,
-      site: withLocalAO(chosenAO, prompt, site),
+      site: retainQContext(chosenAO, prompt, site),
       minutes: 45,
       equipment: chosenGear.includes("Coupon")
         ? ("Coupon" as const)
@@ -235,19 +235,9 @@ export function Planner({
             : prompt,
         ao,
         startTime,
-        site: withLocalAO(
-          ao,
-          prompt,
-          refine
-            ? {
-                ...site,
-                overrides: {
-                  ...site.overrides,
-                  ...siteContext(ao, prompt, site).qStatements,
-                },
-              }
-            : site,
-        ),
+        site: refine
+          ? retainQContext(ao, prompt, site)
+          : withLocalAO(ao, prompt, site),
         minutes: 45,
         equipment:
           mode === "formal"

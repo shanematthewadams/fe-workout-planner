@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { fallbackPlan } from "../src/fallback";
-import { plannerRequestSchema } from "../src/planner-contract";
+import type { PlannerResponse } from "../src/planner-contract";
 const pictures = "qa/screenshots";
 test("before comparison", async ({ page }, info) => {
   test.skip(!process.env.FE_BEFORE_DIR, "Baseline build supplied in CI");
@@ -18,13 +17,31 @@ test("create, refine, edit, save, print, lead and reopen", async ({
 }, info) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
+  // Ask the running app for a valid deterministic fixture. Node does not import
+  // browser modules or their bundler-only JSON imports.
+  const fixturePage = await context.newPage();
+  await fixturePage.goto("/");
+  await fixturePage.getByLabel("Q location", { exact: true }).fill("Gold Rush");
+  await fixturePage
+    .getByLabel("Describe your Q", { exact: true })
+    .fill("Coupons. Partner grinder.");
+  await fixturePage
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await expect(fixturePage.getByLabel("Generated workout draft")).toBeVisible();
+  const fixture = await fixturePage.evaluate<PlannerResponse>(
+    () => JSON.parse(sessionStorage.getItem("fe-planner:assistant:v1")!).result,
+  );
+  await fixturePage.close();
   let apiCalls = 0;
   // Exercise the real client request/response boundary without paid models or credentials.
   await page.route("**/api/plan-workout", async (route) => {
-    const input = plannerRequestSchema.parse(route.request().postDataJSON());
-    const result = fallbackPlan(input);
+    const input = route.request().postDataJSON();
+    const result = structuredClone(fixture);
     result.provider = "OpenRouter";
     result.model = "fixture:free";
+    result.workout.provenance.label =
+      "AI-assisted personal draft (browser fixture)";
     if (input.current) {
       result.plan.title = "Partner Gold";
       result.workout.title = "Partner Gold";

@@ -472,12 +472,7 @@ export default function App() {
     }
   };
   const all = [...sources, ...state.workouts];
-  const base =
-    tab === "mine"
-      ? state.workouts
-      : tab === "favorites"
-        ? all.filter((w) => state.favorites.includes(w.id))
-        : sources;
+  const base = tab === "mine" ? state.workouts : sources;
   const equipmentOptions = [
     ...new Set(all.flatMap((workout) => workout.equipment)),
   ]

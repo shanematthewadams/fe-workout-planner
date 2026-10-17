@@ -833,3 +833,6 @@ footer {
     flex: none;
   }
 }
+.footer-brand span {
+  color: var(--muted);
+}

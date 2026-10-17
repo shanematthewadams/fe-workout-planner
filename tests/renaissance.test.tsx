@@ -6,7 +6,12 @@ import App from "../src/App";
 import { Planner } from "../src/Planner";
 import { FieldTimer } from "../src/FieldTimer";
 import { siteContext, describeSite } from "../src/ao-context";
-import { withLocalAO, readTerrainDrafts, TERRAIN_KEY } from "../src/ao-drafts";
+import {
+  withLocalAO,
+  readTerrainDrafts,
+  TERRAIN_KEY,
+  retainQContext,
+} from "../src/ao-drafts";
 import { contextFor } from "../server/planner-context";
 import { validatePlan } from "../server/planner-service";
 import { fallbackPlan, GEAR } from "../src/fallback";
@@ -121,9 +126,13 @@ it("surprise without an AO sends a neutral location with no fabricated facility 
         ),
     );
   render(<Planner {...props} />);
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: { value: "No coupons. The track is closed." },
+  });
   fireEvent.click(screen.getByRole("button", { name: "Surprise Me!" }));
   await screen.findByLabelText("Generated workout draft");
   const sent = JSON.parse(String(fetcher.mock.calls[0][1]?.body));
+  expect(sent.site.overrides.track).toBe("unavailable");
   expect(sent.ao).toBe("");
   expect(sent.builder.gear).toEqual([]);
   expect(screen.getByLabelText("Q location")).toHaveValue("");
@@ -181,4 +190,16 @@ it("can stop a live timer and move through exercises without changing phase time
   expect(screen.getByRole("timer")).toHaveTextContent("34:00");
   fireEvent.click(screen.getByRole("button", { name: "Stop live timer" }));
   expect(screen.getByRole("button", { name: "Resume" })).toBeEnabled();
+});
+
+it("keeps Q confirmations through refinement without overriding today's unknown", () => {
+  expect(
+    retainQContext("Custom", "We have benches", empty).overrides.benches,
+  ).toBe("available");
+  expect(
+    retainQContext("Custom", "We have benches", {
+      ...empty,
+      overrides: { benches: "unknown" },
+    }).overrides.benches,
+  ).toBe("unknown");
 });
