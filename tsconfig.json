@@ -12,5 +12,5 @@
     "jsx": "react-jsx",
     "strict": true
   },
-  "include": ["src", "tests", "server", "netlify/functions"]
+  "include": ["src", "tests", "server", "netlify/functions", "vite.config.ts"]
 }
