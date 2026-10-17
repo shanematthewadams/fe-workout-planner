@@ -21,7 +21,7 @@ npm run lint
 npm run build
 ```
 
-`npm run dev` runs the frontend; use Netlify's local environment for live serverless endpoints. Offline templates work without an API. The build generates the static service worker. Load the deployed app once online before relying on offline reload.
+`npm run dev` runs the frontend and `/api/plan-workout` through the same handler used by Netlify, including in AI Studio. Offline templates work without an API. The build generates the static service worker. Load the deployed app once online before relying on offline reload.
 
 The strict schedule is 2 minutes welcome, 8 warmup, 29 Thang and 6 Mary; skipping Mary gives the Thang 35 minutes. COT follows the physical hard stop. Source plans keep their original timing and may differ. Workout estimates and exercise suitability still need Q review.
 
@@ -36,3 +36,5 @@ Dedicated Supabase project: `kitqovhdwzkhpxlepvfn`. The approved/published `work
 Local `fe-planner:v1` saved plans and version 1 backups remain compatible. Cloud plans are not encrypted with the sync code: anyone with it can access/change that collection. Keep it private and download it before clearing browser storage. Favorites remain local. Ordinary backups do not contain the sync credential. Device-specific background audio and native printing depend on browser support.
 
 See [STUDIO_INTEGRATION.md](docs/STUDIO_INTEGRATION.md) for integration decisions, data handling and verification; [AI_PLANNER.md](docs/AI_PLANNER.md) for provider/context details; [IMPORT_WORKFLOW.md](docs/IMPORT_WORKFLOW.md) for regional source review; and [SPRINT_HANDOFF.md](docs/SPRINT_HANDOFF.md) for historical sprint evidence.
+
+See [STUDIO_SYNC.md](docs/STUDIO_SYNC.md) for the single-repository Studio workflow and preview environment details.
