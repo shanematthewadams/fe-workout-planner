@@ -505,29 +505,20 @@ export default function App() {
             F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
           </span>
         </button>
-        <nav className="regional-links" aria-label="F3 The FE regional links">
-          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
-            THE REGION ↗
-          </a>
-          <a
-            href="https://f3thefe.com/schedule/"
-            target="_blank"
-            rel="noreferrer"
+        <div className="header-meta">
+          <span className="rug-burn-tag">Created by Rug Burn</span>
+          <span className="region">
+            F3 THE FE <span> / </span> OLATHE, KS
+          </span>
+          <button
+            className="create top-create"
+            onClick={() => {
+              if (leave()) begin(newWorkout());
+            }}
           >
-            AO SCHEDULE ↗
-          </a>
-        </nav>
-        <span className="region">
-          F3 THE FE <span> / </span> OLATHE, KS
-        </span>
-        <button
-          className="create top-create"
-          onClick={() => {
-            if (leave()) begin(newWorkout());
-          }}
-        >
-          <Plus size={18} /> Create a workout
-        </button>
+            <Plus size={18} /> Create a workout
+          </button>
+        </div>
       </header>
       <nav className="app-nav no-print" aria-label="Planner navigation">
         <button
@@ -566,10 +557,10 @@ export default function App() {
           Field Q-Timer
         </button>
         <button
-          onClick={() => go("exicon")}
-          aria-current={tab === "exicon" && !selected ? "page" : undefined}
+          onClick={() => go("library")}
+          aria-current={tab === "library" && !selected ? "page" : undefined}
         >
-          Exicon & Lexicon
+          Library
         </button>
         <button
           onClick={() => go("mine")}
@@ -578,10 +569,16 @@ export default function App() {
           Saved
         </button>
         <button
-          onClick={() => go("library")}
-          aria-current={tab === "library" && !selected ? "page" : undefined}
+          onClick={() => go("aos")}
+          aria-current={tab === "aos" && !selected ? "page" : undefined}
         >
-          Library
+          AO Directory
+        </button>
+        <button
+          onClick={() => go("exicon")}
+          aria-current={tab === "exicon" && !selected ? "page" : undefined}
+        >
+          Exicon & Lexicon
         </button>
       </nav>
       <div
@@ -1744,22 +1741,29 @@ export default function App() {
         </main>
       ) : null}
       <footer className="footer no-print">
-        <span className="footer-brand">
-          F3 THE FE <span>/</span> SHOW UP. STEP UP.
-        </span>
-        <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
-          F3 The FE <ArrowUpRight size={14} />
-        </a>
-        <a
-          href="https://f3thefe.com/schedule/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          AO schedule <ArrowUpRight size={14} />
-        </a>
-        <a href="https://f3nation.com/exicon" target="_blank" rel="noreferrer">
-          F3 Exicon <ArrowUpRight size={14} />
-        </a>
+        <div className="footer-credits">
+          <span className="footer-brand">
+            F3 THE FE <span>/</span> SHOW UP. STEP UP.
+          </span>
+          <span className="rug-burn-footer-credit">
+            Created by <strong>Rug Burn</strong> · F3 The FE · Olathe, KS
+          </span>
+        </div>
+        <div className="footer-links">
+          <a href="https://f3thefe.com/" target="_blank" rel="noreferrer">
+            The Region <ArrowUpRight size={14} />
+          </a>
+          <a
+            href="https://f3thefe.com/schedule/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            AO schedule <ArrowUpRight size={14} />
+          </a>
+          <a href="https://f3nation.com/exicon" target="_blank" rel="noreferrer">
+            F3 Exicon <ArrowUpRight size={14} />
+          </a>
+        </div>
       </footer>
       {pending && (
         <div className="modal-backdrop">

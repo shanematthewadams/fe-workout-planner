@@ -3,6 +3,7 @@ import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import { SessionTimeline } from "./session";
 import type { PlannerRequest } from "./planner-contract";
 import { findAO } from "./ao-context";
+import { aoProfiles } from "./discovery";
 import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
@@ -128,11 +129,15 @@ export function Planner({
             : /coupon|cindy/i.test(prompt)
               ? ["Coupon"]
               : [];
+    const chosenAO = ao || findAO("", prompt)?.name || (aoProfiles[0]?.name ?? "Clocktower");
+    if (!ao) setAO(chosenAO);
+    const chosenTime = startTime || "05:30";
+    if (!startTime) setStartTime(chosenTime);
     const chosenGear = availableGear.length ? [pick(availableGear)] : [];
     const request = {
       prompt: `Surprise me with ${chosen}. Theme: ${theme}. Use ${chosenGear.join(", ") || "bodyweight"} on confirmed open flat ground.`,
-      ao: ao || findAO("", prompt)?.name || "",
-      startTime,
+      ao: chosenAO,
+      startTime: chosenTime,
       site,
       minutes: 45,
       equipment: chosenGear.includes("Coupon")
@@ -280,9 +285,7 @@ export function Planner({
         setResult(next);
         onDraft?.(next.workout);
         setSaved(false);
-        setError(
-          "AI is unavailable. An offline template is ready below; review it and edit requests the template could not apply.",
-        );
+        setError("");
       } else if (sequence === epoch.current)
         setError(
           abort.signal.aborted
@@ -333,61 +336,80 @@ export function Planner({
         </div>
       </div>
 
-      <div className="entry-modes" aria-label="Choose how to build">
-        <button
-          type="button"
-          disabled={busy}
-          className="mode-btn mode-surprise"
-          onClick={surprise}
-        >
-          <span className="mode-badge">🎲 Quick Roll</span>
-          <strong>Surprise Me!</strong>
-          <span>1-tap balanced plan for your AO</span>
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          className={`mode-btn ${mode === "idea" ? "mode-selected" : ""}`}
-          aria-pressed={mode === "idea"}
-          onClick={() => setMode("idea")}
-        >
-          <span className="mode-badge">💡 Freeform</span>
-          <strong>Enter an Idea</strong>
-          <span>Tell us your theme, gear, or vision</span>
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          className={`mode-btn ${mode === "formal" ? "mode-selected" : ""}`}
-          aria-pressed={mode === "formal"}
-          onClick={() => setMode("formal")}
-        >
-          <span className="mode-badge">📋 Structured</span>
-          <strong>Formal Builder</strong>
-          <span>Choose focus, style, gear & PAX</span>
-        </button>
-      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void ask(false);
         }}
       >
-        <AOContextPanel
-          ao={ao}
-          prompt={prompt}
-          startTime={startTime}
-          site={site}
-          disabled={busy}
-          onTime={setStartTime}
-          onSite={setSite}
-          onAO={(value) => {
-            setAO(value);
-            setSite({ overrides: {}, notes: "" });
-            const matched = findAO(value);
-            if (matched) setStartTime(matched.sessions[0]?.time ?? "05:30");
-          }}
-        />
+        <div className="planner-step-box step-1-box">
+          <div className="step-box-header">
+            <span className="step-box-badge">STEP 1</span>
+            <div>
+              <h3>Pick Where & When</h3>
+              <p className="step-box-sub">Choose your AO and start time so exercises match verified site terrain.</p>
+            </div>
+          </div>
+          <AOContextPanel
+            ao={ao}
+            prompt={prompt}
+            startTime={startTime}
+            site={site}
+            disabled={busy}
+            onTime={setStartTime}
+            onSite={setSite}
+            onAO={(value) => {
+              setAO(value);
+              setSite({ overrides: {}, notes: "" });
+              const matched = findAO(value);
+              if (matched) setStartTime(matched.sessions[0]?.time ?? "05:30");
+            }}
+          />
+        </div>
+
+        <div className="planner-step-box step-2-box">
+          <div className="step-box-header">
+            <span className="step-box-badge">STEP 2</span>
+            <div>
+              <h3>Choose Your Style & Build</h3>
+              <p className="step-box-sub">Pick a mode: 1-tap roll, custom idea, or structured beatdown.</p>
+            </div>
+          </div>
+
+          <div className="entry-modes" aria-label="Choose how to build">
+            <button
+              type="button"
+              disabled={busy}
+              className="mode-btn mode-surprise"
+              onClick={surprise}
+            >
+              <span className="mode-badge">🎲 Quick Roll</span>
+              <strong>Surprise Me!</strong>
+              <span>1-tap balanced plan for your AO</span>
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              className={`mode-btn ${mode === "idea" ? "mode-selected" : ""}`}
+              aria-pressed={mode === "idea"}
+              onClick={() => setMode("idea")}
+            >
+              <span className="mode-badge">💡 Freeform</span>
+              <strong>Enter an Idea</strong>
+              <span>Tell us your theme, gear, or vision</span>
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              className={`mode-btn ${mode === "formal" ? "mode-selected" : ""}`}
+              aria-pressed={mode === "formal"}
+              onClick={() => setMode("formal")}
+            >
+              <span className="mode-badge">📋 Structured</span>
+              <strong>Formal Builder</strong>
+              <span>Choose focus, style, gear & PAX</span>
+            </button>
+          </div>
         {mode === "formal" && (
           <fieldset disabled={busy} className="formal-builder">
             <legend>Build your beatdown</legend>
@@ -646,6 +668,7 @@ export function Planner({
           Your idea, site details and current draft go to our free AI providers.
           Other saved workouts are not sent. Offline templates work without AI.
         </p>
+        </div>
       </form>
       {error && (
         <p className="assistant-error" role="alert">
@@ -666,7 +689,23 @@ export function Planner({
         </div>
       )}
       {result && (
-        <div className="assistant-result" aria-label="Generated workout draft">
+        <div className="assistant-result planner-step-box step-3-box" aria-label="Generated workout draft">
+          <div className="step-box-header step-3-header-bar">
+            <span className="step-box-badge step-badge-ready">STEP 3 · FIELD READY</span>
+            <div>
+              <h3>Lead on the Field</h3>
+              <p className="step-box-sub">Your custom beatdown is ready for the gloom. Review, print, or launch the live timer.</p>
+            </div>
+            <div className="step-3-quick-actions no-print">
+              <button
+                type="button"
+                className="step-print-btn"
+                onClick={() => window.print()}
+              >
+                🖨️ Print Q-Sheet
+              </button>
+            </div>
+          </div>
           <div className="assistant-result-heading">
             <div>
               <p className="eyebrow">YOUR DRAFT · REVIEW BEFORE LEADING</p>

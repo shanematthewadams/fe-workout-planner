@@ -2,6 +2,15 @@ import { siteContext } from "./ao-context";
 import { FEATURES, SURFACES, LIGHTING, type Feature } from "./site-contract";
 import { useState } from "react";
 import { aoProfiles, exercises } from "./discovery";
+const SITE_Q_KEY = "fe_ao_site_qs";
+const DEFAULT_SITE_QS: Record<string, string> = {
+  "fe-ao-clocktower": "Rug Burn",
+  "fe-ao-gold-rush": "YHC",
+  "fe-ao-baywatch": "Bacon",
+  "fe-ao-dysentery": "Slapshot",
+  "fe-ao-south-park": "Hotline",
+};
+
 export function Discovery({
   mode,
   onAO,
@@ -10,17 +19,61 @@ export function Discovery({
   onAO: (name: string) => void;
 }) {
   const [query, setQuery] = useState("");
+  const [adminMode, setAdminMode] = useState(false);
+  const [siteQs, setSiteQs] = useState<Record<string, string>>(() => {
+    try {
+      const raw = localStorage.getItem(SITE_Q_KEY);
+      return raw ? { ...DEFAULT_SITE_QS, ...JSON.parse(raw) } : DEFAULT_SITE_QS;
+    } catch {
+      return DEFAULT_SITE_QS;
+    }
+  });
+
   return (
     <section
       className="discovery"
       aria-label={mode === "aos" ? "FE AO profiles" : "Exercise guide"}
     >
-      <h2>{mode === "aos" ? "Find your AO" : "Know the movement"}</h2>
-      <p>
-        {mode === "aos"
-          ? "Official schedule snapshot. Check the regional site for changes. Website-described features show their source and review date. Unlisted features stay unknown; confirm today's access."
-          : "Nine names checked against the Exicon CSV. These short instructions were written for this app; confirm variations and counts with your Q."}
-      </p>
+      <div className="discovery-header-row">
+        <div>
+          <h2>{mode === "aos" ? "Find your AO" : "Know the movement"}</h2>
+          <p>
+            {mode === "aos"
+              ? "Official schedule snapshot. Check the regional site for changes. Website-described features show their source and review date. Unlisted features stay unknown; confirm today's access."
+              : "Nine names checked against the Exicon CSV. These short instructions were written for this app; confirm variations and counts with your Q."}
+          </p>
+        </div>
+        {mode === "aos" && (
+          <button
+            type="button"
+            className={`ao-admin-toggle-btn ${adminMode ? "active" : ""}`}
+            onClick={() => setAdminMode(!adminMode)}
+          >
+            {adminMode ? "✓ Done Editing Site Qs" : "⚙️ Site Q Admin Mode"}
+          </button>
+        )}
+      </div>
+      {mode === "aos" && adminMode && (
+        <aside className="ao-admin-banner">
+          <p>
+            <strong>Site Q Admin Mode Active:</strong> Update the Site Q for any AO below. Changes persist on this device.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(siteQs, null, 2));
+              const downloadAnchor = document.createElement("a");
+              downloadAnchor.setAttribute("href", dataStr);
+              downloadAnchor.setAttribute("download", "f3-the-fe-site-qs.json");
+              document.body.appendChild(downloadAnchor);
+              downloadAnchor.click();
+              downloadAnchor.remove();
+            }}
+          >
+            Export Site Qs (JSON)
+          </button>
+        </aside>
+      )}
       <label>
         Search {mode === "aos" ? "AOs" : "exercises"}
         <input value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -37,7 +90,33 @@ export function Discovery({
                 const context = siteContext(a.name);
                 return (
                   <article className="card" key={a.id}>
-                    <h3>{a.name}</h3>
+                    <div className="card-top-row">
+                      <h3>{a.name}</h3>
+                      {!adminMode && (
+                        <span className="site-q-pill">
+                          <strong>Site Q:</strong> {siteQs[a.id] || "Open"}
+                        </span>
+                      )}
+                    </div>
+                    {adminMode && (
+                      <label className="site-q-input-label">
+                        Site Q Leader:
+                        <input
+                          type="text"
+                          value={siteQs[a.id] || ""}
+                          placeholder="e.g. Rug Burn"
+                          onChange={(e) => {
+                            const next = { ...siteQs, [a.id]: e.target.value };
+                            setSiteQs(next);
+                            try {
+                              localStorage.setItem(SITE_Q_KEY, JSON.stringify(next));
+                            } catch {
+                              // ignore
+                            }
+                          }}
+                        />
+                      </label>
+                    )}
                     {a.sessions.map((s) => (
                       <p key={s.day}>
                         <strong className="day-label">{s.day}</strong> ·{" "}
