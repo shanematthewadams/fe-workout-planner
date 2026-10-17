@@ -213,7 +213,12 @@ export function FieldTimer({
           <button
             className="create"
             onClick={() => {
-              update({ ...timer, elapsed, anchor: null, wall: false });
+              update({
+                ...timer,
+                elapsed: elapsedAt(timer, Date.now()),
+                anchor: null,
+                wall: false,
+              });
               setCadence(false);
             }}
           >

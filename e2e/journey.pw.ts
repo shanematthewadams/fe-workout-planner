@@ -112,6 +112,7 @@ test("create, refine, edit, save, print, lead and reopen", async ({
   await expect(page.getByRole("timer")).toHaveText("45:00");
   await page.getByRole("button", { name: "Mute audio" }).click();
   await page.getByRole("button", { name: "Start practice timer" }).click();
+  await expect(page.getByRole("timer")).not.toHaveText("45:00");
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(page.getByRole("button", { name: "Resume" })).toBeEnabled();
   await page.screenshot({
@@ -176,4 +177,54 @@ test("real preview API has a safe offline fallback and retains prior draft on re
       .getByLabel("Generated workout draft")
       .getByRole("heading", { level: 2 }),
   ).toHaveText(title!);
+});
+
+test("library favorites and AO edits stay consistent with the builder", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "View workout", exact: true }),
+  ).toHaveCount(35);
+  await page.screenshot({
+    path: `${pictures}/${info.project.name}-library.png`,
+    fullPage: true,
+  });
+  const audit = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  expect(audit.violations).toEqual([]);
+  await page
+    .getByRole("button", {
+      name: "Favorite Circle up, get after it",
+      exact: true,
+    })
+    .click();
+  await page.getByLabel("Favorites only", { exact: true }).check();
+  await expect(
+    page.getByRole("button", { name: "View workout", exact: true }),
+  ).toHaveCount(1);
+  await page.getByText("More", { exact: true }).click();
+  await page.getByRole("button", { name: "AO Directory", exact: true }).click();
+  await page.getByLabel("Search AOs", { exact: true }).fill("Gold Rush");
+  await page
+    .getByRole("button", { name: "Edit local AO notes", exact: true })
+    .click();
+  await page
+    .getByLabel("Track for Gold Rush", { exact: true })
+    .selectOption("unavailable");
+  await page.getByRole("button", { name: "Done editing", exact: true }).click();
+  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await page.getByLabel("Q location", { exact: true }).fill("Gold Rush");
+  await page.getByText("Anything different today?", { exact: false }).click();
+  await expect(page.getByLabel("Track today", { exact: true })).toHaveValue("");
+  await expect(
+    page.getByLabel("Track today", { exact: true }).locator("option:checked"),
+  ).toHaveText("Profile: unavailable");
+  await expect(
+    page.getByText("Includes unpublished AO notes from this device.", {
+      exact: true,
+    }),
+  ).toBeVisible();
 });
