@@ -1,15 +1,40 @@
 name: Checks
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - run: npm test -- --maxWorkers=1
       - run: npm run build
+      - name: Build before comparison
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/fe-before" 8a0c426c20fc1a05591a3cb7379d964809a5d934
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/fe-before/node_modules"
+          cd "$RUNNER_TEMP/fe-before"
+          npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify desktop, tablet and mobile
+        run: npm run test:browser
+        env:
+          FE_BEFORE_DIR: ${{ runner.temp }}/fe-before
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-qa
+          path: |
+            qa/
+            playwright-report/
+            test-results/
+          retention-days: 14

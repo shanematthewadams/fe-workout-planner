@@ -9,3 +9,6 @@ qa/
 
 .imports/
 metadata.json
+
+playwright-report/
+test-results/
