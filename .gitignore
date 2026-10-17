@@ -8,3 +8,4 @@ qa/
 !.env.example
 
 .imports/
+metadata.json

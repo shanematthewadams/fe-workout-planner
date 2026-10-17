@@ -302,32 +302,69 @@ export function Planner({
         <div>
           <p className="eyebrow">YOUR NEXT Q STARTS HERE</p>
           <h1>Plan your next Q.</h1>
-          <p>An AO, an idea, a plan you can lead.</p>
+          <p className="assistant-subhead">An AO, an idea, a balanced 45-minute plan you can lead with confidence.</p>
         </div>
         <span className="assistant-badge">AI-assisted · free models only</span>
       </div>
+
+      <div className="planner-quickstart-banner" aria-label="How planning works">
+        <div className="quickstart-step">
+          <span className="quickstart-num">1</span>
+          <div>
+            <strong>Pick Where & When</strong>
+            <span>Select your AO location</span>
+          </div>
+        </div>
+        <div className="quickstart-divider" aria-hidden="true">→</div>
+        <div className="quickstart-step">
+          <span className="quickstart-num">2</span>
+          <div>
+            <strong>Choose Your Style</strong>
+            <span>Surprise, custom idea, or formal</span>
+          </div>
+        </div>
+        <div className="quickstart-divider" aria-hidden="true">→</div>
+        <div className="quickstart-step">
+          <span className="quickstart-num">3</span>
+          <div>
+            <strong>Lead on the Field</strong>
+            <span>Timer, cadence & Q-sheet ready</span>
+          </div>
+        </div>
+      </div>
+
       <div className="entry-modes" aria-label="Choose how to build">
-        <button type="button" disabled={busy} onClick={surprise}>
+        <button
+          type="button"
+          disabled={busy}
+          className="mode-btn mode-surprise"
+          onClick={surprise}
+        >
+          <span className="mode-badge">🎲 Quick Roll</span>
           <strong>Surprise Me!</strong>
-          <span>Uses your AO and preferences</span>
+          <span>1-tap balanced plan for your AO</span>
         </button>
         <button
           type="button"
           disabled={busy}
+          className={`mode-btn ${mode === "idea" ? "mode-selected" : ""}`}
           aria-pressed={mode === "idea"}
           onClick={() => setMode("idea")}
         >
+          <span className="mode-badge">💡 Freeform</span>
           <strong>Enter an Idea</strong>
-          <span>Tell us what you have in mind</span>
+          <span>Tell us your theme, gear, or vision</span>
         </button>
         <button
           type="button"
           disabled={busy}
+          className={`mode-btn ${mode === "formal" ? "mode-selected" : ""}`}
           aria-pressed={mode === "formal"}
           onClick={() => setMode("formal")}
         >
+          <span className="mode-badge">📋 Structured</span>
           <strong>Formal Builder</strong>
-          <span>Choose the details of your Q</span>
+          <span>Choose focus, style, gear & PAX</span>
         </button>
       </div>
       <form
@@ -446,24 +483,51 @@ export function Planner({
           </fieldset>
         )}
         <label className="assistant-prompt">
-          Describe your Q
+          {mode === "formal" ? "Additional instructions (optional)" : "Describe your Q"}
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             maxLength={1800}
             rows={3}
             disabled={busy}
-            placeholder={GOLD_RUSH_EXAMPLE}
+            placeholder={mode === "formal" ? "Any specific exercises, theme, or special instructions..." : GOLD_RUSH_EXAMPLE}
           />
         </label>
-        <button
-          type="button"
-          className="example-prompt"
-          disabled={busy}
-          onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
-        >
-          Try the Gold Rush idea
-        </button>
+        <div className="prompt-inspiration-bar">
+          <span className="inspiration-label">Need inspiration?</span>
+          <button
+            type="button"
+            className="example-prompt"
+            disabled={busy}
+            onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
+          >
+            Try the Gold Rush idea
+          </button>
+          <button
+            type="button"
+            className="inspiration-pill"
+            disabled={busy}
+            onClick={() => setPrompt("Dora 1-2-3 with coupons: 100 Merkins, 200 Big Boys, 300 Squats while partner runs.")}
+          >
+            Dora 1-2-3
+          </button>
+          <button
+            type="button"
+            className="inspiration-pill"
+            disabled={busy}
+            onClick={() => setPrompt("11s Ladder on the hill: Burpees at the bottom, Carolina Dry Docks at the top.")}
+          >
+            11s Hill Ladder
+          </button>
+          <button
+            type="button"
+            className="inspiration-pill"
+            disabled={busy}
+            onClick={() => setPrompt("Full body grinder: Bear crawls, lunges, and plank variations.")}
+          >
+            Bodyweight Grinder
+          </button>
+        </div>
         <div className="assistant-actions">
           <button
             className="create"
@@ -592,6 +656,14 @@ export function Planner({
         <p className="assistant-error" role="alert">
           {storageError}
         </p>
+      )}
+      {!result && !busy && (
+        <div className="planner-discovery-callout" aria-label="Library suggestion">
+          <span className="callout-tag">NEED PROVEN INSPIRATION?</span>
+          <p>
+            You don't have to start from scratch. Switch to the <strong>Library</strong> tab to lead from 35+ battle-tested F3 workouts with complete timing and exercises, or browse the <strong>Exicon & Lexicon</strong> to discover new movements.
+          </p>
+        </div>
       )}
       {result && (
         <div className="assistant-result" aria-label="Generated workout draft">
