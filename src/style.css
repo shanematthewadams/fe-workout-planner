@@ -1,5 +1,5 @@
 :root {
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   font-synthesis: none;
 }
 * {
@@ -65,7 +65,7 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
   font-weight: 700;
   letter-spacing: -0.7px;
 }
@@ -106,7 +106,7 @@ header {
 .brand-sub {
   display: block;
   font:
-    9px "DM Sans",
+    9px "Manrope",
     sans-serif;
 }
 .mark {
@@ -117,7 +117,7 @@ header {
   background: var(--surface);
   color: var(--ink);
   font:
-    700 35px "Barlow Condensed",
+    700 35px "Big Shoulders Display",
     sans-serif;
   width: 54px;
   height: 54px;
@@ -206,7 +206,7 @@ header {
   right: -4px;
   top: 20px;
   font:
-    800 170px "Barlow Condensed",
+    800 170px "Big Shoulders Display",
     sans-serif;
   letter-spacing: -10px;
   color: transparent;
@@ -591,14 +591,14 @@ header {
 }
 .exercise-count {
   font:
-    600 28px "Barlow Condensed",
+    600 28px "Big Shoulders Display",
     sans-serif;
   overflow-wrap: anywhere;
 }
 .exercise-count small {
   display: block;
   font:
-    11px "DM Sans",
+    11px "Manrope",
     sans-serif;
   color: var(--muted);
   margin-top: 3px;
@@ -746,7 +746,7 @@ legend {
 .header .brand {
   color: var(--ink);
   font-size: 28px;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
   font-weight: 700;
   letter-spacing: -0.6px;
 }
@@ -782,7 +782,7 @@ legend {
   text-decoration: underline;
 }
 .hero h1 {
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
   font-size: clamp(48px, 5vw, 68px);
   font-weight: 700;
   line-height: 1.08;
@@ -797,7 +797,7 @@ legend {
   border-color: var(--line);
 }
 .hero-note p {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
   font-size: 32px;
   font-weight: 600;
   letter-spacing: -0.3px;
@@ -838,7 +838,7 @@ legend {
 }
 .detail .workout-block h3,
 .edit-section h2 {
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   font-size: 22px;
   letter-spacing: -0.5px;
   font-weight: 700;
@@ -846,13 +846,13 @@ legend {
 .provenance h3,
 .backup h3,
 .raw-notes h2 {
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 .footer-brand {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
 }
 @media (max-width: 760px) {
   .regional-links {
@@ -1404,7 +1404,7 @@ fieldset,
   gap: 1.5rem;
 }
 .assistant h1 {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
 }
 .assistant-badge {
   padding: 0.6rem 0.8rem;
@@ -1490,7 +1490,7 @@ fieldset,
   background: var(--surface);
 }
 .assistant-result h1 {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
   margin: 0.5rem 0;
 }
 .assistant-result-heading > span {
@@ -1519,7 +1519,7 @@ fieldset,
   gap: 1rem;
 }
 .assistant-sections h2 {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
 }
 .assistant-block h3 {
   margin: 1rem 0 0.6rem;
@@ -1630,7 +1630,7 @@ fieldset,
   border-color: var(--line);
 }
 .entry-modes strong {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
 }
 .entry-modes span {
   font-weight: 400;
@@ -1681,7 +1681,7 @@ fieldset,
   font-size: 0.75rem;
 }
 .session-timeline strong {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
   font-size: 1.3rem;
 }
 .session-timeline span {
@@ -1712,7 +1712,7 @@ fieldset,
   margin: 10px 0;
 }
 .field-clock {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Big Shoulders Display", sans-serif;
   font-variant-numeric: tabular-nums;
   font-size: clamp(6rem, 23vw, 13rem);
   line-height: 1.1;
@@ -2118,16 +2118,16 @@ fieldset,
   }
 }
 
-/* Night game: navy ground, warm readable type, gold actions and red accents. */
+/* Charcoal / gold / red. Big Shoulders display with Manrope for readable plans. */
 :root {
   color-scheme: dark;
   --ink: #f8f5ed;
-  --navy: #0f1432;
-  --ground: #0f1432;
-  --surface: #181f40;
-  --surface-raised: #222c50;
-  --muted: #bbc1d5;
-  --line: #626d91;
+  --charcoal: #151618;
+  --ground: #151618;
+  --surface: #202225;
+  --surface-raised: #2c2f33;
+  --muted: #bdc0c5;
+  --line: #71767e;
   --gold: #ffaa00;
   --gold-hover: #ffc247;
   --red: #ff001e;
@@ -2193,12 +2193,12 @@ textarea,
 .create,
 .assistant .create {
   background: var(--gold);
-  color: var(--navy);
+  color: var(--charcoal);
   border-color: var(--gold);
 }
 .create:hover,
 .assistant .create:hover {
-  color: var(--navy);
+  color: var(--charcoal);
   background: var(--gold-hover);
   border-color: var(--gold-hover);
 }
@@ -2216,7 +2216,7 @@ textarea,
 }
 #root > header {
   padding: 0 max(24px, calc((100vw - 1192px) / 2));
-  background: var(--navy);
+  background: var(--charcoal);
   color: var(--ink);
   border: 0;
   height: 64px;
@@ -2224,7 +2224,7 @@ textarea,
 .brand {
   color: var(--ink);
   font:
-    700 30px/1 "Barlow Condensed",
+    800 32px/1 "Big Shoulders Display",
     sans-serif;
   letter-spacing: 0.04em;
 }
@@ -2251,7 +2251,7 @@ textarea,
   z-index: 5;
   margin: 0;
   padding: 0 max(24px, calc((100vw - 1192px) / 2));
-  background: var(--navy);
+  background: var(--charcoal);
   border: 0;
   display: flex;
   gap: 24px;
@@ -2318,7 +2318,7 @@ textarea,
   font-weight: 700;
   letter-spacing: -0.035em;
   color: var(--ink);
-  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-size: clamp(2.8rem, 6vw, 4rem);
   line-height: 1.05;
   margin: 8px 0 10px;
 }
@@ -2393,25 +2393,26 @@ summary {
   min-height: 116px;
   padding: 14px;
 }
-.prompt-inspiration-bar {
-  display: flex;
+.prompt-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 60px;
   gap: 12px;
-  flex-wrap: wrap;
-  margin: 12px 0 20px;
+  align-items: start;
+  margin-top: 8px;
 }
-.prompt-inspiration-bar .surprise-button {
-  position: relative;
-  min-height: 44px;
-  overflow: hidden;
-  padding: 8px 18px 8px 12px;
-  gap: 10px;
+.assistant-prompt .prompt-input-row textarea {
+  margin: 0;
+}
+.prompt-input-row .surprise-button {
+  min-width: 0;
+  width: 60px;
+  min-height: 60px;
+  padding: 10px;
   border: 1px solid var(--gold);
-  border-radius: 6px;
-  background: var(--surface);
-  color: var(--gold);
-  font-size: 0.88rem;
-  font-weight: 700;
-  box-shadow: 4px 4px 0 var(--red);
+  border-radius: 8px;
+  background: var(--gold);
+  color: var(--charcoal);
+  box-shadow: 3px 3px 0 var(--red);
   transition:
     transform 160ms ease,
     box-shadow 160ms ease,
@@ -2419,27 +2420,46 @@ summary {
 }
 .surprise-button .surprise-icon {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background: var(--gold);
-  color: var(--navy);
   transform: rotate(-8deg);
   transition: transform 180ms ease;
 }
-.prompt-inspiration-bar .surprise-button:hover:not(:disabled) {
+.prompt-input-row .surprise-button:hover:not(:disabled) {
   transform: translate(-1px, -2px);
-  box-shadow: 5px 6px 0 var(--red);
-  background: var(--surface-raised);
+  box-shadow: 4px 5px 0 var(--red);
+  background: var(--gold-hover);
 }
 .surprise-button:hover:not(:disabled) .surprise-icon {
-  transform: rotate(8deg);
+  transform: rotate(12deg);
 }
-.prompt-inspiration-bar .surprise-button:active:not(:disabled) {
-  transform: translate(3px, 3px);
+.prompt-input-row .surprise-button:active:not(:disabled) {
+  transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--red);
+}
+.import-entry {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 12px 0;
+}
+.import-entry button {
+  background: transparent;
+  border: 0;
+  color: var(--gold);
+  padding: 6px;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: inherit;
+}
+@media (max-width: 600px) {
+  .prompt-input-row {
+    grid-template-columns: minmax(0, 1fr) 48px;
+    gap: 8px;
+  }
+  .prompt-input-row .surprise-button {
+    width: 48px;
+    min-height: 48px;
+    padding: 8px;
+  }
 }
 
 .assistant-actions {
@@ -2709,11 +2729,11 @@ summary {
   color: var(--ink);
 }
 .ao-admin-banner button {
-  background: var(--navy);
+  background: var(--charcoal);
   color: var(--ink);
 }
 .ao-admin-toggle-btn.active {
-  background: var(--navy);
+  background: var(--charcoal);
 }
 .backup,
 .cloud-sync {
@@ -2743,7 +2763,7 @@ footer {
 }
 /* Field view prioritizes contrast and touch targets over decorative branding. */
 .field-timer {
-  background: var(--navy);
+  background: var(--charcoal);
   color: var(--ink);
   border: 0;
   border-radius: var(--radius);
@@ -2764,7 +2784,7 @@ footer {
 }
 .field-timer .create {
   background: var(--gold);
-  color: var(--navy);
+  color: var(--charcoal);
   border-color: var(--gold);
 }
 .field-timer button,
@@ -2780,7 +2800,7 @@ footer {
 }
 .field-phases .active {
   background: var(--gold);
-  color: var(--navy);
+  color: var(--charcoal);
 }
 .field-timer .workout-block {
   background: var(--surface);
@@ -2849,7 +2869,7 @@ footer {
     display: block;
   }
   .assistant h1 {
-    font-size: 2.35rem;
+    font-size: 2.8rem;
     margin: 8px 0 10px;
   }
   .assistant-subhead {

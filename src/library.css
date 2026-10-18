@@ -30,7 +30,7 @@
   flex-wrap: wrap;
   gap: 6px 20px;
   padding: 10px max(16px, calc((100vw - 1200px) / 2));
-  background: var(--navy);
+  background: var(--charcoal);
   color: var(--muted);
   font-size: 0.8rem;
   line-height: 1.5;
@@ -80,7 +80,7 @@
 }
 .quick-filters button[aria-pressed="true"] {
   background: var(--gold);
-  color: var(--navy);
+  color: var(--charcoal);
   border-color: var(--gold);
 }
 .library-controls .favorites-filter {
@@ -162,7 +162,7 @@
 }
 .workout-card-actions .use-workout {
   background: var(--gold);
-  color: var(--navy);
+  color: var(--charcoal);
   border-color: var(--gold);
 }
 .movement-filters {
@@ -285,5 +285,81 @@
   .workout-library,
   .movement-guide {
     display: none;
+  }
+}
+
+/* Markdown comes in as text, never rendered HTML. */
+.markdown-import {
+  max-width: 850px;
+  margin: 32px auto 60px;
+}
+.markdown-import h1 {
+  font-size: clamp(2.8rem, 6vw, 4rem);
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+.markdown-import > p {
+  max-width: 70ch;
+}
+.markdown-import .actions {
+  margin: 24px 0 16px;
+}
+.markdown-import .muted {
+  font-size: 0.82rem;
+}
+.markdown-format {
+  margin: 24px 0;
+  border-block: 1px solid var(--line);
+}
+.markdown-format pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 0.85rem/1.65 monospace;
+  color: var(--muted);
+}
+.markdown-import form > label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.markdown-import textarea {
+  width: 100%;
+  font: 0.88rem/1.7 monospace;
+}
+.markdown-import .button:focus-within {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+.markdown-review {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+.markdown-review h2 {
+  font-size: 2.3rem;
+}
+.markdown-review article {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  padding-top: 16px;
+}
+.markdown-review li {
+  line-height: 1.65;
+  margin: 8px 0;
+}
+.import-issues {
+  padding-left: 20px;
+  color: var(--muted);
+}
+.import-directions {
+  white-space: pre-wrap;
+}
+@media (max-width: 600px) {
+  .markdown-review {
+    padding: 16px;
   }
 }

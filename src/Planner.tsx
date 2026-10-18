@@ -23,7 +23,9 @@ export function Planner({
   onReference,
   onDraft,
   onLead,
+  onImport,
 }: {
+  onImport?: () => void;
   onDraft?: (w: Workout) => void;
   onLead?: (w: Workout) => void;
   onEdit: (w: Workout) => void;
@@ -368,7 +370,7 @@ export function Planner({
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
       <div hidden={view === "review"} className="planner-build">
         <div className="assistant-intro">
-          <p className="eyebrow">THE FE / Q PLANNER</p>
+          <p className="eyebrow">YOUR NEXT BEATDOWN STARTS HERE</p>
           <h1>Build your next Q.</h1>
           <p className="assistant-subhead">Bring an idea. Leave with a plan.</p>
         </div>
@@ -453,35 +455,39 @@ export function Planner({
                 </div>
               </fieldset>
             )}
-            <label className="assistant-prompt">
-              {mode === "formal"
-                ? "Additional instructions (optional)"
-                : "Describe your Q"}
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                maxLength={1800}
-                rows={3}
-                disabled={busy}
-                placeholder={
-                  mode === "formal"
-                    ? "Any specific exercises, theme, or special instructions..."
-                    : "A partner workout with coupons, less running, and a focus on upper body…"
-                }
-              />
-            </label>
-            <div className="prompt-inspiration-bar">
-              <button
-                className="surprise-button"
-                type="button"
-                disabled={busy}
-                onClick={surprise}
-              >
-                <span className="surprise-icon" aria-hidden="true">
-                  <Dices size={20} strokeWidth={2.2} />
-                </span>
-                Surprise Me!
-              </button>
+            <div className="assistant-prompt">
+              <label htmlFor="q-description">
+                {mode === "formal"
+                  ? "Additional instructions (optional)"
+                  : "Describe your Q"}
+              </label>
+              <div className="prompt-input-row">
+                <textarea
+                  id="q-description"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  maxLength={1800}
+                  rows={3}
+                  disabled={busy}
+                  placeholder={
+                    mode === "formal"
+                      ? "Any specific exercises, theme, or special instructions..."
+                      : "A partner workout with coupons, less running, and a focus on upper body…"
+                  }
+                />
+                <button
+                  className="surprise-button"
+                  type="button"
+                  disabled={busy}
+                  onClick={surprise}
+                  aria-label="Surprise Me!"
+                  title="Surprise Me! Roll a workout idea"
+                >
+                  <span className="surprise-icon" aria-hidden="true">
+                    <Dices size={30} strokeWidth={1.8} />
+                  </span>
+                </button>
+              </div>
             </div>
             <div className="assistant-actions">
               <button
@@ -551,6 +557,14 @@ export function Planner({
                 </button>
               )}
             </div>
+            {onImport && (
+              <p className="import-entry">
+                Already have a workout?{" "}
+                <button type="button" onClick={onImport}>
+                  Import Markdown
+                </button>
+              </p>
+            )}
             <div className="planner-location">
               <AOContextPanel
                 ao={ao}

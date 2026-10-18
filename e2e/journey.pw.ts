@@ -2,6 +2,77 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
 const pictures = "qa/screenshots";
+test("Markdown file review, correction and personal save", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  await expect(page.getByRole("banner")).toContainText("F3 Q BUILDER");
+  await expect(page.getByRole("banner")).not.toContainText("OLATHE");
+  const prompt = page.getByLabel("Describe your Q", { exact: true });
+  const roll = page.getByRole("button", { name: "Surprise Me!", exact: true });
+  const promptBox = await prompt.boundingBox(),
+    rollBox = await roll.boundingBox();
+  expect(rollBox!.x).toBeGreaterThan(promptBox!.x + promptBox!.width);
+  expect(Math.abs(rollBox!.y - promptBox!.y)).toBeLessThan(3);
+  await page
+    .getByRole("button", { name: "Import Markdown", exact: true })
+    .click();
+  await page.getByLabel("Choose Markdown file", { exact: true }).setInputFiles({
+    name: "workout.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from(
+      "# Imported test ladder\nDuration: 45\nEquipment: Coupon\nRunning: None\n## The Thang\n### Ladder\nMinutes: 43\nAlternate partners; stop at the cap.\n- Lunges | 10 | 1=1 | Each movement counts.\n- Hammers | 20 | 2=1 | Two movements count as one.",
+    ),
+  });
+  await expect(
+    page.getByLabel("Workout Markdown", { exact: true }),
+  ).toHaveValue(/Imported test ladder/);
+  await page
+    .getByRole("button", { name: "Review import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      name: "Review: Imported test ladder",
+      exact: true,
+    }),
+  ).toBeFocused();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: `${pictures}/${info.project.name}-markdown-import.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Open in editor", exact: true })
+    .click();
+  await expect(page.getByLabel("Workout title", { exact: true })).toHaveValue(
+    "Imported test ladder",
+  );
+  await expect(page.getByLabel("Counting", { exact: true }).last()).toHaveValue(
+    "2=1",
+  );
+  await page
+    .getByRole("button", { name: "Save & view workout", exact: true })
+    .click();
+  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Imported test ladder", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Imported test ladder", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("main")).toContainText("Imported Markdown draft");
+});
 test("workout details recover and shape a weather-aware offline draft", async ({
   page,
 }) => {

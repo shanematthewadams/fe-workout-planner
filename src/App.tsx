@@ -18,6 +18,7 @@ import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
 import { OfflineStatus } from "./OfflineStatus";
 import { StagingNotice } from "./StagingNotice";
+import { MarkdownImport } from "./MarkdownImport";
 import {
   SessionTimeline,
   sessionStart,
@@ -502,15 +503,8 @@ export default function App() {
               onClick={() => go("builder")}
               title="Home"
             >
-              <span>
-                F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
-              </span>
+              <span>F3 Q BUILDER</span>
             </button>
-            <div className="header-meta">
-              <span className="region">
-                F3 THE FE <span> / </span> OLATHE, KS
-              </span>
-            </div>
           </header>
           <nav className="app-nav no-print" aria-label="Planner navigation">
             {[
@@ -532,6 +526,7 @@ export default function App() {
               <summary>More</summary>
               <div className="more-menu">
                 {[
+                  ["markdown", "Import Markdown workout"],
                   ["aos", "AO Directory"],
                   ["exicon", "Exicon & Lexicon"],
                   ["data", "Sync & backups"],
@@ -617,6 +612,7 @@ export default function App() {
         <main id="main" className="main">
           {tab === "builder" && (
             <Planner
+              onImport={() => go("markdown")}
               onLead={(w) => {
                 open(w);
                 setNotice("");
@@ -656,6 +652,9 @@ export default function App() {
                   );
               }}
             />
+          )}
+          {tab === "markdown" && (
+            <MarkdownImport onEdit={(w) => begin(w, false)} />
           )}
           {tab === "data" && (
             <CloudSync
