@@ -34,7 +34,11 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   ).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Launch Field Q-Timer" }));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
+  fireEvent.click(
+    screen.getByText("Four-count cadence", { selector: "summary" }),
+  );
   expect(screen.getByRole("button", { name: "Start cadence" })).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "← Back to plan" }));
   fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
   expect(
     screen.getByRole("button", { name: "Digging for gold" }),

@@ -5,6 +5,13 @@ const cloudSnapshot = z.object({
   workouts: z.array(workoutSchema).max(200),
 });
 export type Snapshot = z.infer<typeof cloudSnapshot>;
+export class CloudSnapshotError extends Error {
+  constructor(public snapshot: unknown) {
+    super(
+      "Cloud contains an unreadable record. Nothing was merged or overwritten. Download the cloud recovery file before repairing these records.",
+    );
+  }
+}
 export function cloudKey() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -91,5 +98,8 @@ export async function cloudRequest(
       "Cloud sync unavailable. Your local plans are safe; retry when connected.",
     );
   }
-  return cloudSnapshot.parse(await response.json());
+  const raw: unknown = await response.json();
+  const parsed = cloudSnapshot.safeParse(raw);
+  if (!parsed.success) throw new CloudSnapshotError(raw);
+  return parsed.data;
 }

@@ -51,7 +51,27 @@ export async function handlePlanner(
       if (!input.strictSchedule || input.current || req.signal.aborted)
         throw error;
       result = fallbackPlan(input);
+      result.fallbackReason =
+        error instanceof PlannerError
+          ? error.message.slice(0, 500)
+          : "Free AI could not complete this request.";
+      console.info(
+        "FE_PLANNER_OUTCOME",
+        JSON.stringify({
+          outcome: "template",
+          reason: error instanceof PlannerError ? error.status : 503,
+        }),
+      );
     }
+    if (result.provider !== "Template")
+      console.info(
+        "FE_PLANNER_OUTCOME",
+        JSON.stringify({
+          outcome: "ai",
+          provider: result.provider,
+          model: result.model,
+        }),
+      );
     return send(result);
   } catch (error) {
     if (error instanceof PlannerError)

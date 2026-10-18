@@ -13,7 +13,7 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
   render(<App />);
   expect(
-    screen.getByRole("heading", { name: /Good mornings/ }),
+    screen.getByRole("heading", { name: /Build your next Q/ }),
   ).toBeVisible();
   fireEvent.change(screen.getByLabelText("Q location"), {
     target: { value: "Clocktower" },

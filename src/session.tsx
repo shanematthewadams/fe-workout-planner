@@ -7,7 +7,65 @@ export type Phase = {
   start: number;
   end: number;
   detail: string;
+  sectionKind?: string;
+  blockId?: string;
 };
+/** Use saved block timing. Unknown/inconsistent plans need an explicit fallback. */
+export function workoutPhases(workout: Workout, cot = 10): Phase[] | null {
+  const blocks = workout.sections.flatMap((s) => s.blocks);
+  if (
+    !blocks.length ||
+    blocks.some((b) => b.minutes === null || b.minutes <= 0)
+  )
+    return null;
+  const physical = blocks.reduce((sum, b) => sum + b.minutes!, 0);
+  const welcome = workout.duration === physical + 2 ? 2 : 0;
+  if (
+    workout.duration === null ||
+    Math.abs(workout.duration - physical - welcome) > 0.001
+  )
+    return null;
+  let start = welcome * 60;
+  const phases: Phase[] = welcome
+    ? [
+        {
+          id: "welcome",
+          name: "Welcome & disclaimer",
+          start: 0,
+          end: start,
+          detail: DISCLAIMER,
+        },
+      ]
+    : [];
+  for (const section of workout.sections)
+    for (const block of section.blocks) {
+      const end = start + block.minutes! * 60;
+      phases.push({
+        id: block.id,
+        sectionKind: section.kind,
+        blockId: block.id,
+        name:
+          section.blocks.length > 1
+            ? `${section.title} · ${block.title}`
+            : section.kind === "thang"
+              ? "The Thang"
+              : section.title,
+        start,
+        end,
+        detail: block.instructions,
+      });
+      start = end;
+    }
+  phases.push({
+    id: "cot",
+    name: "Fellowship & trust",
+    start,
+    end: start + cot * 60,
+    detail:
+      "Count-o-Rama · Name-o-Rama / FNG naming · Announcements · Ball of Man / closing",
+  });
+  return phases;
+}
 export function sessionPhases(mary = true, cot = 10): Phase[] {
   return [
     {

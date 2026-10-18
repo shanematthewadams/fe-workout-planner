@@ -157,7 +157,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       : 35
     : input.minutes - 5 - (input.mary ? 5 : 0);
   const plan: Plan = {
-    title: builder?.title || `${style} · ready to lead`,
+    title: builder?.title || `${style} · draft`,
     summary:
       "An offline template draft. Review the movements and space before leading; your theme and additional requests may need manual edits.",
     equipment: [...new Set(gear)],
@@ -215,7 +215,12 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
                   instructions:
                     "Alternate 30 seconds work and 30 seconds rest between LBCs and dead bugs. Repeat to the time cap; allow transitions and stop at the whistle.",
                   exercises: [
-                    core,
+                    {
+                      ...core,
+                      amount: "30",
+                      unit: "seconds" as const,
+                      counting: "time" as const,
+                    },
                     ex(
                       "Dead bugs",
                       "30",

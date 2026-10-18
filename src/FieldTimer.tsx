@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Workout } from "./model";
 import {
   sessionPhases,
-  sessionMatches,
+  workoutPhases,
   clockLabel,
   sessionStart,
 } from "./session";
@@ -13,9 +13,9 @@ type TimerState = {
   wall: boolean;
   cot: number;
 };
-export function elapsedAt(state: TimerState, now: number) {
+export function elapsedAt(state: TimerState, now: number, hardStop = 2700) {
   return Math.min(
-    2700 + state.cot * 60,
+    hardStop + state.cot * 60,
     Math.max(
       0,
       state.elapsed + (state.anchor === null ? 0 : (now - state.anchor) / 1000),
@@ -26,13 +26,14 @@ export function liveTimer(
   now: number,
   cot = 10,
   startTime = "05:30",
+  hardStop = 2700,
 ): TimerState {
   const start = new Date(now);
   const [hours, minutes] = startTime.split(":").map(Number);
   start.setHours(hours, minutes, 0, 0);
   return {
     elapsed: Math.min(
-      2700 + cot * 60,
+      hardStop + cot * 60,
       Math.max(0, (now - start.getTime()) / 1000),
     ),
     anchor: Math.max(now, start.getTime()),
@@ -49,12 +50,30 @@ export function FieldTimer({
 }) {
   const startMinutes = sessionStart(workout),
     startTime = workout.schedule?.startTime ?? "05:30";
+  const today = new Date().toLocaleDateString("en-CA");
   const key = "fe-field-timer:v1:" + workout.id + ":" + startTime;
+  const [standard, setStandard] = useState(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) ?? "null");
+      return (
+        raw?.standard === true &&
+        raw.date === today &&
+        raw.revision === workout.updatedAt
+      );
+    } catch {
+      return false;
+    }
+  });
   const [timer, setTimer] = useState<TimerState>(() => {
+    // An unknown schedule must never resume into a silently substituted clock.
+    if (!workoutPhases(workout) && !standard)
+      return { elapsed: 0, anchor: null, wall: false, cot: 10 };
     try {
       const raw = JSON.parse(localStorage.getItem(key) ?? "null");
       if (
         raw &&
+        (!raw.date || raw.date === today) &&
+        (!raw.revision || raw.revision === workout.updatedAt) &&
         Number.isFinite(raw.elapsed) &&
         raw.elapsed >= 0 &&
         (raw.anchor === null || Number.isFinite(raw.anchor)) &&
@@ -73,21 +92,43 @@ export function FieldTimer({
     [beat, setBeat] = useState(0),
     [bpm, setBpm] = useState(80),
     [storageError, setStorageError] = useState("");
-  const [cursor, setCursor] = useState({ phase: "", index: 0 });
-  const elapsed = elapsedAt(timer, now),
-    total = 2700 + timer.cot * 60;
-  const phases = sessionPhases(
-    workout.sections.some((s) => s.kind === "mary"),
-    timer.cot,
-  );
+  const [cursor, setCursor] = useState(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (
+        raw?.date === today &&
+        raw.revision === workout.updatedAt &&
+        typeof raw.cursor?.phase === "string" &&
+        Number.isInteger(raw.cursor.index) &&
+        raw.cursor.index >= 0
+      )
+        return raw.cursor as { phase: string; index: number };
+    } catch {
+      /* The clock remains usable without exercise recovery. */
+    }
+    return { phase: "", index: 0 };
+  });
+  const savedPhases = workoutPhases(workout, timer.cot);
+  const phases =
+    savedPhases ??
+    sessionPhases(
+      workout.sections.some((s) => s.kind === "mary"),
+      timer.cot,
+    );
+  const hardStop = phases[phases.length - 1].start;
+  const elapsed = elapsedAt(timer, now, hardStop),
+    total = hardStop + timer.cot * 60;
+  const ready = !!savedPhases || standard;
   const phase =
     phases.find((p) => elapsed < p.end) ?? phases[phases.length - 1];
   const phaseExercises = workout.sections
-    .filter((s) => s.kind === phase.id)
+    .filter((s) => s.kind === (phase.sectionKind ?? phase.id))
     .flatMap((s) =>
-      s.blocks.flatMap((b) =>
-        b.exercises.map((exercise) => ({ exercise, block: b })),
-      ),
+      s.blocks
+        .filter((b) => !phase.blockId || b.id === phase.blockId)
+        .flatMap((b) =>
+          b.exercises.map((exercise) => ({ exercise, block: b })),
+        ),
     );
   const exerciseIndex =
     cursor.phase === phase.id
@@ -108,11 +149,20 @@ export function FieldTimer({
   }, []);
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(timer));
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          ...timer,
+          cursor,
+          standard,
+          date: today,
+          revision: workout.updatedAt,
+        }),
+      );
     } catch {
       setStorageError("Timer recovery unavailable. Keep this screen open.");
     }
-  }, [key, timer]);
+  }, [key, timer, cursor, standard, today, workout.updatedAt]);
   useEffect(() => {
     if (
       timer.anchor !== null &&
@@ -121,12 +171,12 @@ export function FieldTimer({
     )
       playSectionWhistle();
     previous.current = elapsed;
-    if (elapsed >= 2700) setCadence(false);
+    if (elapsed >= hardStop) setCadence(false);
     if (elapsed >= total && timer.anchor !== null)
       setTimer({ ...timer, elapsed: total, anchor: null });
   }, [elapsed, timer.anchor, sound, phases]);
   useEffect(() => {
-    if (!cadence || elapsed >= 2700) return;
+    if (!cadence || elapsed >= hardStop) return;
     let step = 0;
     const i = setInterval(() => {
       const count = step++;
@@ -134,7 +184,7 @@ export function FieldTimer({
       if (sound) playCadenceBeep(count % 4 === 3 ? 880 : 550);
     }, 60000 / bpm);
     return () => clearInterval(i);
-  }, [cadence, bpm, sound, elapsed >= 2700]);
+  }, [cadence, bpm, sound, elapsed >= hardStop]);
   useEffect(() => {
     if (timer.anchor === null) return;
     let lock: WakeLockSentinel | undefined;
@@ -166,7 +216,7 @@ export function FieldTimer({
     const current = Date.now();
     update(
       wall
-        ? liveTimer(current, timer.cot, startTime)
+        ? liveTimer(current, timer.cot, startTime, hardStop)
         : { ...timer, anchor: current, wall: false },
     );
   }
@@ -183,12 +233,18 @@ export function FieldTimer({
         </button>
       </div>
       <p className="eyebrow">FIELD Q-TIMER · {workout.title}</p>
-      {!sessionMatches(workout) && (
-        <p role="alert">
-          This plan has different or unknown timing. This timer uses the
-          standard 45-minute schedule; review and adjust your work before
-          starting.
-        </p>
+      {!savedPhases && (
+        <div role="alert" className="timer-timing-warning">
+          <p>
+            This plan has incomplete or inconsistent timing. Review the plan, or
+            choose the standard 45-minute FE schedule.
+          </p>
+          {!standard && (
+            <button onClick={() => setStandard(true)}>
+              Use standard 45-minute timer
+            </button>
+          )}
+        </div>
       )}
       <h1>{elapsed >= total ? "COT complete" : phase.name}</h1>
       <p>
@@ -199,57 +255,13 @@ export function FieldTimer({
         {clockLabel(phase.end, startMinutes)}
       </p>
       <div className="field-clock" role="timer" aria-label="Time remaining">
-        {fmt((elapsed < 2700 ? 2700 : total) - elapsed)}
+        {fmt((elapsed < hardStop ? hardStop : total) - elapsed)}
       </div>
       <h2>
-        {elapsed >= 2700
+        {elapsed >= hardStop
           ? "Physical work is over. Circle up."
           : "until the physical hard stop"}
       </h2>
-      <progress aria-label="Session progress" value={elapsed} max={total} />
-      <p>{phase.detail}</p>
-      <div className="actions">
-        {timer.anchor !== null && elapsed < total ? (
-          <button
-            className="create"
-            onClick={() => {
-              update({
-                ...timer,
-                elapsed: elapsedAt(timer, Date.now()),
-                anchor: null,
-                wall: false,
-              });
-              setCadence(false);
-            }}
-          >
-            {timer.wall ? "Stop live timer" : "Pause"}
-          </button>
-        ) : (
-          <>
-            <button
-              className="create"
-              disabled={elapsed >= total}
-              onClick={() => start(false)}
-            >
-              {timer.elapsed ? "Resume" : "Start practice timer"}
-            </button>
-            <button onClick={() => start(true)}>
-              Join live {clockLabel(0, startMinutes)} schedule
-            </button>
-          </>
-        )}
-        <button
-          onClick={() => {
-            if (confirm("Reset this timer?")) {
-              setCadence(false);
-              update({ elapsed: 0, anchor: null, wall: false, cot: timer.cot });
-              previous.current = 0;
-            }
-          }}
-        >
-          Reset
-        </button>
-      </div>
       {currentExercise && (
         <section aria-label="Lead this phase">
           <h2>Lead this phase</h2>
@@ -276,8 +288,7 @@ export function FieldTimer({
                   Next exercise
                 </button>
               </div>
-              <h3>{currentExercise.block.title}</h3>
-              <p>{currentExercise.block.instructions}</p>
+
               <div className="field-exercise" aria-live="polite">
                 <strong>
                   {currentExercise.exercise.name} ·{" "}
@@ -287,10 +298,61 @@ export function FieldTimer({
                 <p>{currentExercise.exercise.instructions}</p>
                 <span>{currentExercise.exercise.counting}</span>
               </div>
+              <details className="field-block-help">
+                <summary>
+                  {currentExercise.block.title} · block instructions
+                </summary>
+                <p>{currentExercise.block.instructions}</p>
+              </details>
             </article>
           )}
         </section>
       )}
+      <progress aria-label="Session progress" value={elapsed} max={total} />
+      {!currentExercise && <p>{phase.detail}</p>}
+      <div className="actions">
+        {timer.anchor !== null && elapsed < total ? (
+          <button
+            className="create"
+            onClick={() => {
+              update({
+                ...timer,
+                elapsed: elapsedAt(timer, Date.now(), hardStop),
+                anchor: null,
+                wall: false,
+              });
+              setCadence(false);
+            }}
+          >
+            {timer.wall ? "Stop live timer" : "Pause"}
+          </button>
+        ) : (
+          <>
+            <button
+              className="create"
+              disabled={!ready || elapsed >= total}
+              onClick={() => start(false)}
+            >
+              {timer.elapsed ? "Resume" : "Start practice timer"}
+            </button>
+            <button disabled={!ready} onClick={() => start(true)}>
+              Join live {clockLabel(0, startMinutes)} schedule
+            </button>
+          </>
+        )}
+        <button
+          onClick={() => {
+            if (confirm("Reset this timer?")) {
+              setCadence(false);
+              setCursor({ phase: "", index: 0 });
+              update({ elapsed: 0, anchor: null, wall: false, cot: timer.cot });
+              previous.current = 0;
+            }
+          }}
+        >
+          Reset
+        </button>
+      </div>
       <details className="field-overview">
         <summary>Session timeline & COT settings</summary>
         <label>
@@ -315,8 +377,8 @@ export function FieldTimer({
           ))}
         </div>
       </details>
-      <section className="cadence">
-        <h2>Four-count cadence</h2>
+      <details className="cadence">
+        <summary>Four-count cadence</summary>
         <p className="cadence-count">
           {cadence
             ? beat % 4 === 3
@@ -336,7 +398,7 @@ export function FieldTimer({
           {bpm}
         </label>
         <button
-          disabled={elapsed >= 2700}
+          disabled={elapsed >= hardStop}
           aria-pressed={cadence}
           onClick={() => {
             if (sound) playCadenceBeep();
@@ -349,7 +411,7 @@ export function FieldTimer({
           Three lead counts, then the group rep. Audio may be suspended when a
           phone locks; keep the timer visible.
         </p>
-      </section>
+      </details>
       {storageError && <p role="alert">{storageError}</p>}
     </main>
   );

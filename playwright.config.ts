@@ -30,6 +30,10 @@ export default defineConfig({
       },
     },
     {
+      name: "safari-mobile",
+      use: { ...devices["iPhone 13"], viewport: { width: 390, height: 844 } },
+    },
+    {
       name: "mobile",
       use: {
         ...devices["Desktop Chrome"],
