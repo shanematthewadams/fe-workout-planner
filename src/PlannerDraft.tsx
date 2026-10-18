@@ -186,7 +186,7 @@ export function PlannerDraft({
             maxLength={1800}
             rows={2}
             onChange={(e) => setRevision(e.target.value)}
-            placeholder="Less running. Keep the gold theme and make the main work partner-based."
+            placeholder="Keep the structure, add partner work, and simplify the counts…"
           />
         </label>
         <div className="refine-chips">

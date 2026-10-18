@@ -187,7 +187,11 @@ test.describe("deterministic planner client", () => {
       page.getByRole("heading", { name: "Partner Gold", exact: true }),
     ).toBeVisible();
     expect(apiCalls).toBe(2);
-    await expect(page.getByText("No running", { exact: false })).toBeVisible();
+    await expect(
+      page
+        .getByLabel("Generated workout draft", { exact: true })
+        .getByText("No running", { exact: false }),
+    ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Build my workout", exact: true }),
     ).toHaveCount(0);
