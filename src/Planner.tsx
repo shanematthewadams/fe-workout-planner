@@ -292,6 +292,13 @@ export function Planner({
       setResult(next);
       setView("review");
       setLastRequest(resolved);
+      setSite(
+        retainQContext(
+          resolved.ao,
+          resolved.prompt,
+          resolved.site ?? { overrides: {}, notes: "" },
+        ),
+      );
       onDraft?.(next.workout);
       if (next.workout.provenance.ao) setAO(next.workout.provenance.ao);
       setMinutes(next.workout.duration ?? minutes);

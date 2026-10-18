@@ -120,7 +120,7 @@ export async function generatePlan(
     `\n${input.strictSchedule ? "STRICT SCHEDULE: 2 minutes welcome/disclaimer is reserved by the app outside these exercise sections. Warmup EXACTLY 8 minutes; The Thang EXACTLY " + (input.mary ? "29" : "35") + " minutes; Mary " + (input.mary ? "EXACTLY 6 minutes" : "OMITTED") + ". Fellowship/COT happens AFTER the 45-minute hard stop and must NOT appear in physical sections." : ""} All block minutes MUST sum to ${input.minutes - (input.strictSchedule ? 2 : 0)}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
   const message = JSON.stringify({ request: input, verifiedContext: context });
   const deadline = AbortSignal.any([
-    AbortSignal.timeout(20000),
+    AbortSignal.timeout(22000),
     ...(signal ? [signal] : []),
   ]);
   let result: Plan | undefined,
@@ -144,6 +144,11 @@ export async function generatePlan(
       "Free AI is not configured yet. You can still build a workout manually.",
     );
   for (const route of routes) {
+    // Reserve time for the second free provider when the first route stalls.
+    const attempt = AbortSignal.any([
+      deadline,
+      AbortSignal.timeout(routes.length > 1 ? 10000 : 20000),
+    ]);
     try {
       let text = "";
       if (route === "openrouter") {
@@ -153,7 +158,7 @@ export async function generatePlan(
           {
             method: "POST",
             redirect: "error",
-            signal: deadline,
+            signal: attempt,
             headers: {
               Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
               "Content-Type": "application/json",
@@ -189,7 +194,7 @@ export async function generatePlan(
           {
             method: "POST",
             redirect: "error",
-            signal: deadline,
+            signal: attempt,
             headers: {
               "x-goog-api-key": env.GEMINI_API_KEY!,
               "Content-Type": "application/json",
@@ -235,8 +240,12 @@ export async function generatePlan(
           504,
           "Free AI took too long. Your previous draft is safe. Try again.",
         );
+      if (attempt.aborted) {
+        lastStatus = 504;
+        continue;
+      }
       if (error instanceof PlannerError) {
-        if (error.status === 422 && /site features/.test(error.message)) {
+        if (error.status === 422) {
           lastStatus = 422;
           continue;
         }
@@ -258,11 +267,13 @@ export async function generatePlan(
   if (!result)
     throw new PlannerError(
       lastStatus,
-      lastStatus === 429
-        ? "Free AI has reached its current limit. Your draft is safe. Try later or edit manually."
-        : lastStatus === 422
-          ? "The AI returned an incomplete draft. Your previous draft is safe. Try again."
-          : "Free AI is busy or unavailable. Your previous draft is safe. Try later or edit manually.",
+      lastStatus === 504
+        ? "Free AI took too long. Your previous draft is safe. Try again."
+        : lastStatus === 429
+          ? "Free AI has reached its current limit. Your draft is safe. Try later or edit manually."
+          : lastStatus === 422
+            ? "The AI returned an incomplete draft. Your previous draft is safe. Try again."
+            : "Free AI is busy or unavailable. Your previous draft is safe. Try later or edit manually.",
     );
   const references = context.references.map(({ id, title, url }) => ({
     id,

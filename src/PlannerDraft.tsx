@@ -46,7 +46,7 @@ export function PlannerDraft({
       <div className="assistant-result-heading">
         <div>
           <p className="eyebrow">YOUR DRAFT · REVIEW BEFORE LEADING</p>
-          <h2>{result.workout.title}</h2>
+          <h1>{result.workout.title}</h1>
           <p>{result.workout.summary}</p>
         </div>
         <span>
@@ -108,41 +108,55 @@ export function PlannerDraft({
       </div>
       <SessionTimeline workout={result.workout} />
       <div className="assistant-sections">
-        {result.plan.sections.map((s, i) => (
-          <article className={"draft-section draft-" + s.kind} key={s.kind}>
-            <header>
-              <span>
-                {String(i + 1).padStart(2, "0")} /{" "}
-                {s.kind === "thang" ? "THE THANG" : s.kind.toUpperCase()}
-              </span>
-              <strong>{s.blocks.reduce((n, b) => n + b.minutes, 0)} min</strong>
-            </header>
-            <h3>{s.title}</h3>
-            {s.blocks.map((b, j) => (
-              <div className="assistant-block" key={j}>
-                <h4>
-                  {b.title} <span>~{b.minutes} min</span>
-                </h4>
-                <p className="source-text">{b.instructions}</p>
-                <ul>
-                  {b.exercises.map((e, k) => (
-                    <li key={k}>
-                      <strong>
-                        {e.name}: {e.amount} {e.unit}
-                        {e.sets ? ` × ${e.sets} sets` : ""}
-                      </strong>
-                      <span className="count-label">{e.counting}</span>
-                      <details className="movement-help">
-                        <summary>Movement details</summary>
-                        <p>{e.instructions}</p>
-                      </details>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </article>
-        ))}
+        {result.plan.sections.map((s, i) => {
+          const content = (
+            <article className={"draft-section draft-" + s.kind} key={s.kind}>
+              <header>
+                <span>
+                  {String(i + 1).padStart(2, "0")} /{" "}
+                  {s.kind === "thang" ? "THE THANG" : s.kind.toUpperCase()}
+                </span>
+                <strong>
+                  {s.blocks.reduce((n, b) => n + b.minutes, 0)} min
+                </strong>
+              </header>
+              <h2>{s.title}</h2>
+              {s.blocks.map((b, j) => (
+                <div className="assistant-block" key={j}>
+                  <h3>
+                    {b.title} <span>~{b.minutes} min</span>
+                  </h3>
+                  <p className="source-text">{b.instructions}</p>
+                  <ul>
+                    {b.exercises.map((e, k) => (
+                      <li key={k}>
+                        <strong>
+                          {e.name}: {e.amount} {e.unit}
+                          {e.sets ? ` × ${e.sets} sets` : ""}
+                        </strong>
+                        <span className="count-label">{e.counting}</span>
+                        <details className="movement-help">
+                          <summary>Movement details</summary>
+                          <p>{e.instructions}</p>
+                        </details>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </article>
+          );
+          return s.kind === "thang" ? (
+            content
+          ) : (
+            <details className="supporting-phase" key={s.kind}>
+              <summary>
+                {s.title} · {s.blocks.reduce((n, b) => n + b.minutes, 0)} min
+              </summary>
+              {content}
+            </details>
+          );
+        })}
       </div>
       <details className="assistant-notes">
         <summary>Review notes & modifications</summary>

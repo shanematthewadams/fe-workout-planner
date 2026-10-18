@@ -51,9 +51,23 @@ export function FieldTimer({
   const startMinutes = sessionStart(workout),
     startTime = workout.schedule?.startTime ?? "05:30";
   const today = new Date().toLocaleDateString("en-CA");
-  const [standard, setStandard] = useState(false);
   const key = "fe-field-timer:v1:" + workout.id + ":" + startTime;
+  const [standard, setStandard] = useState(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) ?? "null");
+      return (
+        raw?.standard === true &&
+        raw.date === today &&
+        raw.revision === workout.updatedAt
+      );
+    } catch {
+      return false;
+    }
+  });
   const [timer, setTimer] = useState<TimerState>(() => {
+    // An unknown schedule must never resume into a silently substituted clock.
+    if (!workoutPhases(workout) && !standard)
+      return { elapsed: 0, anchor: null, wall: false, cot: 10 };
     try {
       const raw = JSON.parse(localStorage.getItem(key) ?? "null");
       if (
@@ -140,6 +154,7 @@ export function FieldTimer({
         JSON.stringify({
           ...timer,
           cursor,
+          standard,
           date: today,
           revision: workout.updatedAt,
         }),
@@ -147,7 +162,7 @@ export function FieldTimer({
     } catch {
       setStorageError("Timer recovery unavailable. Keep this screen open.");
     }
-  }, [key, timer, cursor, today, workout.updatedAt]);
+  }, [key, timer, cursor, standard, today, workout.updatedAt]);
   useEffect(() => {
     if (
       timer.anchor !== null &&

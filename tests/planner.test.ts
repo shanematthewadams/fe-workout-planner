@@ -14,7 +14,46 @@ import {
 import { parseBackup } from "../src/model";
 import { isVerifiedFreeGeminiKey } from "../server/provider-policy";
 import { planFixture } from "./fixtures/plan";
+import { fallbackPlan } from "../src/fallback";
 const input = () => plannerRequestSchema.parse({ prompt: GOLD_RUSH_EXAMPLE });
+it("tries the next free provider when the first returns a timing violation", async () => {
+  const request = plannerRequestSchema.parse({
+    prompt: "Bodyweight workout",
+    equipment: "None",
+    strictSchedule: true,
+  });
+  const good = fallbackPlan(request).plan,
+    bad = structuredClone(good);
+  bad.sections[1].blocks[0].minutes = 50;
+  const f = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          candidates: [{ content: { parts: [{ text: JSON.stringify(bad) }] } }],
+        }),
+      ),
+    )
+    .mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          model: "fixture:free",
+          choices: [{ message: { content: JSON.stringify(good) } }],
+        }),
+      ),
+    );
+  const response = await generatePlan(
+    request,
+    {
+      GEMINI_API_KEY: "fixture",
+      GEMINI_FREE_TIER_CONFIRMED: "true",
+      OPENROUTER_API_KEY: "fixture",
+    },
+    f,
+  );
+  expect(response.provider).toBe("OpenRouter");
+  expect(f).toHaveBeenCalledTimes(2);
+});
 const fetchOK = () =>
   vi.fn<typeof fetch>().mockResolvedValue(
     new Response(

@@ -115,7 +115,7 @@ it("retains inferred restrictions through consecutive refinements", async () => 
   fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
   await screen.findByLabelText("Generated workout draft");
   for (const revision of [
-    "Make this partner based",
+    "Make this partner based. Stairs are closed.",
     "Simplify the directions",
   ]) {
     fireEvent.change(screen.getByLabelText("What would you change?"), {
@@ -137,6 +137,9 @@ it("retains inferred restrictions through consecutive refinements", async () => 
     expect(request.running).toBe("None");
     expect(request.equipment).toBe("None");
   }
+  expect(
+    JSON.parse(String(f.mock.calls[2][1]?.body)).site.overrides.stairs,
+  ).toBe("unavailable");
 });
 it("retains an existing draft when a new request returns a server fallback", async () => {
   const response = fallbackPlan(input());
