@@ -382,9 +382,11 @@ test("movement guide exposes requirements and alternatives without card sprawl",
   await page.getByLabel("Search reference", { exact: true }).fill("WW3");
   await page.locator(".movement-entry summary").click();
   await expect(
-    page.getByText("One complete sit-up-and-press sequence is one rep.", {
-      exact: true,
-    }),
+    page
+      .locator(".movement-body p")
+      .filter({
+        hasText: "One complete sit-up-and-press sequence is one rep.",
+      }),
   ).toBeVisible();
   await page
     .getByLabel("Movement requirements", { exact: true })

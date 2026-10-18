@@ -44,6 +44,7 @@ export function MovementGuide({
         <label>
           Movement category
           <select
+            aria-label="Movement category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -56,6 +57,7 @@ export function MovementGuide({
         <label>
           Movement requirements
           <select
+            aria-label="Movement requirements"
             value={requirements}
             onChange={(e) => setRequirements(e.target.value)}
           >

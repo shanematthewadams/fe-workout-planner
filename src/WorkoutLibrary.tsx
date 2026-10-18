@@ -257,6 +257,7 @@ export function WorkoutLibrary({
         <label className="library-sort">
           Sort workouts
           <select
+            aria-label="Sort workouts"
             value={sort}
             onChange={(e) =>
               onPreferences({ ...preferences, sort: e.target.value })
