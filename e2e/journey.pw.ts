@@ -131,12 +131,16 @@ test.describe("deterministic planner client", () => {
     await expect(
       page.getByRole("heading", { name: "Gold Rush Morning", exact: true }),
     ).toBeVisible();
-    if (info.project.name === "desktop")
-      await page.pdf({
+    if (info.project.name === "desktop") {
+      const pdf = await page.pdf({
         path: "qa/q-sheet.pdf",
         format: "Letter",
         printBackground: true,
       });
+      const pages = pdf.toString("latin1").match(/\/Type\s*\/Page\b/g) ?? [];
+      expect(pages.length).toBeGreaterThan(0);
+      expect(pages.length).toBeLessThanOrEqual(2);
+    }
     await page.emulateMedia({ media: "screen" });
     await page.clock.install();
     await page.getByRole("button", { name: "Launch Field Q-Timer" }).click();

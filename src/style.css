@@ -3022,4 +3022,142 @@ footer {
   .site-context-note {
     display: none;
   }
+  @page {
+    margin: 12mm;
+  }
+  body {
+    font:
+      10pt/1.35 Arial,
+      sans-serif;
+  }
+  .detail .page-title {
+    font:
+      700 22pt/1.1 Arial,
+      sans-serif;
+    margin: 0 0 6pt;
+  }
+  .detail-summary {
+    font-size: 10pt;
+    margin-bottom: 8pt;
+  }
+  .detail-meta {
+    margin: 0 0 8pt;
+    padding: 0;
+    gap: 12pt;
+  }
+  .detail-meta span {
+    padding: 0;
+    font-size: 9pt;
+  }
+  .session-timeline {
+    display: block;
+    border: 0;
+    margin: 8pt 0;
+  }
+  .session-timeline > div {
+    display: grid;
+    grid-template-columns: 100pt 1fr 115pt;
+    gap: 8pt;
+    min-height: 0;
+    padding: 3pt 0;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+  }
+  .session-timeline strong {
+    font:
+      700 9pt/1.3 Arial,
+      sans-serif;
+  }
+  .session-timeline small,
+  .session-timeline span {
+    font:
+      8pt/1.3 Arial,
+      sans-serif;
+    margin: 0;
+  }
+  .session-timeline > p {
+    font-size: 9pt;
+    margin: 5pt 0;
+  }
+  .timing-note {
+    border: 0;
+    padding: 4pt 0;
+    margin: 4pt 0;
+    font-size: 8pt;
+    line-height: 1.35;
+  }
+  .timing-note p {
+    margin: 3pt 0;
+  }
+  .workout-section {
+    padding: 8pt 0;
+    margin: 6pt 0;
+  }
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6pt;
+  }
+  .section-heading h2,
+  .section-cot h2 {
+    font:
+      700 14pt/1.2 Arial,
+      sans-serif;
+    margin: 0;
+  }
+  .section-heading .eyebrow {
+    display: none;
+  }
+  .section-time {
+    margin: 0;
+    font-size: 9pt;
+  }
+  .detail .workout-block h3 {
+    font:
+      700 11pt/1.3 Arial,
+      sans-serif;
+    margin: 5pt 0;
+  }
+  .detail .instructions,
+  .detail .exercise p {
+    font:
+      9.5pt/1.35 Arial,
+      sans-serif;
+    margin: 3pt 0;
+  }
+  .exercise {
+    grid-template-columns: minmax(110px, 145px) 1fr;
+    gap: 10px;
+    padding: 5pt 0;
+  }
+  .exercise-count,
+  .q-mode .exercise-count {
+    font:
+      700 11pt/1.3 Arial,
+      sans-serif;
+  }
+  .exercise-count small {
+    font-size: 8pt;
+  }
+  .detail .exercise h4 {
+    font:
+      700 10pt/1.3 Arial,
+      sans-serif;
+    margin: 0;
+  }
+  .provenance {
+    font-size: 8pt;
+    padding: 6pt 0;
+  }
+  .provenance h3 {
+    font:
+      700 11pt/1.3 Arial,
+      sans-serif;
+    margin: 5pt 0;
+  }
+  .provenance p {
+    margin: 4pt 0;
+  }
 }
