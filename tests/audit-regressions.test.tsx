@@ -195,17 +195,19 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   vi.spyOn(window, "confirm").mockReturnValue(true);
   const w = fallbackPlan(input()).workout;
   render(<FieldTimer workout={w} onExit={() => {}} />);
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );
   fireEvent.click(screen.getByRole("button", { name: "Next exercise" }));
   cleanup();
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByText("2 of 4")).toBeVisible();
   expect(screen.getByRole("timer")).toHaveTextContent("34:00");
   fireEvent.click(screen.getByRole("button", { name: "Reset" }));
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );
@@ -213,6 +215,8 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   cleanup();
   vi.setSystemTime(new Date(2026, 9, 18, 5, 20));
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
 });
 it("uses saved block timing and requires consent to use a generic schedule for unknown timing", () => {
@@ -223,19 +227,19 @@ it("uses saved block timing and requires consent to use a generic schedule for u
   expect(phases.at(-1)!.start).toBe(1800);
   expect(phases[0].end).toBe(300);
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("30:00");
   cleanup();
   w.sections[0].blocks[0].minutes = null;
   render(<FieldTimer workout={w} onExit={() => {}} />);
-  expect(
-    screen.getByRole("button", { name: "Start practice timer" }),
-  ).toBeDisabled();
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
+  expect(screen.getByRole("button", { name: "Start timer" })).toBeDisabled();
   fireEvent.click(
     screen.getByRole("button", { name: "Use standard 45-minute timer" }),
   );
-  expect(
-    screen.getByRole("button", { name: "Start practice timer" }),
-  ).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Start timer" })).toBeEnabled();
 });
 it("keeps Mary doses consistent with timed template directions", () => {
   const mary = fallbackPlan(input()).plan.sections[2].blocks[0];

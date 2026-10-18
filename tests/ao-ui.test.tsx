@@ -42,7 +42,9 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   expect(
     screen.getByText(/Steps \/ stairs, Grass \/ turf field/),
   ).toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Launch Field Q-Timer" }));
+  fireEvent.click(screen.getByRole("button", { name: "Lead workout" }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(
     screen.getByRole("button", { name: "Join live 6:30 AM schedule" }),
   ).toBeVisible();

@@ -92,10 +92,10 @@ export function MarkdownImport({ onEdit }: { onEdit: (w: Workout) => void }) {
   return (
     <section className="markdown-import" aria-labelledby="markdown-heading">
       <p className="eyebrow">BRING YOUR OWN WORKOUT</p>
-      <h1 id="markdown-heading">Import a Markdown workout.</h1>
+      <h1 id="markdown-heading">Import a workout.</h1>
       <p>
-        Bring a workout from your chat or a Markdown file. Check it here, then
-        make it yours in the editor.
+        Planned a workout in ChatGPT or Gemini? Use the prompt below to format
+        it, then bring it here to edit, save, print, and lead.
       </p>
       <div className="actions">
         <button onClick={() => void copyPrompt()}>
@@ -118,8 +118,9 @@ export function MarkdownImport({ onEdit }: { onEdit: (w: Workout) => void }) {
         </label>
       </div>
       <p className="muted">
-        Copy the prompt into your chat to format a workout for import. This
-        importer works offline and makes no AI requests.
+        Markdown is plain text with headings and lists. Copy the prompt into
+        your chat, add your workout, then paste its response below or choose a
+        Markdown file. Importing uses no AI credits.
       </p>
       <details className="markdown-format">
         <summary>Chat prompt &amp; format</summary>

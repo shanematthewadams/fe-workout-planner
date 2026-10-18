@@ -526,7 +526,7 @@ export default function App() {
               <summary>More</summary>
               <div className="more-menu">
                 {[
-                  ["markdown", "Import Markdown workout"],
+                  ["markdown", "Import a workout"],
                   ["aos", "AO Directory"],
                   ["exicon", "Exicon & Lexicon"],
                   ["data", "Sync & backups"],
@@ -1297,7 +1297,7 @@ export default function App() {
               setTimerOpen(true);
             }}
           >
-            Launch Field Q-Timer
+            Lead workout
           </button>
           <SessionTimeline workout={selected} />
           {selected.schedule?.siteSummary && (

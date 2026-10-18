@@ -180,7 +180,8 @@ it("can stop a live timer and move through exercises without changing phase time
     }),
   ).workout;
   render(<FieldTimer workout={workout} onExit={() => {}} />);
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );

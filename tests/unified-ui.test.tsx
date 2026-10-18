@@ -32,12 +32,12 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   expect(
     screen.getByRole("heading", { name: "Digging for gold" }),
   ).toBeVisible();
-  fireEvent.click(screen.getByRole("button", { name: "Launch Field Q-Timer" }));
+  fireEvent.click(screen.getByRole("button", { name: "Lead workout" }));
+  expect(screen.queryByRole("timer")).toBeNull();
+  expect(screen.queryByText("Four-count cadence")).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
-  fireEvent.click(
-    screen.getByText("Four-count cadence", { selector: "summary" }),
-  );
-  expect(screen.getByRole("button", { name: "Start cadence" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Enable sounds" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "← Back to plan" }));
   fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
   expect(

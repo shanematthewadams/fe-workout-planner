@@ -1,0 +1,359 @@
+import { useEffect, useRef, useState } from "react";
+import type { Workout } from "./model";
+import {
+  TABATA,
+  intervalElapsed,
+  intervalPhase,
+  intervalSettingsSchema,
+  intervalTotal,
+  timerLabel,
+  type IntervalState,
+} from "./interval-timer";
+import {
+  playCadenceBeep,
+  playCountdownPip,
+  playSectionWhistle,
+} from "./utils/sound";
+import { useWakeLock } from "./useWakeLock";
+
+function restore(key: string, revision: string, date: string) {
+  const fresh: IntervalState = {
+    settings: { ...TABATA },
+    elapsed: 0,
+    anchor: null,
+  };
+  try {
+    const raw = JSON.parse(localStorage.getItem(key) ?? "null");
+    const settings = intervalSettingsSchema.safeParse(raw?.settings);
+    if (
+      raw?.date === date &&
+      raw.revision === revision &&
+      settings.success &&
+      Number.isFinite(raw.elapsed) &&
+      raw.elapsed >= 0 &&
+      (raw.anchor === null ||
+        (Number.isFinite(raw.anchor) &&
+          raw.anchor >= 0 &&
+          raw.anchor <= Date.now()))
+    ) {
+      const state = {
+        settings: settings.data,
+        elapsed: raw.elapsed,
+        anchor: raw.anchor,
+      };
+      return {
+        timer: {
+          ...state,
+          elapsed: intervalElapsed(state, Date.now()),
+          anchor: null,
+        },
+        recovered: intervalElapsed(state, Date.now()) > 0,
+      };
+    }
+  } catch {
+    /* Workout remains readable if recovery is unavailable. */
+  }
+  return { timer: fresh, recovered: false };
+}
+const formValues = (s: IntervalState["settings"]) => ({
+  work: String(s.work),
+  rest: String(s.rest),
+  rounds: String(s.rounds),
+  prepare: String(s.prepare),
+});
+export function IntervalTimer({
+  workout,
+  sound,
+  onRunning,
+}: {
+  workout: Workout;
+  sound: boolean;
+  onRunning: (value: boolean) => void;
+}) {
+  const key = `fe-interval-timer:v1:${workout.id}`;
+  const date = new Date().toLocaleDateString("en-CA");
+  const [initial] = useState(() => restore(key, workout.updatedAt, date));
+  const [timer, setTimer] = useState<IntervalState>(initial.timer);
+  const [values, setValues] = useState(() =>
+    formValues(initial.timer.settings),
+  );
+  const [custom, setCustom] = useState(
+    () =>
+      initial.timer.settings.work !== 20 ||
+      initial.timer.settings.rest !== 10 ||
+      initial.timer.settings.rounds !== 8 ||
+      initial.timer.settings.prepare !== 10,
+  );
+  const [now, setNow] = useState(Date.now);
+  const [error, setError] = useState("");
+  const [storageError, setStorageError] = useState("");
+  const candidate = intervalSettingsSchema.safeParse(
+    Object.fromEntries(
+      Object.entries(values).map(([k, v]) => [
+        k,
+        v.trim() === "" ? NaN : Number(v),
+      ]),
+    ),
+  );
+  const settings =
+    timer.elapsed === 0 && timer.anchor === null && candidate.success
+      ? candidate.data
+      : timer.settings;
+  const elapsed = intervalElapsed(timer, now);
+  const phase = intervalPhase(settings, elapsed);
+  const total = intervalTotal(settings);
+  const running = timer.anchor !== null;
+  const latest = useRef(timer);
+  latest.current = timer;
+  useEffect(() => {
+    const pauseForExit = () => {
+      const current = latest.current;
+      try {
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            ...current,
+            elapsed: intervalElapsed(current, Date.now()),
+            anchor: null,
+            date,
+            revision: workout.updatedAt,
+          }),
+        );
+      } catch {
+        /* Keep the workout usable. */
+      }
+    };
+    window.addEventListener("pagehide", pauseForExit);
+    return () => {
+      window.removeEventListener("pagehide", pauseForExit);
+      pauseForExit();
+    };
+  }, [key, date, workout.updatedAt]);
+  const canEdit = !running && timer.elapsed === 0;
+  const prior = useRef({ key: phase.key, seconds: Math.ceil(phase.remaining) });
+  useWakeLock(running);
+  useEffect(() => {
+    onRunning(running);
+  }, [running, onRunning]);
+  useEffect(() => () => onRunning(false), [onRunning]);
+  useEffect(() => {
+    if (!running) return;
+    const tick = () => setNow(Date.now());
+    const visible = () => {
+      const current = intervalPhase(
+        timer.settings,
+        intervalElapsed(timer, Date.now()),
+      );
+      prior.current = {
+        key: current.key,
+        seconds: Math.ceil(current.remaining),
+      };
+      tick();
+    };
+    const id = setInterval(tick, 100);
+    window.addEventListener("focus", visible);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("focus", visible);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [running, timer]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({ ...timer, date, revision: workout.updatedAt }),
+      );
+    } catch {
+      setStorageError(
+        "Interval recovery is unavailable. Keep this screen open.",
+      );
+    }
+  }, [key, timer, date, workout.updatedAt]);
+  useEffect(() => {
+    const seconds = Math.ceil(phase.remaining);
+    if (running && sound && document.visibilityState === "visible") {
+      if (prior.current.key !== phase.key) {
+        if (phase.stage === "Complete") playSectionWhistle();
+        else if (phase.stage === "Work") playCountdownPip(true);
+        else if (phase.stage === "Rest") playCadenceBeep(440, 0.25);
+      } else if (
+        seconds >= 1 &&
+        seconds <= 3 &&
+        prior.current.seconds > seconds
+      )
+        playCountdownPip();
+    }
+    prior.current = { key: phase.key, seconds };
+    if (elapsed >= total && running)
+      setTimer((t) => ({ ...t, elapsed: total, anchor: null }));
+  }, [phase.key, phase.stage, phase.remaining, elapsed, total, running, sound]);
+  function start() {
+    if (!candidate.success && timer.elapsed === 0) {
+      setError(
+        "Set work to 1–300 seconds, rest to 0–300, rounds to 1–100, and get ready to 0–60. Keep the set to 60 minutes or less.",
+      );
+      return;
+    }
+    setError("");
+    const timestamp = Date.now();
+    setNow(timestamp);
+    if (sound) playCadenceBeep();
+    setTimer((t) => ({
+      ...t,
+      settings:
+        t.elapsed === 0 && candidate.success ? candidate.data : t.settings,
+      anchor: timestamp,
+    }));
+  }
+  return (
+    <section
+      className={`interval-clock interval-${phase.stage.toLowerCase().replace(" ", "-")}`}
+      aria-label="Interval timer"
+    >
+      <div className="interval-setup">
+        <label>
+          Interval style
+          <select
+            aria-label="Interval style"
+            disabled={!canEdit}
+            value={custom ? "custom" : "tabata"}
+            onChange={(e) => {
+              const next = e.target.value === "custom";
+              setCustom(next);
+              setError("");
+              if (!next) {
+                setValues(formValues(TABATA));
+                setTimer({ settings: { ...TABATA }, elapsed: 0, anchor: null });
+              }
+            }}
+          >
+            <option value="tabata">Tabata · 20s work / 10s rest × 8</option>
+            <option value="custom">Custom intervals</option>
+          </select>
+        </label>
+        {custom && (
+          <div className="interval-fields">
+            {(
+              [
+                ["work", "Work (seconds)", 1, 300],
+                ["rest", "Rest (seconds)", 0, 300],
+                ["rounds", "Rounds", 1, 100],
+                ["prepare", "Get ready (seconds)", 0, 60],
+              ] as const
+            ).map(([k, label, min, max]) => (
+              <label key={k}>
+                {label}
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={min}
+                  max={max}
+                  step={1}
+                  disabled={!canEdit}
+                  value={values[k]}
+                  onChange={(e) => {
+                    setValues({ ...values, [k]: e.target.value });
+                    setError("");
+                  }}
+                />
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+      <p className="interval-summary">
+        {settings.rounds} rounds · {settings.work}s work / {settings.rest}s rest
+        · {timerLabel((settings.work + settings.rest) * settings.rounds)} +{" "}
+        {settings.prepare}s get ready
+      </p>
+      <h2 className="timer-stage" aria-live="polite">
+        {phase.stage}
+      </h2>
+      <div
+        className="field-clock"
+        role="timer"
+        aria-label="Interval time remaining"
+      >
+        {timerLabel(phase.remaining)}
+      </div>
+      <p className="interval-round">
+        {phase.stage === "Get ready"
+          ? "First round up next"
+          : `Round ${phase.round} of ${settings.rounds}`}
+        {!running && timer.elapsed > 0 && phase.stage !== "Complete"
+          ? " · Paused"
+          : ""}
+      </p>
+      <progress
+        aria-label="Interval set progress"
+        value={elapsed}
+        max={total}
+      />
+      <div className="actions">
+        {running ? (
+          <button
+            className="create"
+            onClick={() => {
+              const timestamp = Date.now();
+              setNow(timestamp);
+              setTimer((t) => ({
+                ...t,
+                elapsed: intervalElapsed(t, timestamp),
+                anchor: null,
+              }));
+            }}
+          >
+            Pause intervals
+          </button>
+        ) : (
+          <button
+            className="create"
+            disabled={phase.stage === "Complete"}
+            onClick={start}
+          >
+            {timer.elapsed > 0 ? "Resume intervals" : "Start intervals"}
+          </button>
+        )}
+        <button
+          onClick={() => {
+            if (timer.elapsed > 0 || running) {
+              if (!confirm("Reset this interval set?")) return;
+            }
+            setNow(Date.now());
+            setTimer((t) => ({ ...t, elapsed: 0, anchor: null }));
+            prior.current = { key: "prepare", seconds: timer.settings.prepare };
+            setError("");
+          }}
+        >
+          Reset intervals
+        </button>
+      </div>
+      {phase.stage === "Complete" && (
+        <p role="status">Set complete. Reset to go again.</p>
+      )}
+      {initial.recovered &&
+        timer.elapsed > 0 &&
+        !running &&
+        phase.stage !== "Complete" && (
+          <p className="muted">
+            Recovered a paused interval set. Resume when you’re ready.
+          </p>
+        )}
+      {!canEdit && (
+        <p className="muted">Reset the set to change its intervals.</p>
+      )}
+      <p className="muted">
+        An interval set has its own clock and does not change your workout
+        schedule. The last round includes its rest period.
+      </p>
+      {error && (
+        <p role="alert" className="assistant-error">
+          {error}
+        </p>
+      )}
+      {storageError && <p role="alert">{storageError}</p>}
+    </section>
+  );
+}

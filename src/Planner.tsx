@@ -559,9 +559,12 @@ export function Planner({
             </div>
             {onImport && (
               <p className="import-entry">
-                Already have a workout?{" "}
+                <strong>
+                  Already planned your workout in ChatGPT or Gemini?
+                </strong>
+                <span>Bring it here to edit, save, print, and lead.</span>
                 <button type="button" onClick={onImport}>
-                  Import Markdown
+                  Import a workout
                 </button>
               </p>
             )}

@@ -2437,14 +2437,23 @@ summary {
 }
 .import-entry {
   color: var(--muted);
-  font-size: 0.8rem;
-  margin: 12px 0;
+  font-size: 0.82rem;
+  margin: 22px 0;
+  line-height: 1.6;
+}
+.import-entry strong,
+.import-entry span {
+  display: block;
+}
+.import-entry strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 .import-entry button {
   background: transparent;
   border: 0;
   color: var(--gold);
-  padding: 6px;
+  padding: 6px 0;
   min-height: 44px;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -3219,4 +3228,21 @@ footer {
   .provenance p {
     margin: 4pt 0;
   }
+}
+
+.assistant-intro h1,
+.workout-library .library-head h2,
+.discovery > h2,
+.discovery-header-row h2,
+.editor > .page-title,
+.markdown-import h1 {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+}
+.section-heading h2,
+.assistant-sections h2,
+.supporting-phase > summary {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }

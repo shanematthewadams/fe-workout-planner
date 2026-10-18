@@ -90,7 +90,7 @@ export function PlannerDraft({
             type="button"
             onClick={() => onLead(structuredClone(result.workout))}
           >
-            Launch Field Q-Timer
+            Lead workout
           </button>
         )}
         <button

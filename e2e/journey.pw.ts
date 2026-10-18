@@ -2,6 +2,97 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
 const pictures = "qa/screenshots";
+test("Lead starts simply and runs optional Tabata intervals with sound cues", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() => {
+    const target = window as typeof window & { __leadToneStarts?: number };
+    target.__leadToneStarts = 0;
+    const original = AudioContext.prototype.createOscillator;
+    AudioContext.prototype.createOscillator = function () {
+      const oscillator = original.call(this);
+      const start = oscillator.start.bind(oscillator);
+      oscillator.start = (when?: number) => {
+        target.__leadToneStarts!++;
+        start(when);
+      };
+      return oscillator;
+    };
+  });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await expect(page.getByRole("timer")).toHaveCount(0);
+  await expect(
+    page.getByText("Four-count cadence", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByLabel("Workout to lead", { exact: true }),
+  ).toBeVisible();
+  await page.clock.install();
+  await page.getByRole("button", { name: "Intervals", exact: true }).click();
+  await expect(page.getByRole("timer")).toHaveText("00:10");
+  await expect(
+    page.getByRole("combobox", { name: "Interval style", exact: true }),
+  ).toHaveValue("tabata");
+  await page
+    .getByRole("button", { name: "Enable sounds", exact: true })
+    .click();
+  const tones = () =>
+    page.evaluate(
+      () =>
+        (window as typeof window & { __leadToneStarts: number })
+          .__leadToneStarts,
+    );
+  expect(await tones()).toBeGreaterThan(0);
+  await page
+    .getByRole("button", { name: "Start intervals", exact: true })
+    .click();
+  await page.clock.fastForward(10000);
+  await expect(
+    page.getByRole("heading", { name: "Work", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("timer")).toHaveText("00:20");
+  expect(await tones()).toBeGreaterThan(1);
+  await page.clock.fastForward(20000);
+  await expect(
+    page.getByRole("heading", { name: "Rest", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("timer")).toHaveText("00:10");
+  await page
+    .getByRole("button", { name: "Pause intervals", exact: true })
+    .click();
+  const before = await tones();
+  await page.clock.fastForward(60000);
+  await expect(page.getByRole("timer")).toHaveText("00:10");
+  expect(await tones()).toBe(before);
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: `${pictures}/${info.project.name}-tabata.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Resume intervals", exact: true })
+    .click();
+  await page.clock.fastForward(220000);
+  await expect(
+    page.getByRole("heading", { name: "Complete", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("timer")).toHaveText("00:00");
+});
 test("Markdown file review, correction and personal save", async ({
   page,
 }, info) => {
@@ -15,7 +106,8 @@ test("Markdown file review, correction and personal save", async ({
   expect(rollBox!.x).toBeGreaterThan(promptBox!.x + promptBox!.width);
   expect(Math.abs(rollBox!.y - promptBox!.y)).toBeLessThan(3);
   await page
-    .getByRole("button", { name: "Import Markdown", exact: true })
+    .getByRole("main")
+    .getByRole("button", { name: "Import a workout", exact: true })
     .click();
   await page.getByLabel("Choose Markdown file", { exact: true }).setInputFiles({
     name: "workout.md",
@@ -316,10 +408,12 @@ test.describe("deterministic planner client", () => {
     await page.emulateMedia({ media: "screen" });
     await page.getByLabel("Print only The Thang", { exact: true }).uncheck();
     await page.clock.install();
-    await page.getByRole("button", { name: "Launch Field Q-Timer" }).click();
+    await page.getByRole("button", { name: "Lead workout" }).click();
+    await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .click();
     await expect(page.getByRole("timer")).toHaveText("45:00");
-    await page.getByRole("button", { name: "Mute audio" }).click();
-    await page.getByRole("button", { name: "Start practice timer" }).click();
+    await page.getByRole("button", { name: "Start timer" }).click();
     await page.clock.fastForward(1000);
     await expect(page.getByRole("timer")).not.toHaveText("45:00");
     await page.getByRole("button", { name: "Pause", exact: true }).click();
@@ -338,7 +432,10 @@ test.describe("deterministic planner client", () => {
       .getByRole("button", { name: "← Back to plan", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Launch Field Q-Timer", exact: true })
+      .getByRole("button", { name: "Lead workout", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Session timer", exact: true })
       .click();
     await expect(page.getByText("2 of 4", { exact: true })).toBeVisible();
     await page.screenshot({

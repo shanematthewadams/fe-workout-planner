@@ -363,3 +363,153 @@
     padding: 16px;
   }
 }
+
+/* Lead mode: readable workout first; optional clocks stay focused on the next cue. */
+.lead-view {
+  max-width: 850px;
+}
+.lead-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+.field-timer .lead-workout-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.lead-timer-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+.lead-timer-options button {
+  flex: 1 1 120px;
+}
+.lead-timer-options button[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--charcoal);
+  border-color: var(--gold);
+}
+.lead-view .muted,
+.timer-audio-note {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.lead-plan-panel {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.lead-plan-panel > summary {
+  font-weight: 700;
+}
+.lead-workout details {
+  border-top: 1px solid var(--line);
+  padding: 8px 0;
+}
+.lead-workout details > summary {
+  font:
+    700 1.5rem "Big Shoulders Display",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.lead-workout article {
+  padding: 8px 0;
+}
+.lead-workout h3 {
+  font-size: 1.4rem;
+  margin: 12px 0;
+}
+.lead-workout ul {
+  list-style: none;
+  padding: 0;
+}
+.lead-workout li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.lead-workout li strong {
+  font-size: 1.1rem;
+}
+.lead-workout li p {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+}
+.lead-view .timer-stage {
+  text-transform: uppercase;
+  font:
+    800 clamp(2rem, 6vw, 3rem)/1.1 "Big Shoulders Display",
+    sans-serif;
+  letter-spacing: 0.04em;
+  margin: 24px 0 8px;
+}
+.lead-view .field-clock {
+  font-size: clamp(5.5rem, 21vw, 9rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+}
+.interval-setup {
+  margin: 24px 0 12px;
+}
+.field-timer .interval-setup label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.interval-setup select,
+.interval-setup input {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+.interval-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.interval-summary {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.interval-round {
+  font-weight: 600;
+  margin: 8px 0 24px;
+}
+.interval-rest .timer-stage {
+  color: var(--ink);
+}
+.interval-work .timer-stage {
+  color: var(--gold);
+}
+.interval-complete .timer-stage {
+  color: var(--gold);
+}
+.lead-view .actions {
+  margin: 20px 0;
+}
+.lead-view progress {
+  margin: 16px 0 8px;
+}
+@media (max-width: 600px) {
+  .lead-view .lead-workout-title {
+    font-size: 2.1rem;
+  }
+  .lead-timer-options {
+    gap: 6px;
+  }
+  .lead-timer-options button {
+    flex: 1 1 0;
+    padding: 8px;
+    font-size: 0.82rem;
+    min-width: 0;
+  }
+  .lead-view .field-clock {
+    font-size: 6rem;
+  }
+}
