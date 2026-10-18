@@ -2,6 +2,53 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
 const pictures = "qa/screenshots";
+test("workout details recover and shape a weather-aware offline draft", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".header")).not.toContainText(
+    "Created by Rug Burn",
+  );
+  await expect(
+    page.getByRole("button", { name: "Try the Gold Rush idea", exact: true }),
+  ).toHaveCount(0);
+  await page.locator(".workout-details > summary").click();
+  await page.getByLabel("PAX count", { exact: true }).fill("11");
+  await page
+    .getByLabel("Work together", { exact: true })
+    .selectOption("Partners");
+  await page.getByLabel("Fitness focus", { exact: true }).selectOption("Core");
+  await page
+    .getByLabel("How much running", { exact: true })
+    .selectOption("None");
+  await page.getByLabel("Workout date", { exact: true }).fill("2026-12-21");
+  await page.getByLabel("Expected light", { exact: true }).selectOption("Dark");
+  await page.getByLabel("Rain", { exact: true }).check();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  await page.reload();
+  await page.locator(".workout-details > summary").click();
+  await expect(page.getByLabel("PAX count", { exact: true })).toHaveValue("11");
+  await expect(page.getByLabel("Fitness focus", { exact: true })).toHaveValue(
+    "Core",
+  );
+  await expect(page.getByLabel("Rain", { exact: true })).toBeChecked();
+  await expect(page.getByLabel("Expected light", { exact: true })).toHaveValue(
+    "Dark",
+  );
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await expect(
+    page.getByLabel("Generated workout draft", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("main")).toContainText("Standing knee drives");
+});
 test("staging protects live sync and labels the test environment", async ({
   page,
 }) => {
@@ -382,11 +429,9 @@ test("movement guide exposes requirements and alternatives without card sprawl",
   await page.getByLabel("Search reference", { exact: true }).fill("WW3");
   await page.locator(".movement-entry summary").click();
   await expect(
-    page
-      .locator(".movement-body p")
-      .filter({
-        hasText: "One complete sit-up-and-press sequence is one rep.",
-      }),
+    page.locator(".movement-body p").filter({
+      hasText: "One complete sit-up-and-press sequence is one rep.",
+    }),
   ).toBeVisible();
   await page
     .getByLabel("Movement requirements", { exact: true })

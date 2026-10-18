@@ -33,6 +33,21 @@ export { resolveRequest } from "../src/planner-contract.ts";
 export function validatePlan(value: unknown, input: PlannerRequest) {
   const p = planSchema.parse(value),
     kinds = p.sections.map((s) => s.kind);
+  if (
+    (input.planning?.pax === 1 || input.planning?.grouping === "Individual") &&
+    (p.format === "Partner" ||
+      p.sections.some((s) =>
+        s.blocks.some((b) =>
+          /\b(?:pair up|partner [ab]|your partner|partners? alternate|swap partners?)\b/i.test(
+            b.instructions,
+          ),
+        ),
+      ))
+  )
+    throw new PlannerError(
+      422,
+      "The draft requires a partner despite your individual-work setup.",
+    );
   if (kinds.join(",") !== (input.mary ? "warmup,thang,mary" : "warmup,thang"))
     throw new PlannerError(
       422,
@@ -114,6 +129,7 @@ export async function generatePlan(
     context = contextFor(input);
   const system =
     F3_BRIEF +
+    "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions; for rain or snow/ice prefer controlled standing work rather than ground contact, jumping or fast changes of direction. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
     "\nReturn ONLY JSON matching this shape (example exercises are not a required plan): " +
     JSON.stringify(OUTPUT_SHAPE) +
     "\nUse ONLY these case-sensitive enums: running None|Light|Moderate; format Circuit|11s|EMOM|AMRAP|Ladder|Partner|Stations|Chipper|Custom; exercise unit reps|seconds|minutes|meters|rounds|instructions; counting total|1=1|2=1|per side|cadence|time|distance|not applicable. amount MUST be a string. No extra top-level fields. " +

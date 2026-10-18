@@ -22,16 +22,14 @@ async function responseFixture() {
   return generatePlan(
     { prompt: GOLD_RUSH_EXAMPLE },
     { OPENROUTER_API_KEY: "fixture" },
-    vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        new Response(
-          JSON.stringify({
-            model: "fixture:free",
-            choices: [{ message: { content: JSON.stringify(planFixture) } }],
-          }),
-        ),
+    vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          model: "fixture:free",
+          choices: [{ message: { content: JSON.stringify(planFixture) } }],
+        }),
       ),
+    ),
   );
 }
 it("creates, refines without losing the last good draft, saves and previews private work", async () => {
@@ -56,9 +54,9 @@ it("creates, refines without losing the last good draft, saves and previews priv
       onReference={() => {}}
     />,
   );
-  fireEvent.click(
-    screen.getByRole("button", { name: "Try the Gold Rush idea" }),
-  );
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: { value: GOLD_RUSH_EXAMPLE },
+  });
   fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
   expect(
     await screen.findByRole("heading", { name: "Stake Your Claim" }),
@@ -110,9 +108,9 @@ it("ignores a cancelled stale response and does not persist it over a later sess
       onReference={() => {}}
     />,
   );
-  fireEvent.click(
-    screen.getByRole("button", { name: "Try the Gold Rush idea" }),
-  );
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: { value: GOLD_RUSH_EXAMPLE },
+  });
   fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
   fireEvent.click(screen.getByRole("button", { name: "Cancel generation" }));
   resolve(new Response(JSON.stringify(result)));

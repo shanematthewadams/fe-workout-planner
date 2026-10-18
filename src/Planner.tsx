@@ -7,13 +7,14 @@ import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
 import {
-  GOLD_RUSH_EXAMPLE,
   plannerRequestSchema,
   resolveRequest,
   plannerResponseSchema,
 } from "./planner-contract";
 import { restorePlannerSession, SESSION_KEY } from "./planner-session";
 import { PlannerDraft } from "./PlannerDraft";
+import { WorkoutDetails } from "./WorkoutDetails";
+import { planningDetailsSchema, refinePlanning } from "./planning-details";
 export function Planner({
   onEdit,
   onPreview,
@@ -55,14 +56,26 @@ export function Planner({
   );
   const [lastRequest, setLastRequest] = useState(initial.request);
   const [mode, setMode] = useState<"idea" | "formal">(initial.mode);
-  const [focus, setFocus] = useState(initial.builder.focus),
+  const [conditions, setConditions] = useState(
+    planningDetailsSchema.parse(initial.preferences.planning ?? {}),
+  );
+  const [focus, setFocus] = useState(
+      initial.preferences.planning?.focus ??
+        (initial.builder.focus === "Legs"
+          ? "Lower body"
+          : initial.builder.focus),
+    ),
     [style, setStyle] = useState<(typeof STYLES)[number]>(
       initial.builder.style,
     ),
     [gear, setGear] = useState<string[]>(initial.builder.gear),
-    [pax, setPax] = useState(initial.builder.pax),
+    [pax, setPax] = useState<number | undefined>(
+      initial.preferences.planning?.pax ??
+        (initial.mode === "formal" ? initial.builder.pax : undefined),
+    ),
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);
+  const planning = { ...conditions, focus, pax };
   const formal = {
     title,
     qName,
@@ -70,7 +83,7 @@ export function Planner({
     style,
     gear: gear as NonNullable<PlannerRequest["builder"]>["gear"],
     terrain: "Use confirmed AO features and today's overrides only",
-    pax,
+    pax: pax ?? 12,
   };
   function surprise() {
     const pick = <T,>(values: readonly T[]) =>
@@ -117,6 +130,7 @@ export function Planner({
       mary,
       provider,
       strictSchedule: true,
+      planning,
       builder: {
         ...formal,
         style: chosen,
@@ -170,6 +184,7 @@ export function Planner({
             provider,
             startTime,
             site,
+            planning,
           },
         }),
       );
@@ -199,6 +214,7 @@ export function Planner({
     style,
     gear,
     pax,
+    conditions,
   ]);
   async function ask(refine: boolean, override?: unknown) {
     const request = plannerRequestSchema.safeParse(
@@ -206,7 +222,7 @@ export function Planner({
         prompt: refine
           ? revision
           : mode === "formal"
-            ? `Build ${style}. Focus: ${focus}. PAX: ${pax}. ${prompt}`
+            ? `Build ${style}. Focus: ${focus}. PAX: ${pax ?? "Q to confirm"}. ${prompt}`
             : prompt,
         ao,
         startTime,
@@ -228,6 +244,9 @@ export function Planner({
         mary,
         provider,
         strictSchedule: true,
+        planning: refine
+          ? refinePlanning(lastRequest?.planning ?? planning, revision)
+          : planning,
         ...(mode === "formal" ? { builder: formal } : {}),
         ...(refine && result ? { current: result.plan } : {}),
       },
@@ -292,6 +311,11 @@ export function Planner({
       setResult(next);
       setView("review");
       setLastRequest(resolved);
+      if (resolved.planning) {
+        setConditions(resolved.planning);
+        setFocus(resolved.planning.focus);
+        setPax(resolved.planning.pax);
+      }
       setSite(
         retainQContext(
           resolved.ao,
@@ -391,25 +415,6 @@ export function Planner({
                     />
                   </label>
                   <label>
-                    Fitness focus
-                    <select
-                      value={focus}
-                      onChange={(e) => setFocus(e.target.value)}
-                    >
-                      {[
-                        "Full body",
-                        "Upper body",
-                        "Legs",
-                        "Core",
-                        "Cardio endurance",
-                        "Ruck strength",
-                        "HIIT",
-                      ].map((x) => (
-                        <option key={x}>{x}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
                     F3 style
                     <select
                       value={style}
@@ -419,16 +424,6 @@ export function Planner({
                         <option key={x}>{x}</option>
                       ))}
                     </select>
-                  </label>
-                  <label>
-                    PAX count
-                    <input
-                      type="number"
-                      min={1}
-                      max={200}
-                      value={pax}
-                      onChange={(e) => setPax(Number(e.target.value))}
-                    />
                   </label>
                 </div>
                 <p>
@@ -467,19 +462,11 @@ export function Planner({
                 placeholder={
                   mode === "formal"
                     ? "Any specific exercises, theme, or special instructions..."
-                    : GOLD_RUSH_EXAMPLE
+                    : "A partner workout with coupons, less running, and a focus on upper body…"
                 }
               />
             </label>
             <div className="prompt-inspiration-bar">
-              <button
-                type="button"
-                className="example-prompt"
-                disabled={busy}
-                onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
-              >
-                Try the Gold Rush idea
-              </button>
               <button type="button" disabled={busy} onClick={surprise}>
                 Surprise Me!
               </button>
@@ -517,6 +504,7 @@ export function Planner({
                       running,
                       mary,
                       strictSchedule: true,
+                      planning,
                       ...(mode === "formal" ? { builder: formal } : {}),
                     });
                     if (!request.success) {
@@ -570,6 +558,17 @@ export function Planner({
               />
             </div>
 
+            <WorkoutDetails
+              value={planning}
+              running={running}
+              busy={busy}
+              onRunning={setRunning}
+              onChange={(next) => {
+                setConditions(next);
+                setFocus(next.focus);
+                setPax(next.pax);
+              }}
+            />
             <details className="assistant-preferences">
               <summary>
                 Session preferences <span>45-minute FE schedule</span>
@@ -598,20 +597,6 @@ export function Planner({
                     ))}
                   </select>
                 </label>
-                <label>
-                  Planner running
-                  <select
-                    value={running}
-                    disabled={busy}
-                    onChange={(e) =>
-                      setRunning(e.target.value as PlannerRequest["running"])
-                    }
-                  >
-                    {["From prompt", "None", "Light", "Moderate"].map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </label>
                 <label className="checkbox">
                   <input
                     type="checkbox"
@@ -624,9 +609,9 @@ export function Planner({
               </div>
             </details>
             <p className="assistant-privacy">
-              Your idea, site details and current draft go to our free AI
-              providers. Other saved workouts are not sent. Offline templates
-              work without AI.
+              Your idea, workout details, site details and current draft go to
+              our free AI providers. Other saved workouts are not sent. Offline
+              templates work without AI.
             </p>
           </div>
         </form>

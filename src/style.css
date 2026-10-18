@@ -1447,13 +1447,6 @@ fieldset,
 .assistant button {
   white-space: normal;
 }
-.assistant .example-prompt {
-  border: 0;
-  background: transparent;
-  text-decoration: underline;
-  padding: 0.6rem 0;
-  font-size: 0.8rem;
-}
 .assistant-preferences {
   border-bottom: 1px solid #e1e4e7;
 }
@@ -2234,10 +2227,6 @@ textarea,
   gap: 24px;
   align-items: center;
 }
-.rug-burn-tag {
-  font-size: 0.72rem;
-  opacity: 0.8;
-}
 .region {
   font-size: 0.65rem;
   letter-spacing: 0.1em;
@@ -2395,8 +2384,7 @@ summary {
   flex-wrap: wrap;
   margin: 12px 0 20px;
 }
-.prompt-inspiration-bar button,
-.assistant .example-prompt {
+.prompt-inspiration-bar button {
   padding: 6px 0;
   border: 0;
   background: transparent;
@@ -2404,9 +2392,6 @@ summary {
   font-size: 0.83rem;
   text-decoration: underline;
   text-underline-offset: 4px;
-}
-.prompt-inspiration-bar button + button {
-  margin-left: auto;
 }
 .assistant-actions {
   display: flex;
@@ -2794,9 +2779,6 @@ footer {
   }
   .brand {
     font-size: 26px;
-  }
-  .rug-burn-tag {
-    font-size: 0.65rem;
   }
   .app-nav {
     padding: 0 20px;

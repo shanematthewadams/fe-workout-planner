@@ -1,4 +1,30 @@
 /* Scoped playbook/field-guide styles. Avoid another global card override layer. */
+.workout-details > fieldset {
+  margin: 16px 0 0;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.workout-details > fieldset > legend {
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.workout-details .expected-weather {
+  margin: 20px 0 0;
+  border: 0;
+  padding: 0;
+}
+.workout-details .expected-weather legend {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.workout-details .expected-weather .checkbox {
+  min-height: 44px;
+}
+.workout-details .muted {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
 .staging-notice {
   display: flex;
   flex-wrap: wrap;

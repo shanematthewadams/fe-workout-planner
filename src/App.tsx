@@ -507,7 +507,6 @@ export default function App() {
               </span>
             </button>
             <div className="header-meta">
-              <span className="rug-burn-tag">Created by Rug Burn</span>
               <span className="region">
                 F3 THE FE <span> / </span> OLATHE, KS
               </span>
