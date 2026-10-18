@@ -142,6 +142,26 @@ test.describe("deterministic planner client", () => {
       expect(pages.length).toBeLessThanOrEqual(2);
     }
     await page.emulateMedia({ media: "screen" });
+    await page.getByLabel("Print only The Thang", { exact: true }).check();
+    await page.emulateMedia({ media: "print" });
+    await expect(
+      page.getByRole("heading", { name: "Warm-o-Rama / COP", exact: true }),
+    ).toBeHidden();
+    await expect(
+      page.getByRole("heading", { name: /Fellowship & trust/ }),
+    ).toBeHidden();
+    if (info.project.name === "desktop") {
+      const pdf = await page.pdf({
+        path: "qa/q-sheet-thang.pdf",
+        format: "Letter",
+        printBackground: true,
+      });
+      expect(
+        (pdf.toString("latin1").match(/\/Type\s*\/Page\b/g) ?? []).length,
+      ).toBe(1);
+    }
+    await page.emulateMedia({ media: "screen" });
+    await page.getByLabel("Print only The Thang", { exact: true }).uncheck();
     await page.clock.install();
     await page.getByRole("button", { name: "Launch Field Q-Timer" }).click();
     await expect(page.getByRole("timer")).toHaveText("45:00");
