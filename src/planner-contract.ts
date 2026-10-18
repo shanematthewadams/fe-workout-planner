@@ -142,6 +142,15 @@ export function resolveRequest(raw: unknown) {
     )
   )
     input.running = "None";
+  else if (
+    input.running === "From prompt" &&
+    /\b(?:add|include|allow|with)\s+(?:(?:some|light|moderate)\s+)?running\b/i.test(
+      input.prompt,
+    )
+  )
+    input.running = /\bmoderate\s+running\b/i.test(input.prompt)
+      ? "Moderate"
+      : "Light";
   if (
     input.equipment === "From prompt" &&
     /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:any\s+)?(?:coupons?|cinder blocks?|equipment)\b/i.test(

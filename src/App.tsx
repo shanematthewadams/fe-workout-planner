@@ -498,7 +498,7 @@ export default function App() {
             <button
               className="brand"
               onClick={() => go("builder")}
-              aria-label="F3 THE FE WORKOUT PLANNER home"
+              title="Home"
             >
               <span>
                 F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>

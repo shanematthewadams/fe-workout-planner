@@ -61,6 +61,24 @@ it("accepts bodyweight instructions that explicitly exclude running and gear", (
     "No running. Without equipment. Use a running clock and rotate in place.";
   expect(() => validatePlan(plan, request)).not.toThrow();
 });
+it("recognizes deliberate running changes without treating less running as permission", () => {
+  expect(
+    resolveRequest({ prompt: "Add light running", running: "From prompt" })
+      .running,
+  ).toBe("Light");
+  expect(
+    resolveRequest({
+      prompt: "Include moderate running",
+      running: "From prompt",
+    }).running,
+  ).toBe("Moderate");
+  expect(
+    resolveRequest({
+      prompt: "Less running, keep everything else",
+      running: "From prompt",
+    }).running,
+  ).toBe("From prompt");
+});
 it.each([true, false])(
   "keeps closures regardless of conflicting statement order (%s)",
   (reverse) => {
