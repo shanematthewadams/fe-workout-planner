@@ -6,6 +6,7 @@ import {
   clockLabel,
   sessionStart,
 } from "./session";
+import { cancelTimerVoice } from "./utils/timer-voice";
 import { playCadenceBeep, playSectionWhistle } from "./utils/sound";
 import { useWakeLock } from "./useWakeLock";
 type TimerState = {
@@ -45,10 +46,12 @@ export function liveTimer(
 export function SessionTimer({
   workout,
   sound,
+  voice,
   onRunning,
 }: {
   workout: Workout;
   sound: boolean;
+  voice?: (text: string) => void;
   onRunning: (running: boolean) => void;
 }) {
   const startMinutes = sessionStart(workout),
@@ -165,11 +168,22 @@ export function SessionTimer({
   useEffect(() => {
     if (
       timer.anchor !== null &&
-      sound &&
+      (sound || voice) &&
       document.visibilityState === "visible" &&
       phases.some((p) => previous.current < p.end && elapsed >= p.end)
-    )
-      playSectionWhistle();
+    ) {
+      if (
+        voice &&
+        phases.some(
+          (p) =>
+            previous.current < p.end &&
+            elapsed >= p.end &&
+            elapsed - p.end <= 0.5,
+        )
+      )
+        voice(elapsed >= total ? "Session complete" : "Next section");
+      else if (sound) playSectionWhistle();
+    }
     previous.current = elapsed;
     if (elapsed >= total && timer.anchor !== null)
       setTimer({ ...timer, elapsed: total, anchor: null });
@@ -180,11 +194,14 @@ export function SessionTimer({
   }, [timer.anchor, onRunning]);
   useEffect(() => () => onRunning(false), [onRunning]);
   const update = (next: TimerState) => {
+    if (next.anchor === null) cancelTimerVoice();
     setNow(Date.now());
     setTimer(next);
   };
   function start(wall: boolean) {
-    if (sound) playCadenceBeep();
+    cancelTimerVoice();
+    if (voice) voice("Timer started");
+    else if (sound) playCadenceBeep();
     const current = Date.now();
     update(
       wall

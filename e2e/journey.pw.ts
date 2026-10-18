@@ -38,8 +38,8 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
     page.getByRole("combobox", { name: "Interval style", exact: true }),
   ).toHaveValue("tabata");
   await page
-    .getByRole("button", { name: "Enable sounds", exact: true })
-    .click();
+    .getByRole("combobox", { name: "Timer sound", exact: true })
+    .selectOption("beeps");
   const tones = () =>
     page.evaluate(
       () =>

@@ -37,7 +37,7 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   expect(screen.queryByText("Four-count cadence")).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
-  expect(screen.getByRole("button", { name: "Enable sounds" })).toBeVisible();
+  expect(screen.getByRole("combobox", { name: "Timer sound" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "← Back to plan" }));
   fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
   expect(

@@ -155,7 +155,9 @@ it("opens a readable workout with no clock or cadence trainer", () => {
 });
 it("keeps sounds opt-in, cues the final countdown and transitions, then stops at completion", () => {
   launch();
-  fireEvent.click(screen.getByRole("button", { name: "Enable sounds" }));
+  fireEvent.change(screen.getByRole("combobox", { name: "Timer sound" }), {
+    target: { value: "beeps" },
+  });
   expect(playCadenceBeep).toHaveBeenCalledTimes(1);
   fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
   expect(screen.getByRole("button", { name: "Session timer" })).toBeDisabled();
@@ -298,7 +300,9 @@ it("previews the next phase and runs the 40/20 preset without changing the plan"
 
 it("catches up after a hidden tab without replaying missed sound cues", () => {
   launch();
-  fireEvent.click(screen.getByRole("button", { name: "Enable sounds" }));
+  fireEvent.change(screen.getByRole("combobox", { name: "Timer sound" }), {
+    target: { value: "beeps" },
+  });
   fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
   vi.clearAllMocks();
   const visibility = vi.spyOn(document, "visibilityState", "get");

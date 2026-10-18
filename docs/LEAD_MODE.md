@@ -2,7 +2,7 @@
 
 **Lead workout** opens a readable workout sheet with no timer running. The main work is expanded; warmup, Mary and notes are optional disclosures. Reps and authored directions remain, while the cadence trainer and counting badges have been removed from this view.
 
-Choose **Session timer** for the saved workout's session countdown, or **Intervals** for a separate interval set. Sounds are off by default. **Enable sounds** plays a test beep and enables phase cues. Start, pause/resume and reset are the primary controls. Pause before changing timer modes. Keep the screen open and phone volume up for audio; screen wake lock is requested where supported. Mobile browsers may suspend audio when locked.
+Choose **Session timer** for the saved workout's session countdown, or **Intervals** for a separate interval set. Sound defaults to **Off**. Choose **Beeps** or **Voice**, then use **Preview sound** while paused. Selecting a sound also confirms the choice with a beep or “Voice on.” Start, pause/resume and reset are the primary controls. Pause before changing timer modes. Keep the screen open and phone volume up for audio; screen wake lock is requested where supported. Mobile browsers may suspend audio when locked.
 
 Session timing retains its existing recovery key, saved block timing, physical hard stop and COT handling. Incomplete/inconsistent timing still requires an explicit choice to use the standard schedule. Scheduled-start and COT controls live under Schedule & session settings. No workout or database schema changes.
 
@@ -20,8 +20,18 @@ Main screen titles and section signposts use uppercase Big Shoulders Display; au
 
 ## Focus timer
 
-Starting or resuming intervals opens focus mode: setup, workout chrome and explanatory paragraphs give way to the phase, large tabular countdown, round, next phase and whole-set progress. Work uses gold; rest uses warm white, with explicit text for both. Sounds can be toggled in focus. Exit focus (or Escape) reveals the plan controls without stopping the set. Space pauses/resumes when the timer panel has keyboard focus; repeated keydown events are ignored. Native button keyboard behavior remains intact. Reset asks before discarding progress and returns to setup.
+Starting or resuming intervals opens focus mode: setup, workout chrome and explanatory paragraphs give way to the phase, large tabular countdown, round, next phase and whole-set progress. Work uses gold; rest uses warm white, with explicit text for both. Sound mode can be changed in focus. Exit focus (or Escape) reveals the plan controls without stopping the set. Space pauses/resumes when the timer panel has keyboard focus; repeated keydown events are ignored. Native button keyboard behavior remains intact. Reset asks before discarding progress and returns to setup.
 
 A 40/20 × 8 preset complements 20/10 Tabata and custom settings. The next-phase preview handles zero-rest intervals and the final rest correctly. The timer adapts to portrait and short landscape screens. A small staging label remains visible in focus mode.
 
 A `pagehide` interruption now freezes the in-memory timer as well as its recovery record, including when the browser restores the same page from its back/forward cache. A hidden tab otherwise catches up from timestamps, without replaying missed cues. Screen wake-lock requests are deduplicated while pending; grants received after stopping or hiding are released. These features do not guarantee audio or operation while a phone is locked.
+
+## Spoken cues
+
+**Voice** uses the browser's speech synthesis, preferring a local English voice where available. It replaces interval beeps. Preparation and rest count down “Three, two, one,” then work begins with “Go.” Work announces “Halfway,” counts “Five, four, three, two, one,” then says “Stop” at rest. The set ends with “Stop. Set complete.” Work under 12 seconds skips halfway so it cannot crowd the final countdown. Zero-rest rounds say “Go” at the next round; no competing stop/go commands are queued. Session timers use “Timer started,” “Next section” and “Session complete,” rather than interval countdowns.
+
+Each cue replaces outstanding speech. Pause, mute, reset, page hiding/leaving and switching timer modes cancel speech. Focus changes leave the clock alone. Missed cues are discarded after delayed rendering; no old countdown is replayed. A voice that errors or cannot start within 700 milliseconds is cancelled, and the UI visibly switches to beeps. Preview is disabled while running to avoid interrupting cues. Sound stays off when reopening Lead.
+
+Voice quality and availability depend on the browser/OS; some installed/default voices can use a remote service. The app sends only fixed cue words to speech synthesis, never workout text, and adds no AI API calls or paid services. Screen lock/background audio is not guaranteed. Reference: [SpeechSynthesis cancellation](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/cancel).
+
+Verification includes pure boundary/freshness tests, mocked speech start/error/cancellation and voice selection tests, and four browser profiles exercising the UI with deterministic speech synthesis. The existing browser journey also runs native Web Audio beeps. Automated speech tests verify the app's cue commands and cleanup, not a physical phone speaker or its installed voice.

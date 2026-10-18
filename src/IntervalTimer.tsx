@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Workout } from "./model";
 import {
   TABATA,
@@ -14,6 +14,8 @@ import {
   playCountdownPip,
   playSectionWhistle,
 } from "./utils/sound";
+import { cancelTimerVoice, type SoundMode } from "./utils/timer-voice";
+import { intervalVoiceCue } from "./interval-voice";
 import { useWakeLock } from "./useWakeLock";
 
 function restore(key: string, revision: string, date: string) {
@@ -63,18 +65,22 @@ const formValues = (s: IntervalState["settings"]) => ({
 });
 export function IntervalTimer({
   workout,
-  sound,
+  soundMode,
+  speak,
+  soundControls,
+  audioNotice,
   onRunning,
   focused,
   onFocus,
-  onSound,
 }: {
   workout: Workout;
-  sound: boolean;
+  soundMode: SoundMode;
+  speak: (text: string) => void;
+  soundControls: ReactNode;
+  audioNotice: string;
   onRunning: (value: boolean) => void;
   focused: boolean;
   onFocus: (value: boolean) => void;
-  onSound: () => void;
 }) {
   const key = `fe-interval-timer:v1:${workout.id}`;
   const date = new Date().toLocaleDateString("en-CA");
@@ -134,6 +140,7 @@ export function IntervalTimer({
       }
     };
     const leavePage = () => {
+      cancelTimerVoice();
       pauseForExit();
       const current = latest.current;
       const paused = {
@@ -151,6 +158,10 @@ export function IntervalTimer({
     };
   }, [key, date, workout.updatedAt]);
   const canEdit = !running && timer.elapsed === 0;
+  const voicePrior = useRef({ elapsed, mode: soundMode });
+  const speakRef = useRef(speak);
+  speakRef.current = speak;
+  useEffect(() => () => cancelTimerVoice(), []);
   const prior = useRef({ key: phase.key, seconds: Math.ceil(phase.remaining) });
   useWakeLock(running);
   useEffect(() => {
@@ -169,6 +180,11 @@ export function IntervalTimer({
         key: current.key,
         seconds: Math.ceil(current.remaining),
       };
+      voicePrior.current = {
+        ...voicePrior.current,
+        elapsed: intervalElapsed(timer, Date.now()),
+      };
+      if (document.visibilityState !== "visible") cancelTimerVoice();
       tick();
     };
     const id = setInterval(tick, 100);
@@ -194,7 +210,11 @@ export function IntervalTimer({
   }, [key, timer, date, workout.updatedAt]);
   useEffect(() => {
     const seconds = Math.ceil(phase.remaining);
-    if (running && sound && document.visibilityState === "visible") {
+    if (
+      running &&
+      soundMode === "beeps" &&
+      document.visibilityState === "visible"
+    ) {
       if (prior.current.key !== phase.key) {
         if (phase.stage === "Complete") playSectionWhistle();
         else if (phase.stage === "Work") playCountdownPip(true);
@@ -206,10 +226,36 @@ export function IntervalTimer({
       )
         playCountdownPip();
     }
+    if (
+      running &&
+      soundMode === "voice" &&
+      voicePrior.current.mode === "voice" &&
+      document.visibilityState === "visible"
+    ) {
+      const cue = intervalVoiceCue(
+        settings,
+        voicePrior.current.elapsed,
+        timer.elapsed +
+          (timer.anchor === null
+            ? 0
+            : Math.max(0, (now - timer.anchor) / 1000)),
+      );
+      if (cue) speakRef.current(cue);
+    }
+    voicePrior.current = { elapsed, mode: soundMode };
     prior.current = { key: phase.key, seconds };
     if (elapsed >= total && running)
       setTimer((t) => ({ ...t, elapsed: total, anchor: null }));
-  }, [phase.key, phase.stage, phase.remaining, elapsed, total, running, sound]);
+  }, [
+    phase.key,
+    phase.stage,
+    phase.remaining,
+    elapsed,
+    total,
+    running,
+    soundMode,
+    settings,
+  ]);
   function start() {
     if (!candidate.success && timer.elapsed === 0) {
       setError(
@@ -221,7 +267,22 @@ export function IntervalTimer({
     onFocus(true);
     const timestamp = Date.now();
     setNow(timestamp);
-    if (sound) playCadenceBeep();
+    cancelTimerVoice();
+    if (soundMode === "beeps") playCadenceBeep();
+    if (soundMode === "voice") {
+      const s =
+        timer.elapsed === 0 && candidate.success
+          ? candidate.data
+          : timer.settings;
+      const current = intervalPhase(s, intervalElapsed(timer, timestamp));
+      speak(
+        timer.elapsed > 0
+          ? "Resumed"
+          : current.stage === "Get ready"
+            ? "Get ready"
+            : "Go",
+      );
+    }
     setTimer((t) => ({
       ...t,
       settings:
@@ -230,6 +291,7 @@ export function IntervalTimer({
     }));
   }
   function pause() {
+    cancelTimerVoice();
     const timestamp = Date.now();
     setNow(timestamp);
     setTimer((t) => ({
@@ -271,11 +333,7 @@ export function IntervalTimer({
           / {settings.rounds} ROUNDS
         </span>
         <div>
-          {focused && (
-            <button aria-pressed={sound} onClick={onSound}>
-              {sound ? "Sounds on" : "Enable sounds"}
-            </button>
-          )}
+          {focused && soundControls}
           <button aria-pressed={focused} onClick={() => onFocus(!focused)}>
             {focused ? "Exit focus" : "Focus timer"}
           </button>
@@ -397,6 +455,7 @@ export function IntervalTimer({
             if (timer.elapsed > 0 || running) {
               if (!confirm("Reset this interval set?")) return;
             }
+            cancelTimerVoice();
             onFocus(false);
             setNow(Date.now());
             setTimer((t) => ({ ...t, elapsed: 0, anchor: null }));
@@ -407,6 +466,11 @@ export function IntervalTimer({
           Reset intervals
         </button>
       </div>
+      {focused && audioNotice && (
+        <p className="timer-audio-status" role="status">
+          {audioNotice}
+        </p>
+      )}
       {phase.stage === "Complete" && (
         <p role="status">Set complete. Reset to go again.</p>
       )}
@@ -427,8 +491,9 @@ export function IntervalTimer({
           schedule. The last round includes its rest period.
         </p>
         <p className="muted">
-          Three countdown pips. High tone for work, low tone for rest, whistle
-          to finish. Space to pause or resume when the timer is focused.
+          Voice: halfway, five seconds to stop, three seconds to go. Halfway is
+          skipped for work under 12 seconds. Beeps use distinct work/rest cues.
+          Space pauses or resumes when the timer is focused.
         </p>
       </div>
       {error && (

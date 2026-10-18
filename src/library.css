@@ -699,3 +699,33 @@ body:has(.staging-notice) .lead-focused {
     margin: 8px 0;
   }
 }
+.timer-sound-controls {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+.field-timer .timer-sound-controls label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.7rem;
+  margin: 0;
+}
+.field-timer .timer-sound-controls select {
+  min-height: 44px;
+  width: 92px;
+  padding: 6px;
+  font-size: 0.8rem;
+}
+.field-timer .timer-sound-controls button {
+  min-height: 44px;
+  padding: 8px;
+  font-size: 0.75rem;
+}
+.interval-toolbar > div {
+  align-items: end;
+  flex-wrap: wrap;
+}
+.timer-audio-status {
+  font-size: 0.85rem;
+  color: var(--ink);
+}

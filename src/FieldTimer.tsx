@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Workout } from "./model";
 import { SessionTimer } from "./SessionTimer";
 import { IntervalTimer } from "./IntervalTimer";
 import { playCadenceBeep } from "./utils/sound";
+import { TimerSoundControls } from "./TimerSoundControls";
+import {
+  cancelTimerVoice,
+  speakTimerCue,
+  timerVoiceSupported,
+  type SoundMode,
+} from "./utils/timer-voice";
 export { elapsedAt, liveTimer } from "./SessionTimer";
 
 export function FieldTimer({
@@ -13,9 +20,57 @@ export function FieldTimer({
   onExit: () => void;
 }) {
   const [mode, setMode] = useState<"off" | "session" | "intervals">("off");
-  const [sound, setSound] = useState(false);
+  const [soundMode, setSoundMode] = useState<SoundMode>("off");
   const [running, setRunning] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [audioNotice, setAudioNotice] = useState("");
+  const supported = timerVoiceSupported();
+  useEffect(() => {
+    // Prime asynchronous voice discovery without starting speech.
+    try {
+      window.speechSynthesis?.getVoices();
+    } catch {
+      /* Beeps still work. */
+    }
+    const hide = () => {
+      if (document.visibilityState !== "visible") cancelTimerVoice();
+    };
+    document.addEventListener("visibilitychange", hide);
+    window.addEventListener("pagehide", cancelTimerVoice);
+    return () => {
+      document.removeEventListener("visibilitychange", hide);
+      window.removeEventListener("pagehide", cancelTimerVoice);
+      cancelTimerVoice();
+    };
+  }, []);
+  const speak = (text: string) =>
+    speakTimerCue(text, () => {
+      setSoundMode("beeps");
+      setAudioNotice(
+        "Voice is unavailable on this device. Using beeps instead.",
+      );
+      if (document.visibilityState === "visible") playCadenceBeep();
+    });
+  const changeSound = (value: SoundMode) => {
+    cancelTimerVoice();
+    setAudioNotice("");
+    setSoundMode(value);
+    if (value === "voice") speak("Voice on");
+    else if (value === "beeps") playCadenceBeep();
+  };
+  const preview = () => {
+    if (soundMode === "voice") speak("Three, two, one, go");
+    else if (soundMode === "beeps") playCadenceBeep();
+  };
+  const soundControls = (
+    <TimerSoundControls
+      mode={soundMode}
+      supported={supported}
+      onChange={changeSound}
+      onPreview={preview}
+      running={running}
+    />
+  );
   return (
     <main
       id="main"
@@ -23,17 +78,7 @@ export function FieldTimer({
     >
       <div className="lead-top">
         <button onClick={onExit}>← Back to plan</button>
-        {mode !== "off" && (
-          <button
-            aria-pressed={sound}
-            onClick={() => {
-              if (!sound) playCadenceBeep();
-              setSound(!sound);
-            }}
-          >
-            {sound ? "Sounds on" : "Enable sounds"}
-          </button>
-        )}
+        {mode !== "off" && !focused && soundControls}
       </div>
       <p className="eyebrow">LEAD YOUR Q</p>
       <h1 className="lead-workout-title">{workout.title}</h1>
@@ -53,7 +98,10 @@ export function FieldTimer({
             key={key}
             aria-pressed={mode === key}
             disabled={running && mode !== key}
-            onClick={() => setMode(key)}
+            onClick={() => {
+              cancelTimerVoice();
+              setMode(key);
+            }}
           >
             {label}
           </button>
@@ -61,20 +109,29 @@ export function FieldTimer({
       </div>
       {running && <p className="muted">Pause before switching timer modes.</p>}
       {mode === "session" && (
-        <SessionTimer workout={workout} sound={sound} onRunning={setRunning} />
+        <SessionTimer
+          workout={workout}
+          sound={soundMode === "beeps"}
+          voice={soundMode === "voice" ? speak : undefined}
+          onRunning={setRunning}
+        />
       )}
       {mode === "intervals" && (
         <IntervalTimer
           workout={workout}
-          sound={sound}
+          soundMode={soundMode}
+          speak={speak}
+          soundControls={soundControls}
+          audioNotice={audioNotice}
           onRunning={setRunning}
           focused={focused}
           onFocus={setFocused}
-          onSound={() => {
-            if (!sound) playCadenceBeep();
-            setSound(!sound);
-          }}
         />
+      )}
+      {audioNotice && !focused && (
+        <p className="timer-audio-status" role="status">
+          {audioNotice}
+        </p>
       )}
       {mode !== "off" && (
         <p className="timer-audio-note">
