@@ -141,6 +141,9 @@ it("reviews locally, invalidates edited previews, and saves only through the exi
   expect(screen.getByRole("button", { name: "F3 Q BUILDER" })).toBeVisible();
   expect(within(screen.getByRole("banner")).queryByText(/OLATHE/)).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Import Markdown" }));
+  expect(
+    screen.queryByRole("heading", { name: "Find your next workout" }),
+  ).toBeNull();
   fireEvent.change(screen.getByLabelText("Workout Markdown"), {
     target: { value: markdown },
   });

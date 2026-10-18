@@ -58,9 +58,9 @@ test("Markdown file review, correction and personal save", async ({
   await expect(page.getByLabel("Workout title", { exact: true })).toHaveValue(
     "Imported test ladder",
   );
-  await expect(page.getByLabel("Counting", { exact: true }).last()).toHaveValue(
-    "2=1",
-  );
+  await expect(
+    page.getByRole("combobox", { name: "Counting", exact: true }).last(),
+  ).toHaveValue("2=1");
   await page
     .getByRole("button", { name: "Save & view workout", exact: true })
     .click();

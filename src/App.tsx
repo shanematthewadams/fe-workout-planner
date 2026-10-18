@@ -690,7 +690,7 @@ export default function App() {
                       go("library");
                     }}
                   />
-                ) : tab === "data" ? null : (
+                ) : tab === "data" || tab === "markdown" ? null : (
                   <WorkoutLibrary
                     key={tab}
                     sources={sources}
