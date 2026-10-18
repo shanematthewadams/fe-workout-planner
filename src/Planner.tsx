@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import type { PlannerRequest } from "./planner-contract";
 import { findAO } from "./ao-context";
@@ -470,7 +471,15 @@ export function Planner({
               />
             </label>
             <div className="prompt-inspiration-bar">
-              <button type="button" disabled={busy} onClick={surprise}>
+              <button
+                className="surprise-button"
+                type="button"
+                disabled={busy}
+                onClick={surprise}
+              >
+                <span className="surprise-icon" aria-hidden="true">
+                  <Dices size={20} strokeWidth={2.2} />
+                </span>
                 Surprise Me!
               </button>
             </div>
