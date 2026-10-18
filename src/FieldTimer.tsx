@@ -15,8 +15,12 @@ export function FieldTimer({
   const [mode, setMode] = useState<"off" | "session" | "intervals">("off");
   const [sound, setSound] = useState(false);
   const [running, setRunning] = useState(false);
+  const [focused, setFocused] = useState(false);
   return (
-    <main id="main" className="main field-timer lead-view">
+    <main
+      id="main"
+      className={`main field-timer lead-view ${focused ? "lead-focused" : ""}`}
+    >
       <div className="lead-top">
         <button onClick={onExit}>← Back to plan</button>
         {mode !== "off" && (
@@ -60,7 +64,17 @@ export function FieldTimer({
         <SessionTimer workout={workout} sound={sound} onRunning={setRunning} />
       )}
       {mode === "intervals" && (
-        <IntervalTimer workout={workout} sound={sound} onRunning={setRunning} />
+        <IntervalTimer
+          workout={workout}
+          sound={sound}
+          onRunning={setRunning}
+          focused={focused}
+          onFocus={setFocused}
+          onSound={() => {
+            if (!sound) playCadenceBeep();
+            setSound(!sound);
+          }}
+        />
       )}
       {mode !== "off" && (
         <p className="timer-audio-note">

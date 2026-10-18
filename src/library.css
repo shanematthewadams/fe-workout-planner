@@ -513,3 +513,153 @@
     font-size: 6rem;
   }
 }
+
+/* A quiet setup becomes a room-readable clock when the set starts. */
+.interval-clock {
+  --phase-color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(16px, 4vw, 32px);
+  background: #1c1d20;
+}
+.interval-rest {
+  --phase-color: #a9d5e4;
+}
+.interval-get-ready {
+  --phase-color: #f6f1e8;
+}
+.interval-toolbar,
+.interval-totals {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.interval-toolbar > div {
+  display: flex;
+  gap: 8px;
+}
+.interval-toolbar button {
+  min-height: 44px;
+  font-size: 0.8rem;
+}
+.interval-display {
+  text-align: center;
+  padding: 12px 0;
+}
+.lead-view .interval-clock .timer-stage {
+  color: var(--phase-color);
+}
+.lead-view .interval-clock .field-clock {
+  color: var(--phase-color);
+  font-family: "Big Shoulders Display", sans-serif;
+  font-size: clamp(6rem, 26vw, 13rem);
+  line-height: 1;
+  white-space: nowrap;
+}
+.interval-round {
+  margin: 12px 0;
+}
+.interval-next {
+  color: var(--muted);
+  font-weight: 600;
+  margin: 16px 0 4px;
+}
+.interval-totals {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.interval-clock progress {
+  accent-color: var(--phase-color);
+  width: 100%;
+  height: 8px;
+}
+.interval-clock .actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+.interval-clock .actions button {
+  min-height: 64px;
+}
+.interval-clock .actions .create {
+  font-size: 1.1rem;
+}
+body:has(.lead-focused) .header,
+body:has(.lead-focused) .footer {
+  display: none;
+}
+.lead-focused {
+  max-width: 1100px;
+  padding: 16px;
+}
+.lead-focused > :not(.interval-clock) {
+  display: none;
+}
+.lead-focused .interval-setup,
+.lead-focused .interval-summary,
+.lead-focused .interval-help {
+  display: none;
+}
+.lead-focused .interval-clock {
+  min-height: calc(100svh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lead-focused .interval-toolbar {
+  margin-bottom: auto;
+}
+.lead-focused .interval-display {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lead-focused .interval-clock .field-clock {
+  font-size: clamp(7rem, 32vw, 20rem);
+}
+.lead-focused .interval-clock .timer-stage {
+  font-size: clamp(3rem, 9vw, 5rem);
+  margin-top: 20px;
+}
+@media (max-height: 550px) and (min-width: 600px) {
+  .lead-focused .interval-clock {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4px 24px;
+    min-height: 90svh;
+  }
+  .lead-focused .interval-toolbar {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  .lead-focused .interval-display {
+    grid-column: 2;
+    grid-row: 2 / 6;
+  }
+  .lead-focused .interval-clock .field-clock {
+    font-size: 28vh;
+  }
+  .lead-focused .interval-clock .timer-stage {
+    font-size: 8vh;
+    margin-top: 0;
+  }
+  .lead-focused .interval-clock .actions {
+    grid-template-columns: 1fr;
+  }
+}
+body:has(.lead-focused) .staging-notice span {
+  display: none;
+}
+.lead-focused {
+  --timer-chrome: 32px;
+  margin: 0 auto;
+}
+body:has(.staging-notice) .lead-focused {
+  --timer-chrome: 72px;
+}
+.lead-focused .interval-clock {
+  min-height: calc(100svh - var(--timer-chrome));
+}

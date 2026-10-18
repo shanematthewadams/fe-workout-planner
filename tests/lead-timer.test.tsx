@@ -244,3 +244,72 @@ it("validates custom blanks and requires reset before changing an active set", (
   expect(screen.getByLabelText("Work (seconds)")).toBeEnabled();
   expect(screen.getByRole("timer")).toHaveTextContent("00:05");
 });
+
+it("focuses on start, keeps escape harmless, and supports space without double toggling", () => {
+  launch();
+  fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
+  const timer = screen.getByRole("region", { name: "Interval timer" });
+  expect(timer).toHaveFocus();
+  jump(12);
+  fireEvent.keyDown(timer, { code: "Space", key: " " });
+  expect(
+    screen.getByRole("button", { name: "Resume intervals" }),
+  ).toBeEnabled();
+  const value = screen.getByRole("timer").textContent;
+  fireEvent.keyDown(timer, { code: "Space", key: " ", repeat: true });
+  jump(20);
+  expect(screen.getByRole("timer").textContent).toBe(value);
+  fireEvent.keyDown(timer, { code: "Space", key: " " });
+  expect(screen.getByRole("button", { name: "Pause intervals" })).toBeVisible();
+  fireEvent.keyDown(timer, { key: "Escape" });
+  expect(screen.getByRole("button", { name: "Focus timer" })).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  expect(screen.getByRole("button", { name: "Pause intervals" })).toBeEnabled();
+});
+it("pauses a page-cache interruption rather than silently advancing on return", () => {
+  launch();
+  fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
+  jump(12);
+  fireEvent(window, new Event("pagehide"));
+  jump(120);
+  fireEvent(window, new Event("pageshow"));
+  expect(screen.getByRole("timer")).toHaveTextContent("00:18");
+  expect(
+    screen.getByRole("button", { name: "Resume intervals" }),
+  ).toBeEnabled();
+});
+it("previews the next phase and runs the 40/20 preset without changing the plan", () => {
+  const w = launch();
+  const original = JSON.stringify(w);
+  fireEvent.change(screen.getByRole("combobox", { name: "Interval style" }), {
+    target: { value: "steady" },
+  });
+  expect(screen.getByText("Next: Work · 00:40")).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
+  jump(10);
+  expect(screen.getByRole("timer")).toHaveTextContent("00:40");
+  expect(screen.getByText("Next: Rest · 00:20")).toBeVisible();
+  jump(40);
+  expect(screen.getByRole("heading", { name: "Rest" })).toBeVisible();
+  expect(JSON.stringify(w)).toBe(original);
+});
+
+it("catches up after a hidden tab without replaying missed sound cues", () => {
+  launch();
+  fireEvent.click(screen.getByRole("button", { name: "Enable sounds" }));
+  fireEvent.click(screen.getByRole("button", { name: "Start intervals" }));
+  vi.clearAllMocks();
+  const visibility = vi.spyOn(document, "visibilityState", "get");
+  visibility.mockReturnValue("hidden");
+  jump(45);
+  visibility.mockReturnValue("visible");
+  fireEvent(document, new Event("visibilitychange"));
+  expect(screen.getByRole("timer")).toHaveTextContent("00:15");
+  expect(screen.getByRole("heading", { name: "Work" })).toBeVisible();
+  expect(playCountdownPip).not.toHaveBeenCalled();
+  expect(playCadenceBeep).not.toHaveBeenCalled();
+  jump(12);
+  expect(playCountdownPip).toHaveBeenCalledTimes(1);
+});

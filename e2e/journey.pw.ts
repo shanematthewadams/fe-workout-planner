@@ -50,6 +50,13 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
   await page
     .getByRole("button", { name: "Start intervals", exact: true })
     .click();
+  await expect(
+    page.getByRole("button", { name: "Exit focus", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("banner")).toHaveCount(0);
+  await expect(
+    page.getByRole("combobox", { name: "Interval style" }),
+  ).toBeHidden();
   await page.clock.fastForward(10000);
   await expect(
     page.getByRole("heading", { name: "Work", exact: true }),
@@ -68,6 +75,9 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
   await page.clock.fastForward(60000);
   await expect(page.getByRole("timer")).toHaveText("00:10");
   expect(await tones()).toBe(before);
+  await expect(
+    page.getByText("Next: Work · 00:20", { exact: true }),
+  ).toBeVisible();
   expect(
     (
       await new AxeBuilder({ page })
@@ -84,6 +94,22 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
     path: `${pictures}/${info.project.name}-tabata.png`,
     fullPage: true,
   });
+  const viewport = page.viewportSize()!;
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(page.getByRole("timer")).toBeInViewport();
+  await expect(
+    page.getByRole("button", { name: "Resume intervals", exact: true }),
+  ).toBeInViewport();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: `${pictures}/${info.project.name}-tabata-landscape.png`,
+    fullPage: true,
+  });
+  await page.setViewportSize(viewport);
   await page
     .getByRole("button", { name: "Resume intervals", exact: true })
     .click();

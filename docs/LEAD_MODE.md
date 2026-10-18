@@ -17,3 +17,11 @@ Interval state is local, scoped to the workout and revision, and expires on a ne
 ## Design and importing
 
 Main screen titles and section signposts use uppercase Big Shoulders Display; authored workout names and instructions retain their case. Manrope remains the body font. Import entry copy now explains bringing a workout from ChatGPT or Gemini, with the action **Import a workout**. The import screen explains Markdown and the chat prompt before asking for pasted text.
+
+## Focus timer
+
+Starting or resuming intervals opens focus mode: setup, workout chrome and explanatory paragraphs give way to the phase, large tabular countdown, round, next phase and whole-set progress. Work uses gold; rest uses pale blue, with explicit text for both. Sounds can be toggled in focus. Exit focus (or Escape) reveals the plan controls without stopping the set. Space pauses/resumes when the timer panel has keyboard focus; repeated keydown events are ignored. Native button keyboard behavior remains intact. Reset asks before discarding progress and returns to setup.
+
+A 40/20 × 8 preset complements 20/10 Tabata and custom settings. The next-phase preview handles zero-rest intervals and the final rest correctly. The timer adapts to portrait and short landscape screens. A small staging label remains visible in focus mode.
+
+A `pagehide` interruption now freezes the in-memory timer as well as its recovery record, including when the browser restores the same page from its back/forward cache. A hidden tab otherwise catches up from timestamps, without replaying missed cues. Screen wake-lock requests are deduplicated while pending; grants received after stopping or hiding are released. These features do not guarantee audio or operation while a phone is locked.

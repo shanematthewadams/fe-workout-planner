@@ -6,23 +6,35 @@ export function useWakeLock(running: boolean) {
     if (!running) return;
     let lock: WakeLockSentinel | undefined;
     let disposed = false;
+    let pending = false;
     const wake = () => {
-      if (document.visibilityState !== "visible" || lock?.released === false)
+      if (
+        disposed ||
+        pending ||
+        document.visibilityState !== "visible" ||
+        lock?.released === false
+      )
         return;
+      if (!navigator.wakeLock) return;
+      pending = true;
       navigator.wakeLock
         ?.request("screen")
         .then((value) => {
-          if (disposed) void value.release();
+          if (disposed || document.visibilityState !== "visible")
+            void value.release().catch(() => {});
           else lock = value;
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          pending = false;
+        });
     };
     wake();
     document.addEventListener("visibilitychange", wake);
     return () => {
       disposed = true;
       document.removeEventListener("visibilitychange", wake);
-      void lock?.release();
+      void lock?.release().catch(() => {});
     };
   }, [running]);
 }

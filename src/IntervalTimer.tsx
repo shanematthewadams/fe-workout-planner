@@ -65,10 +65,16 @@ export function IntervalTimer({
   workout,
   sound,
   onRunning,
+  focused,
+  onFocus,
+  onSound,
 }: {
   workout: Workout;
   sound: boolean;
   onRunning: (value: boolean) => void;
+  focused: boolean;
+  onFocus: (value: boolean) => void;
+  onSound: () => void;
 }) {
   const key = `fe-interval-timer:v1:${workout.id}`;
   const date = new Date().toLocaleDateString("en-CA");
@@ -84,6 +90,10 @@ export function IntervalTimer({
       initial.timer.settings.rounds !== 8 ||
       initial.timer.settings.prepare !== 10,
   );
+  const panel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (focused) panel.current?.focus();
+  }, [focused]);
   const [now, setNow] = useState(Date.now);
   const [error, setError] = useState("");
   const [storageError, setStorageError] = useState("");
@@ -123,9 +133,20 @@ export function IntervalTimer({
         /* Keep the workout usable. */
       }
     };
-    window.addEventListener("pagehide", pauseForExit);
+    const leavePage = () => {
+      pauseForExit();
+      const current = latest.current;
+      const paused = {
+        ...current,
+        elapsed: intervalElapsed(current, Date.now()),
+        anchor: null,
+      };
+      latest.current = paused;
+      setTimer(paused);
+    };
+    window.addEventListener("pagehide", leavePage);
     return () => {
-      window.removeEventListener("pagehide", pauseForExit);
+      window.removeEventListener("pagehide", leavePage);
       pauseForExit();
     };
   }, [key, date, workout.updatedAt]);
@@ -197,6 +218,7 @@ export function IntervalTimer({
       return;
     }
     setError("");
+    onFocus(true);
     const timestamp = Date.now();
     setNow(timestamp);
     if (sound) playCadenceBeep();
@@ -207,29 +229,83 @@ export function IntervalTimer({
       anchor: timestamp,
     }));
   }
+  function pause() {
+    const timestamp = Date.now();
+    setNow(timestamp);
+    setTimer((t) => ({
+      ...t,
+      elapsed: intervalElapsed(t, timestamp),
+      anchor: null,
+    }));
+  }
+  const nextPhase = intervalPhase(
+    settings,
+    Math.min(total, elapsed + phase.remaining + 0.001),
+  );
   return (
     <section
+      ref={panel}
+      tabIndex={-1}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") onFocus(false);
+        if (
+          event.code === "Space" &&
+          event.target === event.currentTarget &&
+          phase.stage !== "Complete"
+        ) {
+          event.preventDefault();
+          if (!event.repeat) {
+            if (running) pause();
+            else start();
+          }
+        }
+      }}
       className={`interval-clock interval-${phase.stage.toLowerCase().replace(" ", "-")}`}
       aria-label="Interval timer"
     >
+      <div className="interval-toolbar">
+        <span className="eyebrow">
+          {settings.work === 20 && settings.rest === 10
+            ? "TABATA"
+            : "INTERVALS"}{" "}
+          / {settings.rounds} ROUNDS
+        </span>
+        <div>
+          {focused && (
+            <button aria-pressed={sound} onClick={onSound}>
+              {sound ? "Sounds on" : "Enable sounds"}
+            </button>
+          )}
+          <button aria-pressed={focused} onClick={() => onFocus(!focused)}>
+            {focused ? "Exit focus" : "Focus timer"}
+          </button>
+        </div>
+      </div>
       <div className="interval-setup">
         <label>
           Interval style
           <select
             aria-label="Interval style"
             disabled={!canEdit}
-            value={custom ? "custom" : "tabata"}
+            value={
+              custom ? "custom" : settings.work === 40 ? "steady" : "tabata"
+            }
             onChange={(e) => {
               const next = e.target.value === "custom";
               setCustom(next);
               setError("");
               if (!next) {
-                setValues(formValues(TABATA));
-                setTimer({ settings: { ...TABATA }, elapsed: 0, anchor: null });
+                const preset =
+                  e.target.value === "steady"
+                    ? { work: 40, rest: 20, rounds: 8, prepare: 10 }
+                    : TABATA;
+                setValues(formValues(preset));
+                setTimer({ settings: { ...preset }, elapsed: 0, anchor: null });
               }
             }}
           >
             <option value="tabata">Tabata · 20s work / 10s rest × 8</option>
+            <option value="steady">40 / 20 · 8 rounds</option>
             <option value="custom">Custom intervals</option>
           </select>
         </label>
@@ -268,24 +344,35 @@ export function IntervalTimer({
         · {timerLabel((settings.work + settings.rest) * settings.rounds)} +{" "}
         {settings.prepare}s get ready
       </p>
-      <h2 className="timer-stage" aria-live="polite">
-        {phase.stage}
-      </h2>
-      <div
-        className="field-clock"
-        role="timer"
-        aria-label="Interval time remaining"
-      >
-        {timerLabel(phase.remaining)}
+      <div className="interval-display">
+        <h2 className="timer-stage" aria-live="polite">
+          {phase.stage}
+        </h2>
+        <div
+          className="field-clock"
+          role="timer"
+          aria-label="Interval time remaining"
+        >
+          {timerLabel(phase.remaining)}
+        </div>
+        <p className="interval-round">
+          {phase.stage === "Get ready"
+            ? "First round up next"
+            : `Round ${phase.round} of ${settings.rounds}`}
+          {!running && timer.elapsed > 0 && phase.stage !== "Complete"
+            ? " · Paused"
+            : ""}
+        </p>
+        <p className="interval-next">
+          {phase.stage === "Complete"
+            ? "Nice work. Take a breath."
+            : `Next: ${nextPhase.stage === "Complete" ? "Set complete" : `${nextPhase.stage} · ${timerLabel(nextPhase.remaining)}`}`}
+        </p>
       </div>
-      <p className="interval-round">
-        {phase.stage === "Get ready"
-          ? "First round up next"
-          : `Round ${phase.round} of ${settings.rounds}`}
-        {!running && timer.elapsed > 0 && phase.stage !== "Complete"
-          ? " · Paused"
-          : ""}
-      </p>
+      <div className="interval-totals">
+        <span>{timerLabel(total - elapsed)} remaining</span>
+        <span>{Math.floor((elapsed / total) * 100)}% complete</span>
+      </div>
       <progress
         aria-label="Interval set progress"
         value={elapsed}
@@ -293,18 +380,7 @@ export function IntervalTimer({
       />
       <div className="actions">
         {running ? (
-          <button
-            className="create"
-            onClick={() => {
-              const timestamp = Date.now();
-              setNow(timestamp);
-              setTimer((t) => ({
-                ...t,
-                elapsed: intervalElapsed(t, timestamp),
-                anchor: null,
-              }));
-            }}
-          >
+          <button className="create" onClick={pause}>
             Pause intervals
           </button>
         ) : (
@@ -321,6 +397,7 @@ export function IntervalTimer({
             if (timer.elapsed > 0 || running) {
               if (!confirm("Reset this interval set?")) return;
             }
+            onFocus(false);
             setNow(Date.now());
             setTimer((t) => ({ ...t, elapsed: 0, anchor: null }));
             prior.current = { key: "prepare", seconds: timer.settings.prepare };
@@ -341,13 +418,19 @@ export function IntervalTimer({
             Recovered a paused interval set. Resume when you’re ready.
           </p>
         )}
-      {!canEdit && (
-        <p className="muted">Reset the set to change its intervals.</p>
-      )}
-      <p className="muted">
-        An interval set has its own clock and does not change your workout
-        schedule. The last round includes its rest period.
-      </p>
+      <div className="interval-help">
+        {!canEdit && (
+          <p className="muted">Reset the set to change its intervals.</p>
+        )}
+        <p className="muted">
+          An interval set has its own clock and does not change your workout
+          schedule. The last round includes its rest period.
+        </p>
+        <p className="muted">
+          Three countdown pips. High tone for work, low tone for rest, whistle
+          to finish. Space to pause or resume when the timer is focused.
+        </p>
+      </div>
       {error && (
         <p role="alert" className="assistant-error">
           {error}
