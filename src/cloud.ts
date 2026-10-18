@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { workoutSchema, copyWorkout, type Workout } from "./model";
+import { isStaging } from "./environment";
 const cloudSnapshot = z.object({
   version: z.number().int().nonnegative(),
   workouts: z.array(workoutSchema).max(200),
@@ -67,6 +68,10 @@ export async function cloudRequest(
   workouts: Workout[] = [],
   signal?: AbortSignal,
 ): Promise<Snapshot> {
+  if (isStaging())
+    throw Error(
+      "Cloud sync is disabled in this staging version. Your test plans stay in this browser.",
+    );
   if (!/^[a-f0-9]{64}$/.test(token))
     throw Error("Enter the full 64-character sync code.");
   const url = import.meta.env.VITE_SUPABASE_URL,

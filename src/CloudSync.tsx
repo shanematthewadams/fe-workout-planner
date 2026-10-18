@@ -8,6 +8,7 @@ import {
   CloudSnapshotError,
 } from "./cloud";
 import { importStudio } from "./studio/import";
+import { isStaging } from "./environment";
 const SETTINGS = "fe-sync:v1";
 type Settings = { code: string; base: Workout[] };
 function settings(): Settings | null {
@@ -24,6 +25,34 @@ function settings(): Settings | null {
   return null;
 }
 export function CloudSync({
+  workouts,
+  onMerge,
+  onStudio,
+}: {
+  workouts: Workout[];
+  onMerge: (w: Workout[]) => boolean;
+  onStudio: (w: Workout[]) => boolean;
+}) {
+  return isStaging() ? (
+    <section
+      className="cloud-sync"
+      aria-label="Cloud sync unavailable in staging"
+    >
+      <h2>Test plans stay here</h2>
+      <p>
+        Cloud sync and Studio cloud imports are disabled in this test version.
+        You can save workouts on this device and use the backup controls below.
+      </p>
+    </section>
+  ) : (
+    <ActiveCloudSync
+      workouts={workouts}
+      onMerge={onMerge}
+      onStudio={onStudio}
+    />
+  );
+}
+function ActiveCloudSync({
   workouts,
   onMerge,
   onStudio,

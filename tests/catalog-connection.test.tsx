@@ -33,6 +33,7 @@ it("confirms a loaded published library after a validated remote response", asyn
     new Response(JSON.stringify(catalog.map((data) => ({ data })))),
   );
   render(<App />);
+  fireEvent.click(screen.getByText(/reviewed FE workouts ·/));
   expect(
     await screen.findByText(/Latest published library loaded\./),
   ).toBeVisible();

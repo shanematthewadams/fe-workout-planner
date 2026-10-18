@@ -4,10 +4,7 @@ import {
   ArrowLeft,
   Heart,
   Plus,
-  Search,
   Clock3,
-  Footprints,
-  Dumbbell,
   Copy,
   Printer,
   Maximize2,
@@ -15,12 +12,12 @@ import {
   Upload,
   X,
   Check,
-  Layers3,
 } from "lucide-react";
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
 import { OfflineStatus } from "./OfflineStatus";
+import { StagingNotice } from "./StagingNotice";
 import {
   SessionTimeline,
   sessionStart,
@@ -32,7 +29,9 @@ import {
 import { ExiconBrowser } from "./ExiconBrowser";
 import { Planner } from "./Planner";
 import { Discovery } from "./Discovery";
-import { aoProfiles, statusLabel } from "./discovery";
+import { statusLabel } from "./discovery";
+import { WorkoutLibrary, type LibraryPreferences } from "./WorkoutLibrary";
+import { MovementPicker } from "./MovementPicker";
 import { catalog } from "./catalog";
 import { SupabaseCatalog } from "./repository";
 import {
@@ -40,10 +39,8 @@ import {
   type Workout,
   type Section,
   type LocalState,
-  type Filters,
   type Exercise,
   filtersEmpty,
-  matches,
   copyWorkout,
   newWorkout,
   newSection,
@@ -225,7 +222,8 @@ export default function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
   const [timerOpen, setTimerOpen] = useState(false);
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [libraryPreferences, setLibraryPreferences] =
+    useState<LibraryPreferences>({ favoritesOnly: false, sort: "recommended" });
   const persist = (next: LocalState) => {
     if (blocked) {
       setNotice(
@@ -305,6 +303,20 @@ export default function App() {
     setSelected(null);
     setDirty(!saved);
     window.scrollTo(0, 0);
+  };
+  const useWorkout = (workout: Workout) => {
+    if (!leave()) return;
+    if (state.workouts.length >= 200) {
+      setNotice(
+        "This browser has 200 drafts. Export a backup before adding more.",
+      );
+      return;
+    }
+    const copied = copyWorkout(workout);
+    if (persist({ ...state, workouts: [...state.workouts, copied] })) {
+      begin(copied, true);
+      setNotice("Personal copy created. Your source is unchanged.");
+    }
   };
   const favorite = (id: string) => {
     const has = state.favorites.includes(id);
@@ -472,17 +484,6 @@ export default function App() {
       setPending(null);
     }
   };
-  const all = [...sources, ...state.workouts];
-  const base = tab === "mine" ? state.workouts : sources;
-  const equipmentOptions = [
-    ...new Set(all.flatMap((workout) => workout.equipment)),
-  ]
-    .filter(Boolean)
-    .sort();
-  const visible = base.filter(
-    (w) =>
-      matches(w, filters) && (!favoritesOnly || state.favorites.includes(w.id)),
-  );
   const update = (w: Workout) => {
     setEditing(w);
     setDirty(true);
@@ -492,6 +493,7 @@ export default function App() {
       <a className="skip-link no-print" href="#main">
         Skip to workouts
       </a>
+      <StagingNotice />
       {!timerOpen && (
         <>
           <header className="header no-print">
@@ -691,268 +693,24 @@ export default function App() {
                     }}
                   />
                 ) : tab === "data" ? null : (
-                  <>
-                    {tab === "library" && (
-                      <aside className="catalog-status">
-                        <strong>
-                          {
-                            sources.filter(
-                              (w) =>
-                                w.provenance.status === "regional-reviewed",
-                            ).length
-                          }{" "}
-                          reviewed FE workouts ·{" "}
-                          {
-                            sources.filter(
-                              (w) => w.provenance.status === "illustrative",
-                            ).length
-                          }{" "}
-                          illustrative starters
-                        </strong>
-                        <p>
-                          {catalogOrigin === "published"
-                            ? "Latest published library loaded."
-                            : "Saved library snapshot."}{" "}
-                          Backblasts may have timing or exercise gaps; check
-                          source notes before leading. Starters are illustrative
-                          examples.
-                        </p>
-                      </aside>
-                    )}
-                    <section className="library-head">
-                      <div>
-                        <p className="eyebrow">
-                          {tab === "library"
-                            ? "THE STARTING LINE"
-                            : "YOUR CORNER"}
-                        </p>
-                        <h2>
-                          {tab === "library"
-                            ? "Find your next workout"
-                            : tab === "mine"
-                              ? "Made yours. Ready to lead."
-                              : "Keep the good ones close."}
-                        </h2>
-                      </div>
-                      <div className="library-head-actions">
-                        <button
-                          className="create"
-                          onClick={() => {
-                            if (leave()) begin(newWorkout());
-                          }}
-                        >
-                          <Plus size={16} /> Create a workout
-                        </button>
-                      </div>
-                    </section>
-                    <label className="checkbox favorites-filter">
-                      <input
-                        type="checkbox"
-                        checked={favoritesOnly}
-                        onChange={(e) => setFavoritesOnly(e.target.checked)}
-                      />{" "}
-                      Favorites only
-                    </label>
-                    <section className="filters" aria-label="Filter workouts">
-                      <label className="search">
-                        <Search size={18} />
-                        <input
-                          aria-label="Search workouts"
-                          placeholder="Search workouts…"
-                          value={filters.query}
-                          onChange={(e) =>
-                            setFilters({ ...filters, query: e.target.value })
-                          }
-                        />
-                      </label>
-                      <details className="filter-details">
-                        <summary>Filter workouts</summary>
-                        <div className="filter-options">
-                          {(
-                            [
-                              [
-                                "duration",
-                                "Duration",
-                                ["All", "30 or less", "31–45", "46+"],
-                              ],
-                              [
-                                "equipment",
-                                "Equipment",
-                                ["All", "None", ...equipmentOptions],
-                              ],
-                              [
-                                "running",
-                                "Running",
-                                ["All", "None", "Light", "Moderate"],
-                              ],
-                              ["format", "Format", ["All", ...formatOptions]],
-                              [
-                                "status",
-                                "Source status",
-                                [
-                                  "All",
-                                  "regional-reviewed",
-                                  "illustrative",
-                                  "personal",
-                                ],
-                              ],
-                              [
-                                "ao",
-                                "Source AO",
-                                [
-                                  "All",
-                                  ...new Set([
-                                    ...aoProfiles.map((a) => a.name),
-                                    ...all.flatMap((w) =>
-                                      w.provenance.ao ? [w.provenance.ao] : [],
-                                    ),
-                                  ]),
-                                ],
-                              ],
-                            ] as [keyof Filters, string, string[]][]
-                          ).map(([key, label, options]) => (
-                            <label className="filter" key={key}>
-                              <span>{label}</span>
-                              <select
-                                aria-label={label}
-                                value={filters[key]}
-                                onChange={(e) =>
-                                  setFilters({
-                                    ...filters,
-                                    [key]: e.target.value,
-                                  })
-                                }
-                              >
-                                {options.map((o) => (
-                                  <option key={o} value={o}>
-                                    {key === "status" && o !== "All"
-                                      ? statusLabel(o)
-                                      : o}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          ))}
-                        </div>
-                      </details>
-                    </section>
-                    <div className="result-line">
-                      <span>
-                        {visible.length}{" "}
-                        {visible.length === 1 ? "workout" : "workouts"}{" "}
-                        <span className="muted">
-                          · a starting point, not a prescription
-                        </span>
-                      </span>
-                      <button
-                        className="text-button"
-                        onClick={() => setFilters({ ...filtersEmpty })}
-                      >
-                        Reset filters
-                      </button>
-                    </div>
-                    <div className="cards">
-                      {visible.map((w, i) => (
-                        <article className="card" key={w.id}>
-                          <div className="card-top">
-                            <span className="chip">{w.format}</span>
-                            <button
-                              className={
-                                "heart " +
-                                (state.favorites.includes(w.id)
-                                  ? "hearted"
-                                  : "")
-                              }
-                              aria-label={
-                                (state.favorites.includes(w.id)
-                                  ? "Unfavorite "
-                                  : "Favorite ") + w.title
-                              }
-                              aria-pressed={state.favorites.includes(w.id)}
-                              onClick={() => favorite(w.id)}
-                            >
-                              <Heart size={20} />
-                            </button>
-                          </div>
-                          <span className="card-number">
-                            {String(i + 1).padStart(2, "0")} /{" "}
-                            {w.kind === "personal"
-                              ? w.provenance.generation
-                                ? "AI-ASSISTED DRAFT"
-                                : "PERSONAL DRAFT"
-                              : statusLabel(w.provenance.status).toUpperCase()}
-                          </span>
-                          <h3>
-                            <button onClick={() => open(w)}>{w.title}</button>
-                          </h3>
-                          <p className="card-summary">
-                            {w.summary || "Your plan, your way."}
-                          </p>
-                          {w.provenance.ao && (
-                            <p className="source-meta">
-                              {w.provenance.ao} ·{" "}
-                              {w.provenance.q ?? "Q unknown"} ·{" "}
-                              {w.provenance.eventDate ?? "Date unknown"}
-                            </p>
-                          )}
-                          {!!w.provenance.issues?.length && (
-                            <p className="source-meta">
-                              {w.provenance.issues.length} source notes · check
-                              details
-                            </p>
-                          )}
-                          <div className="card-metrics">
-                            <span>
-                              <Clock3 />
-                              {w.duration
-                                ? `~${w.duration} min`
-                                : "Time not set"}
-                            </span>
-                            <span>
-                              <Dumbbell />
-                              {w.equipment.join(", ") ||
-                                (w.provenance.issues?.some((i) =>
-                                  i.startsWith("Equipment not"),
-                                )
-                                  ? "Equipment unknown"
-                                  : "No gear")}
-                            </span>
-                            <span>
-                              <Footprints />
-                              {w.provenance.issues?.some((i) =>
-                                i.startsWith("Running requirement"),
-                              )
-                                ? "Running unknown"
-                                : w.running === "None"
-                                  ? "No running"
-                                  : w.running + " running"}
-                            </span>
-                          </div>
-                          <button className="card-open" onClick={() => open(w)}>
-                            View workout <ArrowUpRight size={20} />
-                          </button>
-                        </article>
-                      ))}
-                    </div>
-                    {!visible.length && (
-                      <section className="empty">
-                        <Layers3 size={34} />
-                        <h3>
-                          {base.length
-                            ? "No workouts match those filters."
-                            : "A little room for your next idea."}
-                        </h3>
-                        <p>
-                          {base.length
-                            ? "Try a different format or clear your filters."
-                            : "Copy a library workout, create a plan, or import your drafts."}
-                        </p>
-                        <button onClick={() => setFilters({ ...filtersEmpty })}>
-                          Reset filters
-                        </button>
-                      </section>
-                    )}
-                  </>
+                  <WorkoutLibrary
+                    key={tab}
+                    sources={sources}
+                    workouts={state.workouts}
+                    favorites={state.favorites}
+                    catalogOrigin={catalogOrigin}
+                    personal={tab === "mine"}
+                    filters={filters}
+                    preferences={libraryPreferences}
+                    onPreferences={setLibraryPreferences}
+                    onFilters={setFilters}
+                    onFavorite={favorite}
+                    onOpen={open}
+                    onUse={useWorkout}
+                    onCreate={() => {
+                      if (leave()) begin(newWorkout());
+                    }}
+                  />
                 )}
                 {tab === "data" && (
                   <section className="backup">
@@ -1323,8 +1081,18 @@ export default function App() {
                         </fieldset>
                       );
                     })}
+                    <MovementPicker
+                      disabled={b.exercises.length >= 100}
+                      onAdd={(exercise) =>
+                        changeBlock({
+                          ...b,
+                          exercises: [...b.exercises, exercise],
+                        })
+                      }
+                    />
                     <div className="actions">
                       <button
+                        disabled={b.exercises.length >= 100}
                         onClick={() =>
                           changeBlock({
                             ...b,
@@ -1497,24 +1265,7 @@ export default function App() {
             </span>
           </div>
           <div className="actions no-print detail-actions">
-            <button
-              className="create"
-              onClick={() => {
-                if (state.workouts.length >= 200) {
-                  setNotice(
-                    "This browser has 200 drafts. Export a backup before adding more.",
-                  );
-                  return;
-                }
-                const copied = copyWorkout(selected);
-                if (
-                  persist({ ...state, workouts: [...state.workouts, copied] })
-                ) {
-                  begin(copied, true);
-                  setNotice("Personal copy created. Your source is unchanged.");
-                }
-              }}
-            >
+            <button className="create" onClick={() => useWorkout(selected)}>
               <Copy size={17} />
               Copy to my workouts
             </button>

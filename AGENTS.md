@@ -7,3 +7,4 @@
 - Preserve strict timing, unknown AO facts, explicit temporary closures, version 1 backups, local saved workouts and private opt-in sync. Do not overwrite reviewed regional originals with generated drafts.
 - Verify changes with relevant tests, lint and production build; check the runtime that changed. Do not claim live provider success based on a template fallback.
 - Shane manages the product and expects a simple mobile flow. Handle routine engineering work autonomously; explain concrete blockers plainly.
+- Explicit approval is required before any production publish, merge to main, or production database change. Local checks/builds are allowed; Netlify preview deploys and remote builds that consume credits also require approval. Do not push a branch merely to test it: a push can trigger a Netlify build. Keep unapproved work local on studio/ux-streamline and report its unpushed status.

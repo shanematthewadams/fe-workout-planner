@@ -9,6 +9,7 @@ import "@fontsource/dm-sans/latin-400.css";
 import "@fontsource/dm-sans/latin-600.css";
 import "@fontsource/dm-sans/latin-700.css";
 import "./style.css";
+import "./library.css";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppRecovery>

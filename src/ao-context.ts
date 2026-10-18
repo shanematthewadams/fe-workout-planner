@@ -1,4 +1,5 @@
 import { aoProfiles } from "./discovery.ts";
+import { mentionedMovements } from "./movements";
 import { aoKey } from "./model";
 import {
   FEATURES,
@@ -180,9 +181,14 @@ export function detectFeatures(plan: {
     runningRoute:
       /\b(?:measured|marked|known)\s+(?:running\s+)?(?:loop|route)\b|\b(?:lake|trail)\s+(?:loop|route)/i,
   };
-  return (Object.keys(patterns) as Feature[]).filter((f) =>
-    patterns[f]!.test(text),
-  );
+  return [
+    ...new Set([
+      ...(Object.keys(patterns) as Feature[]).filter((f) =>
+        patterns[f]!.test(text),
+      ),
+      ...mentionedMovements(text).flatMap((m) => m.features),
+    ]),
+  ];
 }
 export function blockedFeatures(
   plan: Parameters<typeof detectFeatures>[0] & { requiredFeatures?: Feature[] },

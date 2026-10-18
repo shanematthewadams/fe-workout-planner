@@ -1,7 +1,8 @@
 name: Checks
 on:
   push:
-    branches: [main]
+    branches: [main, studio/ux-streamline]
+  workflow_dispatch:
   pull_request:
     branches: [main]
 concurrency:
@@ -24,12 +25,15 @@ jobs:
       - run: npm run lint
       - run: npm test -- --maxWorkers=1
       - run: npm run build
+        env:
+          VITE_APP_ENV: ${{ github.ref == 'refs/heads/studio/ux-streamline' && 'staging' || 'production' }}
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
       - name: Verify desktop, tablet and mobile
         run: npm run test:browser
         env:
           CI: true
+          FE_STAGING_TEST: ${{ github.ref == 'refs/heads/studio/ux-streamline' && 'true' || 'false' }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -30,7 +30,9 @@ describe("source discovery", () => {
     fireEvent.change(screen.getByLabelText("Search exercises"), {
       target: { value: "Decline merkin" },
     });
-    expect(screen.getByRole("heading", { name: "Derkin" })).toBeVisible();
+    expect(screen.getByText("Derkin")).toBeVisible();
+    fireEvent.click(screen.getByText("Derkin"));
+    expect(screen.getByText(/One|State one complete rep/)).toBeVisible();
     expect(
       screen.getByRole("link", { name: "Exicon source file ↗" }),
     ).toHaveAttribute("href", expect.stringContaining("exicon.csv"));

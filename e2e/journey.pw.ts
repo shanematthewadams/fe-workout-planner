@@ -2,6 +2,37 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
 const pictures = "qa/screenshots";
+test("staging protects live sync and labels the test environment", async ({
+  page,
+}) => {
+  test.skip(
+    process.env.FE_STAGING_TEST !== "true",
+    "Only staging builds expose the staging protections",
+  );
+  const syncCalls: string[] = [];
+  await page.route("**/rest/v1/rpc/fe_sync_plans", async (route) => {
+    syncCalls.push(route.request().url());
+    await route.abort();
+  });
+  await page.goto("/");
+  await expect(
+    page.getByLabel("Staging version", { exact: true }),
+  ).toBeVisible();
+  await page.getByText("More", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Sync & backups", exact: true })
+    .click();
+  await expect(
+    page.getByLabel("Cloud sync unavailable in staging", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Enable cloud sync", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Export backup", exact: true }),
+  ).toBeVisible();
+  expect(syncCalls).toEqual([]);
+});
 test("before comparison", async ({ page }, info) => {
   test.skip(!process.env.FE_BEFORE_DIR, "Baseline build supplied in CI");
   await page.goto("http://127.0.0.1:4174");
@@ -293,6 +324,79 @@ test("library favorites and AO edits stay consistent with the builder", async ({
       exact: true,
     }),
   ).toBeVisible();
+});
+
+test("library quick filters, direct copy, and movement insertion", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await page.getByRole("button", { name: "No running", exact: true }).click();
+  await expect(page.getByLabel("Running", { exact: true })).toHaveValue("None");
+  await page.getByRole("button", { name: "No gear", exact: true }).click();
+  await expect(page.getByLabel("Equipment", { exact: true })).toHaveValue(
+    "None",
+  );
+  await page
+    .getByRole("button", { name: "Reset filters", exact: true })
+    .click();
+  await page.getByLabel("Sort workouts", { exact: true }).selectOption("title");
+  await page
+    .getByRole("button", {
+      name: "Use this workout: Circle up, get after it",
+      exact: true,
+    })
+    .click();
+  await expect(page.getByLabel("Workout title", { exact: true })).toHaveValue(
+    "Circle up, get after it · my copy",
+  );
+  const picker = page.locator(".movement-picker").first();
+  await picker.locator("summary").click();
+  await picker.getByLabel("Find a movement", { exact: true }).fill("WW3");
+  await picker.getByRole("button", { name: "Add WW3", exact: true }).click();
+  await expect(page.locator('input[value="WW3"]')).toHaveCount(1);
+  const inserted = page
+    .locator("fieldset")
+    .filter({ has: page.locator('input[value="WW3"]') })
+    .last();
+  await expect(
+    inserted.getByLabel("Count / amount", { exact: true }),
+  ).toHaveValue("Set reps or time");
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+});
+
+test("movement guide exposes requirements and alternatives without card sprawl", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByText("More", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Exicon & Lexicon", exact: true })
+    .click();
+  await page.getByLabel("Search reference", { exact: true }).fill("WW3");
+  await page.locator(".movement-entry summary").click();
+  await expect(
+    page.getByText("One complete sit-up-and-press sequence is one rep.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page
+    .getByLabel("Movement requirements", { exact: true })
+    .selectOption("Bodyweight, no fixed support");
+  await expect(page.getByText(/No movements match/)).toBeVisible();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
 });
 
 test("formal setup survives navigation and reload", async ({ page }) => {

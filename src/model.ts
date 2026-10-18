@@ -1,5 +1,6 @@
 import { scheduleSchema } from "./site-contract";
 import { z } from "zod";
+import { mentionedMovements } from "./movements";
 const text = z.string().max(20000);
 export const exerciseSchema = z.object({
   id: z.string().min(1).max(100),
@@ -195,11 +196,24 @@ export function aoKey(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 export function matches(w: Workout, f: Filters) {
+  const directions = w.sections
+    .flatMap((s) =>
+      s.blocks.flatMap((b) => [
+        b.instructions,
+        ...b.exercises.map((e) => `${e.name} ${e.instructions}`),
+      ]),
+    )
+    .join(" ");
+  const known = mentionedMovements(directions);
+  const searchable =
+    `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${directions} ${known.flatMap((m) => [m.name, ...m.aliases]).join(" ")}`.toLowerCase();
   return (
     (!f.query ||
-      `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${w.sections.flatMap((s) => s.blocks.flatMap((b) => [b.instructions, ...b.exercises.map((e) => e.name)])).join(" ")}`
+      f.query
+        .trim()
         .toLowerCase()
-        .includes(f.query.trim().toLowerCase())) &&
+        .split(/\s+/)
+        .every((word) => searchable.includes(word))) &&
     (f.duration === "All" ||
       (w.duration !== null &&
         (f.duration === "30 or less"
@@ -210,12 +224,14 @@ export function matches(w: Workout, f: Filters) {
     (f.equipment === "All" ||
       (f.equipment === "None"
         ? w.equipment.length === 0 &&
+          !known.some((m) => m.equipment.length) &&
           !w.provenance.issues?.some((i) =>
             i.startsWith("Equipment not specified"),
           )
         : w.equipment.includes(f.equipment))) &&
     (f.running === "All" ||
       (w.running === f.running &&
+        (f.running !== "None" || !known.some((m) => m.running)) &&
         !w.provenance.issues?.some((i) =>
           i.startsWith("Running requirement not supplied"),
         ))) &&

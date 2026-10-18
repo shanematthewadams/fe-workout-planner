@@ -165,6 +165,7 @@ it("keeps exactly three primary destinations and moves backup controls out of li
     screen.queryByRole("navigation", { name: "Workout collections" }),
   ).toBeNull();
   expect(screen.queryByText("Import backup")).toBeNull();
+  fireEvent.click(screen.getByText(/reviewed FE workouts ·/));
   expect(
     screen.getByText(/Backblasts may have timing or exercise gaps/),
   ).toBeVisible();

@@ -1,5 +1,10 @@
 import { siteContext } from "../src/ao-context.ts";
-import { aoProfiles, exercises } from "../src/discovery.ts";
+import { aoProfiles } from "../src/discovery.ts";
+import {
+  movements,
+  mentionedMovements,
+  type Movement,
+} from "../src/movements.ts";
 import regional from "../data/regional-workouts.json";
 import { aoKey, workoutSchema } from "../src/model.ts";
 import type { PlannerRequest } from "../src/planner-contract.ts";
@@ -15,6 +20,43 @@ export function contextFor(input: PlannerRequest) {
     input.ao ? aoKey(a.name) === requested : requested.includes(aoKey(a.name)),
   );
   const words = input.prompt.toLowerCase().match(/[a-z]{4,}/g) ?? [];
+  const site = siteContext(input.ao, input.prompt, input.site);
+  const eligible = movements.filter(
+    (movement) =>
+      (input.equipment !== "None" || !movement.equipment.length) &&
+      (input.running !== "None" || !movement.running) &&
+      movement.features.every(
+        (feature) => site.features[feature] === "available",
+      ),
+  );
+  const requestedMovements = mentionedMovements(
+    [
+      input.prompt,
+      ...(input.current?.sections.flatMap((s) =>
+        s.blocks.flatMap((b) => b.exercises.map((e) => e.name)),
+      ) ?? []),
+    ].join(". "),
+  );
+  const selected: Movement[] = eligible.filter((movement) =>
+    requestedMovements.includes(movement),
+  );
+  // Bound prompt size while retaining a mix of warmup, main work, and core.
+  const groups = [
+    ...new Set(eligible.map((movement) => movement.category)),
+  ].map((category) =>
+    eligible.filter((movement) => movement.category === category),
+  );
+  for (
+    let index = 0;
+    index < eligible.length && selected.length < 24;
+    index++
+  ) {
+    for (const group of groups) {
+      const movement = group[index];
+      if (movement && !selected.includes(movement) && selected.length < 24)
+        selected.push(movement);
+    }
+  }
   const references = regional
     .map((value) => workoutSchema.parse(value))
     .filter((w) => w.provenance.status === "regional-reviewed")
@@ -57,20 +99,35 @@ export function contextFor(input: PlannerRequest) {
           scheduleChecked: ao.checkedAt,
         }
       : null,
-    site: siteContext(input.ao, input.prompt, input.site),
+    site,
     aoWarning: ao
       ? "Unlisted local attributes remain UNKNOWN. Schedule is a dated snapshot; Q checks current conditions."
       : "No verified AO matched. Do not infer location or terrain.",
-    exercises: exercises.map(
-      ({ name, aliases, instructions, equipment, counting, sourceUrl }) => ({
-        name,
-        aliases,
-        instructions,
-        equipment,
-        counting,
-        sourceUrl,
-      }),
-    ),
+    exerciseGuideWarning:
+      "App planning conventions, not verified regional variations. Confirm names and demonstrate counting. Alternatives are suggestions for a different movement, never automatic replacements or medical advice. Only use fixed features confirmed available in site.features. No running does not mean no jumping; offer a step-based option when requested.",
+    exercises: selected
+      .slice(0, 24)
+      .map(
+        ({
+          name,
+          aliases,
+          instructions,
+          equipment,
+          counting,
+          features,
+          running,
+          alternative,
+        }) => ({
+          name,
+          aliases,
+          instructions,
+          equipment,
+          counting,
+          requiredFeatures: features,
+          running,
+          alternative,
+        }),
+      ),
     references,
   };
 }

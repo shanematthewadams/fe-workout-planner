@@ -5,6 +5,12 @@ publish = "dist"
 NODE_VERSION = "22"
 VITE_SUPABASE_URL = "https://kitqovhdwzkhpxlepvfn.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_0JeYeQVmWejiGgAyYXDo9g_F-6r3IDU"
+[context.branch-deploy.environment]
+VITE_APP_ENV = "staging"
+[context.deploy-preview.environment]
+VITE_APP_ENV = "staging"
+[context.production.environment]
+VITE_APP_ENV = "production"
 [[redirects]]
 from = "/*"
 to = "/index.html"
