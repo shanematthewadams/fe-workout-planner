@@ -63,6 +63,10 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
   ).toBeVisible();
   await expect(page.getByRole("timer")).toHaveText("00:20");
   expect(await tones()).toBeGreaterThan(1);
+  await page.screenshot({
+    path: `${pictures}/${info.project.name}-tabata-work.png`,
+    fullPage: true,
+  });
   await page.clock.fastForward(20000);
   await expect(
     page.getByRole("heading", { name: "Rest", exact: true }),
@@ -102,7 +106,9 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
   ).toBeInViewport();
   expect(
     await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
+      () =>
+        document.documentElement.scrollWidth <= innerWidth &&
+        document.documentElement.scrollHeight <= innerHeight,
     ),
   ).toBe(true);
   await page.screenshot({
@@ -113,6 +119,11 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
   await page
     .getByRole("button", { name: "Resume intervals", exact: true })
     .click();
+  await page.getByRole("button", { name: "Exit focus", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause intervals", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Focus timer", exact: true }).click();
   await page.clock.fastForward(220000);
   await expect(
     page.getByRole("heading", { name: "Complete", exact: true }),

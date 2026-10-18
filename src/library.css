@@ -523,7 +523,7 @@
   background: #1c1d20;
 }
 .interval-rest {
-  --phase-color: #a9d5e4;
+  --phase-color: #f6f1e8;
 }
 .interval-get-ready {
   --phase-color: #f6f1e8;
@@ -662,4 +662,40 @@ body:has(.staging-notice) .lead-focused {
 }
 .lead-focused .interval-clock {
   min-height: calc(100svh - var(--timer-chrome));
+}
+@media (max-height: 550px) and (min-width: 600px) {
+  .lead-focused {
+    padding: 8px 16px;
+  }
+  .lead-focused .interval-clock {
+    padding: 12px 20px;
+    min-height: calc(100svh - var(--timer-chrome) + 16px);
+  }
+  .lead-focused .interval-toolbar {
+    margin: 0;
+  }
+  .lead-focused .interval-display {
+    padding: 0;
+  }
+  .lead-focused .interval-clock .timer-stage {
+    margin: 0 0 4px;
+  }
+  .lead-focused .interval-clock .field-clock {
+    margin: 0;
+  }
+  .lead-focused .interval-round,
+  .lead-focused .interval-next {
+    margin: 4px 0;
+  }
+  .lead-focused .interval-clock .actions {
+    margin: 8px 0;
+    gap: 8px;
+  }
+  .lead-focused .interval-clock .actions button {
+    min-height: 48px;
+    padding: 10px;
+  }
+  .lead-focused .interval-clock progress {
+    margin: 8px 0;
+  }
 }

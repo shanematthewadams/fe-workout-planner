@@ -20,7 +20,7 @@ Main screen titles and section signposts use uppercase Big Shoulders Display; au
 
 ## Focus timer
 
-Starting or resuming intervals opens focus mode: setup, workout chrome and explanatory paragraphs give way to the phase, large tabular countdown, round, next phase and whole-set progress. Work uses gold; rest uses pale blue, with explicit text for both. Sounds can be toggled in focus. Exit focus (or Escape) reveals the plan controls without stopping the set. Space pauses/resumes when the timer panel has keyboard focus; repeated keydown events are ignored. Native button keyboard behavior remains intact. Reset asks before discarding progress and returns to setup.
+Starting or resuming intervals opens focus mode: setup, workout chrome and explanatory paragraphs give way to the phase, large tabular countdown, round, next phase and whole-set progress. Work uses gold; rest uses warm white, with explicit text for both. Sounds can be toggled in focus. Exit focus (or Escape) reveals the plan controls without stopping the set. Space pauses/resumes when the timer panel has keyboard focus; repeated keydown events are ignored. Native button keyboard behavior remains intact. Reset asks before discarding progress and returns to setup.
 
 A 40/20 × 8 preset complements 20/10 Tabata and custom settings. The next-phase preview handles zero-rest intervals and the final rest correctly. The timer adapts to portrait and short landscape screens. A small staging label remains visible in focus mode.
 
