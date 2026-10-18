@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { planningDetailsSchema } from "./planning-details";
 import {
   plannerRequestSchema,
   plannerResponseSchema,
@@ -45,14 +46,22 @@ export function restorePlannerSession(): PlannerSession {
     const result = plannerResponseSchema.safeParse(value.result);
     const preferences = plannerRequestSchema
       .omit({ prompt: true, current: true })
-      .safeParse(value.preferences ?? {});
+      .safeParse({ ...value.preferences, planning: undefined });
+    const planning = planningDetailsSchema
+      .optional()
+      .safeParse(value.preferences?.planning);
     const builder = plannerRequestSchema.shape.builder.safeParse(value.builder);
     const request = plannerRequestSchema.safeParse(value.request);
     return {
       prompt:
         typeof value.prompt === "string" ? value.prompt.slice(0, 1800) : "",
       result: result.success ? result.data : null,
-      preferences: preferences.success ? preferences.data : empty.preferences,
+      preferences: preferences.success
+        ? {
+            ...preferences.data,
+            planning: planning.success ? planning.data : undefined,
+          }
+        : empty.preferences,
       mode: value.mode === "formal" ? "formal" : "idea",
       builder: builder.success && builder.data ? builder.data : defaultBuilder,
       revision: z.string().max(1800).safeParse(value.revision).success

@@ -70,8 +70,11 @@ export function Planner({
     ),
     [gear, setGear] = useState<string[]>(initial.builder.gear),
     [pax, setPax] = useState<number | undefined>(
-      initial.preferences.planning?.pax ??
-        (initial.mode === "formal" ? initial.builder.pax : undefined),
+      initial.preferences.planning
+        ? initial.preferences.planning.pax
+        : initial.mode === "formal"
+          ? initial.builder.pax
+          : undefined,
     ),
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);

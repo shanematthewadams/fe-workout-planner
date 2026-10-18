@@ -20,6 +20,7 @@ import { Planner } from "../src/Planner";
 import App from "../src/App";
 import { contextFor } from "../server/planner-context";
 import { validatePlan } from "../server/planner-service";
+import { SESSION_KEY, restorePlannerSession } from "../src/planner-session";
 const props = {
   onSave: () => true,
   onEdit: () => {},
@@ -259,4 +260,36 @@ it("takes a stated turnout from the idea when the count is left blank", () => {
     resolveRequest({ prompt: "Maybe 17 guys", planning: { pax: 20 } }).planning
       ?.pax,
   ).toBe(20);
+});
+it("keeps an unknown turnout blank after restoring formal mode", () => {
+  const first = render(<Planner {...props} />);
+  fireEvent.click(screen.getByRole("button", { name: "Formal Builder" }));
+  fireEvent.change(screen.getByLabelText("PAX count"), {
+    target: { value: "17" },
+  });
+  fireEvent.change(screen.getByLabelText("PAX count"), {
+    target: { value: "" },
+  });
+  first.unmount();
+  render(<Planner {...props} />);
+  expect(screen.getByLabelText("PAX count")).toHaveValue(null);
+});
+it("does not discard valid older preferences when new planning details are invalid", () => {
+  sessionStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      prompt: "Keep my idea",
+      preferences: {
+        ao: "Gold Rush",
+        running: "None",
+        startTime: "06:00",
+        planning: { pax: 0 },
+      },
+    }),
+  );
+  expect(restorePlannerSession().preferences).toMatchObject({
+    ao: "Gold Rush",
+    running: "None",
+    startTime: "06:00",
+  });
 });
