@@ -51,7 +51,21 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
     page.getByRole("heading", { name: "My workouts", exact: true }),
   ).toBeVisible();
   await navigate(page, "AO Directory");
+  await page.getByLabel("Search AOs", { exact: true }).fill("South Park");
+  await expect(
+    page.getByRole("link", { name: "F3 Nation map ↗", exact: true }),
+  ).toHaveAttribute("href", /locationId=38856/);
+  await expect(
+    page.getByText(/Listed default: Brougham Elementary School/),
+  ).toContainText("Seasonal meeting points may differ");
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-nation-map.png`,
+    fullPage: true,
+  });
   await page.getByLabel("Search AOs", { exact: true }).fill("Heartland");
+  await expect(
+    page.getByRole("link", { name: "F3 Nation map ↗", exact: true }),
+  ).toHaveAttribute("href", /locationId=49796/);
   await page.getByText("Landmarks", { exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Back concrete benches", exact: true }),

@@ -1,3 +1,4 @@
+import { NationLocation } from "./NationLocation";
 import { AppIcon } from "./AppIcon";
 import { AOReview } from "./AOReview";
 import { siteContext } from "./ao-context";
@@ -284,6 +285,10 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
                     {s.location}
                   </p>
                 ))}
+                <NationLocation
+                  aoId={a.id}
+                  seasonal={(a.local.venues?.length ?? 0) > 1}
+                />
                 {a.local.accessNotes && (
                   <p className="ao-access-note">
                     <AppIcon name="review" />
