@@ -12,24 +12,17 @@ const locationSchema = z.object({
   addressState: z.string().nullable(),
 });
 const orgSchema = z.object({
-  orgId: id,
-  name: z.string().nullable(),
-  orgType: z.string(),
-  hierarchy: z.array(z.tuple([id, z.string().nullable(), z.string()])),
-  activeLocations: z.array(
-    z.object({
-      locationId: id,
-      latitude: z.number().min(-90).max(90),
-      longitude: z.number().min(-180).max(180),
-    }),
-  ),
+  id,
+  name: z.string(),
+  orgType: z.literal("ao"),
+  parentId: id,
+  defaultLocationId: id.nullable(),
+  isActive: z.boolean(),
 });
-export class NationRegionError extends Error {
-  constructor(readonly organizations: z.infer<typeof orgSchema>[]) {
-    super("No regional AOs returned; verify the official region identity.");
-    this.name = "NationRegionError";
-  }
-}
+const pageSchema = z.object({
+  orgs: z.array(orgSchema),
+  total: z.number().int().min(0).max(10000),
+});
 /** Uses the official OpenAPI contract retrieved 2026-10-19. Strip contact/leadership data. */
 export async function fetchNationDirectory({
   token,
@@ -57,47 +50,79 @@ export async function fetchNationDirectory({
       );
     return response.json();
   };
-  const organizations = z
-    .object({ orgs: z.array(orgSchema.nullable()) })
-    .parse(await get("org-chart"))
-    .orgs.filter((org): org is z.infer<typeof orgSchema> => !!org);
-  const orgs = organizations.filter(
-    (org) =>
-      org.orgType === "ao" &&
-      org.hierarchy.some(
-        ([ancestor, , type]) => ancestor === regionId && type === "region",
-      ),
-  );
-  if (!orgs.length) throw new NationRegionError(organizations);
-  if (new Set(orgs.map((org) => org.orgId)).size !== orgs.length)
-    throw Error("Duplicate official AO identity; import stopped.");
+  const organizations: z.infer<typeof orgSchema>[] = [];
+  let total: number | undefined;
+  for (let pageIndex = 0; ; pageIndex++) {
+    const query = new URLSearchParams({
+      orgTypes: "ao",
+      parentOrgIds: String(regionId),
+      statuses: "active",
+      pageIndex: String(pageIndex),
+      pageSize: "100",
+    });
+    const page = pageSchema.parse(await get(`org?${query}`));
+    if (total !== undefined && page.total !== total)
+      throw Error(
+        "Nation directory changed during pagination; retry the complete import.",
+      );
+    total = page.total;
+    if (page.orgs.some((org) => org.parentId !== regionId || !org.isActive))
+      throw Error("Official AO region or activity mismatch; import stopped.");
+    organizations.push(...page.orgs);
+    if (
+      new Set(organizations.map((org) => org.id)).size !== organizations.length
+    )
+      throw Error("Duplicate official AO identity; import stopped.");
+    if (organizations.length === total) break;
+    if (!page.orgs.length || organizations.length > total || pageIndex >= 99)
+      throw Error("Incomplete Nation directory pagination; import stopped.");
+  }
+  if (!organizations.length)
+    throw Error(
+      "No regional AOs returned; verify the official region identity.",
+    );
   const locationIds = [
     ...new Set(
-      orgs.flatMap((org) =>
-        org.activeLocations.map((location) => location.locationId),
+      organizations.flatMap((org) =>
+        org.defaultLocationId ? [org.defaultLocationId] : [],
       ),
     ),
   ];
   const locations: z.infer<typeof locationSchema>[] = [];
-  for (const locationId of locationIds) {
-    const location = z
-      .object({ location: locationSchema.nullable() })
-      .parse(await get(`location/id/${locationId}`)).location;
-    if (
-      !location ||
-      location.id !== locationId ||
-      location.regionId !== regionId ||
-      !location.isActive
-    )
-      throw Error(
-        "Official location identity, activity or region mismatch; import stopped.",
-      );
-    locations.push(location);
+  for (let index = 0; index < locationIds.length; index += 4) {
+    const batch = await Promise.all(
+      locationIds.slice(index, index + 4).map(async (locationId) => {
+        const location = z
+          .object({ location: locationSchema.nullable() })
+          .parse(await get(`location/id/${locationId}`)).location;
+        if (
+          !location ||
+          location.id !== locationId ||
+          location.regionId !== regionId ||
+          !location.isActive
+        )
+          throw Error(
+            "Official location identity, activity or region mismatch; import stopped.",
+          );
+        return location;
+      }),
+    );
+    locations.push(...batch);
   }
+  const orgs = organizations.map(
+    ({ id: orgId, name, parentId, defaultLocationId, orgType }) => ({
+      orgId,
+      name,
+      parentId,
+      defaultLocationId,
+      orgType,
+    }),
+  );
   return {
     sourceUrl: "https://api.f3nation.com/docs",
     checkedAt: new Date().toISOString(),
     regionId,
+    locationBasis: "default" as const,
     orgs,
     locations,
   };
@@ -118,7 +143,8 @@ export function directoryCandidates(
       name: org.name,
       localId: matches.length === 1 ? matches[0].id : null,
       status: "needs-review",
-      locationIds: org.activeLocations.map((location) => location.locationId),
+      locationIds: org.defaultLocationId ? [org.defaultLocationId] : [],
+      locationBasis: directory.locationBasis,
     };
   });
 }

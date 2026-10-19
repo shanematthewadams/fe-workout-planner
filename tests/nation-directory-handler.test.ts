@@ -15,24 +15,17 @@ it("uses only the saved region and strips contact and leadership details from Na
     .mockResolvedValueOnce(
       new Response(
         JSON.stringify({
+          total: 1,
           orgs: [
             {
-              orgId: 100,
+              id: 100,
+              parentId: 5,
+              isActive: true,
+              defaultLocationId: 6,
               name: "South Park",
               orgType: "ao",
-              hierarchy: [[5, "The FE", "region"]],
-              activeLocations: [
-                { locationId: 6, latitude: 38, longitude: -94 },
-              ],
               email: "private@example.test",
               positions: [{ userId: 42 }],
-            },
-            {
-              orgId: 101,
-              name: "Other region",
-              orgType: "ao",
-              hierarchy: [[999, "Other", "region"]],
-              activeLocations: [],
             },
           ],
         }),
@@ -140,35 +133,13 @@ it("rejects malformed directory results and timeouts without returning a partial
     502,
   );
 });
-it("reports public region identity candidates when the saved region ID has no active AOs", async () => {
+it("does not invent AOs when the region has no active records", async () => {
   const fetcher = vi
     .fn<typeof fetch>()
-    .mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          orgs: [
-            {
-              orgId: 100,
-              name: "South Park",
-              orgType: "ao",
-              hierarchy: [[9, "The FE", "region"]],
-              activeLocations: [],
-              email: "private@example.test",
-            },
-          ],
-        }),
-      ),
-    );
+    .mockResolvedValue(new Response(JSON.stringify({ orgs: [], total: 0 })));
   const response = await handleNationDirectory(request(), env, fetcher);
-  const body = await response.json();
-  expect(body).toMatchObject({
-    reason: "nation-region",
-    regionId: 5,
-    organizationCount: 1,
-    aoCount: 1,
-    localNameMatches: [
-      { id: 100, name: "South Park", regions: [{ id: 9, name: "The FE" }] },
-    ],
+  expect(await response.json()).toMatchObject({
+    reason: "nation-directory",
+    detail: "no-regional-aos",
   });
-  expect(JSON.stringify(body)).not.toContain("private");
 });

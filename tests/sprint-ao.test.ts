@@ -78,15 +78,15 @@ it("strips contacts, validates region and creates review candidates without modi
     .mockResolvedValueOnce(
       new Response(
         JSON.stringify({
+          total: 1,
           orgs: [
             {
-              orgId: 100,
+              id: 100,
+              parentId: 5,
+              isActive: true,
+              defaultLocationId: 6,
               name: "South Park",
               orgType: "ao",
-              hierarchy: [[5, "The FE", "region"]],
-              activeLocations: [
-                { locationId: 6, latitude: 38, longitude: -94 },
-              ],
               email: "private@example.test",
             },
           ],
@@ -131,15 +131,15 @@ it("does not silently accept wrong-region location records", async () => {
     .mockResolvedValueOnce(
       new Response(
         JSON.stringify({
+          total: 1,
           orgs: [
             {
-              orgId: 100,
+              id: 100,
+              parentId: 5,
+              isActive: true,
+              defaultLocationId: 6,
               name: "South Park",
               orgType: "ao",
-              hierarchy: [[5, "The FE", "region"]],
-              activeLocations: [
-                { locationId: 6, latitude: 38, longitude: -94 },
-              ],
             },
           ],
         }),

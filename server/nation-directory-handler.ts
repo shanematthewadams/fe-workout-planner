@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   fetchNationDirectory,
   directoryCandidates,
-  NationRegionError,
 } from "../scripts/nation-directory";
 import local from "../data/ao-official.json";
 
@@ -54,43 +53,6 @@ export async function handleNationDirectory(
       candidates: directoryCandidates(directory, local),
     });
   } catch (problem) {
-    if (problem instanceof NationRegionError) {
-      const normalize = (name: string) =>
-        name.toLowerCase().replace(/[^a-z0-9]/g, "");
-      const localNames = new Set(local.map((ao) => normalize(ao.name)));
-      const configured = problem.organizations.find(
-        (org) => org.orgId === regionId,
-      );
-      return Response.json(
-        {
-          status: "unavailable",
-          reason: "nation-region",
-          regionId,
-          organizationCount: problem.organizations.length,
-          aoCount: problem.organizations.filter((org) => org.orgType === "ao")
-            .length,
-          configuredOrganization: configured
-            ? {
-                id: configured.orgId,
-                name: configured.name,
-                type: configured.orgType,
-              }
-            : null,
-          localNameMatches: problem.organizations
-            .filter((org) => org.name && localNames.has(normalize(org.name)))
-            .slice(0, 100)
-            .map((org) => ({
-              id: org.orgId,
-              name: org.name,
-              type: org.orgType,
-              regions: org.hierarchy
-                .filter(([, , type]) => type === "region")
-                .map(([id, name]) => ({ id, name })),
-            })),
-        },
-        { status: 502 },
-      );
-    }
     const schema = problem instanceof z.ZodError;
     const message = problem instanceof Error ? problem.message : "";
     const upstreamStatus =
