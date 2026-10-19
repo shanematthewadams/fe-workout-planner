@@ -3,6 +3,11 @@ on:
   push:
     branches: [main, studio/ux-streamline]
   workflow_dispatch:
+    inputs:
+      live_cloud:
+        description: Verify temporary synthetic collections against the existing Supabase store
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
 concurrency:
@@ -13,6 +18,8 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      FE_LIVE_CLOUD: ${{ (inputs.live_cloud || contains(github.event.head_commit.message, '[verify cloud]')) && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,13 +34,23 @@ jobs:
       - run: npm run build
         env:
           VITE_APP_ENV: ${{ github.ref == 'refs/heads/studio/ux-streamline' && 'staging' || 'production' }}
-      - name: Build isolated cloud test app
-        run: npx vite build --outDir qa/cloud-app
+      - name: Build cloud test app
+        run: |
+          python - <<'PYBUILD'
+          import os, subprocess, tomllib
+          env = os.environ.copy()
+          if env.get("FE_LIVE_CLOUD") == "true":
+              config = tomllib.load(open("netlify.toml", "rb"))["build"]["environment"]
+              env.update({key: config[key] for key in ("VITE_SUPABASE_URL", "VITE_SUPABASE_PUBLISHABLE_KEY")})
+              with open(os.environ["GITHUB_ENV"], "a") as out:
+                  out.write("FE_LIVE_CLOUD_URL=" + env["VITE_SUPABASE_URL"] + "\n")
+                  out.write("FE_LIVE_CLOUD_KEY=" + env["VITE_SUPABASE_PUBLISHABLE_KEY"] + "\n")
+          subprocess.run(["npx", "vite", "build", "--outDir", "qa/cloud-app"], env=env, check=True)
+          PYBUILD
         env:
           VITE_APP_ENV: staging
-          VITE_STAGING_SUPABASE_URL: https://staging-sync.invalid
-          VITE_STAGING_SUPABASE_PUBLISHABLE_KEY: test-public-fixture
-          VITE_STAGING_SYNC_RPC: fe_staging_sync_plans
+          VITE_SUPABASE_URL: https://staging-sync.invalid
+          VITE_SUPABASE_PUBLISHABLE_KEY: test-public-fixture
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
       - name: Verify desktop, tablet and mobile

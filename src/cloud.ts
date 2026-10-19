@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { workoutSchema, copyWorkout, type Workout } from "./model";
-import { isStaging } from "./environment";
 const cloudSnapshot = z.object({
   version: z.number().int().nonnegative(),
   workouts: z.array(workoutSchema).max(200),
@@ -61,33 +60,15 @@ export function mergeCloud(
     );
   return { workouts: result, conflicts };
 }
-/** Staging requires a separate database or the explicitly isolated staging RPC. */
+/** Staging and production share the existing pre-launch private workout store. */
 export function cloudConnection() {
-  const production = import.meta.env.VITE_SUPABASE_URL;
-  const url = isStaging()
-    ? import.meta.env.VITE_STAGING_SUPABASE_URL
-    : production;
-  const key = isStaging()
-    ? import.meta.env.VITE_STAGING_SUPABASE_PUBLISHABLE_KEY
-    : import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return null;
   try {
     const target = new URL(url);
-    const sameProject =
-      target.origin === new URL(production || "https://invalid.example").origin;
-    const isolatedRpc =
-      import.meta.env.VITE_STAGING_SYNC_RPC === "fe_staging_sync_plans";
-    if (
-      target.protocol !== "https:" ||
-      (isStaging() && (!production || sameProject) && !isolatedRpc)
-    )
-      return null;
-    return {
-      url: target.origin,
-      key,
-      rpc:
-        isStaging() && isolatedRpc ? "fe_staging_sync_plans" : "fe_sync_plans",
-    };
+    if (target.protocol !== "https:") return null;
+    return { url: target.origin, key, rpc: "fe_sync_plans" };
   } catch {
     return null;
   }
@@ -101,11 +82,7 @@ export async function cloudRequest(
 ): Promise<Snapshot> {
   const connection = cloudConnection();
   if (!connection)
-    throw Error(
-      isStaging()
-        ? "Cloud sync is disabled until an isolated staging database is configured."
-        : "Cloud connection is not configured. Your device copy is safe.",
-    );
+    throw Error("Cloud saving is not configured. Your device copy is safe.");
   if (!/^[a-f0-9]{64}$/.test(token))
     throw Error("Enter the full 64-character connection code.");
   const { url, key, rpc } = connection;

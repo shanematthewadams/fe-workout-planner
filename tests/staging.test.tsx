@@ -10,8 +10,10 @@ afterEach(() => {
   vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
-it("marks staging and disables cloud entry points without a request", async () => {
+it("marks staging and handles missing cloud configuration without a request", async () => {
   vi.stubEnv("VITE_APP_ENV", "staging");
+  vi.stubEnv("VITE_SUPABASE_URL", "");
+  vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "");
   const fetcher = vi.spyOn(globalThis, "fetch");
   render(
     <>
@@ -20,16 +22,16 @@ it("marks staging and disables cloud entry points without a request", async () =
     </>,
   );
   expect(screen.getByLabelText("Staging version")).toBeVisible();
-  expect(
-    screen.getByLabelText("Cloud sync unavailable in staging"),
-  ).toBeVisible();
+  expect(screen.getByLabelText("Saving and devices")).toBeVisible();
   expect(
     screen.queryByRole("button", { name: "Connect my devices" }),
   ).toBeNull();
   await expect(cloudRequest("a".repeat(64), "put", 0, [])).rejects.toThrow(
-    "disabled",
+    "not configured",
   );
-  await expect(cloudRequest("a".repeat(64), "get")).rejects.toThrow("disabled");
+  await expect(cloudRequest("a".repeat(64), "get")).rejects.toThrow(
+    "not configured",
+  );
   expect(fetcher).not.toHaveBeenCalled();
 });
 it("retains production cloud controls and omits the staging label", () => {

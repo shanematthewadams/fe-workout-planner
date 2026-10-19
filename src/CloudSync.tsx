@@ -94,14 +94,7 @@ export function CloudSync({
       </aside>
     );
   return (
-    <section
-      className="cloud-sync"
-      aria-label={
-        !save.available && isStaging()
-          ? "Cloud sync unavailable in staging"
-          : "Saving and devices"
-      }
-    >
+    <section className="cloud-sync" aria-label="Saving and devices">
       <h2>
         <Cloud size={26} aria-hidden="true" /> Saving & devices
       </h2>
@@ -111,9 +104,7 @@ export function CloudSync({
       </p>
       {!save.available && (
         <p className="muted">
-          {isStaging()
-            ? "Cloud testing is waiting for an isolated staging database. Test plans stay on this device; production data is protected."
-            : "Cloud saving is not configured. Your device saves still work."}
+          Cloud saving is not configured. Your device saves still work.
         </p>
       )}
       <p role="status">{save.status}</p>

@@ -130,17 +130,16 @@ it("pauses cloud work while storage recovery or unsaved edits need attention", a
   await settle();
   expect(cloudRequest).toHaveBeenCalledTimes(1);
 });
-it("requires isolated staging configuration and never falls back to the production database", () => {
+it("uses the existing private cloud store on staging while keeping browser connections explicit", () => {
   vi.stubEnv("VITE_APP_ENV", "staging");
+  expect(cloudConnection()).toEqual({
+    url: "https://production.example",
+    key: "public-test",
+    rpc: "fe_sync_plans",
+  });
+  vi.stubEnv("VITE_SUPABASE_URL", "http://production.example");
   expect(cloudConnection()).toBeNull();
-  vi.stubEnv("VITE_STAGING_SUPABASE_URL", "https://production.example/");
-  vi.stubEnv("VITE_STAGING_SUPABASE_PUBLISHABLE_KEY", "staging-public");
-  expect(cloudConnection()).toBeNull();
-  vi.stubEnv("VITE_STAGING_SUPABASE_URL", "https://staging.example");
-  expect(cloudConnection()?.url).toBe("https://staging.example");
-  vi.stubEnv("VITE_STAGING_SUPABASE_URL", "https://production.example");
-  vi.stubEnv("VITE_STAGING_SYNC_RPC", "fe_staging_sync_plans");
-  expect(cloudConnection()?.rpc).toBe("fe_staging_sync_plans");
+  vi.stubEnv("VITE_SUPABASE_URL", "https://production.example");
   localStorage.setItem(
     SYNC_SETTINGS,
     JSON.stringify({ code: "e".repeat(64), base: [] }),

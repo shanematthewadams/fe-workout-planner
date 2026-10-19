@@ -249,12 +249,12 @@ test("workout details recover and shape a weather-aware offline draft", async ({
   ).toBeVisible();
   await expect(page.getByRole("main")).toContainText("Standing knee drives");
 });
-test("staging protects live sync and labels the test environment", async ({
+test("staging stays labeled and missing cloud configuration leaves device saves available", async ({
   page,
 }) => {
   test.skip(
     process.env.FE_STAGING_TEST !== "true",
-    "Only staging builds expose the staging protections",
+    "Only staging builds show the test-version label",
   );
   const syncCalls: string[] = [];
   await page.route("**/rest/v1/rpc/fe_sync_plans", async (route) => {
@@ -270,7 +270,7 @@ test("staging protects live sync and labels the test environment", async ({
     .getByRole("button", { name: "Saving & devices", exact: true })
     .click();
   await expect(
-    page.getByLabel("Cloud sync unavailable in staging", { exact: true }),
+    page.getByLabel("Saving and devices", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Connect my devices", exact: true }),

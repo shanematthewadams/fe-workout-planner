@@ -7,8 +7,8 @@ export function StagingNotice() {
       <strong>Staging · test version</strong>
       <span>
         {cloudConnection()
-          ? "Test cloud saves use an isolated staging store."
-          : "Test plans stay on this device. Cloud testing awaits its isolated store."}
+          ? "Connect devices to see your saved workouts on your phone and computer."
+          : "Test plans stay on this device until cloud saving is configured."}
       </span>
     </aside>
   ) : null;
