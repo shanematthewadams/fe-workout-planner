@@ -14,7 +14,7 @@ If you already have a transactional email sender, use its SMTP credentials in th
    | Field | Value |
    | --- | --- |
    | Sender email | `signin@auth.f3thefe.com` |
-   | Sender name | `F3 Q Builder` |
+   | Sender name | `F3QBuilder` |
    | Host | `smtp.resend.com` |
    | Port | `465` |
    | Username | `resend` |
@@ -25,6 +25,23 @@ If you already have a transactional email sender, use its SMTP credentials in th
 6. Open [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your own email, and open the emailed link in the same browser. This confirms real inbox delivery; the automated checks below already cover the app behavior.
 
 Sources checked October 19, 2026: [Resend’s Supabase setup guide](https://resend.com/docs/send-with-supabase-smtp), [Resend pricing](https://resend.com/pricing). No Resend account, sender credentials, DNS records or paid subscription was created automatically.
+
+## Branded authentication emails
+
+The repository now includes two branded email bodies. They are prepared for installation; a Git push does not install them in Supabase.
+
+1. Open the project's **Authentication → Email → Templates** page (older dashboards call this **Email Templates**).
+2. For **Magic link**, set the subject to **Your F3QBuilder sign-in link**. Replace the body with the complete contents of `docs/email-signin.html` and save.
+3. For **Confirm sign up**, set the subject to **Finish signing in to F3QBuilder**. Replace the body with `docs/email-confirm-signup.html` and save. Supabase can use this message for a first-time email-link sign-in.
+4. Set the SMTP **Sender name** to **F3QBuilder**, as shown above. Both templates use a red wordmark header, charcoal background, readable light text and a red button with a gold accent. They have no external images or font downloads.
+5. Keep the button's `{{ .ConfirmationURL }}` exactly as supplied. It includes Supabase verification and the requested return URL. Do not replace it with a hardcoded staging URL, production URL or `{{ .SiteURL }}`. Turn off your email provider's link tracking so it does not rewrite the sign-in link.
+6. After installing, verify a first-time sign-in and a returning sign-in with a real mailbox. Prepared HTML alone does not prove inbox rendering or delivery. Template changes apply to this shared Supabase project, so staging and production use the same branding.
+
+## Staging and production returns
+
+The app derives each sign-in return URL from the browser's current origin. A staging request returns to staging; a production request returns to production once that build is approved and released. Browser sessions and account caches are separate between the sites; accounts and cloud workout records intentionally use the same pre-launch Supabase project.
+
+Both return destinations must be allowed in Supabase. The staging wildcard in the setup above covers staging. Before the production login release, allow the exact production return URL `https://q.f3thefe.com/?signin=1#my-workouts` and set **Site URL** to `https://q.f3thefe.com` as the default fallback. A temporary staging Site URL is valid during staging-only testing. We do not need separate Supabase projects or to keep switching the Site URL between sites during normal use.
 
 ## What is implemented
 
