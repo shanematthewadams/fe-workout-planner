@@ -1,18 +1,18 @@
 # Optional email-code sign-in
 
-F3QBuilder uses one-time codes sent by email. Guest access stays open. Entering a code signs in to a personal workout library; there is no password and no SMS service.
+F3QBuilder confirms a new email address with a one-time confirmation link. After confirmation, future sign-ins use numeric codes sent by email. Guest access stays open; there is no password and no SMS service.
 
 ## Install the code emails in Supabase
 
-These email templates have not been installed in Supabase yet. The files below are ready to paste into the dashboard. Updating repository files does not install them automatically. If your sender, DNS and SMTP settings are already configured, keep them; otherwise finish the sender setup below as well.
+These repository templates must be installed in Supabase manually; their dashboard installation has not been verified. The files below are ready to paste into the dashboard. Updating repository files does not install them automatically. If your sender, DNS and SMTP settings are already configured, keep them; otherwise finish the sender setup below as well.
 
-The email displays a selectable numeric code as plain text using `{{ .Token }}`. There is no sign-in link, code embedded in a URL, or clickable sign-in button. Users copy the code from the email and paste it into the app’s single Sign-in code field, then select Verify & sign in. Typing and device-supported code autofill also work. Email cannot reliably run a clipboard button, so copying uses the email app’s normal text selection and Copy command.
+The returning-user sign-in email displays a selectable numeric code as plain text using `{{ .Token }}`. There is no sign-in link, code embedded in a URL, or clickable sign-in button. Users copy the code from the email and paste it into the app’s single Sign-in code field, then select Verify & sign in. Typing and device-supported code autofill also work. Email cannot reliably run a clipboard button, so copying uses the email app’s normal text selection and Copy command.
 
 1. Open the project's **Authentication → Email → Templates** page (older dashboards call this **Email Templates**).
 2. Under **Magic link**, use subject **Your F3QBuilder sign-in code** and replace the body with the complete contents of `docs/email-signin.html`. Save. Supabase keeps the “Magic link” template name even when its email contains a code.
-3. Under **Confirm sign up**, use the same subject and replace the body with `docs/email-confirm-signup.html`. Save. Supabase can use this template for a first-time code request.
-4. Both bodies must contain `{{ .Token }}`. That inserts the one-time code. The new templates have no sign-in button or hardcoded site URL.
-5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. Copy the emailed code and paste it back in the app, then choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
+3. Under **Confirm sign up**, use subject **Confirm your F3QBuilder email** and replace the body with `docs/email-confirm-signup.html`. Save. New users receive a **Confirm my email** link using `{{ .ConfirmationURL }}`. Open it in the browser where signup started; the app already handles its session callback.
+4. Only **Magic link** contains `{{ .Token }}` as visible text. **Confirm sign up** contains `{{ .ConfirmationURL }}` as its confirmation button destination. Do not replace the signup template with the code template. Neither hardcodes a site URL.
+5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. For a new email, open **Confirm my email** in the same browser to complete signup. For an already-confirmed email, copy the emailed code and paste it back in the app, then choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
 
 Both templates retain the red wordmark header, charcoal background, readable light text and gold accent. The code is large, selectable text with no external image or font downloads. Set SMTP **Sender name** to **F3QBuilder** if it is not already set.
 
@@ -45,7 +45,7 @@ If an SMTP sender is already working, skip this section. Resend is a supported o
    | Password | Your private Resend API key |
 
    Save the settings. Never put SMTP credentials in frontend environment variables or source.
-5. Keep the Email provider enabled and email confirmation required. Install both code templates above. Do not disable confirmation to work around delivery failures.
+5. Keep the Email provider enabled and email confirmation required. Install the confirmation-link and sign-in-code templates above. Do not disable confirmation to work around delivery failures.
 
 Supabase's default email sender is restricted to project-team addresses and is not suitable for public sign-in. See [custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp), [Resend's setup guide](https://resend.com/docs/send-with-supabase-smtp) and [Resend pricing](https://resend.com/pricing). No email-provider account, sender credentials, DNS records or paid subscription was created automatically.
 
@@ -53,7 +53,7 @@ Supabase's default email sender is restricted to project-team addresses and is n
 
 Typing a code completes sign-in on the app page where it is entered, without following an email return link. Staging and production retain separate browser sessions and device caches. Accounts and cloud workout records intentionally share the same pre-launch Supabase project.
 
-The same-origin redirect option and old link handling remain compatible with previously delivered email links. Keep the existing URL configuration: allow `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` for staging. Before the production login release, allow `https://q.f3thefe.com/?signin=1#my-workouts` and set **Site URL** to `https://q.f3thefe.com` as the default fallback. A temporary staging Site URL is valid during staging-only testing. Normal code sign-in does not require switching the Site URL between environments.
+The same-origin redirect option and callback handling support the initial signup confirmation link and previously delivered email links. Keep the existing URL configuration: allow `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` for staging. Before the production login release, allow `https://q.f3thefe.com/?signin=1#my-workouts` and set **Site URL** to `https://q.f3thefe.com` as the default fallback. A temporary staging Site URL is valid during staging-only testing. Normal code sign-in does not require switching the Site URL between environments.
 
 ## Account storage and preservation
 
