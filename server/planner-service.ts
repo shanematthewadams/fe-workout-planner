@@ -33,6 +33,17 @@ export { resolveRequest } from "../src/planner-contract.ts";
 export function validatePlan(value: unknown, input: PlannerRequest) {
   const p = planSchema.parse(value),
     kinds = p.sections.map((s) => s.kind);
+  // Current AO facts confirm outdoor features, not indoor workout permission.
+  // Check prominent claims; caveats in notes do not establish access.
+  const description = `${p.title}. ${p.summary}`.replace(
+    /\b(?:not|never|no|without|avoid)\s+indoor(?:s)?\b/gi,
+    "",
+  );
+  if (/\bindoor(?:s)?\b/i.test(description))
+    throw new PlannerError(
+      422,
+      "The AI claimed unconfirmed indoor workout access. A covered shelter does not establish indoor permission.",
+    );
   if (
     (input.planning?.pax === 1 || input.planning?.grouping === "Individual") &&
     (p.format === "Partner" ||

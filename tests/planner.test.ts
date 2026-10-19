@@ -16,6 +16,25 @@ import { isVerifiedFreeGeminiKey } from "../server/provider-policy";
 import { planFixture } from "./fixtures/plan";
 import { fallbackPlan } from "../src/fallback";
 const input = () => plannerRequestSchema.parse({ prompt: GOLD_RUSH_EXAMPLE });
+it("does not treat a covered AO garage as confirmed indoor workout access", () => {
+  const request = resolveRequest({
+    prompt: "Core circuit",
+    ao: "Heartland",
+    equipment: "None",
+    running: "None",
+    strictSchedule: true,
+    planning: { weather: ["Rain"], focus: "Core" },
+  });
+  const plan = fallbackPlan(request).plan;
+  expect(contextFor(request).site.features.shelter).toBe("available");
+  plan.title = "Core Focus Indoor Shelter Circuit";
+  expect(() => validatePlan(plan, request)).toThrow("unconfirmed indoor");
+  plan.title = "Standing Core Circuit";
+  plan.summary = "An indoor-sheltered workout under the garage.";
+  expect(() => validatePlan(plan, request)).toThrow("unconfirmed indoor");
+  plan.summary = "Standing work, not indoors; Q confirms footing and access.";
+  expect(() => validatePlan(plan, request)).not.toThrow();
+});
 it("tries the next free provider when the first returns a timing violation", async () => {
   const request = plannerRequestSchema.parse({
     prompt: "Bodyweight workout",
