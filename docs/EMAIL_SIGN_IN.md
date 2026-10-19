@@ -2,15 +2,17 @@
 
 F3QBuilder uses one-time codes sent by email. Guest access stays open. Entering a code signs in to a personal workout library; there is no password and no SMS service.
 
-## If your email sender is already configured
+## Install the code emails in Supabase
 
-Keep the existing sender, DNS and SMTP settings. The only required configuration change for this switch is the two email templates in Supabase. Updating these repository files does not install them in Supabase automatically.
+These email templates have not been installed in Supabase yet. The files below are ready to paste into the dashboard. Updating repository files does not install them automatically. If your sender, DNS and SMTP settings are already configured, keep them; otherwise finish the sender setup below as well.
+
+The email displays a selectable numeric code as plain text using `{{ .Token }}`. There is no sign-in link, code embedded in a URL, or clickable sign-in button. Users copy the code from the email and paste it into the app’s single Sign-in code field, then select Verify & sign in. Typing and device-supported code autofill also work. Email cannot reliably run a clipboard button, so copying uses the email app’s normal text selection and Copy command.
 
 1. Open the project's **Authentication → Email → Templates** page (older dashboards call this **Email Templates**).
 2. Under **Magic link**, use subject **Your F3QBuilder sign-in code** and replace the body with the complete contents of `docs/email-signin.html`. Save. Supabase keeps the “Magic link” template name even when its email contains a code.
 3. Under **Confirm sign up**, use the same subject and replace the body with `docs/email-confirm-signup.html`. Save. Supabase can use this template for a first-time code request.
 4. Both bodies must contain `{{ .Token }}`. That inserts the one-time code. The new templates have no sign-in button or hardcoded site URL.
-5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. Enter the emailed code back in the app and choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
+5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. Copy the emailed code and paste it back in the app, then choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
 
 Both templates retain the red wordmark header, charcoal background, readable light text and gold accent. The code is large, selectable text with no external image or font downloads. Set SMTP **Sender name** to **F3QBuilder** if it is not already set.
 
