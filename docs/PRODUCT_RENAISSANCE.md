@@ -34,7 +34,7 @@ The shared `siteContext` function is used by browser context, API context, valid
 
 `withLocalAO` reads and validates the existing local terrain key, then attaches a bounded `site.localDraft` to a planning request. The server does not read browser storage or treat local notes as regional publication. A change of AO clears another site's local context. Base regional data remains unchanged.
 
-Site Q defaults were removed. A locally entered name is labeled unverified. Unknown does not mean an opening or vacancy. The directory's local editor is not an authorization system and cannot publish regional changes.
+Unsupported Site Q defaults were removed in this design pass. The later [Site Q roster correction](SITE_Q_ROSTER_2026-10-19.md) connects the explicit current inventory roster as the regional default. A locally entered override remains labeled unverified. Unknown does not mean an opening or vacancy. The directory's local editor is not an authorization system and cannot publish regional changes.
 
 Portable gear excludes fixed stairs, bleachers and pull-up bars. Existing API enum values remain accepted for compatibility, but never establish facility availability. Every generated plan goes through the terrain validator, including non-strict API requests.
 

@@ -43,3 +43,7 @@ The AO snapshot contains only schedule facts: 16 unique names, 17 weekly session
 The exercise guide checks nine names against visible `the-codex/exicon.csv`: Al Gore, American Hammer, Burpee, Carolina Dry Docks, Derkin, Dips, Flutter kicks, LBCs and Mountain Climbers. Instructions are short original descriptions of the movements, with separate aliases/equipment/counting guidance and links to the CSV plus official Exicon/Lexicon. No source description text, video, image or CSV bulk data is redistributed. Regional counting is not assumed. Exact stable individual Exicon entry IDs were not established, so links target the visible source file instead of invented deep links. Full national description reuse remains unresolved.
 
 https://f3nation.com/exicon and /lexicon remain public entry pages without an established bulk reuse grant; https://ironpax.f3greenwood.org/ returned no substantive workout content through retrieval. IronPAX workouts are neither FE originals nor imported here. Preserve author/source permission separately from API credentials: technical access does not establish permission to republish private records.
+
+## Current Site Q roster
+
+The [October 19 roster correction](SITE_Q_ROSTER_2026-10-19.md) adds the explicit Site Q(s) column from the regional AO inventory, with source row references and a refresh timestamp. It is separate from the schedule snapshot and local amenity reports. All 16 AOs are covered; co-Qs are preserved. This is a reviewed snapshot, not live Sheet synchronization.

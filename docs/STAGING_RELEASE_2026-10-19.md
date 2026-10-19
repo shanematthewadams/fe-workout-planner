@@ -4,6 +4,10 @@ Staging: https://studio-ux-streamline--fe-workout-planner.netlify.app
 
 Shane approved CI/browser verification, the shared database upgrade and staging deployment with “yes run all that.” No production frontend publish or merge to main was authorized or performed.
 
+## Site Q roster correction
+
+The current AO inventory’s explicit Site Q(s) column is now the default for all 16 AO badges, including co-Qs and consistent seasonal rows. Device overrides remain labeled, and clearing them restores the source roster. See [the roster correction and source-refresh model](SITE_Q_ROSTER_2026-10-19.md). This is a reviewed snapshot, not automatic live Sheet synchronization.
+
 ## Signup flow correction
 
 Shane confirmed inbox signup worked, then flagged that signup and returning sign-in looked identical and F3 Name setup was disconnected. The corrected flow explains the account benefit first, labels the guest entry **Keep my workouts**, and separates **Create account** (F3 Name plus email and confirmation-link instructions) from returning email-code sign-in. Returning sign-in uses `shouldCreateUser: false`.
