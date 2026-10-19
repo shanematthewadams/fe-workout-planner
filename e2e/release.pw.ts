@@ -126,7 +126,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     target.route(
       live
         ? `${liveUrl}/rest/v1/rpc/fe_sync_plans`
-        : "https://staging-sync.invalid/**",
+        : "https://staging-sync.invalid/rest/v1/rpc/fe_sync_plans",
       async (route) => {
         if (offline) {
           await route.abort();

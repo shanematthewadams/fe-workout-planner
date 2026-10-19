@@ -207,7 +207,7 @@ test("workout details recover and shape a weather-aware offline draft", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator(".header")).not.toContainText(
+  await expect(page.getByRole("banner")).not.toContainText(
     "Created by Rug Burn",
   );
   await expect(
