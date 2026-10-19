@@ -39,7 +39,9 @@ it("copies a source directly into a saved personal editor without changing its o
   expect(screen.getByLabelText("Workout title")).toHaveValue(
     `${catalog[0].title} · my copy`,
   );
-  expect(screen.getByText("Saved on this device")).toBeVisible();
+  expect(screen.getByLabelText("Saving status")).toHaveTextContent(
+    "Saved on this device",
+  );
   expect(readState().workouts).toHaveLength(1);
   expect(readState().workouts[0].originId).toBe(catalog[0].id);
   expect(JSON.stringify(catalog)).toBe(before);

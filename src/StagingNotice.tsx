@@ -7,7 +7,7 @@ export function StagingNotice() {
       <strong>Staging · test version</strong>
       <span>
         {cloudConnection()
-          ? "Connect devices to see your saved workouts on your phone and computer."
+          ? "Cloud saving is automatic. Offline work uploads when you reconnect."
           : "Test plans stay on this device until cloud saving is configured."}
       </span>
     </aside>

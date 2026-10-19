@@ -47,10 +47,11 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
     screen.getByRole("button", { name: "Digging for gold" }),
   ).toBeVisible();
   fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
+  fireEvent.click(screen.getByRole("button", { name: "Saving & recovery" }));
   expect(
-    screen.getByRole("button", { name: "Connect my devices" }),
-  ).toBeVisible();
+    screen.queryByRole("button", { name: "Connect my devices" }),
+  ).toBeNull();
+  expect(localStorage.getItem("fe-sync:v1")).not.toBeNull();
 });
 it("skipping Mary yields 35 minutes of The Thang and searchable reference terms", () => {
   render(<App />);

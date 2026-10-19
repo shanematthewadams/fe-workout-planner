@@ -445,7 +445,8 @@ export default function App() {
     const conflict =
       editingBase.current &&
       (!existing ||
-        JSON.stringify(existing) !== JSON.stringify(editingBase.current));
+        JSON.stringify(workoutSchema.parse(existing)) !==
+          JSON.stringify(workoutSchema.parse(editingBase.current)));
     if (conflict && state.workouts.length >= 200) {
       setNotice(
         "A conflict copy would exceed 200 plans. Export a backup and free space; your edits are still here.",
@@ -655,7 +656,7 @@ export default function App() {
                   ["markdown", "Import a workout"],
                   ["aos", "AO Directory"],
                   ["exicon", "Exicon & Lexicon"],
-                  ["data", "Saving & devices"],
+                  ["data", "Saving & recovery"],
                 ].map(([key, label]) => (
                   <button
                     key={key}

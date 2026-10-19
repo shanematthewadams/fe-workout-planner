@@ -33,10 +33,13 @@ export function useCloudSave(
   blocked: boolean,
 ) {
   const [config, setConfig] = useState(readSettings);
-  const [status, setStatus] = useState("Saved on this device");
+  const [status, setStatus] = useState("Workouts save automatically");
   const [busy, setBusy] = useState(false);
   const [recovery, setRecovery] = useState<unknown>(null);
   const [wake, setWake] = useState(0);
+  const [online, setOnline] = useState(() => navigator.onLine !== false);
+  const [settingsRecovery, setSettingsRecovery] = useState<string | null>(null);
+  const refreshSerial = useRef(0);
   const live = useRef({ workouts, onMerge, blocked, config });
   live.current = { workouts, onMerge, blocked, config };
   const active = useRef(false),
@@ -56,6 +59,7 @@ export function useCloudSave(
     if (!current || !available || locked || active.current) return;
     const seq = ++epoch.current;
     const capturedText = JSON.stringify(captured);
+    const beganAtRefresh = refreshSerial.current;
     active.current = true;
     setBusy(true);
     setStatus("Saving to cloud…");
@@ -117,11 +121,12 @@ export function useCloudSave(
       );
     } catch (error) {
       if (seq !== epoch.current) return;
-      failed.current = capturedText;
+      failed.current =
+        refreshSerial.current === beganAtRefresh ? capturedText : null;
       if (error instanceof CloudSnapshotError) setRecovery(error.snapshot);
       setStatus(
         error instanceof TypeError
-          ? "Saved on this device · cloud unavailable. Retry when connected."
+          ? "Saved on this device · waiting to upload when connected."
           : error instanceof Error
             ? error.message
             : "Saved on this device · cloud unavailable",
@@ -133,12 +138,42 @@ export function useCloudSave(
       }
     }
   }
+  // Saving online is the default. Create a private collection only when a workout exists.
+  useEffect(() => {
+    if (config || !workouts.length || blocked || !available) return;
+    try {
+      const raw = localStorage.getItem(settingsKey);
+      const existing = readSettings();
+      if (raw !== null && !existing) {
+        setSettingsRecovery(raw);
+        setStatus("Saved on this device · cloud recovery needs attention");
+        return;
+      }
+      // Another tab may have initialized the collection since this render.
+      const next = existing ?? { code: cloudKey(), base: [] };
+      localStorage.setItem(settingsKey, JSON.stringify(next));
+      setConfig(next);
+    } catch {
+      setStatus(
+        "Saved on this device · could not prepare automatic cloud saving",
+      );
+    }
+  }, [
+    config,
+    signature,
+    workouts.length,
+    blocked,
+    available,
+    settingsKey,
+    wake,
+  ]);
   const syncRef = useRef(sync);
   syncRef.current = sync;
   useEffect(() => {
     if (
       !config ||
       !available ||
+      !online ||
       blocked ||
       busy ||
       signature === acknowledged.current ||
@@ -147,61 +182,47 @@ export function useCloudSave(
       return;
     const id = setTimeout(() => void syncRef.current(), 800);
     return () => clearTimeout(id);
-  }, [signature, config?.code, available, blocked, busy, wake]);
+  }, [signature, config?.code, available, online, blocked, busy, wake]);
   useEffect(() => {
     const refresh = () => {
-      if (document.visibilityState !== "visible") return;
+      refreshSerial.current++;
+      setOnline(navigator.onLine !== false);
       acknowledged.current = null;
       failed.current = null;
       setWake((value) => value + 1);
     };
+    const offline = () => setOnline(false);
+    window.addEventListener("offline", offline);
     window.addEventListener("online", refresh);
     window.addEventListener("focus", refresh);
     return () => {
+      window.removeEventListener("offline", offline);
       window.removeEventListener("online", refresh);
       window.removeEventListener("focus", refresh);
       epoch.current++;
       abort.current?.abort();
     };
   }, []);
-  function connect(code = cloudKey()) {
+  function restore(code: string) {
     if (!/^[a-f0-9]{64}$/.test(code)) {
-      setStatus("Enter the full connection code.");
+      setStatus("Enter the full recovery code.");
       return;
     }
     if (!available || active.current) return;
     const next = { code, base: [] };
     try {
+      if (settingsRecovery !== null)
+        localStorage.setItem(`${settingsKey}:recovery`, settingsRecovery);
       localStorage.setItem(settingsKey, JSON.stringify(next));
+      setSettingsRecovery(null);
       acknowledged.current = null;
       failed.current = null;
       setConfig(next);
-      setStatus("Connecting devices…");
+      setStatus("Restoring saved workouts…");
     } catch {
       setStatus(
-        "Connection could not be saved. Your workouts remain on this device.",
+        "Recovery code could not be saved. Your workouts remain on this device.",
       );
-    }
-  }
-  function disconnect() {
-    if (
-      !confirm(
-        "Disconnect this device? Keep your connection code to reconnect. Saved workouts stay here.",
-      )
-    )
-      return;
-    epoch.current++;
-    abort.current?.abort();
-    active.current = false;
-    try {
-      localStorage.removeItem(settingsKey);
-      setConfig(null);
-      setBusy(false);
-      acknowledged.current = null;
-      failed.current = null;
-      setStatus("Saved on this device");
-    } catch {
-      setStatus("Could not disconnect. Browser storage is unavailable.");
     }
   }
   return {
@@ -209,11 +230,24 @@ export function useCloudSave(
     available,
     status: blocked
       ? "Cloud saving paused · finish editing or resolve this device’s storage warning"
-      : status,
+      : settingsRecovery !== null
+        ? status
+        : !workouts.length && !config
+          ? status
+          : !online
+            ? "Saved on this device · will upload when connected"
+            : !available
+              ? "Saved on this device · cloud saving is unavailable"
+              : config &&
+                  signature !== acknowledged.current &&
+                  signature !== failed.current
+                ? "Saving to cloud…"
+                : status,
     busy,
     recovery,
-    connect,
-    disconnect,
+    restore,
+    settingsRecovery,
+    needsRetry: failed.current === signature,
     retry: () => {
       failed.current = null;
       acknowledged.current = null;

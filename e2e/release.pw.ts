@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import proposal from "../data/ao-proposals/fe-ao-heartland.json" with { type: "json" };
 import type { Workout } from "../src/model";
-import { randomBytes, createHash } from "node:crypto";
+import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 // Live connection codes must not be captured in browser traces.
 test.use({
@@ -79,7 +79,7 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   });
 });
 
-test("cloud autosave connects two devices and recovers after a network failure", async ({
+test("cloud saving needs no setup, supports recovery on another device and retries offline edits", async ({
   page,
   browser,
 }, info) => {
@@ -87,46 +87,6 @@ test("cloud autosave connects two devices and recovers after a network failure",
     !process.env.FE_CLOUD_TEST_DIR,
     "Requires the isolated CI cloud fixture build",
   );
-  const w: Workout = {
-    schemaVersion: 1,
-    id: "synthetic-cloud-qa",
-    title: "Cross-device Q",
-    summary: "Synthetic browser fixture",
-    kind: "personal",
-    duration: 45,
-    equipment: [],
-    running: "None",
-    format: "Circuit",
-    rawNotes: "",
-    adaptationNotes: "",
-    provenance: { status: "personal", label: "Synthetic test workout" },
-    updatedAt: new Date().toISOString(),
-    sections: [
-      {
-        id: "synthetic-thang",
-        kind: "thang",
-        title: "The Thang",
-        blocks: [
-          {
-            id: "synthetic-block",
-            title: "Bodyweight circuit",
-            instructions: "Work at your own pace.",
-            minutes: 45,
-            exercises: [
-              {
-                id: "synthetic-exercise",
-                name: "Squat",
-                amount: "10",
-                unit: "reps",
-                counting: "1=1",
-                instructions: "Rest as needed.",
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
   const live = process.env.FE_LIVE_CLOUD === "true";
   const liveUrl = process.env.FE_LIVE_CLOUD_URL;
   const liveKey = process.env.FE_LIVE_CLOUD_KEY;
@@ -138,8 +98,8 @@ test("cloud autosave connects two devices and recovers after a network failure",
     throw Error(
       "Live checks require the existing HTTPS URL and a publishable client key.",
     );
-  const code = live ? randomBytes(32).toString("hex") : "a".repeat(64);
-  let remote = { version: 0, workouts: [] as (typeof w)[] };
+  let code = "";
+  let remote = { version: 0, workouts: [] as Workout[] };
   const readRemote = async () => {
     if (live) {
       const response = await fetch(
@@ -188,6 +148,7 @@ test("cloud autosave connects two devices and recovers after a network failure",
           return;
         }
         const body = route.request().postDataJSON();
+        if (!code) code = body.sync_code;
         if (body.sync_code !== code) {
           await route.fulfill({ status: 403, body: "{}" });
           return;
@@ -210,34 +171,42 @@ test("cloud autosave connects two devices and recovers after a network failure",
   try {
     await intercept(page);
     await intercept(second);
-    await page.addInitScript(
-      ({ w, code }) => {
-        localStorage.setItem(
-          "fe-planner:v1",
-          JSON.stringify({
-            format: "fe-workout-backup",
-            version: 1,
-            exportedAt: new Date().toISOString(),
-            workouts: [w],
-            favorites: [],
-          }),
-        );
-        localStorage.setItem(
-          "fe-sync:staging:v1",
-          JSON.stringify({ code, base: [] }),
-        );
-      },
-      { w, code },
+    await page.goto("http://127.0.0.1:4175/#build");
+    await page
+      .getByRole("button", { name: "Formal Builder", exact: true })
+      .click();
+    await page.getByLabel("Plan title", { exact: true }).fill("Cross-device Q");
+    await page
+      .getByRole("button", { name: "Use offline template", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Save a private copy", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "My Workouts", exact: true })
+      .click();
+    await expect
+      .poll(() =>
+        page.evaluate(() => !!localStorage.getItem("fe-sync:staging:v1")),
+      )
+      .toBe(true);
+    code = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("fe-sync:staging:v1")!).code,
     );
-    await page.goto("http://127.0.0.1:4175/#my-workouts");
+    await expect(
+      page.getByRole("button", { name: "Connect devices", exact: true }),
+    ).toHaveCount(0);
     await expect.poll(async () => (await readRemote()).workouts.length).toBe(1);
     await second.goto("http://127.0.0.1:4175/#settings");
     await second
-      .getByText("Connect to my existing workouts", { exact: true })
+      .getByText("Recovery & another device", { exact: true })
       .click();
-    await second.getByLabel("Connection code", { exact: true }).fill(code);
     await second
-      .getByRole("button", { name: "Connect with code", exact: true })
+      .getByText("Use an existing recovery code", { exact: true })
+      .click();
+    await second.getByLabel("Recovery code", { exact: true }).fill(code);
+    await second
+      .getByRole("button", { name: "Restore workouts", exact: true })
       .click();
     await expect(
       second.getByRole("status").filter({ hasText: "Saved to cloud" }),
@@ -274,7 +243,7 @@ test("cloud autosave connects two devices and recovers after a network failure",
       .first()
       .click();
     await expect(second.getByLabel("Saving status")).toContainText(
-      "cloud unavailable",
+      "waiting to upload",
     );
     expect((await readRemote()).workouts[0].title).toBe("Cloud updated Q");
     offline = false;
@@ -286,7 +255,7 @@ test("cloud autosave connects two devices and recovers after a network failure",
       .getByRole("button", { name: "My Workouts", exact: true })
       .click();
     await second
-      .getByRole("button", { name: "Devices & saving", exact: true })
+      .getByRole("button", { name: "Saving details", exact: true })
       .click();
     await second.screenshot({
       path: `qa/screenshots/${info.project.name}-cloud-save.png`,
@@ -294,7 +263,7 @@ test("cloud autosave connects two devices and recovers after a network failure",
     });
   } finally {
     await secondContext.close();
-    if (live) {
+    if (live && /^[a-f0-9]{64}$/.test(code)) {
       // Only this test's random collection is touched. Retain a hash for metadata cleanup.
       await mkdir("qa/live-cloud", { recursive: true });
       await writeFile(

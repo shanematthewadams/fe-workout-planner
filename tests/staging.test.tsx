@@ -22,7 +22,7 @@ it("marks staging and handles missing cloud configuration without a request", as
     </>,
   );
   expect(screen.getByLabelText("Staging version")).toBeVisible();
-  expect(screen.getByLabelText("Saving and devices")).toBeVisible();
+  expect(screen.getByLabelText("Saving and recovery")).toBeVisible();
   expect(
     screen.queryByRole("button", { name: "Connect my devices" }),
   ).toBeNull();
@@ -34,7 +34,7 @@ it("marks staging and handles missing cloud configuration without a request", as
   );
   expect(fetcher).not.toHaveBeenCalled();
 });
-it("retains production cloud controls and omits the staging label", () => {
+it("saves automatically without connection setup and omits the staging label in production", () => {
   vi.stubEnv("VITE_APP_ENV", "production");
   localStorage.clear();
   vi.stubEnv("VITE_SUPABASE_URL", "https://production.example");
@@ -47,6 +47,7 @@ it("retains production cloud controls and omits the staging label", () => {
   );
   expect(screen.queryByLabelText("Staging version")).toBeNull();
   expect(
-    screen.getByRole("button", { name: "Connect my devices" }),
-  ).toBeVisible();
+    screen.queryByRole("button", { name: "Connect my devices" }),
+  ).toBeNull();
+  expect(screen.getByText("Workouts save automatically")).toBeVisible();
 });

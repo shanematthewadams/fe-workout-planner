@@ -7,7 +7,6 @@ import {
   Link2,
   Copy,
   Download,
-  Unplug,
   RefreshCw,
 } from "lucide-react";
 import { useCloudSave } from "./useCloudSave";
@@ -73,34 +72,35 @@ export function CloudSync({
     }
   }
   if (hidden) return null;
-  const StatusIcon = save.busy
-    ? CloudUpload
-    : save.config && save.status.startsWith("Saved to cloud")
-      ? CloudCog
-      : save.config
-        ? CloudOff
-        : Cloud;
+  const StatusIcon =
+    save.busy || save.status.startsWith("Saving to cloud")
+      ? CloudUpload
+      : save.config && save.status.startsWith("Saved to cloud")
+        ? CloudCog
+        : save.config
+          ? CloudOff
+          : Cloud;
   if (compact)
     return (
       <aside className="cloud-statusbar no-print" aria-label="Saving status">
         <span>
           <StatusIcon size={17} aria-hidden="true" />
-          {save.config ? save.status : "Saved on this device"}
+          {save.status}
         </span>
         <button onClick={onSettings}>
           <Link2 size={16} aria-hidden="true" />
-          {save.config ? "Devices & saving" : "Connect devices"}
+          Saving details
         </button>
       </aside>
     );
   return (
-    <section className="cloud-sync" aria-label="Saving and devices">
+    <section className="cloud-sync" aria-label="Saving and recovery">
       <h2>
-        <Cloud size={26} aria-hidden="true" /> Saving & devices
+        <Cloud size={26} aria-hidden="true" /> Saving & recovery
       </h2>
       <p>
-        Connect once. Your saved workouts update automatically across your phone
-        and computer. A device copy protects your work if a connection drops.
+        Workouts save online automatically. When you’re offline, changes stay on
+        this device and upload when you’re connected again.
       </p>
       {!save.available && (
         <p className="muted">
@@ -108,67 +108,10 @@ export function CloudSync({
         </p>
       )}
       <p role="status">{save.status}</p>
-      {save.available && (
-        <div className="actions">
-          {save.config ? (
-            <>
-              <button disabled={save.busy || blocked} onClick={save.retry}>
-                <RefreshCw size={17} aria-hidden="true" />
-                Retry cloud save
-              </button>
-              <button
-                disabled={save.busy}
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(save.config!.code);
-                    setMessage(
-                      "Connection code copied. Keep it private; it grants access to your workouts.",
-                    );
-                  } catch {
-                    setMessage(
-                      "Clipboard unavailable. Download the connection code below.",
-                    );
-                  }
-                }}
-              >
-                <Copy size={17} aria-hidden="true" />
-                Copy connection code
-              </button>
-            </>
-          ) : (
-            <button
-              className="create"
-              disabled={blocked}
-              onClick={() => save.connect()}
-            >
-              <Link2 size={17} aria-hidden="true" />
-              Connect my devices
-            </button>
-          )}
-        </div>
-      )}
-      {save.available && !save.config && (
-        <details>
-          <summary>Connect to my existing workouts</summary>
-          <label>
-            Connection code
-            <input
-              type="password"
-              autoComplete="off"
-              value={code}
-              onChange={(event) => setCode(event.target.value.trim())}
-            />
-          </label>
-          <button
-            disabled={blocked}
-            onClick={() => {
-              save.connect(code);
-              setCode("");
-            }}
-          >
-            Connect with code
-          </button>
-        </details>
+      {save.available && save.config && save.needsRetry && (
+        <button disabled={save.busy || blocked} onClick={save.retry}>
+          <RefreshCw size={17} aria-hidden="true" /> Retry saving
+        </button>
       )}
       {save.recovery !== null && (
         <button
@@ -179,27 +122,77 @@ export function CloudSync({
         </button>
       )}
       <details className="advanced-saving">
-        <summary>Connection & recovery options</summary>
+        <summary>Recovery & another device</summary>
         <p>
-          Anyone with the private connection code can read and change that
-          collection. Keep a copy to reconnect. Favorites and unfinished edits
-          stay on this device.
+          Saving needs no setup. To open the same private workouts on another
+          device, copy your recovery code there. Keep it private: anyone with
+          this code can read and change those workouts. Favorites and unfinished
+          edits stay on this device.
         </p>
+        {save.settingsRecovery !== null && (
+          <button
+            onClick={() =>
+              download(
+                save.settingsRecovery,
+                "fe-saving-settings-recovery.json",
+              )
+            }
+          >
+            <Download size={17} aria-hidden="true" /> Download recovery settings
+          </button>
+        )}
         {save.config && (
           <div className="actions">
             <button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(save.config!.code);
+                  setMessage(
+                    "Recovery code copied. Keep it private; it grants access to your workouts.",
+                  );
+                } catch {
+                  setMessage(
+                    "Clipboard unavailable. Download the recovery code instead.",
+                  );
+                }
+              }}
+            >
+              <Copy size={17} aria-hidden="true" /> Copy recovery code
+            </button>
+            <button
               onClick={() =>
-                download(save.config!.code + "\n", "fe-private-sync-code.txt")
+                download(
+                  save.config!.code + "\n",
+                  "fe-private-recovery-code.txt",
+                )
               }
             >
-              <Download size={17} aria-hidden="true" />
-              Download connection code
-            </button>
-            <button onClick={save.disconnect}>
-              <Unplug size={17} aria-hidden="true" />
-              Disconnect this device
+              <Download size={17} aria-hidden="true" /> Download recovery code
             </button>
           </div>
+        )}
+        {save.available && (
+          <details>
+            <summary>Use an existing recovery code</summary>
+            <label>
+              Recovery code
+              <input
+                type="password"
+                autoComplete="off"
+                value={code}
+                onChange={(event) => setCode(event.target.value.trim())}
+              />
+            </label>
+            <button
+              disabled={save.busy || blocked}
+              onClick={() => {
+                save.restore(code);
+                setCode("");
+              }}
+            >
+              Restore workouts
+            </button>
+          </details>
         )}
         {!isStaging() && (
           <button disabled={save.busy} onClick={() => void importSavedStudio()}>

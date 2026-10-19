@@ -13,7 +13,7 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cloudRequest, cloudConnection } from "../src/cloud";
 import { useCloudSave, SYNC_SETTINGS } from "../src/useCloudSave";
-import { newWorkout } from "../src/model";
+import { newWorkout, workoutSchema } from "../src/model";
 vi.mock("../src/cloud", async (original) => ({
   ...(await original<typeof import("../src/cloud")>()),
   cloudRequest: vi.fn(),
@@ -30,13 +30,14 @@ afterEach(() => {
   cleanup();
   vi.useRealTimers();
   vi.unstubAllEnvs();
+  vi.restoreAllMocks();
 });
 async function settle() {
   await act(async () => {
     await vi.advanceTimersByTimeAsync(900);
   });
 }
-it("automatically saves after connecting and after a saved workout changes, with no manual sync step", async () => {
+it("automatically creates private cloud storage for a saved workout without setup and keeps saving later edits", async () => {
   const w = newWorkout();
   let remote = { version: 0, workouts: [] as (typeof w)[] };
   vi.mocked(cloudRequest).mockImplementation(
@@ -51,7 +52,6 @@ it("automatically saves after connecting and after a saved workout changes, with
     ({ workouts }) => useCloudSave(workouts, merge, false),
     { initialProps: { workouts: [w] } },
   );
-  act(() => hook.result.current.connect("a".repeat(64)));
   await settle();
   expect(remote.workouts).toEqual([w]);
   expect(hook.result.current.status).toBe("Saved to cloud");
@@ -179,4 +179,79 @@ it("keeps both versions when cloud changes arrive before edits to an already-ope
   expect(
     saved.some((value) => value.title === "My late edit · conflict copy"),
   ).toBe(true);
+});
+
+it("queues the first workout offline, survives reopening, and uploads automatically on reconnect", async () => {
+  const online = vi.spyOn(navigator, "onLine", "get").mockReturnValue(false);
+  const w = newWorkout();
+  vi.mocked(cloudRequest).mockImplementation(
+    async (_code, op, _version, items) =>
+      op === "put"
+        ? { version: 1, workouts: items! }
+        : { version: 0, workouts: [] },
+  );
+  const first = renderHook(() => useCloudSave([w], () => true, false));
+  await settle();
+  const code = first.result.current.config!.code;
+  expect(code).toMatch(/^[a-f0-9]{64}$/);
+  expect(first.result.current.status).toContain("will upload when connected");
+  expect(cloudRequest).not.toHaveBeenCalled();
+  first.unmount();
+  const reopened = renderHook(() => useCloudSave([w], () => true, false));
+  expect(reopened.result.current.config!.code).toBe(code);
+  online.mockReturnValue(true);
+  act(() => window.dispatchEvent(new Event("online")));
+  await settle();
+  expect(cloudRequest).toHaveBeenCalledWith(
+    code,
+    "put",
+    0,
+    [w],
+    expect.any(AbortSignal),
+  );
+  expect(reopened.result.current.status).toBe("Saved to cloud");
+});
+it("does not create a collection for an empty visit or replace unreadable recovery settings", async () => {
+  const empty = renderHook(() => useCloudSave([], () => true, false));
+  await settle();
+  expect(localStorage.getItem(SYNC_SETTINGS)).toBeNull();
+  expect(cloudRequest).not.toHaveBeenCalled();
+  empty.unmount();
+  const raw = '{"code":"damaged recovery data"';
+  localStorage.setItem(SYNC_SETTINGS, raw);
+  const existing = renderHook(() =>
+    useCloudSave([newWorkout()], () => true, false),
+  );
+  await settle();
+  expect(existing.result.current.settingsRecovery).toBe(raw);
+  expect(localStorage.getItem(SYNC_SETTINGS)).toBe(raw);
+  expect(cloudRequest).not.toHaveBeenCalled();
+});
+
+it("does not duplicate an open personal copy when cloud JSON only reorders its fields", async () => {
+  vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+  vi.spyOn(globalThis, "fetch").mockRejectedValue(
+    new Error("Catalog unavailable"),
+  );
+  vi.mocked(cloudRequest).mockImplementation(
+    async (_code, operation, _version, items) =>
+      operation === "get"
+        ? { version: 0, workouts: [] }
+        : {
+            version: 1,
+            workouts: items!.map((item) => workoutSchema.parse(item)),
+          },
+  );
+  render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(
+    screen.getAllByRole("button", { name: /^Use this workout:/ })[0],
+  );
+  await settle();
+  fireEvent.change(screen.getByLabelText("Workout title"), {
+    target: { value: "Edited without a duplicate" },
+  });
+  fireEvent.click(screen.getAllByRole("button", { name: "Save workout" })[0]);
+  expect(readState().workouts).toHaveLength(1);
+  expect(readState().workouts[0].title).toBe("Edited without a duplicate");
 });

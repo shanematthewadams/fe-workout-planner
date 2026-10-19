@@ -267,10 +267,10 @@ test("staging stays labeled and missing cloud configuration leaves device saves 
   ).toBeVisible();
   await page.getByText("More", { exact: true }).click();
   await page
-    .getByRole("button", { name: "Saving & devices", exact: true })
+    .getByRole("button", { name: "Saving & recovery", exact: true })
     .click();
   await expect(
-    page.getByLabel("Saving and devices", { exact: true }),
+    page.getByLabel("Saving and recovery", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Connect my devices", exact: true }),

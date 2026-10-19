@@ -158,7 +158,7 @@ describe("library UI", () => {
         }),
     });
     fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saving & recovery" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -178,7 +178,7 @@ describe("library UI", () => {
     const file = new File([""], "bad.json");
     Object.defineProperty(file, "text", { value: async () => "{bad" });
     fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saving & recovery" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -285,7 +285,9 @@ describe("library UI", () => {
     expect(screen.getByRole("main")).toHaveClass("q-mode");
     fireEvent.click(screen.getByRole("button", { name: "Edit workout" }));
     expect(screen.getByLabelText("Workout title")).toHaveValue("Ready to Q");
-    expect(screen.getByText("Saved on this device")).toBeVisible();
+    expect(screen.getByLabelText("Saving status")).toHaveTextContent(
+      "Saved on this device",
+    );
   });
   it("keeps the editor open when save and view cannot save", () => {
     render(<App />);
