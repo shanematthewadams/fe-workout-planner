@@ -1,0 +1,220 @@
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import proposal from "../data/ao-proposals/fe-ao-heartland.json";
+import { fallbackPlan } from "../src/fallback";
+import { plannerRequestSchema } from "../src/planner-contract";
+
+test("icons, seasonal venues, AO review and browser history stay clear on every screen size", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Build", exact: true }).locator("svg"),
+  ).toHaveAttribute("aria-hidden", "true");
+  await page.getByLabel("Q location", { exact: true }).fill("South Park");
+  await expect(
+    page.getByRole("combobox", { name: "Workout venue", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Workout venue", exact: true })
+    .selectOption("brougham-elementary");
+  await expect(page.getByLabel("Where and when")).toContainText(
+    "No site features confirmed",
+  );
+  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await expect(page).toHaveURL(/#library$/);
+  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await page.goBack();
+  await expect(
+    page.getByRole("heading", { name: "Find your next workout", exact: true }),
+  ).toBeVisible();
+  await page.goForward();
+  await expect(
+    page.getByRole("heading", { name: "My workouts", exact: true }),
+  ).toBeVisible();
+  await page.getByText("More", { exact: true }).click();
+  await page.getByRole("button", { name: "AO Directory", exact: true }).click();
+  await page.getByLabel("Search AOs", { exact: true }).fill("Heartland");
+  await page.getByText("Landmarks", { exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Back concrete benches", exact: true }),
+  ).toBeVisible();
+  await page.getByText("Review an AO update", { exact: true }).click();
+  await page.getByLabel("AO update file", { exact: true }).setInputFiles({
+    name: "heartland.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(proposal)),
+  });
+  await page
+    .getByRole("button", { name: "Review proposal", exact: true })
+    .click();
+  await expect(page.getByLabel("AO proposal review")).toContainText(
+    "Morgan Freeman",
+  );
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-ao-review.png`,
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-release-build.png`,
+    fullPage: true,
+  });
+});
+
+test("isolated cloud autosave connects two devices and recovers after a network failure", async ({
+  page,
+  browser,
+}, info) => {
+  test.skip(
+    !process.env.FE_CLOUD_TEST_DIR,
+    "Requires the isolated CI cloud fixture build",
+  );
+  const w = fallbackPlan(
+    plannerRequestSchema.parse({
+      prompt: "Bodyweight circuit",
+      strictSchedule: true,
+      equipment: "None",
+    }),
+  ).workout;
+  w.title = "Cross-device Q";
+  const code = "a".repeat(64);
+  let remote = { version: 0, workouts: [] as (typeof w)[] };
+  let offline = false;
+  const secondContext = await browser.newContext({
+    viewport: page.viewportSize()!,
+  });
+  const second = await secondContext.newPage();
+  const intercept = async (target: typeof page) =>
+    target.route("https://staging-sync.invalid/**", async (route) => {
+      if (offline) {
+        await route.abort();
+        return;
+      }
+      if (route.request().method() === "OPTIONS") {
+        await route.fulfill({
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "apikey,content-type",
+          },
+        });
+        return;
+      }
+      const body = route.request().postDataJSON();
+      if (body.sync_code !== code) {
+        await route.fulfill({ status: 403, body: "{}" });
+        return;
+      }
+      if (body.operation === "put") {
+        if (body.expected_version !== remote.version) {
+          await route.fulfill({ status: 409, body: "{}" });
+          return;
+        }
+        remote = { version: remote.version + 1, workouts: body.payload };
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        body: JSON.stringify(remote),
+      });
+    });
+  try {
+    await intercept(page);
+    await intercept(second);
+    await page.addInitScript(
+      ({ w, code }) => {
+        localStorage.setItem(
+          "fe-planner:v1",
+          JSON.stringify({
+            format: "fe-workout-backup",
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            workouts: [w],
+            favorites: [],
+          }),
+        );
+        localStorage.setItem(
+          "fe-sync:staging:v1",
+          JSON.stringify({ code, base: [] }),
+        );
+      },
+      { w, code },
+    );
+    await page.goto("http://127.0.0.1:4175/#my-workouts");
+    await expect.poll(() => remote.workouts.length).toBe(1);
+    await second.goto("http://127.0.0.1:4175/#settings");
+    await second
+      .getByText("Connect to my existing workouts", { exact: true })
+      .click();
+    await second.getByLabel("Connection code", { exact: true }).fill(code);
+    await second
+      .getByRole("button", { name: "Connect with code", exact: true })
+      .click();
+    await expect(
+      second.getByRole("status").filter({ hasText: "Saved to cloud" }),
+    ).toBeVisible();
+    await second
+      .getByRole("button", { name: "My Workouts", exact: true })
+      .click();
+    await second
+      .getByRole("button", { name: "Cross-device Q", exact: true })
+      .click();
+    await second
+      .getByRole("button", { name: "Edit workout", exact: true })
+      .click();
+    await second
+      .getByLabel("Workout title", { exact: true })
+      .fill("Cloud updated Q");
+    await second
+      .getByRole("button", { name: "Save workout", exact: true })
+      .first()
+      .click();
+    await expect.poll(() => remote.workouts[0]?.title).toBe("Cloud updated Q");
+    await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+    await expect(
+      page.getByRole("button", { name: "Cloud updated Q", exact: true }),
+    ).toBeVisible();
+    offline = true;
+    await second
+      .getByLabel("Workout title", { exact: true })
+      .fill("Device pending Q");
+    await second
+      .getByRole("button", { name: "Save workout", exact: true })
+      .first()
+      .click();
+    await expect(second.getByLabel("Saving status")).toContainText(
+      "cloud unavailable",
+    );
+    expect(remote.workouts[0].title).toBe("Cloud updated Q");
+    offline = false;
+    await second.evaluate(() => window.dispatchEvent(new Event("online")));
+    await expect.poll(() => remote.workouts[0]?.title).toBe("Device pending Q");
+    await second
+      .getByRole("button", { name: "My Workouts", exact: true })
+      .click();
+    await second
+      .getByRole("button", { name: "Devices & saving", exact: true })
+      .click();
+    await second.screenshot({
+      path: `qa/screenshots/${info.project.name}-cloud-save.png`,
+      fullPage: true,
+    });
+  } finally {
+    await secondContext.close();
+  }
+});

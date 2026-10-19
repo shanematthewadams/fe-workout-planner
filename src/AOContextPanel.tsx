@@ -1,3 +1,4 @@
+import { AppIcon } from "./AppIcon";
 import { withLocalAO } from "./ao-drafts";
 import { aoProfiles } from "./discovery";
 import { siteContext, findAO } from "./ao-context";
@@ -32,7 +33,7 @@ export function AOContextPanel({
   const baseContext = siteContext(
     ao,
     "",
-    withLocalAO(ao, "", { overrides: {}, notes: "" }),
+    withLocalAO(ao, "", { overrides: {}, notes: "", venueId: site.venueId }),
   );
   const context = siteContext(ao, prompt, withLocalAO(ao, prompt, site)),
     profile = findAO(ao, prompt);
@@ -40,7 +41,10 @@ export function AOContextPanel({
     <section className="ao-context" aria-label="Where and when">
       <div className="ao-start-row">
         <label>
-          Where are you leading?
+          <span className="icon-label">
+            <AppIcon name="aos" />
+            Where are you leading?
+          </span>
           <input
             aria-label="Q location"
             list="fe-ao-options"
@@ -57,7 +61,10 @@ export function AOContextPanel({
           </datalist>
         </label>
         <label>
-          Start time
+          <span className="icon-label">
+            <AppIcon name="timer" />
+            Start time
+          </span>
           <input
             type="time"
             value={startTime}
@@ -67,6 +74,44 @@ export function AOContextPanel({
           />
         </label>
       </div>
+      {!!profile?.local.venues?.length && (
+        <label className="venue-picker">
+          <span className="icon-label">
+            <AppIcon name="aos" />
+            Workout venue
+          </span>
+          <select
+            aria-label="Workout venue"
+            disabled={disabled}
+            value={site.venueId ?? ""}
+            onChange={(event) =>
+              onSite({
+                ...site,
+                venueId: event.target.value || undefined,
+                localDraft: undefined,
+                overrides: {},
+                amenities: undefined,
+              })
+            }
+          >
+            <option value="">Confirm location with the Site Q</option>
+            {profile.local.venues.map((venue) => (
+              <option key={venue.id} value={venue.id}>
+                {venue.name} · {venue.season}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {context.accessNotes && (
+        <details className="ao-access-note">
+          <summary>
+            <AppIcon name="review" />
+            Access & seasonal notes
+          </summary>
+          <p>{context.accessNotes}</p>
+        </details>
+      )}
       <p className="ao-quick-summary">
         {profile ? `${profile.name} · ` : ao ? "Custom AO · " : ""}
         {context.available.length

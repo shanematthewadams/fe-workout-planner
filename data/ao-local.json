@@ -46,9 +46,9 @@
         "detail": "Stairs described; count and access restrictions are unknown."
       }
     },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-clocktower/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "checkedAt": "2026-10-18",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Dairy Queen via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
     "amenities": {
       "couponsOnSite": null,
       "hasCoveredShelter": true,
@@ -57,18 +57,45 @@
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [
+      {
+        "name": "Clocktower",
+        "description": "Four corners around the clocktower reported by the Site Q.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Parking garage",
+        "description": "Site Q suggests 11s in the parking garage.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm a permitted vehicle-free area; no distances or ramp geometry established."
+      },
+      {
+        "name": "Amphitheater",
+        "description": "Amphitheater at or near the AO; exact footprint unconfirmed.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Courthouse and library",
+        "description": "Nearby destinations within running distance, not confirmed on-site amenities.",
+        "status": "confirmed",
+        "use": "nearby",
+        "restrictions": "Confirm current access and permitted use."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "Basketball court is nearby rather than on-site. No measured route to nearby destinations is confirmed."
   },
   "fe-ao-south-park": {
-    "features": {
-      "parkingLot": {
-        "state": "available",
-        "detail": "Large parking lots described at both seasonal locations. Confirm which location is in use."
-      }
-    },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-south-park/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "features": {},
+    "checkedAt": "2026-10-18",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Shane via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
     "amenities": {
       "couponsOnSite": null,
       "hasCoveredShelter": null,
@@ -77,7 +104,25 @@
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [],
+    "venues": [
+      {
+        "id": "heritage-marina",
+        "name": "Heritage Park Marina",
+        "season": "Summer; Site Q determines annual changeover.",
+        "access": "Confirm active venue and park opening hours. Amenities are not yet venue-verified.",
+        "features": {}
+      },
+      {
+        "id": "brougham-elementary",
+        "name": "Brougham Elementary",
+        "season": "Fall through spring; Site Q determines annual changeover.",
+        "access": "Confirm active venue and current permission. Amenities are not yet venue-verified.",
+        "features": {}
+      }
+    ],
+    "accessNotes": "Two seasonal venues. Do not transfer amenities from South Stride or between South Park venues. The changeover is not a fixed calendar date."
   },
   "fe-ao-stagecoach": {
     "features": {
@@ -105,6 +150,172 @@
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [
+      {
+        "name": "Goose Poop Island",
+        "description": "Large circular concrete area beside the lake where geese gather.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Shane-described; Site Q verification, current access and surface check pending."
+      }
+    ]
+  },
+  "fe-ao-heartland": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lot reported by the Site Q."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Concrete benches behind the building; dimensions and condition not established."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Long walls reported by the Site Q; confirm clearance and permission."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Grass area behind the building; size is not specified."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered garage reported. This does not establish safe lightning shelter."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Back concrete benches",
+        "description": "Concrete benches behind the building.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Long walls",
+        "description": "Long walls at the site.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Covered garage",
+        "description": "Covered garage reported by the Site Q.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Covered does not establish safe lightning shelter. Confirm current access."
+      },
+      {
+        "name": "Indoor coffeeteria",
+        "description": "Indoor gathering space reported by the Site Q.",
+        "status": "confirmed",
+        "use": "gathering",
+        "restrictions": "Workout permission is not established."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "30/30 was reported but its meaning is unconfirmed. Indoor coffeeteria is a gathering space, not confirmed indoor workout access.",
+    "reviewBasis": "Morgan Freeman via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+  },
+  "fe-ao-the-gathering": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lot; lighting reported for the lot only."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Grassy exercise areas reported; sizes unknown."
+      },
+      "hills": {
+        "state": "available",
+        "detail": "Monkey Humper Hill reported; slope and distance unknown."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered shelter, front entrance and rear-wall patio reported; confirm permitted use."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Monkey Humper Hill",
+        "description": "Frequently used hill; geometry is unconfirmed.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Fireside coffeeteria",
+        "description": "Indoor fireside gathering in rain, snow or cold.",
+        "status": "confirmed",
+        "use": "gathering",
+        "restrictions": "Indoor workout permission is not established."
+      },
+      {
+        "name": "Covered front entrance and rear-wall patio",
+        "description": "Covered spaces reported by the Site Qs.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm exercise permission and keep entrances clear."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "Shared Stagecoach amenities were claimed but are not copied automatically. Indoor fireside access is for coffeeteria; other indoor access remains unconfirmed.",
+    "reviewBasis": "Vana and Black Bird via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+  },
+  "fe-ao-southstride": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "stairs": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no stairs."
+      },
+      "track": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no running track."
+      },
+      "pullupBars": {
+        "state": "available",
+        "detail": "Pull-up bars reported in the site-Q inventory."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Benches reported in the site-Q inventory."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Walls reported in the site-Q inventory."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered shelter reported in the site-Q inventory."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Outdoor exercise circuit",
+        "description": "Adjacent to the parking lot; suggested as possible extra credit.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Current availability and permitted hours need confirmation."
+      }
+    ],
+    "venues": [
+      {
+        "id": "heritage-marina",
+        "name": "Heritage Park Marina",
+        "season": "Year-round; rucking-first AO, runners welcome.",
+        "access": "Reported park opening: March\u2013October 05:00; November\u2013February 07:30. Early gate access in November is unverified; check with the Site Q.",
+        "features": {}
+      }
+    ],
+    "accessNotes": "Confirm permitted early-morning access, especially November\u2013February. Optional paddleboarding is an activity idea, not confirmed equipment or permission.",
+    "reviewBasis": "Prestige Worldwide via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
   }
 }

@@ -13,6 +13,8 @@ import {
   X,
   Check,
 } from "lucide-react";
+import { readRoute, writeRoute, routeHash } from "./navigation";
+import { AppIcon } from "./AppIcon";
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
@@ -202,7 +204,7 @@ export default function App() {
   const [state, setState] = useState(initial.data),
     [notice, setNotice] = useState(initial.error),
     [blocked, setBlocked] = useState(!!initial.error),
-    [tab, setTab] = useState("builder"),
+    [tab, setTab] = useState(() => readRoute().tab),
     [filters, setFilters] = useState(filtersEmpty),
     [selected, setSelected] = useState<Workout | null>(null),
     [editing, setEditing] = useState<Workout | null>(null),
@@ -223,6 +225,92 @@ export default function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
   const [timerOpen, setTimerOpen] = useState(false);
+  const unresolvedRoute = useRef<string | null>(null);
+  const navigation = useRef({
+    dirty,
+    state,
+    sources,
+    tab,
+    selected,
+    editing,
+    timerOpen,
+  });
+  navigation.current = {
+    dirty,
+    state,
+    sources,
+    tab,
+    selected,
+    editing,
+    timerOpen,
+  };
+  useEffect(() => {
+    const restore = (initial = false) => {
+      const current = navigation.current;
+      if (
+        !initial &&
+        current.dirty &&
+        !confirm("Leave without saving these changes?")
+      ) {
+        const hash = routeHash(
+          current.editing
+            ? { tab: current.tab, view: "edit", id: current.editing.id }
+            : { tab: current.tab },
+        );
+        history.pushState({}, "", hash);
+        return;
+      }
+      const route = readRoute();
+      const workout = [...current.state.workouts, ...current.sources].find(
+        (value) => value.id === route.id,
+      );
+      setTab(route.tab);
+      setQ(false);
+      setDirty(false);
+      setEditing(null);
+      setSelected(null);
+      setTimerOpen(false);
+      if (route.view && workout) {
+        unresolvedRoute.current = null;
+        if (route.view === "edit") {
+          setEditing(structuredClone(workout));
+          editingBase.current = structuredClone(workout);
+        } else {
+          setSelected(workout);
+          setTimerOpen(route.view === "lead");
+        }
+      } else if (route.view) {
+        unresolvedRoute.current = routeHash(route);
+        setNotice(
+          "That workout is not saved on this device. Your saved plans are still here.",
+        );
+        setTab("mine");
+      }
+    };
+    restore(true);
+    const pop = () => restore();
+    window.addEventListener("popstate", pop);
+    return () => window.removeEventListener("popstate", pop);
+  }, []);
+  useEffect(() => {
+    if (!unresolvedRoute.current || unresolvedRoute.current !== location.hash)
+      return;
+    const route = readRoute();
+    const workout = [...state.workouts, ...sources].find(
+      (value) => value.id === route.id,
+    );
+    if (!workout) return;
+    unresolvedRoute.current = null;
+    setNotice("");
+    setTab(route.tab);
+    if (route.view === "edit") {
+      setEditing(structuredClone(workout));
+      editingBase.current = structuredClone(workout);
+    } else {
+      setSelected(workout);
+      setTimerOpen(route.view === "lead");
+    }
+  }, [state.workouts, sources]);
   const [libraryPreferences, setLibraryPreferences] =
     useState<LibraryPreferences>({ favoritesOnly: false, sort: "recommended" });
   const persist = (next: LocalState) => {
@@ -261,6 +349,7 @@ export default function App() {
       setSelected(null);
       setPending(null);
       if (editing) {
+        editingBase.current = null;
         setEditing({
           ...structuredClone(editing),
           id: uid(),
@@ -289,17 +378,22 @@ export default function App() {
     setSelected(null);
     setQ(false);
     setTab(next);
+    writeRoute({ tab: next });
   };
   const open = (w: Workout) => {
+    writeRoute({ tab, view: "workout", id: w.id });
     setSelected(w);
     setTimerOpen(false);
     setQ(false);
     window.scrollTo(0, 0);
   };
+  const editingBase = useRef<Workout | null>(null);
   const begin = (
     w: Workout,
     saved = state.workouts.some((item) => item.id === w.id),
   ) => {
+    writeRoute({ tab: "mine", view: "edit", id: w.id });
+    editingBase.current = saved ? structuredClone(w) : null;
     setEditing(structuredClone(w));
     setSelected(null);
     setDirty(!saved);
@@ -329,9 +423,7 @@ export default function App() {
           : [...state.favorites, id],
       })
     )
-      setNotice(
-        has ? "Removed from favorites." : "Saved to favorites on this device.",
-      );
+      setNotice(has ? "Removed from favorites." : "Saved to favorites.");
   };
   const save = () => {
     if (!editing) return;
@@ -349,7 +441,27 @@ export default function App() {
       setNotice("Please check the draft: " + result.error.issues[0].message);
       return;
     }
-    const w = { ...result.data, updatedAt: new Date().toISOString() };
+    const existing = state.workouts.find((item) => item.id === editing.id);
+    const conflict =
+      editingBase.current &&
+      (!existing ||
+        JSON.stringify(existing) !== JSON.stringify(editingBase.current));
+    if (conflict && state.workouts.length >= 200) {
+      setNotice(
+        "A conflict copy would exceed 200 plans. Export a backup and free space; your edits are still here.",
+      );
+      return;
+    }
+    const w = {
+      ...result.data,
+      ...(conflict
+        ? {
+            id: uid(),
+            title: titledCopy(result.data.title, " · conflict copy"),
+          }
+        : {}),
+      updatedAt: new Date().toISOString(),
+    };
     const next = {
       ...state,
       workouts: [...state.workouts.filter((x) => x.id !== w.id), w],
@@ -357,7 +469,12 @@ export default function App() {
     if (persist(next)) {
       setDirty(false);
       setEditing(w);
-      setNotice("Workout saved on this device.");
+      editingBase.current = structuredClone(w);
+      setNotice(
+        conflict
+          ? "Both versions kept. Your edits are a separate conflict copy."
+          : "Workout saved.",
+      );
       return w;
     }
   };
@@ -495,6 +612,29 @@ export default function App() {
         Skip to workouts
       </a>
       <StagingNotice />
+      <CloudSync
+        compact={tab !== "data" || !!selected || !!editing}
+        hidden={timerOpen}
+        blocked={blocked || storageChanged || dirty}
+        onSettings={() => go("data")}
+        workouts={state.workouts}
+        onMerge={(workouts) => persist({ ...state, workouts })}
+        onStudio={(workouts) => {
+          const existing = new Set(state.workouts.map((w) => w.originId));
+          const fresh = workouts.filter((w) => !existing.has(w.originId));
+          if (state.workouts.length + fresh.length > 200) {
+            setNotice(
+              "Import would exceed 200 plans. Export a backup and free space first.",
+            );
+            return false;
+          }
+          return persist({
+            ...state,
+            workouts: [...state.workouts, ...fresh],
+          });
+        }}
+      />
+
       {!timerOpen && (
         <>
           <header className="header no-print">
@@ -519,6 +659,7 @@ export default function App() {
                 }
                 onClick={() => go(key)}
               >
+                <AppIcon name={key} />
                 {label}
               </button>
             ))}
@@ -529,7 +670,7 @@ export default function App() {
                   ["markdown", "Import a workout"],
                   ["aos", "AO Directory"],
                   ["exicon", "Exicon & Lexicon"],
-                  ["data", "Sync & backups"],
+                  ["data", "Saving & devices"],
                 ].map(([key, label]) => (
                   <button
                     key={key}
@@ -540,6 +681,7 @@ export default function App() {
                         ?.removeAttribute("open");
                     }}
                   >
+                    <AppIcon name={key} />
                     {label}
                   </button>
                 ))}
@@ -606,7 +748,10 @@ export default function App() {
         <FieldTimer
           key={selected.id}
           workout={selected}
-          onExit={() => setTimerOpen(false)}
+          onExit={() => {
+            setTimerOpen(false);
+            writeRoute({ tab, view: "workout", id: selected.id }, true);
+          }}
         />
       ) : !selected && !editing ? (
         <main id="main" className="main">
@@ -617,6 +762,7 @@ export default function App() {
                 open(w);
                 setNotice("");
                 setTimerOpen(true);
+                writeRoute({ tab: "mine", view: "lead", id: w.id });
               }}
               onEdit={(w) => begin(w)}
               onPreview={(w) => {
@@ -638,7 +784,7 @@ export default function App() {
                 if (
                   persist({ ...state, workouts: [...state.workouts, copy] })
                 ) {
-                  setNotice("AI-assisted copy saved privately on this device.");
+                  setNotice("Personal workout saved.");
                   return true;
                 }
                 return false;
@@ -655,26 +801,6 @@ export default function App() {
           )}
           {tab === "markdown" && (
             <MarkdownImport onEdit={(w) => begin(w, false)} />
-          )}
-          {tab === "data" && (
-            <CloudSync
-              workouts={state.workouts}
-              onMerge={(workouts) => persist({ ...state, workouts })}
-              onStudio={(workouts) => {
-                const existing = new Set(state.workouts.map((w) => w.originId));
-                const fresh = workouts.filter((w) => !existing.has(w.originId));
-                if (state.workouts.length + fresh.length > 200) {
-                  setNotice(
-                    "Import would exceed 200 plans. Export a backup and free space first.",
-                  );
-                  return false;
-                }
-                return persist({
-                  ...state,
-                  workouts: [...state.workouts, ...fresh],
-                });
-              }}
-            />
           )}
           {tab === "exicon" ? (
             <ExiconBrowser />
@@ -713,10 +839,10 @@ export default function App() {
                 {tab === "data" && (
                   <section className="backup">
                     <div>
-                      <h3>Your plans travel with you.</h3>
+                      <h3>Backup & recovery</h3>
                       <p>
-                        Browser storage is device-specific and can be cleared.
-                        Export a backup to keep your drafts and favorites.
+                        Export a copy of your saved workouts and favorites
+                        whenever you want an extra backup.
                       </p>
                     </div>
                     <div className="actions">
@@ -751,7 +877,7 @@ export default function App() {
               <ArrowLeft size={17} /> My workouts
             </button>
             <span className="editor-status">
-              {dirty ? "Unsaved changes" : "Saved on this device"}
+              {dirty ? "Unsaved changes" : "Saved"}
             </span>
             <button className="create" onClick={save}>
               <Check size={17} />
@@ -1295,6 +1421,7 @@ export default function App() {
             onClick={() => {
               setNotice("");
               setTimerOpen(true);
+              writeRoute({ tab, view: "lead", id: selected.id });
             }}
           >
             Lead workout

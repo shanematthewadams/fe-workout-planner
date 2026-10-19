@@ -1,0 +1,27 @@
+{
+  "format": "fe-ao-update",
+  "version": 1,
+  "aoId": "fe-ao-south-park",
+  "source": "Shane via AO inventory; partial site-Q report",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+  "checkedAt": "2026-10-18",
+  "features": {},
+  "landmarks": [],
+  "venues": [
+    {
+      "id": "heritage-marina",
+      "name": "Heritage Park Marina",
+      "season": "Summer; Site Q determines annual changeover.",
+      "access": "Confirm active venue and park opening hours. Amenities are not yet venue-verified.",
+      "features": {}
+    },
+    {
+      "id": "brougham-elementary",
+      "name": "Brougham Elementary",
+      "season": "Fall through spring; Site Q determines annual changeover.",
+      "access": "Confirm active venue and current permission. Amenities are not yet venue-verified.",
+      "features": {}
+    }
+  ],
+  "accessNotes": "Two seasonal venues. Do not transfer amenities from South Stride or between South Park venues. The changeover is not a fixed calendar date."
+}

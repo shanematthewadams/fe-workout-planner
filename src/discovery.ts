@@ -1,6 +1,11 @@
 import official from "../data/ao-official.json";
 import local from "../data/ao-local.json";
 export type LocalAO = {
+  landmarks?: import("zod").z.infer<
+    typeof import("./ao-review").landmarkSchema
+  >[];
+  venues?: import("zod").z.infer<typeof import("./ao-review").venueSchema>[];
+  accessNotes?: string;
   amenities?: Partial<import("./site-contract").Amenities>;
   features?: Partial<
     Record<

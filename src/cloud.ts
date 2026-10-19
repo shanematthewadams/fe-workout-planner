@@ -61,6 +61,37 @@ export function mergeCloud(
     );
   return { workouts: result, conflicts };
 }
+/** A staging connection must point to a different database, never the production fallback. */
+export function cloudConnection() {
+  const production = import.meta.env.VITE_SUPABASE_URL;
+  const url = isStaging()
+    ? import.meta.env.VITE_STAGING_SUPABASE_URL
+    : production;
+  const key = isStaging()
+    ? import.meta.env.VITE_STAGING_SUPABASE_PUBLISHABLE_KEY
+    : import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
+  try {
+    const target = new URL(url);
+    const sameProject =
+      target.origin === new URL(production || "https://invalid.example").origin;
+    const isolatedRpc =
+      import.meta.env.VITE_STAGING_SYNC_RPC === "fe_staging_sync_plans";
+    if (
+      target.protocol !== "https:" ||
+      (isStaging() && (!production || sameProject) && !isolatedRpc)
+    )
+      return null;
+    return {
+      url: target.origin,
+      key,
+      rpc:
+        isStaging() && isolatedRpc ? "fe_staging_sync_plans" : "fe_sync_plans",
+    };
+  } catch {
+    return null;
+  }
+}
 export async function cloudRequest(
   token: string,
   operation: "get" | "put",
@@ -68,19 +99,17 @@ export async function cloudRequest(
   workouts: Workout[] = [],
   signal?: AbortSignal,
 ): Promise<Snapshot> {
-  if (isStaging())
+  const connection = cloudConnection();
+  if (!connection)
     throw Error(
-      "Cloud sync is disabled in this staging version. Your test plans stay in this browser.",
+      isStaging()
+        ? "Cloud sync is disabled until an isolated staging database is configured."
+        : "Cloud connection is not configured. Your device copy is safe.",
     );
   if (!/^[a-f0-9]{64}$/.test(token))
-    throw Error("Enter the full 64-character sync code.");
-  const url = import.meta.env.VITE_SUPABASE_URL,
-    key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key)
-    throw Error(
-      "Cloud connection is not configured. Your local plans are safe.",
-    );
-  const response = await fetch(new URL("/rest/v1/rpc/fe_sync_plans", url), {
+    throw Error("Enter the full 64-character connection code.");
+  const { url, key, rpc } = connection;
+  const response = await fetch(new URL(`/rest/v1/rpc/${rpc}`, url), {
     method: "POST",
     headers: { apikey: key, "Content-Type": "application/json" },
     body: JSON.stringify({

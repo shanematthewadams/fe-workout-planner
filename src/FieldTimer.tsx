@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AppIcon } from "./AppIcon";
 import type { Workout } from "./model";
 import { SessionTimer } from "./SessionTimer";
 import { IntervalTimer } from "./IntervalTimer";
@@ -103,6 +104,7 @@ export function FieldTimer({
               setMode(key);
             }}
           >
+            <AppIcon name={key === "off" ? "sheet" : "timer"} />
             {label}
           </button>
         ))}
@@ -145,7 +147,10 @@ export function FieldTimer({
         </p>
       ) : null}
       <details className="lead-plan-panel" open={mode === "off"}>
-        <summary>Workout sheet</summary>
+        <summary>
+          <AppIcon name="sheet" />
+          Workout sheet
+        </summary>
         <section className="lead-workout" aria-label="Workout to lead">
           {workout.sections.map((section) => (
             <details key={section.id} open={section.kind === "thang"}>

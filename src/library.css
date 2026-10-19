@@ -729,3 +729,115 @@ body:has(.staging-notice) .lead-focused {
   font-size: 0.85rem;
   color: var(--ink);
 }
+.app-icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-nav button,
+.more-menu button,
+.entry-modes button,
+.lead-timer-options button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.cloud-statusbar {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 8px 44px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.cloud-statusbar span {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.cloud-statusbar button {
+  padding: 6px 10px;
+  min-height: 36px;
+  font-size: 0.75rem;
+}
+.cloud-sync {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.cloud-sync h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.advanced-saving {
+  margin-top: 24px;
+}
+@media (max-width: 600px) {
+  .cloud-statusbar {
+    padding: 8px 20px;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .cloud-statusbar span {
+    max-width: 50%;
+  }
+  .app-nav button {
+    gap: 6px;
+  }
+  .app-nav .app-icon {
+    width: 17px;
+  }
+}
+@media print {
+  .app-icon,
+  .cloud-statusbar {
+    display: none;
+  }
+}
+.ao-review {
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 18px;
+}
+.ao-review label {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.ao-review textarea {
+  width: 100%;
+  min-height: 140px;
+}
+.ao-review summary,
+.ao-access-note summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.ao-access-note {
+  margin: 16px 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.venue-picker {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.discovery h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

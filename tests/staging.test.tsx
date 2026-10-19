@@ -24,7 +24,7 @@ it("marks staging and disables cloud entry points without a request", async () =
     screen.getByLabelText("Cloud sync unavailable in staging"),
   ).toBeVisible();
   expect(
-    screen.queryByRole("button", { name: "Enable cloud sync" }),
+    screen.queryByRole("button", { name: "Connect my devices" }),
   ).toBeNull();
   await expect(cloudRequest("a".repeat(64), "put", 0, [])).rejects.toThrow(
     "disabled",
@@ -35,6 +35,8 @@ it("marks staging and disables cloud entry points without a request", async () =
 it("retains production cloud controls and omits the staging label", () => {
   vi.stubEnv("VITE_APP_ENV", "production");
   localStorage.clear();
+  vi.stubEnv("VITE_SUPABASE_URL", "https://production.example");
+  vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "test-public");
   render(
     <>
       <StagingNotice />
@@ -43,6 +45,6 @@ it("retains production cloud controls and omits the staging label", () => {
   );
   expect(screen.queryByLabelText("Staging version")).toBeNull();
   expect(
-    screen.getByRole("button", { name: "Enable cloud sync" }),
+    screen.getByRole("button", { name: "Connect my devices" }),
   ).toBeVisible();
 });

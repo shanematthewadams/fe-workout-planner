@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { AppIcon } from "./AppIcon";
 import type { Workout } from "./model";
 import {
   TABATA,
@@ -439,6 +440,7 @@ export function IntervalTimer({
       <div className="actions">
         {running ? (
           <button className="create" onClick={pause}>
+            <AppIcon name="pause" />
             Pause intervals
           </button>
         ) : (
@@ -447,6 +449,7 @@ export function IntervalTimer({
             disabled={phase.stage === "Complete"}
             onClick={start}
           >
+            <AppIcon name="play" />
             {timer.elapsed > 0 ? "Resume intervals" : "Start intervals"}
           </button>
         )}
@@ -463,6 +466,7 @@ export function IntervalTimer({
             setError("");
           }}
         >
+          <AppIcon name="reset" />
           Reset intervals
         </button>
       </div>

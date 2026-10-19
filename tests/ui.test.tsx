@@ -158,7 +158,7 @@ describe("library UI", () => {
         }),
     });
     fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -178,7 +178,7 @@ describe("library UI", () => {
     const file = new File([""], "bad.json");
     Object.defineProperty(file, "text", { value: async () => "{bad" });
     fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });

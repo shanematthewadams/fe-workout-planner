@@ -1,0 +1,58 @@
+{
+  "format": "fe-ao-update",
+  "version": 1,
+  "aoId": "fe-ao-clocktower",
+  "source": "Dairy Queen via AO inventory; partial site-Q report",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+  "checkedAt": "2026-10-18",
+  "features": {
+    "shelter": {
+      "state": "available",
+      "detail": "Covered garage described; current public access and capacity not verified."
+    },
+    "field": {
+      "state": "available",
+      "detail": "Large grassy area described; drainage is unknown."
+    },
+    "runningRoute": {
+      "state": "available",
+      "detail": "Running loop described; distance is not supplied."
+    },
+    "stairs": {
+      "state": "available",
+      "detail": "Stairs described; count and access restrictions are unknown."
+    }
+  },
+  "landmarks": [
+    {
+      "name": "Clocktower",
+      "description": "Four corners around the clocktower reported by the Site Q.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm current access and permitted use."
+    },
+    {
+      "name": "Parking garage",
+      "description": "Site Q suggests 11s in the parking garage.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm a permitted vehicle-free area; no distances or ramp geometry established."
+    },
+    {
+      "name": "Amphitheater",
+      "description": "Amphitheater at or near the AO; exact footprint unconfirmed.",
+      "status": "reported",
+      "use": "workout",
+      "restrictions": "Confirm current access and permitted use."
+    },
+    {
+      "name": "Courthouse and library",
+      "description": "Nearby destinations within running distance, not confirmed on-site amenities.",
+      "status": "confirmed",
+      "use": "nearby",
+      "restrictions": "Confirm current access and permitted use."
+    }
+  ],
+  "venues": [],
+  "accessNotes": "Basketball court is nearby rather than on-site. No measured route to nearby destinations is confirmed."
+}

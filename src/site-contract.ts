@@ -96,6 +96,10 @@ export const siteInputSchema = z
   .object({
     // Unpublished device edits are Q context, never regional facts.
     localDraft: localFeaturesSchema.optional(),
+    venueId: z
+      .string()
+      .regex(/^[a-z0-9-]{1,80}$/)
+      .optional(),
     overrides: z.record(featureSchema, availabilitySchema).default({}),
     notes: z.string().max(800).default(""),
     amenities: amenitiesPatchSchema.optional(),

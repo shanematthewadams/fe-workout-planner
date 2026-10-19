@@ -1,0 +1,53 @@
+{
+  "format": "fe-ao-update",
+  "version": 1,
+  "aoId": "fe-ao-southstride",
+  "source": "Prestige Worldwide via AO inventory; partial site-Q report",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+  "checkedAt": "2026-10-18",
+  "features": {
+    "stairs": {
+      "state": "unavailable",
+      "detail": "Site-Q inventory response: no stairs."
+    },
+    "track": {
+      "state": "unavailable",
+      "detail": "Site-Q inventory response: no running track."
+    },
+    "pullupBars": {
+      "state": "available",
+      "detail": "Pull-up bars reported in the site-Q inventory."
+    },
+    "benches": {
+      "state": "available",
+      "detail": "Benches reported in the site-Q inventory."
+    },
+    "walls": {
+      "state": "available",
+      "detail": "Walls reported in the site-Q inventory."
+    },
+    "shelter": {
+      "state": "available",
+      "detail": "Covered shelter reported in the site-Q inventory."
+    }
+  },
+  "landmarks": [
+    {
+      "name": "Outdoor exercise circuit",
+      "description": "Adjacent to the parking lot; suggested as possible extra credit.",
+      "status": "reported",
+      "use": "workout",
+      "restrictions": "Current availability and permitted hours need confirmation."
+    }
+  ],
+  "venues": [
+    {
+      "id": "heritage-marina",
+      "name": "Heritage Park Marina",
+      "season": "Year-round; rucking-first AO, runners welcome.",
+      "access": "Reported park opening: March\u2013October 05:00; November\u2013February 07:30. Early gate access in November is unverified; check with the Site Q.",
+      "features": {}
+    }
+  ],
+  "accessNotes": "Confirm permitted early-morning access, especially November\u2013February. Optional paddleboarding is an activity idea, not confirmed equipment or permission."
+}

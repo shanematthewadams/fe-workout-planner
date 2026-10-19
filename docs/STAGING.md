@@ -5,7 +5,7 @@ Shane approved the first staging deployment on October 18, 2026. This does not a
 - `main` remains production at `https://q.f3thefe.com`.
 - `studio/ux-streamline` is the sole active development and staging branch.
 - Netlify branch deploys and deploy previews set `VITE_APP_ENV=staging`; production explicitly sets `production`.
-- Staging shows a visible label. Browser saves and backups work, while CloudSync does not mount its active controls or legacy Studio cloud import. The cloud request helper rejects staging calls before sending a network request.
+- Staging shows a visible label. Browser saves and backups work. Cloud saving requires explicit isolated staging configuration; missing or unsafe configuration is rejected before a network request. Production connection codes are not reused, and legacy Studio cloud import is disabled. See RELEASE_CANDIDATE.md for the prepared staging-only schema and approval gate.
 - Published regional catalog access remains read-only. This is an app safeguard, not a separate database or a new database access policy.
 - GitHub Checks runs on staging branch pushes and can also run manually. It builds the staging app and exercises the existing desktop/tablet/mobile Chromium and mobile WebKit journeys plus staging protections. These checks use a local server in CI, not the protected Netlify URL; live Netlify runtime verification is separate.
 - Netlify provides the branch URL. Preserve existing team-login protection. Do not create a second project or another working branch.

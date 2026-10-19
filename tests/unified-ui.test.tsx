@@ -4,6 +4,8 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import App from "../src/App";
 beforeEach(() => {
+  vi.stubEnv("VITE_SUPABASE_URL", "https://production.example");
+  vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "test-public");
   localStorage.clear();
   sessionStorage.clear();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
@@ -12,6 +14,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 it("builds an offline formal plan, saves it, and leads the same plan in the field", () => {
   render(<App />);
@@ -44,9 +47,9 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
     screen.getByRole("button", { name: "Digging for gold" }),
   ).toBeVisible();
   fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+  fireEvent.click(screen.getByRole("button", { name: "Saving & devices" }));
   expect(
-    screen.getByRole("button", { name: "Enable cloud sync" }),
+    screen.getByRole("button", { name: "Connect my devices" }),
   ).toBeVisible();
 });
 it("skipping Mary yields 35 minutes of The Thang and searchable reference terms", () => {

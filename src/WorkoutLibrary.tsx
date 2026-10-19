@@ -1,3 +1,4 @@
+import { AppIcon } from "./AppIcon";
 import {
   ArrowUpRight,
   Clock3,
@@ -218,6 +219,7 @@ export function WorkoutLibrary({
               })
             }
           >
+            <AppIcon name="running" />
             No running
           </button>
           <button
@@ -229,6 +231,7 @@ export function WorkoutLibrary({
               })
             }
           >
+            <AppIcon name="exicon" />
             No gear
           </button>
           <button

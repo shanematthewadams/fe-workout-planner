@@ -1,3 +1,4 @@
+import { AppIcon } from "./AppIcon";
 import type { PlannerRequest } from "./planner-contract";
 import {
   WEATHER,
@@ -37,7 +38,10 @@ export function WorkoutDetails({
         <legend>Shape this workout</legend>
         <div className="assistant-grid">
           <label>
-            PAX count
+            <span className="icon-label">
+              <AppIcon name="pax" />
+              PAX count
+            </span>
             <input
               type="number"
               min={1}
@@ -54,7 +58,10 @@ export function WorkoutDetails({
             />
           </label>
           <label>
-            Work together
+            <span className="icon-label">
+              <AppIcon name="group" />
+              Work together
+            </span>
             <select
               aria-label="Work together"
               value={value.grouping}
@@ -71,7 +78,10 @@ export function WorkoutDetails({
             </select>
           </label>
           <label>
-            Fitness focus
+            <span className="icon-label">
+              <AppIcon name="focus" />
+              Fitness focus
+            </span>
             <select
               aria-label="Fitness focus"
               value={value.focus}
@@ -83,7 +93,10 @@ export function WorkoutDetails({
             </select>
           </label>
           <label>
-            How much running
+            <span className="icon-label">
+              <AppIcon name="running" />
+              How much running
+            </span>
             <select
               aria-label="How much running"
               value={running}
@@ -103,7 +116,10 @@ export function WorkoutDetails({
             </select>
           </label>
           <label>
-            Workout date
+            <span className="icon-label">
+              <AppIcon name="date" />
+              Workout date
+            </span>
             <input
               type="date"
               value={value.date}
@@ -111,7 +127,10 @@ export function WorkoutDetails({
             />
           </label>
           <label>
-            Expected light
+            <span className="icon-label">
+              <AppIcon name="light" />
+              Expected light
+            </span>
             <select
               aria-label="Expected light"
               value={value.light}
@@ -145,6 +164,7 @@ export function WorkoutDetails({
                     })
                   }
                 />
+                <AppIcon name={weather} size={17} />
                 {weather}
               </label>
             ))}

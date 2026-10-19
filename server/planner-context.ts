@@ -96,7 +96,14 @@ export function contextFor(input: PlannerRequest) {
       ? {
           name: ao.name,
           sessions: ao.sessions,
-          local: ao.local,
+          local: {
+            reviewBasis: ao.local.reviewBasis,
+            accessNotes: site.accessNotes,
+            landmarks: site.landmarks,
+            activeVenue: site.venue,
+            features: site.details,
+            amenities: site.amenities,
+          },
           scheduleChecked: ao.checkedAt,
         }
       : null,

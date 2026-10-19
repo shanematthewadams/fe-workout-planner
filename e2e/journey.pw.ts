@@ -267,13 +267,13 @@ test("staging protects live sync and labels the test environment", async ({
   ).toBeVisible();
   await page.getByText("More", { exact: true }).click();
   await page
-    .getByRole("button", { name: "Sync & backups", exact: true })
+    .getByRole("button", { name: "Saving & devices", exact: true })
     .click();
   await expect(
     page.getByLabel("Cloud sync unavailable in staging", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Enable cloud sync", exact: true }),
+    page.getByRole("button", { name: "Connect my devices", exact: true }),
   ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Export backup", exact: true }),

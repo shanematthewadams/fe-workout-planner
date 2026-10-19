@@ -1,0 +1,62 @@
+{
+  "format": "fe-ao-update",
+  "version": 1,
+  "aoId": "fe-ao-heartland",
+  "source": "Morgan Freeman via AO inventory; partial site-Q report",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+  "checkedAt": "2026-10-18",
+  "features": {
+    "parkingLot": {
+      "state": "available",
+      "detail": "Large parking lot reported by the Site Q."
+    },
+    "benches": {
+      "state": "available",
+      "detail": "Concrete benches behind the building; dimensions and condition not established."
+    },
+    "walls": {
+      "state": "available",
+      "detail": "Long walls reported by the Site Q; confirm clearance and permission."
+    },
+    "field": {
+      "state": "available",
+      "detail": "Grass area behind the building; size is not specified."
+    },
+    "shelter": {
+      "state": "available",
+      "detail": "Covered garage reported. This does not establish safe lightning shelter."
+    }
+  },
+  "landmarks": [
+    {
+      "name": "Back concrete benches",
+      "description": "Concrete benches behind the building.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm current access and permitted use."
+    },
+    {
+      "name": "Long walls",
+      "description": "Long walls at the site.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm current access and permitted use."
+    },
+    {
+      "name": "Covered garage",
+      "description": "Covered garage reported by the Site Q.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Covered does not establish safe lightning shelter. Confirm current access."
+    },
+    {
+      "name": "Indoor coffeeteria",
+      "description": "Indoor gathering space reported by the Site Q.",
+      "status": "confirmed",
+      "use": "gathering",
+      "restrictions": "Workout permission is not established."
+    }
+  ],
+  "venues": [],
+  "accessNotes": "30/30 was reported but its meaning is unconfirmed. Indoor coffeeteria is a gathering space, not confirmed indoor workout access."
+}

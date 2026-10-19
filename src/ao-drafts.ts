@@ -30,7 +30,14 @@ export function withLocalAO(
   // Resolve afresh: changing AO must never carry another site's draft forward.
   const today = { ...site };
   delete today.localDraft;
-  const draft = profile && readTerrainDrafts()[profile.id];
+  const seasonal = (profile?.local.venues?.length ?? 0) > 1;
+  const venue = profile?.local.venues?.find(
+    (value) => value.id === site.venueId,
+  );
+  const draftKey =
+    profile &&
+    (seasonal ? (venue ? `${profile.id}:${venue.id}` : undefined) : profile.id);
+  const draft = draftKey && readTerrainDrafts()[draftKey];
   return { ...today, ...(draft ? { localDraft: draft } : {}) };
 }
 

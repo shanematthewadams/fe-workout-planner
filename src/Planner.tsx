@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { AppIcon } from "./AppIcon";
 import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import type { PlannerRequest } from "./planner-contract";
@@ -389,6 +390,7 @@ export function Planner({
                 aria-pressed={mode === "idea"}
                 onClick={() => setMode("idea")}
               >
+                <AppIcon name="builder" />
                 Enter an Idea
               </button>
               <button
@@ -397,6 +399,7 @@ export function Planner({
                 aria-pressed={mode === "formal"}
                 onClick={() => setMode("formal")}
               >
+                <AppIcon name="details" />
                 Formal Builder
               </button>
             </div>

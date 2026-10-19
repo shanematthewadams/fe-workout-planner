@@ -49,6 +49,14 @@ export default defineConfig({
       url: "http://127.0.0.1:4173",
       reuseExistingServer: !process.env.CI,
     },
+    ...(process.env.FE_CLOUD_TEST_DIR
+      ? [
+          {
+            command: `node node_modules/vite/bin/vite.js preview --outDir ${process.env.FE_CLOUD_TEST_DIR} --host 127.0.0.1 --port 4175 --strictPort`,
+            url: "http://127.0.0.1:4175",
+          },
+        ]
+      : []),
     ...(process.env.FE_BEFORE_DIR
       ? [
           {

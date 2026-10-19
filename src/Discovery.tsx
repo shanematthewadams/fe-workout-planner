@@ -1,3 +1,5 @@
+import { AppIcon } from "./AppIcon";
+import { AOReview } from "./AOReview";
 import { siteContext } from "./ao-context";
 import {
   FEATURES,
@@ -71,20 +73,23 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
     <section className="discovery" aria-label="FE AO profiles">
       <div className="discovery-header-row">
         <div>
-          <h2>Find your AO</h2>
+          <h2>
+            <AppIcon name="aos" size={25} />
+            Find your AO
+          </h2>
           <p>
             Official schedule snapshot. Check the regional site for changes.
             Website-described features show their source and review date.
             Unlisted features stay unknown; confirm today’s access.
           </p>
         </div>
-          <button
-            type="button"
-            className={`ao-admin-toggle-btn ${adminMode ? "active" : ""}`}
-            onClick={() => setAdminMode(!adminMode)}
-          >
-            {adminMode ? "Done editing" : "Edit local AO notes"}
-          </button>
+        <button
+          type="button"
+          className={`ao-admin-toggle-btn ${adminMode ? "active" : ""}`}
+          onClick={() => setAdminMode(!adminMode)}
+        >
+          {adminMode ? "Done editing" : "Edit local AO notes"}
+        </button>
       </div>
       {adminMode && (
         <aside className="ao-admin-banner">
@@ -121,6 +126,7 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
           </div>
         </aside>
       )}
+      <AOReview />
       {storageError && <p role="alert">{storageError}</p>}
       <label>
         Search AOs
@@ -278,8 +284,50 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
                     {s.location}
                   </p>
                 ))}
+                {a.local.accessNotes && (
+                  <p className="ao-access-note">
+                    <AppIcon name="review" />
+                    {a.local.accessNotes}
+                  </p>
+                )}
+                {!!a.local.venues?.length && (
+                  <details>
+                    <summary>
+                      <AppIcon name="aos" />
+                      Locations & seasonal access
+                    </summary>
+                    {a.local.venues.map((venue) => (
+                      <article key={venue.id}>
+                        <h4>{venue.name}</h4>
+                        <p>{venue.season}</p>
+                        <p>{venue.access}</p>
+                      </article>
+                    ))}
+                  </details>
+                )}
+                {!!a.local.landmarks?.length && (
+                  <details>
+                    <summary>
+                      <AppIcon name="landmark" />
+                      Landmarks
+                    </summary>
+                    {a.local.landmarks.map((landmark) => (
+                      <article key={landmark.name}>
+                        <h4>{landmark.name}</h4>
+                        <p>{landmark.description}</p>
+                        <p className="muted">
+                          {landmark.status} · {landmark.use} ·{" "}
+                          {landmark.restrictions}
+                        </p>
+                      </article>
+                    ))}
+                  </details>
+                )}
                 <details>
-                  <summary>Terrain & local details</summary>
+                  <summary>
+                    <AppIcon name="aos" />
+                    Terrain & local details
+                  </summary>
                   <dl>
                     {(Object.keys(FEATURES) as Feature[]).map((feature) => {
                       const override = terrainOverrides[a.id]?.[feature];
