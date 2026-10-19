@@ -413,7 +413,7 @@ test("signup explains the benefit and restores the chosen F3 Name after confirma
       return fulfill({ version: 0, workouts: [] });
     return fulfill([]);
   });
-  await page.goto("/#settings");
+  await page.goto("http://127.0.0.1:4175/#settings");
   await expect(
     page.getByRole("heading", { name: "Create your account", exact: true }),
   ).toBeVisible();
