@@ -1,5 +1,11 @@
+import roster from "../data/ao-site-qs.json";
 import official from "../data/ao-official.json";
 import local from "../data/ao-local.json";
+const regionalSiteQs: Record<string, { names: string[] }> = roster.siteQs;
+export const siteQRosterSource = {
+  url: roster.sourceUrl,
+  checkedAt: roster.checkedAt,
+};
 export type LocalAO = {
   landmarks?: import("zod").z.infer<
     typeof import("./ao-review").landmarkSchema
@@ -28,6 +34,7 @@ export type LocalAO = {
 };
 export const aoProfiles = official.map((ao) => ({
   ...ao,
+  siteQs: regionalSiteQs[ao.id]?.names ?? [],
   local: (local as Record<string, LocalAO>)[ao.id] ?? {},
 }));
 export const statusLabel = (status: string) =>

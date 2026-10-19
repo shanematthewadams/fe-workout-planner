@@ -52,6 +52,9 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   ).toBeVisible();
   await navigate(page, "AO Directory");
   await page.getByLabel("Search AOs", { exact: true }).fill("South Park");
+  await expect(page.locator(".site-q-pill")).toContainText(
+    "Duffalo, Jazz Hands",
+  );
   await expect(
     page.getByRole("link", { name: "F3 Nation map ↗", exact: true }),
   ).toHaveAttribute("href", /locationId=38856/);

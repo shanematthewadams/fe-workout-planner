@@ -41,7 +41,7 @@ it("propagates unpublished AO changes through directory, builder, API context an
     target: { value: "Gold Rush" },
   });
   expect(
-    screen.getByText("Unknown", { selector: ".site-q-pill" }),
+    screen.getByText(/Woodpecker/, { selector: ".site-q-pill" }),
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Edit local AO notes" }));
   fireEvent.change(screen.getByLabelText("Track for Gold Rush"), {
@@ -97,7 +97,7 @@ it("temporary closures and unknown override local availability without publishin
     }).features.track,
   ).toBe("unavailable");
 });
-it("rejects corrupt local terrain and never defaults unknown Site Qs to people", () => {
+it("rejects corrupt local terrain and keeps the explicit regional Site Q roster separate", () => {
   localStorage.setItem(
     TERRAIN_KEY,
     '{"fe-ao-gold-rush":{"track":{"state":"maybe"}}}',

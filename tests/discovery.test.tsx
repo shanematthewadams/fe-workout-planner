@@ -19,7 +19,10 @@ describe("source discovery", () => {
     expect(
       screen.getByRole("heading", { name: "Clocktower", level: 3 }),
     ).toBeVisible();
-    expect(screen.getAllByText("Unknown")).toHaveLength(11);
+    expect(screen.getAllByText("Unknown")).toHaveLength(10);
+    expect(
+      screen.getByText(/Dairy Queen/, { selector: ".site-q-pill" }),
+    ).toBeVisible();
     fireEvent.click(
       screen.getByRole("button", { name: "Workouts from this AO →" }),
     );

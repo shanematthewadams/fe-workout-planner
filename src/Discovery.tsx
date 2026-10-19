@@ -11,7 +11,7 @@ import {
 } from "./site-contract";
 import { readTerrainDrafts, TERRAIN_KEY, SITE_Q_KEY } from "./ao-drafts";
 import { useState } from "react";
-import { aoProfiles } from "./discovery";
+import { aoProfiles, siteQRosterSource } from "./discovery";
 import { MovementGuide } from "./MovementGuide";
 
 type TerrainOverride = Partial<
@@ -83,6 +83,12 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
             Website-described features show their source and review date.
             Unlisted features stay unknown; confirm today’s access.
           </p>
+          <p className="muted">
+            <a href={siteQRosterSource.url} target="_blank" rel="noreferrer">
+              Site Q roster from the regional inventory ↗
+            </a>{" "}
+            · Refreshed {siteQRosterSource.checkedAt.slice(0, 10)}
+          </p>
         </div>
         <button
           type="button"
@@ -146,27 +152,39 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
               notes: "",
               localDraft: terrainOverrides[a.id],
             });
+            const sourceQs = a.siteQs.join(", ");
+            const localQs = siteQs[a.id]?.trim();
             return (
               <article className="card" key={a.id}>
                 <div className="card-top-row">
                   <h3>{a.name}</h3>
                   {!adminMode && (
-                    <span className="site-q-pill">
-                      <strong>Site Q:</strong>{" "}
-                      {siteQs[a.id]
-                        ? `${siteQs[a.id]} (local, unverified)`
-                        : "Unknown"}
+                    <span
+                      className="site-q-pill"
+                      title={
+                        localQs
+                          ? "Unpublished device override"
+                          : "From the regional AO inventory roster"
+                      }
+                    >
+                      <strong>
+                        Site Q{!localQs && a.siteQs.length > 1 ? "s" : ""}:
+                      </strong>{" "}
+                      {localQs
+                        ? `${localQs} (local, unverified)`
+                        : sourceQs || "Unknown"}
                     </span>
                   )}
                 </div>
                 {adminMode && (
                   <div className="ao-admin-card-fields">
                     <label className="site-q-input-label">
-                      Site Q (local, unverified):
+                      Site Q override (this device):
                       <input
                         type="text"
                         value={siteQs[a.id] || ""}
-                        placeholder="e.g. Rug Burn"
+                        placeholder={sourceQs || "e.g. Rug Burn"}
+                        maxLength={160}
                         onChange={(e) => {
                           const next = {
                             ...siteQs,
@@ -186,6 +204,10 @@ function AODirectory({ onAO }: { onAO: (name: string) => void }) {
                         }}
                       />
                     </label>
+                    <small className="muted">
+                      Regional roster: {sourceQs || "Not listed"}. Leave the
+                      override blank to use this roster.
+                    </small>
 
                     <div className="ao-admin-terrain-section">
                       <strong className="ao-admin-terrain-title">
