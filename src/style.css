@@ -3264,7 +3264,7 @@ footer {
   justify-content: flex-start;
   gap: 38px;
   overflow-y: auto;
-  background: #191a1d;
+  background: #bd142b;
   border: 0;
   border-right: 1px solid #ffffff20;
 }
@@ -3278,24 +3278,13 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--ink);
+  color: #fff;
   text-decoration: none;
   white-space: nowrap;
   font:
-    800 27px/1 "Big Shoulders Display",
+    800 34px/1 "Big Shoulders Display",
     sans-serif;
-  letter-spacing: 0.025em;
-}
-.navigation-mark {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 40px;
-  background: #bd142b;
-  border-radius: 4px;
-  color: #fff;
-  font-size: 27px;
-  transform: skewY(-6deg);
+  letter-spacing: -0.025em;
 }
 .navigation-toggle {
   display: none;
@@ -3306,7 +3295,7 @@ footer {
 }
 .navigation-label {
   margin: 0 12px 12px;
-  color: var(--muted);
+  color: #fff;
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -3324,19 +3313,19 @@ footer {
   padding: 12px;
   border-radius: 6px;
   border-left: 3px solid transparent;
-  color: var(--muted);
+  color: #fff;
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 700;
 }
 .navigation-links a:hover {
-  color: var(--ink);
-  background: #ffffff09;
+  color: #fff;
+  background: #9c1024;
 }
 .navigation-links a[aria-current="page"] {
   color: #fff;
-  background: #bd142b;
-  border-left-color: #ff6478;
+  background: #710c1d;
+  border-left-color: #ffcf72;
   box-shadow: 0 4px 16px #0002;
 }
 .navigation-current {
@@ -3365,12 +3354,7 @@ footer {
     border-bottom: 1px solid #ffffff26;
   }
   .navigation-brand {
-    font-size: 25px;
-  }
-  .navigation-mark {
-    width: 30px;
-    height: 34px;
-    font-size: 24px;
+    font-size: 30px;
   }
   .navigation-toggle {
     display: inline-flex;
@@ -3378,13 +3362,13 @@ footer {
     padding: 8px 12px;
     border-color: #ffffff40;
     background: transparent;
-    color: var(--ink);
+    color: #fff;
     border-radius: 6px;
     font-size: 0.8rem;
   }
   .navigation-toggle[aria-expanded="true"] {
-    background: #bd142b;
-    border-color: #bd142b;
+    background: #710c1d;
+    border-color: #ffffff70;
     color: #fff;
   }
   .navigation-links {
@@ -3397,8 +3381,8 @@ footer {
     padding: 22px 20px;
     max-height: calc(100dvh - 74px);
     overflow-y: auto;
-    background: #191a1d;
-    border-bottom: 2px solid #bd142b;
+    background: #bd142b;
+    border-bottom: 2px solid #710c1d;
     box-shadow: 0 20px 32px #0008;
   }
   .app-navigation[data-expanded="true"] .navigation-links {

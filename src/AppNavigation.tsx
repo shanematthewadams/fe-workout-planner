@@ -88,10 +88,7 @@ export function AppNavigation({
           href="#build"
           onClick={(event) => navigate(event, "builder")}
         >
-          <span className="navigation-mark" aria-hidden="true">
-            F3
-          </span>
-          <span>F3 Q BUILDER</span>
+          <span>F3QBuilder</span>
         </a>
         <button
           ref={toggle}

@@ -138,7 +138,7 @@ it("flags inconsistent timing instead of inventing a schedule", () => {
 });
 it("reviews locally, invalidates edited previews, and saves only through the existing editor", () => {
   render(<App />);
-  expect(screen.getByRole("link", { name: "F3 Q BUILDER" })).toBeVisible();
+  expect(screen.getByRole("link", { name: "F3QBuilder" })).toBeVisible();
   expect(within(screen.getByRole("banner")).queryByText(/OLATHE/)).toBeNull();
   fireEvent.click(
     within(screen.getByRole("main")).getByRole("button", {

@@ -135,7 +135,7 @@ test("Markdown file review, correction and personal save", async ({
   page,
 }, info) => {
   await page.goto("/");
-  await expect(page.getByRole("banner")).toContainText("F3 Q BUILDER");
+  await expect(page.getByRole("banner")).toContainText("F3QBuilder");
   await expect(page.getByRole("banner")).not.toContainText("OLATHE");
   const prompt = page.getByLabel("Describe your Q", { exact: true });
   const roll = page.getByRole("button", { name: "Surprise Me!", exact: true });
