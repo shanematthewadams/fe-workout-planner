@@ -2,6 +2,15 @@ import { scheduleSchema } from "./site-contract";
 import { z } from "zod";
 import { mentionedMovements } from "./movements";
 const text = z.string().max(20000);
+// pg_jsonschema does not enforce format:uuid in this project. Keep an explicit
+// pattern as well as Zod's UUID check so hosted and client validation agree.
+const accountId = z
+  .string()
+  .uuid()
+  .regex(
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+  );
+
 export const exerciseSchema = z.object({
   id: z.string().min(1).max(100),
   name: text,
@@ -47,15 +56,15 @@ export const workoutSchema = z
     originId: z.string().max(100).optional(),
     attribution: z
       .object({
-        ownerId: z.string().uuid().optional(),
-        creatorId: z.string().uuid().optional(),
+        ownerId: accountId.optional(),
+        creatorId: accountId.optional(),
         creatorDisplayName: z.string().trim().min(1).max(80).optional(),
         createdAt: z.string().datetime(),
         visibility: z.literal("private"),
         adaptedFrom: z
           .object({
             workoutId: z.string().max(100),
-            creatorId: z.string().uuid().optional(),
+            creatorId: accountId.optional(),
             creatorDisplayName: z.string().max(80).optional(),
           })
           .optional(),

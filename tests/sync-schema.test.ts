@@ -54,3 +54,25 @@ it("generates one atomic upgrade without duplicating existing vault constraints"
     /delete from|truncate|update fe_private\.fe_(account|plan)_vault/i,
   );
 });
+
+it("uses explicit UUID patterns because the hosted validator does not assert format labels", async () => {
+  const schema = JSON.parse(
+    await readFile(
+      new URL("../docs/workout-sync.schema.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const attribution =
+    schema.definitions.Workout.properties.attribution.properties;
+  for (const field of [
+    attribution.ownerId,
+    attribution.creatorId,
+    attribution.adaptedFrom.properties.creatorId,
+  ]) {
+    expect(field.format).toBe("uuid");
+    expect(
+      new RegExp(field.pattern).test("11111111-1111-4111-8111-111111111111"),
+    ).toBe(true);
+    expect(new RegExp(field.pattern).test("not-a-uuid")).toBe(false);
+  }
+});
