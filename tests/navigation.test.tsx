@@ -36,7 +36,11 @@ it("retains dirty editor work when a browser-history navigation is declined", ()
   fireEvent.change(screen.getByLabelText("Workout title"), {
     target: { value: "Keep this edit" },
   });
-  vi.spyOn(window, "confirm").mockReturnValue(false);
+  const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+  fireEvent.click(screen.getByRole("link", { name: "Skip to workouts" }));
+  expect(location.hash).toBe(`#edit/${w.id}`);
+  expect(screen.getByRole("main")).toHaveFocus();
+  expect(confirm).not.toHaveBeenCalled();
   history.replaceState({}, "", "/#library");
   fireEvent(window, new PopStateEvent("popstate"));
   expect(screen.getByLabelText("Workout title")).toHaveValue("Keep this edit");

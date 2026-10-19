@@ -1,8 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import proposal from "../data/ao-proposals/fe-ao-heartland.json";
-import { fallbackPlan } from "../src/fallback";
-import { plannerRequestSchema } from "../src/planner-contract";
+import proposal from "../data/ao-proposals/fe-ao-heartland.json" with { type: "json" };
+import type { Workout } from "../src/model";
 
 test("icons, seasonal venues, AO review and browser history stay clear on every screen size", async ({
   page,
@@ -82,14 +81,46 @@ test("isolated cloud autosave connects two devices and recovers after a network 
     !process.env.FE_CLOUD_TEST_DIR,
     "Requires the isolated CI cloud fixture build",
   );
-  const w = fallbackPlan(
-    plannerRequestSchema.parse({
-      prompt: "Bodyweight circuit",
-      strictSchedule: true,
-      equipment: "None",
-    }),
-  ).workout;
-  w.title = "Cross-device Q";
+  const w: Workout = {
+    schemaVersion: 1,
+    id: "synthetic-cloud-qa",
+    title: "Cross-device Q",
+    summary: "Synthetic browser fixture",
+    kind: "personal",
+    duration: 45,
+    equipment: [],
+    running: "None",
+    format: "Circuit",
+    rawNotes: "",
+    adaptationNotes: "",
+    provenance: { status: "personal", label: "Synthetic test workout" },
+    updatedAt: new Date().toISOString(),
+    sections: [
+      {
+        id: "synthetic-thang",
+        kind: "thang",
+        title: "The Thang",
+        blocks: [
+          {
+            id: "synthetic-block",
+            title: "Bodyweight circuit",
+            instructions: "Work at your own pace.",
+            minutes: 45,
+            exercises: [
+              {
+                id: "synthetic-exercise",
+                name: "Squat",
+                amount: "10",
+                unit: "reps",
+                counting: "1=1",
+                instructions: "Rest as needed.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
   const code = "a".repeat(64);
   let remote = { version: 0, workouts: [] as (typeof w)[] };
   let offline = false;

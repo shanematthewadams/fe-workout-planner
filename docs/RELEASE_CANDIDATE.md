@@ -1,6 +1,6 @@
 # F3 Q Builder — finishing pass
 
-Scope: automatic cloud saving after one-time opt-in, source-backed AO review/venue handling, representative AI evaluation, navigation/release polish, and consistent icons. Playlist workouts are v2 ideas; circuit timers are deferred.
+Scope: automatic cloud saving after one-time opt-in, source-backed AO review/venue handling, representative AI evaluation, navigation/release polish, and consistent icons. Playlist workouts are v2 ideas; existing circuit timers are preserved.
 
 ## Delivered in code
 

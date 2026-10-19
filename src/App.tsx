@@ -608,32 +608,17 @@ export default function App() {
   };
   return (
     <>
-      <a className="skip-link no-print" href="#main">
+      <a
+        className="skip-link no-print"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
         Skip to workouts
       </a>
       <StagingNotice />
-      <CloudSync
-        compact={tab !== "data" || !!selected || !!editing}
-        hidden={timerOpen}
-        blocked={blocked || storageChanged || dirty}
-        onSettings={() => go("data")}
-        workouts={state.workouts}
-        onMerge={(workouts) => persist({ ...state, workouts })}
-        onStudio={(workouts) => {
-          const existing = new Set(state.workouts.map((w) => w.originId));
-          const fresh = workouts.filter((w) => !existing.has(w.originId));
-          if (state.workouts.length + fresh.length > 200) {
-            setNotice(
-              "Import would exceed 200 plans. Export a backup and free space first.",
-            );
-            return false;
-          }
-          return persist({
-            ...state,
-            workouts: [...state.workouts, ...fresh],
-          });
-        }}
-      />
 
       {!timerOpen && (
         <>
@@ -690,6 +675,29 @@ export default function App() {
           </nav>
         </>
       )}
+      <CloudSync
+        compact={tab !== "data" || !!selected || !!editing}
+        hidden={timerOpen}
+        blocked={blocked || storageChanged || dirty}
+        onSettings={() => go("data")}
+        workouts={state.workouts}
+        onMerge={(workouts) => persist({ ...state, workouts })}
+        onStudio={(workouts) => {
+          const existing = new Set(state.workouts.map((w) => w.originId));
+          const fresh = workouts.filter((w) => !existing.has(w.originId));
+          if (state.workouts.length + fresh.length > 200) {
+            setNotice(
+              "Import would exceed 200 plans. Export a backup and free space first.",
+            );
+            return false;
+          }
+          return persist({
+            ...state,
+            workouts: [...state.workouts, ...fresh],
+          });
+        }}
+      />
+
       <div
         role="status"
         aria-live="polite"
@@ -754,7 +762,7 @@ export default function App() {
           }}
         />
       ) : !selected && !editing ? (
-        <main id="main" className="main">
+        <main id="main" tabIndex={-1} className="main">
           {tab === "builder" && (
             <Planner
               onImport={() => go("markdown")}
@@ -871,7 +879,7 @@ export default function App() {
           )}
         </main>
       ) : editing ? (
-        <main id="main" className="editor main">
+        <main id="main" tabIndex={-1} className="editor main">
           <div className="page-top">
             <button onClick={() => go("mine")}>
               <ArrowLeft size={17} /> My workouts
@@ -1340,6 +1348,7 @@ export default function App() {
       ) : selected ? (
         <main
           id="main"
+          tabIndex={-1}
           className={
             "main detail " +
             (q ? "q-mode " : "") +

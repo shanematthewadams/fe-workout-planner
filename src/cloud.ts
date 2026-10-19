@@ -61,7 +61,7 @@ export function mergeCloud(
     );
   return { workouts: result, conflicts };
 }
-/** A staging connection must point to a different database, never the production fallback. */
+/** Staging requires a separate database or the explicitly isolated staging RPC. */
 export function cloudConnection() {
   const production = import.meta.env.VITE_SUPABASE_URL;
   const url = isStaging()
