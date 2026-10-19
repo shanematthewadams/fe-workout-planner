@@ -14,6 +14,9 @@ import {
   Check,
 } from "lucide-react";
 import { readRoute, writeRoute, routeHash } from "./navigation";
+import { AccountPanel, AccountEntry } from "./AccountPanel";
+import { useAccount } from "./AccountContext";
+import { accountStorageKey } from "./auth";
 import { AppNavigation } from "./AppNavigation";
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
@@ -38,7 +41,7 @@ import { MovementPicker } from "./MovementPicker";
 import { catalog } from "./catalog";
 import { SupabaseCatalog } from "./repository";
 import {
-  STORAGE_KEY,
+  STORAGE_KEY as GUEST_STORAGE_KEY,
   type Workout,
   type Section,
   type LocalState,
@@ -128,11 +131,11 @@ function TimingSummary({ workout }: { workout: Workout }) {
     </aside>
   );
 }
-function load() {
+function load(key = GUEST_STORAGE_KEY) {
   try {
     return {
-      data: readState(),
-      raw: localStorage.getItem(STORAGE_KEY),
+      data: readState(localStorage, key),
+      raw: localStorage.getItem(key),
       error: "",
     };
   } catch {
@@ -145,6 +148,8 @@ function load() {
   }
 }
 export default function App() {
+  const account = useAccount();
+  const STORAGE_KEY = accountStorageKey(account?.user?.id);
   const [sources, setSources] = useState(catalog);
   const [catalogOrigin, setCatalogOrigin] = useState("snapshot");
   useEffect(() => {
@@ -180,7 +185,7 @@ export default function App() {
       controller.abort();
     };
   }, []);
-  const [initial] = useState(load);
+  const [initial] = useState(() => load(STORAGE_KEY));
   const savedSnapshot = useRef(initial.raw);
   const [storageChanged, setStorageChanged] = useState(false);
   useEffect(() => {
@@ -311,6 +316,10 @@ export default function App() {
       setTimerOpen(route.view === "lead");
     }
   }, [state.workouts, sources]);
+  useEffect(() => {
+    account?.setBlocked(dirty || blocked || storageChanged);
+    return () => account?.setBlocked(false);
+  }, [dirty, blocked, storageChanged, account?.setBlocked]);
   const [libraryPreferences, setLibraryPreferences] =
     useState<LibraryPreferences>({ favoritesOnly: false, sort: "recommended" });
   const persist = (next: LocalState) => {
@@ -328,7 +337,7 @@ export default function App() {
         );
         return false;
       }
-      writeState(next);
+      writeState(next, localStorage, STORAGE_KEY);
       savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
       setState(next);
       return true;
@@ -341,7 +350,7 @@ export default function App() {
   };
   const loadLatest = () => {
     try {
-      const latest = readState();
+      const latest = readState(localStorage, STORAGE_KEY);
       const raw = localStorage.getItem(STORAGE_KEY);
       setState(latest);
       savedSnapshot.current = raw;
@@ -499,7 +508,7 @@ export default function App() {
           }
         : state;
       const raw = recovery
-        ? (localStorage.getItem("fe-planner:v1") ?? "")
+        ? (localStorage.getItem(STORAGE_KEY) ?? "")
         : JSON.stringify(
             {
               format: "fe-workout-backup",
@@ -622,7 +631,46 @@ export default function App() {
       </a>
       <StagingNotice />
 
-      {!timerOpen && <AppNavigation active={tab} onNavigate={go} />}
+      {!timerOpen && (
+        <AppNavigation
+          active={tab}
+          onNavigate={go}
+          accountEntry={(onOpen) => <AccountEntry onOpen={onOpen} />}
+        />
+      )}
+      {!timerOpen && tab === "data" && !selected && !editing && (
+        <AccountPanel
+          onImportGuest={() => {
+            try {
+              const incoming = readState().workouts.filter(
+                (workout) =>
+                  !state.workouts.some(
+                    (existing) =>
+                      JSON.stringify(workoutSchema.parse(existing)) ===
+                      JSON.stringify(workoutSchema.parse(workout)),
+                  ),
+              );
+              const merged = mergeBackup(
+                state.workouts,
+                incoming,
+                sources.map((workout) => workout.id),
+              );
+              if (merged.workouts.length > 200)
+                throw Error(
+                  "Adding guest workouts would exceed 200 plans. Export a backup and free space first.",
+                );
+              return persist({ ...state, workouts: merged.workouts });
+            } catch (error) {
+              setNotice(
+                error instanceof Error
+                  ? error.message
+                  : "Guest workouts could not be read. Their original copy is unchanged.",
+              );
+              return false;
+            }
+          }}
+        />
+      )}
       <CloudSync
         compact={tab !== "data" || !!selected || !!editing}
         hidden={timerOpen}

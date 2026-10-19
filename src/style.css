@@ -3397,3 +3397,61 @@ footer {
     padding-left: 0;
   }
 }
+
+.account-entry {
+  width: 100%;
+  justify-content: flex-start;
+  color: #fff;
+  background: #710c1d;
+  border-color: #ffffff70;
+  border-radius: 6px;
+  min-height: 48px;
+}
+.account-panel {
+  margin: 24px auto;
+  width: min(900px, calc(100% - 40px));
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.account-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.account-panel .account-email {
+  overflow-wrap: anywhere;
+}
+.account-form {
+  display: grid;
+  gap: 16px;
+  max-width: 560px;
+}
+.account-form label {
+  display: grid;
+  gap: 8px;
+}
+.account-form button {
+  justify-self: start;
+}
+.account-panel .guest-import {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  margin-block: 16px;
+}
+.account-loading {
+  padding-top: 48px;
+}
+@media (max-width: 600px) {
+  .account-panel {
+    padding: 20px;
+  }
+  .account-form button {
+    width: 100%;
+  }
+}
+.account-entry:hover {
+  background: #5a0a17;
+  color: #fff;
+}

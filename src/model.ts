@@ -299,6 +299,7 @@ export type LocalState = { workouts: Workout[]; favorites: string[] };
 export function writeState(
   state: LocalState,
   storage: Pick<Storage, "setItem"> = localStorage,
+  key = STORAGE_KEY,
 ) {
   const backup = {
     format: "fe-workout-backup",
@@ -307,12 +308,13 @@ export function writeState(
     ...state,
   };
   parseBackup(JSON.stringify(backup));
-  storage.setItem(STORAGE_KEY, JSON.stringify(backup));
+  storage.setItem(key, JSON.stringify(backup));
 }
 export function readState(
   storage: Pick<Storage, "getItem"> = localStorage,
+  key = STORAGE_KEY,
 ): LocalState {
-  const raw = storage.getItem(STORAGE_KEY);
+  const raw = storage.getItem(key);
   if (!raw) return { workouts: [], favorites: [] };
   return parseBackup(raw);
 }

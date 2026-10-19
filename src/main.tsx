@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { AccountWorkspace } from "./AccountContext";
 import { AppRecovery } from "./AppRecovery";
 import "@fontsource/big-shoulders-display/latin-600";
 import "@fontsource/big-shoulders-display/latin-700";
@@ -13,7 +14,9 @@ import "./library.css";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppRecovery>
-      <App />
+      <AccountWorkspace>
+        <App />
+      </AccountWorkspace>
     </AppRecovery>
   </React.StrictMode>,
 );

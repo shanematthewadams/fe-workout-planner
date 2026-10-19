@@ -9,6 +9,7 @@ import {
   Download,
   RefreshCw,
 } from "lucide-react";
+import { useAccount } from "./AccountContext";
 import { useCloudSave } from "./useCloudSave";
 import { isStaging } from "./environment";
 import { importStudio } from "./studio/import";
@@ -30,7 +31,14 @@ export function CloudSync({
   blocked?: boolean;
   onSettings?: () => void;
 }) {
-  const save = useCloudSave(workouts, onMerge, blocked);
+  const account = useAccount();
+  const owner = account?.user?.id;
+  const save = useCloudSave(
+    workouts,
+    onMerge,
+    blocked || !!account?.switching,
+    owner,
+  );
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const download = (value: unknown, name: string) => {
@@ -121,85 +129,92 @@ export function CloudSync({
           Download cloud recovery file
         </button>
       )}
-      <details className="advanced-saving">
-        <summary>Recovery & another device</summary>
+      {save.settingsRecovery !== null && (
+        <button
+          onClick={() =>
+            download(save.settingsRecovery, "fe-saving-settings-recovery.json")
+          }
+        >
+          <Download size={17} aria-hidden="true" /> Download recovery settings
+        </button>
+      )}
+      {owner ? (
         <p>
-          Saving needs no setup. To open the same private workouts on another
-          device, copy your recovery code there. Keep it private: anyone with
-          this code can read and change those workouts. Favorites and unfinished
-          edits stay on this device.
+          Sign in with the same email on another device to open your account
+          workouts. Favorites and unfinished edits stay on this browser.
         </p>
-        {save.settingsRecovery !== null && (
-          <button
-            onClick={() =>
-              download(
-                save.settingsRecovery,
-                "fe-saving-settings-recovery.json",
-              )
-            }
-          >
-            <Download size={17} aria-hidden="true" /> Download recovery settings
-          </button>
-        )}
-        {save.config && (
-          <div className="actions">
-            <button
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(save.config!.code);
-                  setMessage(
-                    "Recovery code copied. Keep it private; it grants access to your workouts.",
-                  );
-                } catch {
-                  setMessage(
-                    "Clipboard unavailable. Download the recovery code instead.",
-                  );
+      ) : (
+        <details className="advanced-saving">
+          <summary>Recovery & another device</summary>
+          <p>
+            Saving needs no setup. To open the same private workouts on another
+            device, copy your recovery code there. Keep it private: anyone with
+            this code can read and change those workouts. Favorites and
+            unfinished edits stay on this device.
+          </p>
+          {save.config && (
+            <div className="actions">
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(save.config!.code);
+                    setMessage(
+                      "Recovery code copied. Keep it private; it grants access to your workouts.",
+                    );
+                  } catch {
+                    setMessage(
+                      "Clipboard unavailable. Download the recovery code instead.",
+                    );
+                  }
+                }}
+              >
+                <Copy size={17} aria-hidden="true" /> Copy recovery code
+              </button>
+              <button
+                onClick={() =>
+                  download(
+                    save.config!.code + "\n",
+                    "fe-private-recovery-code.txt",
+                  )
                 }
-              }}
-            >
-              <Copy size={17} aria-hidden="true" /> Copy recovery code
-            </button>
+              >
+                <Download size={17} aria-hidden="true" /> Download recovery code
+              </button>
+            </div>
+          )}
+          {save.available && (
+            <details>
+              <summary>Use an existing recovery code</summary>
+              <label>
+                Recovery code
+                <input
+                  type="password"
+                  autoComplete="off"
+                  value={code}
+                  onChange={(event) => setCode(event.target.value.trim())}
+                />
+              </label>
+              <button
+                disabled={save.busy || blocked}
+                onClick={() => {
+                  save.restore(code);
+                  setCode("");
+                }}
+              >
+                Restore workouts
+              </button>
+            </details>
+          )}
+          {!isStaging() && (
             <button
-              onClick={() =>
-                download(
-                  save.config!.code + "\n",
-                  "fe-private-recovery-code.txt",
-                )
-              }
+              disabled={save.busy}
+              onClick={() => void importSavedStudio()}
             >
-              <Download size={17} aria-hidden="true" /> Download recovery code
+              Import saved Studio cloud plans
             </button>
-          </div>
-        )}
-        {save.available && (
-          <details>
-            <summary>Use an existing recovery code</summary>
-            <label>
-              Recovery code
-              <input
-                type="password"
-                autoComplete="off"
-                value={code}
-                onChange={(event) => setCode(event.target.value.trim())}
-              />
-            </label>
-            <button
-              disabled={save.busy || blocked}
-              onClick={() => {
-                save.restore(code);
-                setCode("");
-              }}
-            >
-              Restore workouts
-            </button>
-          </details>
-        )}
-        {!isStaging() && (
-          <button disabled={save.busy} onClick={() => void importSavedStudio()}>
-            Import saved Studio cloud plans
-          </button>
-        )}
-      </details>
+          )}
+        </details>
+      )}
       {message && <p role="status">{message}</p>}
     </section>
   );

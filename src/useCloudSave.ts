@@ -7,17 +7,18 @@ import {
   CloudSnapshotError,
   cloudConnection,
 } from "./cloud";
+import { accountRequest } from "./auth";
 import { isStaging } from "./environment";
 export const SYNC_SETTINGS = "fe-sync:v1";
 type Settings = { code: string; base: Workout[] };
-function readSettings(): Settings | null {
+function readSettings(key: string, owner?: string): Settings | null {
   try {
-    const raw = JSON.parse(
-      localStorage.getItem(
-        isStaging() ? "fe-sync:staging:v1" : SYNC_SETTINGS,
-      ) ?? "null",
-    );
-    if (raw && /^[a-f0-9]{64}$/.test(raw.code) && Array.isArray(raw.base))
+    const raw = JSON.parse(localStorage.getItem(key) ?? "null");
+    if (
+      raw &&
+      (owner ? raw.code === owner : /^[a-f0-9]{64}$/.test(raw.code)) &&
+      Array.isArray(raw.base)
+    )
       return {
         code: raw.code,
         base: raw.base.map((w: unknown) => workoutSchema.parse(w)),
@@ -31,8 +32,14 @@ export function useCloudSave(
   workouts: Workout[],
   onMerge: (workouts: Workout[]) => boolean,
   blocked: boolean,
+  owner?: string,
 ) {
-  const [config, setConfig] = useState(readSettings);
+  const settingsKey = owner
+    ? `fe-account-sync:${isStaging() ? "staging:" : ""}${owner}:v1`
+    : isStaging()
+      ? "fe-sync:staging:v1"
+      : SYNC_SETTINGS;
+  const [config, setConfig] = useState(() => readSettings(settingsKey, owner));
   const [status, setStatus] = useState("Workouts save automatically");
   const [busy, setBusy] = useState(false);
   const [recovery, setRecovery] = useState<unknown>(null);
@@ -47,9 +54,12 @@ export function useCloudSave(
   const acknowledged = useRef<string | null>(null),
     failed = useRef<string | null>(null);
   const epoch = useRef(0);
-  const settingsKey = isStaging() ? "fe-sync:staging:v1" : SYNC_SETTINGS;
   const available = !!cloudConnection();
   const signature = JSON.stringify(workouts);
+  const request: typeof cloudRequest = owner
+    ? (_code, op, version, items, signal) =>
+        accountRequest(owner, op, version, items, signal)
+    : cloudRequest;
   async function sync() {
     const {
       config: current,
@@ -67,7 +77,7 @@ export function useCloudSave(
     const controller = new AbortController();
     abort.current = controller;
     try {
-      const remote = await cloudRequest(
+      const remote = await request(
         current.code,
         "get",
         0,
@@ -86,7 +96,7 @@ export function useCloudSave(
       const next =
         JSON.stringify(merged.workouts) === JSON.stringify(remote.workouts)
           ? remote
-          : await cloudRequest(
+          : await request(
               current.code,
               "put",
               remote.version,
@@ -140,17 +150,17 @@ export function useCloudSave(
   }
   // Saving online is the default. Create a private collection only when a workout exists.
   useEffect(() => {
-    if (config || !workouts.length || blocked || !available) return;
+    if (config || (!owner && !workouts.length) || blocked || !available) return;
     try {
       const raw = localStorage.getItem(settingsKey);
-      const existing = readSettings();
+      const existing = readSettings(settingsKey, owner);
       if (raw !== null && !existing) {
         setSettingsRecovery(raw);
         setStatus("Saved on this device · cloud recovery needs attention");
         return;
       }
       // Another tab may have initialized the collection since this render.
-      const next = existing ?? { code: cloudKey(), base: [] };
+      const next = existing ?? { code: owner ?? cloudKey(), base: [] };
       localStorage.setItem(settingsKey, JSON.stringify(next));
       setConfig(next);
     } catch {
@@ -160,6 +170,7 @@ export function useCloudSave(
     }
   }, [
     config,
+    owner,
     signature,
     workouts.length,
     blocked,
@@ -204,6 +215,7 @@ export function useCloudSave(
     };
   }, []);
   function restore(code: string) {
+    if (owner) return;
     if (!/^[a-f0-9]{64}$/.test(code)) {
       setStatus("Enter the full recovery code.");
       return;

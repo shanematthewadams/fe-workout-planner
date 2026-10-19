@@ -12,6 +12,11 @@ export class CloudSnapshotError extends Error {
     );
   }
 }
+export function parseCloudSnapshot(raw: unknown): Snapshot {
+  const parsed = cloudSnapshot.safeParse(raw);
+  if (!parsed.success) throw new CloudSnapshotError(raw);
+  return parsed.data;
+}
 export function cloudKey() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -109,8 +114,5 @@ export async function cloudRequest(
       "Cloud sync unavailable. Your local plans are safe; retry when connected.",
     );
   }
-  const raw: unknown = await response.json();
-  const parsed = cloudSnapshot.safeParse(raw);
-  if (!parsed.success) throw new CloudSnapshotError(raw);
-  return parsed.data;
+  return parseCloudSnapshot(await response.json());
 }

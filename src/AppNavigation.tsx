@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type MouseEvent,
+} from "react";
 import { flushSync } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { AppIcon } from "./AppIcon";
@@ -27,8 +33,10 @@ const groups = [
 export function AppNavigation({
   active,
   onNavigate,
+  accountEntry,
 }: {
   active: string;
+  accountEntry?: (onOpen: () => void) => ReactNode;
   onNavigate: (destination: string) => boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -66,13 +74,21 @@ export function AppNavigation({
     )
       return;
     event.preventDefault();
+    open(destination);
+  };
+  const open = (destination: string) => {
     let accepted = false;
     flushSync(() => {
       accepted = onNavigate(destination);
       if (accepted) setExpanded(false);
     });
     if (accepted) {
-      document.getElementById("main")?.focus({ preventScroll: true });
+      const content =
+        destination === "data"
+          ? (document.getElementById("account-heading") ??
+            document.getElementById("main"))
+          : document.getElementById("main");
+      content?.focus({ preventScroll: true });
       window.scrollTo(0, 0);
     }
   };
@@ -134,6 +150,7 @@ export function AppNavigation({
             ))}
           </div>
         ))}
+        {accountEntry?.(() => open("data"))}
       </nav>
     </header>
   );

@@ -1,3 +1,5 @@
+import { useAccount } from "./AccountContext";
+import { scopedDraftKey } from "./auth";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AppIcon } from "./AppIcon";
 import type { Workout } from "./model";
@@ -83,7 +85,10 @@ export function IntervalTimer({
   focused: boolean;
   onFocus: (value: boolean) => void;
 }) {
-  const key = `fe-interval-timer:v1:${workout.id}`;
+  const key = scopedDraftKey(
+    `fe-interval-timer:v1:${workout.id}`,
+    useAccount()?.user?.id,
+  );
   const date = new Date().toLocaleDateString("en-CA");
   const [initial] = useState(() => restore(key, workout.updatedAt, date));
   const [timer, setTimer] = useState<IntervalState>(initial.timer);

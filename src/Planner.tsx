@@ -14,6 +14,8 @@ import {
   plannerResponseSchema,
 } from "./planner-contract";
 import { restorePlannerSession, SESSION_KEY } from "./planner-session";
+import { useAccount } from "./AccountContext";
+import { scopedDraftKey } from "./auth";
 import { PlannerDraft } from "./PlannerDraft";
 import { WorkoutDetails } from "./WorkoutDetails";
 import { planningDetailsSchema, refinePlanning } from "./planning-details";
@@ -34,7 +36,8 @@ export function Planner({
   onSave: (w: Workout) => boolean;
   onReference: (id: string) => void;
 }) {
-  const [initial] = useState(restorePlannerSession),
+  const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
+  const [initial] = useState(() => restorePlannerSession(sessionKey)),
     [prompt, setPrompt] = useState(initial.prompt),
     [result, setResult] = useState(initial.result),
     [revision, setRevision] = useState(initial.revision),
@@ -174,7 +177,7 @@ export function Planner({
   useEffect(() => {
     try {
       sessionStorage.setItem(
-        SESSION_KEY,
+        sessionKey,
         JSON.stringify({
           prompt,
           result,

@@ -1,3 +1,5 @@
+import { useAccount } from "./AccountContext";
+import { scopedDraftKey } from "./auth";
 import { useEffect, useRef, useState } from "react";
 import type { Workout } from "./model";
 import {
@@ -57,7 +59,10 @@ export function SessionTimer({
   const startMinutes = sessionStart(workout),
     startTime = workout.schedule?.startTime ?? "05:30";
   const today = new Date().toLocaleDateString("en-CA");
-  const key = "fe-field-timer:v1:" + workout.id + ":" + startTime;
+  const key = scopedDraftKey(
+    "fe-field-timer:v1:" + workout.id + ":" + startTime,
+    useAccount()?.user?.id,
+  );
   const [standard, setStandard] = useState(() => {
     try {
       const raw = JSON.parse(localStorage.getItem(key) ?? "null");

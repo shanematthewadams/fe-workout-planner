@@ -26,7 +26,7 @@ export type PlannerSession = {
   revision: string;
   request: PlannerRequest | null;
 };
-export function restorePlannerSession(): PlannerSession {
+export function restorePlannerSession(key = SESSION_KEY): PlannerSession {
   const empty: PlannerSession = {
     prompt: "",
     result: null,
@@ -39,7 +39,7 @@ export function restorePlannerSession(): PlannerSession {
     request: null,
   };
   try {
-    const value = JSON.parse(sessionStorage.getItem(SESSION_KEY) ?? "null");
+    const value = JSON.parse(sessionStorage.getItem(key) ?? "null");
     if (!value) return empty;
     // Recover older v1 sessions. Optional newer fields fail independently so an
     // invalid form field cannot discard an otherwise recoverable workout.

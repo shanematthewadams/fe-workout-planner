@@ -5,13 +5,16 @@ import {
   MARKDOWN_PROMPT,
   parseMarkdownWorkout,
 } from "./markdown-workout";
+import { useAccount } from "./AccountContext";
+import { scopedDraftKey } from "./auth";
 import { type Workout } from "./model";
 
 const DRAFT_KEY = "fe-planner:markdown-import:v1";
 export function MarkdownImport({ onEdit }: { onEdit: (w: Workout) => void }) {
+  const draftKey = scopedDraftKey(DRAFT_KEY, useAccount()?.user?.id);
   const [text, setText] = useState(() => {
     try {
-      return sessionStorage.getItem(DRAFT_KEY) ?? "";
+      return sessionStorage.getItem(draftKey) ?? "";
     } catch {
       return "";
     }
@@ -39,7 +42,7 @@ export function MarkdownImport({ onEdit }: { onEdit: (w: Workout) => void }) {
     setError("");
     setMessage("");
     try {
-      sessionStorage.setItem(DRAFT_KEY, value);
+      sessionStorage.setItem(draftKey, value);
     } catch {
       setMessage(
         "This browser cannot keep your pasted text after navigation. Keep your original file or chat.",
