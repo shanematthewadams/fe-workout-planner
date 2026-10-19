@@ -1,5 +1,7 @@
 # Small-group demo readiness — October 19, 2026
 
+> Historical checkpoint. Release gates were subsequently completed; see [the staging release record](STAGING_RELEASE_2026-10-19.md) and [the verified Nation directory hookup](NATION_DIRECTORY_2026-10-19.md) for current status.
+
 Target: a shareable small-group demo by Friday, October 23. Keep the demo focused on guest planning, personal libraries, F3 profiles, AO-aware planning, and leading a saved workout. Shared/public workout publishing is not included.
 
 ## Completed in this pass

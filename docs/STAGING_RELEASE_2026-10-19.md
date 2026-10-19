@@ -65,7 +65,7 @@ Pre/post guest and account vault counts and content digests matched. Security ad
 ## Remaining limits
 
 - Real inbox delivery and confirmation redirects were not newly exercised. OTP/session/UI behavior passed synthetic browser tests; that is not a claim of fresh end-to-end email delivery verification.
-- F3 Nation directory access still returns HTTP 401 using the existing configured credential. No official AO links/coordinates were invented or imported. The demo uses the existing regional snapshots and verified venue reports.
+- F3 Nation access and official map references were subsequently verified and implemented; see [the Nation directory hookup](NATION_DIRECTORY_2026-10-19.md). Earlier local 401 responses used a masked connector value and were not valid evidence against the real saved key.
 - Shared/public workout publishing is not implemented.
 - Browser phone tests are emulated Chromium/WebKit. Physical-device background audio, wake locks and long-running sessions were not retested on hardware.
 

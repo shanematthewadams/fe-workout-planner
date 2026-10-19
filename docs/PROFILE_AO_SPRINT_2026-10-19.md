@@ -1,5 +1,7 @@
 # Profiles, attribution and AO planning — October 19, 2026
 
+> Historical checkpoint. Release gates were subsequently completed; see [the staging release record](STAGING_RELEASE_2026-10-19.md) and [the verified Nation directory hookup](NATION_DIRECTORY_2026-10-19.md) for current status.
+
 ## State
 
 Implemented and verified locally on `studio/ux-streamline`, starting at `7539ba0`. Remote refs were fetched before editing; this was the current development head. Production main was `07ff631`. No branch was created, no changes were pushed, no Netlify build/deploy was triggered, and no production database was changed. The older develop checkout has unrelated uncommitted work and was left untouched.
