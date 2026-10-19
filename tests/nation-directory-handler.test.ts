@@ -114,18 +114,18 @@ it("does not run in production, on writes, or with absent or masked settings", a
   expect(fetcher).not.toHaveBeenCalled();
 });
 it("reports upstream authorization failures without exposing tokens or upstream response bodies", async () => {
-  const fetcher = vi
-    .fn<typeof fetch>()
-    .mockResolvedValue(
-      new Response("private-fixture-token private@example.test", {
-        status: 401,
-      }),
-    );
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+    new Response("private-fixture-token private@example.test", {
+      status: 401,
+    }),
+  );
   const response = await handleNationDirectory(request(), env, fetcher);
   expect(response.status).toBe(502);
   expect(await response.json()).toEqual({
     status: "unavailable",
     reason: "nation-authorization",
+    upstreamStatus: 401,
+    failureType: "Error",
   });
 });
 it("rejects malformed directory results and timeouts without returning a partial import", async () => {

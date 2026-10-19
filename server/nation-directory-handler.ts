@@ -54,12 +54,23 @@ export async function handleNationDirectory(
     });
   } catch (problem) {
     const schema = problem instanceof z.ZodError;
+    const message = problem instanceof Error ? problem.message : "";
+    const upstreamStatus =
+      Number(message.match(/read failed \((\d{3})\)/)?.[1]) || undefined;
     const authorization =
       problem instanceof Error &&
       /read failed \((401|403)\)/.test(problem.message);
     return Response.json(
       {
         status: "unavailable",
+        ...(upstreamStatus ? { upstreamStatus } : {}),
+        ...(problem instanceof Error ? { failureType: problem.name } : {}),
+        ...(message.startsWith("No regional AOs")
+          ? { detail: "no-regional-aos" }
+          : {}),
+        ...(message.startsWith("Official location identity")
+          ? { detail: "location-identity" }
+          : {}),
         reason: authorization
           ? "nation-authorization"
           : schema
