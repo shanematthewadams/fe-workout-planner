@@ -43,7 +43,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
   )
     style = "The Grinder";
   else if (details.grouping === "Partners" && !builder) style = "Dora 1-2-3";
-  const running =
+  let running =
     input.running === "From prompt"
       ? wet || /\b(no|without|skip) running\b/i.test(input.prompt)
         ? "None"
@@ -308,6 +308,53 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       ...details.conditionsInstructions,
     ],
   };
+  if (details.activity !== "Bootcamp") {
+    const routeMinutes =
+      input.minutes -
+      (input.strictSchedule ? 2 : 0) -
+      (input.mary ? (input.strictSchedule ? 6 : 5) : 0);
+    const instructions = `Q confirms route and access before departure. ${details.route ? "Q-supplied route: " + details.route : "Use a Q-checked out-and-back; route unconfirmed."} ${details.distance ? "Target distance (not measured by the app): " + details.distance + "." : "Use time rather than an assumed distance."} ${details.pace || "Use a conversational effort; allow a walking option."} Turn back by halfway through the route time or earlier for the group. Regroup at turns and return together by the hard stop.`;
+    running =
+      details.activity === "Ruck"
+        ? "None"
+        : input.running === "None"
+          ? "None"
+          : "Moderate";
+    plan.title = `${details.activity} · route draft`;
+    plan.summary =
+      "Q-confirmed route planning template. Check distance, access and group logistics before leading.";
+    plan.format = "Custom";
+    plan.running = running;
+    plan.equipment = details.activity === "Ruck" ? ["Ruck"] : [];
+    plan.sections = [
+      {
+        kind: "thang",
+        title: details.activity + " route",
+        blocks: [
+          {
+            title: "Out and back together",
+            instructions,
+            minutes: routeMinutes,
+            exercises: [
+              {
+                name: details.activity,
+                amount: String(routeMinutes),
+                unit: "minutes",
+                counting: "time",
+                instructions,
+              },
+            ],
+          },
+        ],
+      },
+      ...plan.sections.filter(
+        (section) => input.mary && section.kind === "mary",
+      ),
+    ];
+    plan.notes.push(
+      "COT and fellowship follow the physical hard stop. Optional exercise stops from your idea need manual review in this template.",
+    );
+  }
   const id = "template-" + crypto.randomUUID();
   const workout = workoutSchema.parse({
     schemaVersion: 1,
@@ -318,7 +365,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     duration: input.minutes,
     equipment: plan.equipment,
     running,
-    format,
+    format: plan.format,
     schedule: {
       startTime: input.startTime,
       requiredFeatures: [],

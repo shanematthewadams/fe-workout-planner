@@ -38,6 +38,62 @@ export function WorkoutDetails({
         <legend>Shape this workout</legend>
         <div className="assistant-grid">
           <label>
+            Workout type
+            <select
+              aria-label="Workout type"
+              value={value.activity}
+              onChange={(e) =>
+                onChange({
+                  ...value,
+                  activity: e.target.value as PlanningDetails["activity"],
+                })
+              }
+            >
+              {["Bootcamp", "Run", "Ruck"].map((activity) => (
+                <option key={activity}>{activity}</option>
+              ))}
+            </select>
+          </label>
+          {value.activity !== "Bootcamp" && (
+            <>
+              <label>
+                Route description
+                <input
+                  maxLength={600}
+                  value={value.route}
+                  onChange={(e) =>
+                    onChange({ ...value, route: e.target.value })
+                  }
+                  placeholder="Q confirms a route or out-and-back"
+                />
+              </label>
+              <label>
+                Target distance (optional)
+                <input
+                  maxLength={80}
+                  value={value.distance}
+                  onChange={(e) =>
+                    onChange({ ...value, distance: e.target.value })
+                  }
+                  placeholder="For example, 3 miles"
+                />
+              </label>
+              <label>
+                Pace and regrouping
+                <input
+                  maxLength={120}
+                  value={value.pace}
+                  onChange={(e) => onChange({ ...value, pace: e.target.value })}
+                  placeholder="Conversational pace; regroup at turns"
+                />
+              </label>
+              <p>
+                Confirm access and distance. Choose a turnaround that gets
+                everyone back for COT. Add any exercise stops in your idea.
+              </p>
+            </>
+          )}
+          <label>
             <span className="icon-label">
               <AppIcon name="pax" />
               PAX count

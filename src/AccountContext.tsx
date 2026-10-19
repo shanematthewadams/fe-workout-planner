@@ -9,6 +9,7 @@ import {
 import { type Session } from "@supabase/supabase-js";
 import { cachedAccountIdentity, cleanSignInUrl, getAuthClient } from "./auth";
 import { cloneElement } from "react";
+import { ProfileWorkspace } from "./ProfileContext";
 import { writeRoute } from "./navigation";
 
 type Identity = { id: string; email?: string };
@@ -135,7 +136,9 @@ export function AccountWorkspace({ children }: { children: ReactElement }) {
           to switch accounts. Cloud saving is paused.
         </aside>
       )}
-      {cloneElement(children, { key: workspace?.id ?? "guest" })}
+      <ProfileWorkspace key={workspace?.id ?? "guest"}>
+        {cloneElement(children, { key: workspace?.id ?? "guest" })}
+      </ProfileWorkspace>
     </AccountContext.Provider>
   );
 }

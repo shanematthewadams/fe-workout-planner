@@ -16,7 +16,8 @@
     "postbuild": "node scripts/build-offline.mjs && node scripts/probe-nation.mjs",
     "test:browser": "playwright test",
     "eval:planner": "vite build --ssr scripts/evaluate-planner.ts --outDir qa/evaluator --emptyOutDir && node qa/evaluator/evaluate-planner.js",
-    "sync:schema": "node scripts/export-sync-schema.mjs"
+    "sync:schema": "node scripts/export-sync-schema.mjs",
+    "catalog:nation-directory": "node --experimental-strip-types scripts/collect-nation-directory.ts"
   },
   "dependencies": {
     "@fontsource/big-shoulders-display": "5.3.0",

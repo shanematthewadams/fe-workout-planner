@@ -51,7 +51,7 @@ export const planSchema = z
             .max(6),
         }),
       )
-      .min(2)
+      .min(1)
       .max(3),
     requiredFeatures: z.array(featureSchema).max(11).optional(),
     notes: z.array(z.string().min(1).max(400)).max(10),

@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { readRoute, writeRoute, routeHash } from "./navigation";
 import { AccountPanel, AccountEntry } from "./AccountPanel";
+import { attributeWorkout, sameGuestContent } from "./attribution";
+import { useProfile } from "./ProfileContext";
 import { useAccount } from "./AccountContext";
 import { accountStorageKey } from "./auth";
 import { AppNavigation } from "./AppNavigation";
@@ -149,6 +151,7 @@ function load(key = GUEST_STORAGE_KEY) {
 }
 export default function App() {
   const account = useAccount();
+  const profile = useProfile()?.profile;
   const STORAGE_KEY = accountStorageKey(account?.user?.id);
   const [sources, setSources] = useState(catalog);
   const [catalogOrigin, setCatalogOrigin] = useState("snapshot");
@@ -337,6 +340,12 @@ export default function App() {
         );
         return false;
       }
+      next = {
+        ...next,
+        workouts: next.workouts.map((workout) =>
+          attributeWorkout(workout, account?.user?.id, profile?.display_name),
+        ),
+      };
       writeState(next, localStorage, STORAGE_KEY);
       savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
       setState(next);
@@ -417,7 +426,11 @@ export default function App() {
       );
       return;
     }
-    const copied = copyWorkout(workout);
+    const copied = attributeWorkout(
+      copyWorkout(workout),
+      account?.user?.id,
+      profile?.display_name,
+    );
     if (persist({ ...state, workouts: [...state.workouts, copied] })) {
       begin(copied, true);
       setNotice("Personal copy created. Your source is unchanged.");
@@ -463,16 +476,20 @@ export default function App() {
       );
       return;
     }
-    const w = {
-      ...result.data,
-      ...(conflict
-        ? {
-            id: uid(),
-            title: titledCopy(result.data.title, " · conflict copy"),
-          }
-        : {}),
-      updatedAt: new Date().toISOString(),
-    };
+    const w = attributeWorkout(
+      {
+        ...result.data,
+        ...(conflict
+          ? {
+              id: uid(),
+              title: titledCopy(result.data.title, " · conflict copy"),
+            }
+          : {}),
+        updatedAt: new Date().toISOString(),
+      },
+      account?.user?.id,
+      profile?.display_name,
+    );
     const next = {
       ...state,
       workouts: [...state.workouts.filter((x) => x.id !== w.id), w],
@@ -644,10 +661,11 @@ export default function App() {
             try {
               const incoming = readState().workouts.filter(
                 (workout) =>
-                  !state.workouts.some(
-                    (existing) =>
-                      JSON.stringify(workoutSchema.parse(existing)) ===
-                      JSON.stringify(workoutSchema.parse(workout)),
+                  !state.workouts.some((existing) =>
+                    sameGuestContent(
+                      workoutSchema.parse(existing),
+                      workoutSchema.parse(workout),
+                    ),
                   ),
               );
               const merged = mergeBackup(

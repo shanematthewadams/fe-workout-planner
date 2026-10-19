@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { getAuthClient, signInRedirect } from "./auth";
 import { useAccount } from "./AccountContext";
+import { ProfileEditor } from "./ProfileContext";
 import { readState } from "./model";
 
 export function AccountPanel({
@@ -171,6 +172,7 @@ export function AccountPanel({
             Your saved workouts follow you when you sign in on another phone or
             computer. Offline changes upload when you reconnect.
           </p>
+          <ProfileEditor />
           {guestCount > 0 && !imported && (
             <div className="guest-import">
               <p>
@@ -251,8 +253,12 @@ export function AccountPanel({
           ) : (
             <>
               <p role="status">
-                Check your email for a sign-in code sent to{" "}
+                Check your email at{" "}
                 <strong className="account-email">{sentEmail}</strong>.
+              </p>
+              <p>
+                First time here? Open the confirmation link in that email.
+                Returning? Enter your sign-in code below.
               </p>
               <form onSubmit={verifyCode} className="account-form">
                 <label>

@@ -111,18 +111,18 @@
         "id": "heritage-marina",
         "name": "Heritage Park Marina",
         "season": "Summer; Site Q determines annual changeover.",
-        "access": "Confirm active venue and park opening hours. Amenities are not yet venue-verified.",
+        "access": "Confirm active venue and current permitted access. Use only verified amenities for this venue.",
         "features": {}
       },
       {
         "id": "brougham-elementary",
         "name": "Brougham Elementary",
         "season": "Fall through spring; Site Q determines annual changeover.",
-        "access": "Confirm active venue and current permission. Amenities are not yet venue-verified.",
+        "access": "Confirm active venue and current permitted access. Use only verified amenities for this venue.",
         "features": {}
       }
     ],
-    "accessNotes": "Two seasonal venues. Do not transfer amenities from South Stride or between South Park venues. The changeover is not a fixed calendar date."
+    "accessNotes": "Q confirms the active venue. Site Q decides changeover; no fixed seasonal dates. Venue amenities are shared with other AOs only at the selected venue."
   },
   "fe-ao-stagecoach": {
     "features": {
@@ -159,7 +159,8 @@
         "use": "workout",
         "restrictions": "Shane-described; Site Q verification, current access and surface check pending."
       }
-    ]
+    ],
+    "venueId": "olathe-community-center"
   },
   "fe-ao-heartland": {
     "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
@@ -266,7 +267,8 @@
     ],
     "venues": [],
     "accessNotes": "Shared Stagecoach amenities were claimed but are not copied automatically. Indoor fireside access is for coffeeteria; other indoor access remains unconfirmed.",
-    "reviewBasis": "Vana and Black Bird via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+    "reviewBasis": "Vana and Black Bird via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
+    "venueId": "olathe-community-center"
   },
   "fe-ao-southstride": {
     "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
@@ -316,6 +318,7 @@
       }
     ],
     "accessNotes": "Confirm permitted early-morning access, especially November\u2013February. Optional paddleboarding is an activity idea, not confirmed equipment or permission.",
-    "reviewBasis": "Prestige Worldwide via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+    "reviewBasis": "Prestige Worldwide via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
+    "venueId": "heritage-marina"
   }
 }

@@ -24,9 +24,21 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   await page
     .getByRole("combobox", { name: "Workout venue", exact: true })
     .selectOption("brougham-elementary");
-  await expect(page.getByLabel("Where and when")).toContainText(
-    "No site features confirmed",
-  );
+  const venueSummary = page
+    .getByLabel("Where and when")
+    .locator(".ao-quick-summary")
+    .first();
+  await expect(venueSummary).toContainText("Shelter / covered space");
+  await expect(venueSummary).toContainText("Benches / raised support");
+  await expect(venueSummary).not.toContainText("Pull-up bars");
+  await page
+    .getByRole("combobox", { name: "Workout venue", exact: true })
+    .selectOption("heritage-marina");
+  await expect(venueSummary).toContainText("Pull-up bars");
+  await page
+    .getByRole("combobox", { name: "Workout venue", exact: true })
+    .selectOption("brougham-elementary");
+  await expect(venueSummary).not.toContainText("Pull-up bars");
   await navigate(page, "Library");
   await expect(page).toHaveURL(/#library$/);
   await navigate(page, "My Workouts");

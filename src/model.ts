@@ -45,6 +45,22 @@ export const workoutSchema = z
     schemaVersion: z.literal(1),
     id: z.string().min(1).max(100),
     originId: z.string().max(100).optional(),
+    attribution: z
+      .object({
+        ownerId: z.string().uuid().optional(),
+        creatorId: z.string().uuid().optional(),
+        creatorDisplayName: z.string().trim().min(1).max(80).optional(),
+        createdAt: z.string().datetime(),
+        visibility: z.literal("private"),
+        adaptedFrom: z
+          .object({
+            workoutId: z.string().max(100),
+            creatorId: z.string().uuid().optional(),
+            creatorDisplayName: z.string().max(80).optional(),
+          })
+          .optional(),
+      })
+      .optional(),
     title: z.string().trim().min(1).max(160),
     summary: text,
     kind: z.enum(["source", "personal"]),
@@ -173,14 +189,33 @@ export function titledCopy(title: string, suffix: string) {
   return title.slice(0, 160 - suffix.length) + suffix;
 }
 export function copyWorkout(w: Workout): Workout {
-  return {
+  return workoutSchema.parse({
     ...structuredClone(w),
     id: uid(),
     originId: w.originId ?? w.id,
+    attribution: {
+      ...(w.attribution?.creatorId
+        ? { creatorId: w.attribution.creatorId }
+        : {}),
+      ...(w.attribution?.creatorDisplayName
+        ? { creatorDisplayName: w.attribution.creatorDisplayName }
+        : {}),
+      createdAt: new Date().toISOString(),
+      visibility: "private",
+      adaptedFrom: w.attribution?.adaptedFrom ?? {
+        workoutId: w.id,
+        ...(w.attribution?.creatorId
+          ? { creatorId: w.attribution.creatorId }
+          : {}),
+        ...(w.attribution?.creatorDisplayName
+          ? { creatorDisplayName: w.attribution.creatorDisplayName }
+          : {}),
+      },
+    },
     title: titledCopy(w.title, " · my copy"),
     kind: "personal",
     updatedAt: new Date().toISOString(),
-  };
+  });
 }
 export const filtersEmpty = {
   query: "",

@@ -587,8 +587,18 @@ export function Planner({
                   setAO(value);
                   setSite({ overrides: {}, notes: "" });
                   const matched = findAO(value);
-                  if (matched)
+                  if (matched) {
                     setStartTime(matched.sessions[0]?.time ?? "05:30");
+                    const format = matched.sessions[0]?.format;
+                    const activity =
+                      format === "Ruck"
+                        ? "Ruck"
+                        : format === "Run / ruck"
+                          ? "Run"
+                          : "Bootcamp";
+                    setConditions((previous) => ({ ...previous, activity }));
+                    setMary(activity === "Bootcamp");
+                  }
                 }}
               />
             </div>
@@ -600,6 +610,8 @@ export function Planner({
               onRunning={setRunning}
               onChange={(next) => {
                 setConditions(next);
+                if (next.activity !== conditions.activity)
+                  setMary(next.activity === "Bootcamp");
                 setFocus(next.focus);
                 setPax(next.pax);
               }}
@@ -611,8 +623,20 @@ export function Planner({
               <div className="assistant-grid">
                 <p className="schedule-fixed">
                   45-minute physical session
-                  <br />2 welcome · 8 warmup ·{" "}
-                  {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+                  <br />
+                  {conditions.activity === "Bootcamp" ? (
+                    <>
+                      2 welcome · 8 warmup ·{" "}
+                      {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+                    </>
+                  ) : (
+                    <>
+                      2 welcome ·{" "}
+                      {mary
+                        ? "37 route · 6 Mary"
+                        : "43 route · warmup and Mary skipped"}
+                    </>
+                  )}
                   <br />
                   Fellowship follows the hard stop.
                 </p>

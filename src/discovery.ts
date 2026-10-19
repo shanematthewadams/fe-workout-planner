@@ -5,6 +5,8 @@ export type LocalAO = {
     typeof import("./ao-review").landmarkSchema
   >[];
   venues?: import("zod").z.infer<typeof import("./ao-review").venueSchema>[];
+  venueId?: string;
+  flagLocation?: string;
   accessNotes?: string;
   amenities?: Partial<import("./site-contract").Amenities>;
   features?: Partial<

@@ -20,6 +20,10 @@ export const FOCUS = [
 ] as const;
 export const planningDetailsSchema = z
   .object({
+    activity: z.enum(["Bootcamp", "Run", "Ruck"]).default("Bootcamp"),
+    route: z.string().max(600).default(""),
+    distance: z.string().max(80).default(""),
+    pace: z.string().max(120).default(""),
     date: z
       .string()
       .refine(

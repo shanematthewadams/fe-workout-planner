@@ -50,6 +50,17 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   );
   // This uses only a fake auth/backend service. No messages or real accounts are created.
   const accounts = new Map<string, { version: number; workouts: Workout[] }>();
+  const profiles = new Map<
+    string,
+    {
+      user_id: string;
+      display_name: string;
+      home_region: string;
+      home_ao: string;
+      created_at: string;
+      updated_at: string;
+    }
+  >();
   let guest = { version: 0, workouts: [] as Workout[] };
   let nextOwner = ownerA;
   let requests = 0;
@@ -88,6 +99,28 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
       if (url.pathname === "/auth/v1/logout") return fulfill({});
       if (url.pathname === "/auth/v1/user")
         return fulfill(sessionFor(nextOwner).user);
+      if (url.pathname === "/rest/v1/fe_profiles") {
+        const authorization = request.headers().authorization;
+        expect(authorization).toMatch(/^Bearer /);
+        const owner = JSON.parse(
+          Buffer.from(authorization!.split(".")[1], "base64url").toString(),
+        ).sub as string;
+        if (request.method() === "POST") {
+          const body = request.postDataJSON();
+          expect(body.user_id).toBe(owner);
+          expect(body.email).toBeUndefined();
+          const row = {
+            ...body,
+            created_at:
+              profiles.get(owner)?.created_at ?? new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          profiles.set(owner, row);
+          return fulfill(row);
+        }
+        expect(url.searchParams.get("user_id")).toBe("eq." + owner);
+        return fulfill(profiles.has(owner) ? [profiles.get(owner)] : []);
+      }
       if (url.pathname === "/rest/v1/rpc/fe_sync_plans") {
         const body = request.postDataJSON();
         if (body.operation === "put")
@@ -185,6 +218,29 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   ).toHaveCount(0);
   await navigate(page, "Saving & recovery");
   await expect(page.getByText("1@example.test", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Complete profile" }),
+  ).toBeVisible();
+  await page.getByLabel("Display Name", { exact: true }).fill("Rug Burn");
+  await page
+    .getByLabel("Home AO (optional)", { exact: true })
+    .fill("Overdraft");
+  await page.getByRole("button", { name: "Save profile", exact: true }).click();
+  await expect(page.getByText("Profile saved.", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Complete profile" }),
+  ).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByLabel("Display Name", { exact: true })).toHaveValue(
+    "Rug Burn",
+  );
+  await expect(
+    page.getByLabel("Home AO (optional)", { exact: true }),
+  ).toHaveValue("Overdraft");
+  await expect(
+    page.getByRole("link", { name: "Complete profile" }),
+  ).toHaveCount(0);
+
   await page
     .getByRole("button", {
       name: "Add guest workouts to my account",

@@ -1,0 +1,64 @@
+{
+  "heritage-marina": {
+    "name": "Heritage Park Marina",
+    "features": {
+      "stairs": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no stairs."
+      },
+      "track": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no running track."
+      },
+      "pullupBars": {
+        "state": "available",
+        "detail": "Pull-up bars reported in the site-Q inventory."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Benches reported in the site-Q inventory."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Walls reported in the site-Q inventory."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered shelter reported in the site-Q inventory."
+      }
+    },
+    "amenities": {
+      "hasCoveredShelter": true,
+      "hasTrack": false,
+      "hasPullUpBars": true
+    },
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "reviewBasis": "Prestige Worldwide via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+  },
+  "brougham-elementary": {
+    "name": "Brougham Elementary",
+    "features": {
+      "benches": {
+        "state": "available",
+        "detail": "Picnic benches at the park across the street; confirm access."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Shelter in the park across the street; confirm access."
+      }
+    },
+    "amenities": {
+      "hasCoveredShelter": true
+    },
+    "sourceUrl": "https://f3thefe.com/schedule/",
+    "checkedAt": "2026-10-19",
+    "reviewBasis": "Shane reports playgrounds, swings, basketball court, shelter and picnic benches across the street, and a dark walking/running trail. Distances and lighting at the school remain unknown."
+  },
+  "olathe-community-center": {
+    "name": "Olathe Community Center / Stagecoach Park",
+    "features": {},
+    "amenities": {},
+    "reviewBasis": "Shared broader venue per Shane. AO-specific reports and exact flags remain separate."
+  }
+}

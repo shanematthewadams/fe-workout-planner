@@ -17,6 +17,58 @@
           "type": "string",
           "maxLength": 100
         },
+        "attribution": {
+          "type": "object",
+          "properties": {
+            "ownerId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "creatorId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "creatorDisplayName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "visibility": {
+              "type": "string",
+              "const": "private"
+            },
+            "adaptedFrom": {
+              "type": "object",
+              "properties": {
+                "workoutId": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "creatorId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "creatorDisplayName": {
+                  "type": "string",
+                  "maxLength": 80
+                }
+              },
+              "required": [
+                "workoutId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "createdAt",
+            "visibility"
+          ],
+          "additionalProperties": false
+        },
         "title": {
           "type": "string",
           "minLength": 1,

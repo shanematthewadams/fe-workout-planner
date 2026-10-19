@@ -122,6 +122,16 @@ it("separates account caches, imports guest copies explicitly and restores guest
     readState(localStorage, accountStorageKey(a)).workouts.map((w) => w.title),
   ).toEqual(["Account A only", "Guest original"]);
   expect(readState().workouts).toEqual([guest]);
+  // Leaving and reopening settings remounts its import button; metadata must not duplicate the original.
+  fireEvent.click(screen.getByRole("link", { name: "My Workouts" }));
+  fireEvent.click(screen.getByRole("link", { name: "Saving & recovery" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Add guest workouts to my account" }),
+  );
+  expect(readState(localStorage, accountStorageKey(a)).workouts).toHaveLength(
+    2,
+  );
+  expect(readState().workouts).toEqual([guest]);
   fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
   await screen.findByRole("heading", { name: "Keep your workouts" });
   fireEvent.click(screen.getByRole("link", { name: "My Workouts" }));

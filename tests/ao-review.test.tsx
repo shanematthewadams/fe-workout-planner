@@ -67,8 +67,8 @@ it("keeps seasonal venues distinct and requires explicit confirmation of ameniti
     }),
   );
   expect(summer.venue).toBe("Heritage Park Marina");
-  expect(summer.features.track).toBe("unknown");
-  expect(summer.available).toEqual([]);
+  expect(summer.features.track).toBe("unavailable");
+  expect(summer.available).toContain("pullupBars");
   const winter = siteContext("South Park", "", {
     venueId: "brougham-elementary",
     notes: "",

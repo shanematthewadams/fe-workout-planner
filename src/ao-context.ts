@@ -1,3 +1,5 @@
+import venues from "../data/venues.json";
+import type { LocalAO } from "./discovery";
 import { aoProfiles } from "./discovery.ts";
 import { mentionedMovements } from "./movements";
 import { aoKey } from "./model";
@@ -21,8 +23,18 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
   const ao = findAO(aoName, prompt);
   const seasonal = (ao?.local.venues?.length ?? 0) > 1;
   const venue = ao?.local.venues?.find((value) => value.id === site?.venueId);
-  const baseline = seasonal ? (venue?.features ?? {}) : ao?.local.features;
-  const baselineAmenities = seasonal ? undefined : ao?.local.amenities;
+  const venueId = venue?.id ?? (!seasonal ? ao?.local.venueId : undefined);
+  const sharedVenue = venueId
+    ? (venues as Record<string, LocalAO & { name: string }>)[venueId]
+    : undefined;
+  const baseline = {
+    ...sharedVenue?.features,
+    ...(seasonal ? venue?.features : ao?.local.features),
+  };
+  const baselineAmenities = {
+    ...sharedVenue?.amenities,
+    ...(!seasonal ? ao?.local.amenities : {}),
+  };
   const localDraft = seasonal && !venue ? {} : (site?.localDraft ?? {});
   const features = Object.fromEntries(
     Object.keys(FEATURES).map((key) => [
@@ -141,7 +153,10 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     ),
     details: { ...baseline, ...localDraft },
     localDraft,
-    venue: venue?.name,
+    venue: venue?.name ?? sharedVenue?.name,
+    venueId,
+    venueReview: sharedVenue?.reviewBasis,
+    flagLocation: ao?.local.flagLocation,
     venueRequired: seasonal && !venue,
     accessNotes: [ao?.local.accessNotes, venue?.access]
       .filter(Boolean)
@@ -149,8 +164,8 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     landmarks: (ao?.local.landmarks ?? []).filter(
       (value) => value.status === "confirmed" && value.use === "workout",
     ),
-    sourceUrl: ao?.local.sourceUrl,
-    reviewedAt: ao?.local.checkedAt,
+    sourceUrl: sharedVenue?.sourceUrl ?? ao?.local.sourceUrl,
+    reviewedAt: sharedVenue?.checkedAt ?? ao?.local.checkedAt,
     todayNotes: notes,
     temporaryOverrides: site?.overrides ?? {},
     qStatements: claims,

@@ -1,5 +1,5 @@
 import { readFile, writeFile, rename } from "node:fs/promises";
-import { parseSchedule } from "./ao-sync.mjs";
+import { parseSchedule, mergeSchedule } from "./ao-sync.mjs";
 const source = process.argv[2];
 try {
   const html = source
@@ -12,9 +12,11 @@ try {
         return r.text();
       })();
   const rows = parseSchedule(html, new Date().toISOString());
+  const previous = JSON.parse(await readFile("data/ao-official.json", "utf8"));
+  const merged = mergeSchedule(previous, rows);
   await writeFile(
     "data/ao-official.json.tmp",
-    JSON.stringify(rows, null, 2) + "\n",
+    JSON.stringify(merged, null, 2) + "\n",
   );
   await rename("data/ao-official.json.tmp", "data/ao-official.json");
   console.log(
