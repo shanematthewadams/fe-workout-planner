@@ -13,7 +13,7 @@ import { catalog } from "../src/catalog";
 import { copyWorkout, writeState, readState } from "../src/model";
 function render(element: React.ReactElement) {
   const view = renderUI(element);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   return view;
 }
 afterEach(() => {
@@ -61,7 +61,7 @@ it("keeps the bundled library and private saved copy when configured upstream fa
   expect(screen.getAllByRole("button", { name: "View workout" })).toHaveLength(
     35,
   );
-  fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
+  fireEvent.click(screen.getByRole("link", { name: /My workouts/i }));
   expect(
     screen.getByRole("button", { name: "Private offline plan" }),
   ).toBeVisible();

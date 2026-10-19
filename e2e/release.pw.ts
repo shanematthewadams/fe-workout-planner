@@ -1,3 +1,4 @@
+import { navigate } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import proposal from "../data/ao-proposals/fe-ao-heartland.json" with { type: "json" };
@@ -14,7 +15,7 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
 }, info) => {
   await page.goto("/");
   await expect(
-    page.getByRole("button", { name: "Build", exact: true }).locator("svg"),
+    page.locator('.navigation-links a[href="#build"] svg').first(),
   ).toHaveAttribute("aria-hidden", "true");
   await page.getByLabel("Q location", { exact: true }).fill("South Park");
   await expect(
@@ -26,9 +27,9 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   await expect(page.getByLabel("Where and when")).toContainText(
     "No site features confirmed",
   );
-  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await navigate(page, "Library");
   await expect(page).toHaveURL(/#library$/);
-  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await navigate(page, "My Workouts");
   await page.goBack();
   await expect(
     page.getByRole("heading", { name: "Find your next workout", exact: true }),
@@ -37,8 +38,7 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   await expect(
     page.getByRole("heading", { name: "My workouts", exact: true }),
   ).toBeVisible();
-  await page.getByText("More", { exact: true }).click();
-  await page.getByRole("button", { name: "AO Directory", exact: true }).click();
+  await navigate(page, "AO Directory");
   await page.getByLabel("Search AOs", { exact: true }).fill("Heartland");
   await page.getByText("Landmarks", { exact: true }).click();
   await expect(
@@ -72,7 +72,7 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
     path: `qa/screenshots/${info.project.name}-ao-review.png`,
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await navigate(page, "Build");
   await page.screenshot({
     path: `qa/screenshots/${info.project.name}-release-build.png`,
     fullPage: true,
@@ -182,9 +182,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     await page
       .getByRole("button", { name: "Save a private copy", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "My Workouts", exact: true })
-      .click();
+    await navigate(page, "My Workouts");
     await expect
       .poll(() =>
         page.evaluate(() => !!localStorage.getItem("fe-sync:staging:v1")),
@@ -211,9 +209,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     await expect(
       second.getByRole("status").filter({ hasText: "Saved to cloud" }),
     ).toBeVisible();
-    await second
-      .getByRole("button", { name: "My Workouts", exact: true })
-      .click();
+    await navigate(second, "My Workouts");
     await second
       .getByRole("button", { name: "Cross-device Q", exact: true })
       .click();
@@ -251,9 +247,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     await expect
       .poll(async () => (await readRemote()).workouts[0]?.title)
       .toBe("Device pending Q");
-    await second
-      .getByRole("button", { name: "My Workouts", exact: true })
-      .click();
+    await navigate(second, "My Workouts");
     await second
       .getByRole("button", { name: "Saving details", exact: true })
       .click();
@@ -290,4 +284,60 @@ test("cloud saving needs no setup, supports recovery on another device and retri
       expect(cleared.status, "Synthetic cloud cleanup status").toBe(200);
     }
   }
+});
+
+test("navigation exposes every destination and mobile menu works by keyboard", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  const menu = page.getByRole("button", { name: "Menu", exact: true });
+  const compact = (page.viewportSize()?.width ?? 1440) <= 1000;
+  if (compact) {
+    await expect(
+      page.getByRole("navigation", { name: "Planner navigation" }),
+    ).toBeHidden();
+    await menu.click();
+    await expect(
+      page.getByRole("button", { name: "Close", exact: true }),
+    ).toHaveAttribute("aria-expanded", "true");
+  }
+  const nav = page.getByRole("navigation", { name: "Planner navigation" });
+  await expect(nav.getByRole("link")).toHaveCount(7);
+  await expect(
+    nav.getByRole("link", { name: "Build", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-navigation.png`,
+    fullPage: true,
+  });
+  if (compact) {
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeFocused();
+    await expect(nav).toBeHidden();
+  }
+  await navigate(page, "AO Directory");
+  await expect(page).toHaveURL(/#aos$/);
+  if (compact) await menu.click();
+  await expect(
+    nav.getByRole("link", { name: "AO Directory", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  if (compact)
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+  await page.reload();
+  if (compact) await menu.click();
+  await expect(
+    nav.getByRole("link", { name: "AO Directory", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
 });

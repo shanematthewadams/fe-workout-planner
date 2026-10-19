@@ -42,12 +42,11 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
   expect(screen.getByRole("combobox", { name: "Timer sound" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "← Back to plan" }));
-  fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
+  fireEvent.click(screen.getByRole("link", { name: "My Workouts" }));
   expect(
     screen.getByRole("button", { name: "Digging for gold" }),
   ).toBeVisible();
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Saving & recovery" }));
+  fireEvent.click(screen.getByRole("link", { name: "Saving & recovery" }));
   expect(
     screen.queryByRole("button", { name: "Connect my devices" }),
   ).toBeNull();
@@ -61,8 +60,7 @@ it("skipping Mary yields 35 minutes of The Thang and searchable reference terms"
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "35 min",
   );
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Exicon & Lexicon" }));
+  fireEvent.click(screen.getByRole("link", { name: "Exicon & Lexicon" }));
   fireEvent.click(screen.getByRole("button", { name: "Lexicon" }));
   fireEvent.change(screen.getByLabelText("Search reference"), {
     target: { value: "mumblechatter" },

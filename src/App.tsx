@@ -14,7 +14,7 @@ import {
   Check,
 } from "lucide-react";
 import { readRoute, writeRoute, routeHash } from "./navigation";
-import { AppIcon } from "./AppIcon";
+import { AppNavigation } from "./AppNavigation";
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
@@ -371,7 +371,7 @@ export default function App() {
   const leave = () =>
     !dirty || window.confirm("Leave without saving these changes?");
   const go = (next: string) => {
-    if (!leave()) return;
+    if (!leave()) return false;
     setTimerOpen(false);
     setEditing(null);
     setDirty(false);
@@ -379,6 +379,7 @@ export default function App() {
     setQ(false);
     setTab(next);
     writeRoute({ tab: next });
+    return true;
   };
   const open = (w: Workout) => {
     writeRoute({ tab, view: "workout", id: w.id });
@@ -621,61 +622,7 @@ export default function App() {
       </a>
       <StagingNotice />
 
-      {!timerOpen && (
-        <>
-          <header className="header no-print">
-            <button
-              className="brand"
-              onClick={() => go("builder")}
-              title="Home"
-            >
-              <span>F3 Q BUILDER</span>
-            </button>
-          </header>
-          <nav className="app-nav no-print" aria-label="Planner navigation">
-            {[
-              ["builder", "Build"],
-              ["library", "Library"],
-              ["mine", "My Workouts"],
-            ].map(([key, label]) => (
-              <button
-                key={key}
-                aria-current={
-                  !selected && !editing && tab === key ? "page" : undefined
-                }
-                onClick={() => go(key)}
-              >
-                <AppIcon name={key} />
-                {label}
-              </button>
-            ))}
-            <details className="more-nav">
-              <summary>More</summary>
-              <div className="more-menu">
-                {[
-                  ["markdown", "Import a workout"],
-                  ["aos", "AO Directory"],
-                  ["exicon", "Exicon & Lexicon"],
-                  ["data", "Saving & recovery"],
-                ].map(([key, label]) => (
-                  <button
-                    key={key}
-                    onClick={(event) => {
-                      go(key);
-                      event.currentTarget
-                        .closest("details")
-                        ?.removeAttribute("open");
-                    }}
-                  >
-                    <AppIcon name={key} />
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </details>
-          </nav>
-        </>
-      )}
+      {!timerOpen && <AppNavigation active={tab} onNavigate={go} />}
       <CloudSync
         compact={tab !== "data" || !!selected || !!editing}
         hidden={timerOpen}

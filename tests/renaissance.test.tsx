@@ -36,8 +36,7 @@ const props = {
 };
 it("propagates unpublished AO changes through directory, builder, API context and validator", async () => {
   render(<App />);
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "AO Directory" }));
+  fireEvent.click(screen.getByRole("link", { name: "AO Directory" }));
   fireEvent.change(screen.getByLabelText("Search AOs"), {
     target: { value: "Gold Rush" },
   });
@@ -48,7 +47,7 @@ it("propagates unpublished AO changes through directory, builder, API context an
   fireEvent.change(screen.getByLabelText("Track for Gold Rush"), {
     target: { value: "unavailable" },
   });
-  fireEvent.click(screen.getByRole("button", { name: "Build" }));
+  fireEvent.click(screen.getByRole("link", { name: "Build" }));
   fireEvent.change(screen.getByLabelText("Q location"), {
     target: { value: "Gold Rush" },
   });
@@ -152,15 +151,15 @@ it("formal portable gear never confirms fixed terrain", () => {
   expect(stored.result.workout.equipment).toEqual(["Coupon"]);
   expect(stored.preferences.site.overrides).toEqual({});
 });
-it("keeps exactly three primary destinations and moves backup controls out of library", () => {
+it("groups workout destinations and keeps backup controls out of library", () => {
   render(<App />);
   const nav = screen.getByRole("navigation", { name: "Planner navigation" });
   expect(
-    Array.from(nav.querySelectorAll(":scope > button")).map(
+    Array.from(nav.querySelectorAll(".navigation-group:first-child a")).map(
       (b) => b.textContent,
     ),
   ).toEqual(["Build", "Library", "My Workouts"]);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   expect(
     screen.queryByRole("navigation", { name: "Workout collections" }),
   ).toBeNull();

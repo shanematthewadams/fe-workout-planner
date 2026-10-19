@@ -1,3 +1,4 @@
+import { navigate } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
@@ -193,7 +194,7 @@ test("Markdown file review, correction and personal save", async ({
   await page
     .getByRole("button", { name: "Save & view workout", exact: true })
     .click();
-  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await navigate(page, "My Workouts");
   await page
     .getByRole("button", { name: "Imported test ladder", exact: true })
     .click();
@@ -265,10 +266,7 @@ test("staging stays labeled and missing cloud configuration leaves device saves 
   await expect(
     page.getByLabel("Staging version", { exact: true }),
   ).toBeVisible();
-  await page.getByText("More", { exact: true }).click();
-  await page
-    .getByRole("button", { name: "Saving & recovery", exact: true })
-    .click();
+  await navigate(page, "Saving & recovery");
   await expect(
     page.getByLabel("Saving and recovery", { exact: true }),
   ).toBeVisible();
@@ -486,13 +484,9 @@ test.describe("deterministic planner client", () => {
     await page
       .getByRole("button", { name: "← Back to plan", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "My Workouts", exact: true })
-      .click();
+    await navigate(page, "My Workouts");
     await page.reload();
-    await page
-      .getByRole("button", { name: "My Workouts", exact: true })
-      .click();
+    await navigate(page, "My Workouts");
     await page
       .getByRole("button", { name: "Gold Rush Morning", exact: true })
       .click();
@@ -536,7 +530,7 @@ test("library favorites and AO edits stay consistent with the builder", async ({
   page,
 }, info) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await navigate(page, "Library");
   await expect(
     page.getByRole("button", { name: "View workout", exact: true }),
   ).toHaveCount(35);
@@ -558,8 +552,7 @@ test("library favorites and AO edits stay consistent with the builder", async ({
   await expect(
     page.getByRole("button", { name: "View workout", exact: true }),
   ).toHaveCount(1);
-  await page.getByText("More", { exact: true }).click();
-  await page.getByRole("button", { name: "AO Directory", exact: true }).click();
+  await navigate(page, "AO Directory");
   await page.getByLabel("Search AOs", { exact: true }).fill("Gold Rush");
   await page
     .getByRole("button", { name: "Edit local AO notes", exact: true })
@@ -568,7 +561,7 @@ test("library favorites and AO edits stay consistent with the builder", async ({
     .getByLabel("Track for Gold Rush", { exact: true })
     .selectOption("unavailable");
   await page.getByRole("button", { name: "Done editing", exact: true }).click();
-  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await navigate(page, "Build");
   await page.getByLabel("Q location", { exact: true }).fill("Gold Rush");
   await page.getByText("Anything different today?", { exact: false }).click();
   await expect(page.getByLabel("Track today", { exact: true })).toHaveValue("");
@@ -586,7 +579,7 @@ test("library quick filters, direct copy, and movement insertion", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Library", exact: true }).click();
+  await navigate(page, "Library");
   await page.getByRole("button", { name: "No running", exact: true }).click();
   await expect(page.getByLabel("Running", { exact: true })).toHaveValue("None");
   await page.getByRole("button", { name: "No gear", exact: true }).click();
@@ -631,10 +624,7 @@ test("movement guide exposes requirements and alternatives without card sprawl",
   page,
 }) => {
   await page.goto("/");
-  await page.getByText("More", { exact: true }).click();
-  await page
-    .getByRole("button", { name: "Exicon & Lexicon", exact: true })
-    .click();
+  await navigate(page, "Exicon & Lexicon");
   await page.getByLabel("Search reference", { exact: true }).fill("WW3");
   await page.locator(".movement-entry summary").click();
   await expect(
@@ -665,8 +655,8 @@ test("formal setup survives navigation and reload", async ({ page }) => {
     .fill("Recovered partner Q");
   await page.getByLabel("Q name", { exact: true }).fill("Rug Burn");
   await page.getByLabel("Coupon", { exact: true }).check();
-  await page.getByRole("button", { name: "Library", exact: true }).click();
-  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await navigate(page, "Library");
+  await navigate(page, "Build");
   await expect(page.getByLabel("Plan title", { exact: true })).toHaveValue(
     "Recovered partner Q",
   );
@@ -693,7 +683,7 @@ test("real offline cache reopens saved plans and creates explicit templates", as
   await page
     .getByRole("button", { name: "Save a private copy", exact: true })
     .click();
-  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await navigate(page, "My Workouts");
   await expect(
     page.getByRole("button", { name: title!, exact: true }),
   ).toBeVisible();
@@ -701,12 +691,12 @@ test("real offline cache reopens saved plans and creates explicit templates", as
   await expect(page.getByText(/Ready offline/)).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: "My Workouts", exact: true }).click();
+  await navigate(page, "My Workouts");
   await page.getByRole("button", { name: title!, exact: true }).click();
   await expect(
     page.getByRole("heading", { name: title!, exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await navigate(page, "Build");
   await page
     .getByRole("button", { name: "← Back to setup", exact: true })
     .click();

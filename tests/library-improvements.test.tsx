@@ -26,7 +26,7 @@ afterEach(() => {
 });
 const library = () => {
   render(<App />);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
 };
 it("copies a source directly into a saved personal editor without changing its original", () => {
   const before = JSON.stringify(catalog);

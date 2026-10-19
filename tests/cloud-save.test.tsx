@@ -243,7 +243,7 @@ it("does not duplicate an open personal copy when cloud JSON only reorders its f
           },
   );
   render(<App />);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   fireEvent.click(
     screen.getAllByRole("button", { name: /^Use this workout:/ })[0],
   );
