@@ -1,5 +1,4 @@
 import { test, expect, type Page } from "@playwright/test";
-import { createHash } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { navigate } from "./navigation";
 import type { Workout } from "../src/model";
@@ -41,7 +40,7 @@ function sessionFor(id: string) {
   };
 }
 
-test("optional email links preserve guest plans and isolate signed-in libraries", async ({
+test("optional email codes preserve guest plans and isolate signed-in libraries", async ({
   page,
   browser,
 }, info) => {
@@ -53,7 +52,6 @@ test("optional email links preserve guest plans and isolate signed-in libraries"
   const accounts = new Map<string, { version: number; workouts: Workout[] }>();
   let guest = { version: 0, workouts: [] as Workout[] };
   let nextOwner = ownerA;
-  let challenge = "";
   let requests = 0;
   const fixture = async (target: Page) => {
     await target.route("https://staging-sync.invalid/**", async (route) => {
@@ -76,19 +74,15 @@ test("optional email links preserve guest plans and isolate signed-in libraries"
         const body = request.postDataJSON();
         expect(body.phone).toBeUndefined();
         expect(body.email).toBe("q@example.test");
-        expect(body.code_challenge_method).toBe("s256");
-        expect(body.code_challenge).toBeTruthy();
-        challenge = body.code_challenge;
         requests++;
         return fulfill({});
       }
-      if (url.pathname === "/auth/v1/token") {
+      if (url.pathname === "/auth/v1/verify") {
         const body = request.postDataJSON();
-        expect(url.searchParams.get("grant_type")).toBe("pkce");
-        expect(body.auth_code).toBe("fixture-email-code");
-        expect(
-          createHash("sha256").update(body.code_verifier).digest("base64url"),
-        ).toBe(challenge);
+        expect(body.email).toBe("q@example.test");
+        expect(body.type).toBe("email");
+        if (body.token !== "12345678")
+          return fulfill({ code: "otp_expired", msg: "Invalid code" }, 403);
         return fulfill(sessionFor(nextOwner));
       }
       if (url.pathname === "/auth/v1/logout") return fulfill({});
@@ -144,20 +138,48 @@ test("optional email links preserve guest plans and isolate signed-in libraries"
     .getByLabel("Email address", { exact: true })
     .fill("q@example.test");
   await page
-    .getByRole("button", { name: "Email me a sign-in link", exact: true })
+    .getByRole("button", { name: "Email me a sign-in code", exact: true })
     .click();
   await expect(page.getByText(/Check your email/)).toBeVisible();
   await expect(
     page.getByRole("button", { name: /Send again in/ }),
   ).toBeDisabled();
   expect(requests).toBe(1);
-  await page.goto(
-    "http://127.0.0.1:4175/?code=fixture-email-code&signin=1#my-workouts",
-  );
+  const codeField = page.getByLabel("Sign-in code", { exact: true });
+  await expect(codeField).toBeFocused();
+  await expect(codeField).toHaveAttribute("autocomplete", "one-time-code");
+  await codeField.fill("000000");
+  await page
+    .getByRole("button", { name: "Verify & sign in", exact: true })
+    .click();
+  await expect(
+    page.getByText(/That code is incorrect or has expired/),
+  ).toBeVisible();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-email-code.png`,
+    fullPage: true,
+  });
+
+  await page.getByLabel("Sign-in code", { exact: true }).fill("12 34 56 78");
+  await page
+    .getByRole("button", { name: "Verify & sign in", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "My workouts", exact: true }),
   ).toBeVisible();
   await expect(page).toHaveURL(/\/#my-workouts$/);
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "My workouts", exact: true }),
+  ).toBeVisible();
+
   await expect(
     page.getByRole("button", { name: "Guest original Q", exact: true }),
   ).toHaveCount(0);
@@ -225,13 +247,14 @@ test("optional email links preserve guest plans and isolate signed-in libraries"
     .getByLabel("Email address", { exact: true })
     .fill("q@example.test");
   await page
-    .getByRole("button", { name: "Email me a sign-in link", exact: true })
+    .getByRole("button", { name: "Email me a sign-in code", exact: true })
     .click();
   await expect(page.getByText(/Check your email/)).toBeVisible();
   nextOwner = ownerB;
-  await page.goto(
-    "http://127.0.0.1:4175/?code=fixture-email-code&signin=1#my-workouts",
-  );
+  await page.getByLabel("Sign-in code", { exact: true }).fill("12345678");
+  await page
+    .getByRole("button", { name: "Verify & sign in", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "My workouts", exact: true }),
   ).toBeVisible();
@@ -240,7 +263,7 @@ test("optional email links preserve guest plans and isolate signed-in libraries"
   ).toHaveCount(0);
 });
 
-test("expired email links leave guest access available and remove callback parameters", async ({
+test("older expired email links leave guest access available and remove callback parameters", async ({
   page,
 }) => {
   test.skip(

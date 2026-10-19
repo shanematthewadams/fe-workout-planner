@@ -3455,3 +3455,10 @@ footer {
   background: #5a0a17;
   color: #fff;
 }
+.account-code-actions {
+  margin-top: 16px;
+}
+.account-form input[autocomplete="one-time-code"] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}

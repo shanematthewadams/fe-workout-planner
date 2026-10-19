@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   LogIn,
   LogOut,
@@ -18,16 +18,33 @@ export function AccountPanel({
 }) {
   const account = useAccount();
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [sentEmail, setSentEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [verifyWait, setVerifyWait] = useState(0);
+  const codeInput = useRef<HTMLInputElement>(null);
+  const refocusCode = useRef(false);
+  const emailInput = useRef<HTMLInputElement>(null);
+  const sent = !!sentEmail;
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const [imported, setImported] = useState(false);
   useEffect(() => {
-    if (!cooldown) return;
-    const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+    if (!cooldown && !verifyWait) return;
+    const timer = setTimeout(() => {
+      setCooldown((value) => Math.max(0, value - 1));
+      setVerifyWait((value) => Math.max(0, value - 1));
+    }, 1000);
     return () => clearTimeout(timer);
-  }, [cooldown]);
+  }, [cooldown, verifyWait]);
+  useEffect(() => {
+    if (sentEmail && !busy && refocusCode.current) {
+      codeInput.current?.focus();
+      codeInput.current?.select();
+      refocusCode.current = false;
+    } else if (!sentEmail) emailInput.current?.focus();
+  }, [sentEmail, busy]);
   if (!account?.available) return null;
   let guestCount = 0;
   try {
@@ -35,23 +52,25 @@ export function AccountPanel({
   } catch {
     /* Existing guest recovery remains available after signing out. */
   }
-  async function sendLink(event: React.FormEvent) {
-    event.preventDefault();
+  async function sendCode(event?: React.FormEvent) {
+    event?.preventDefault();
     const client = getAuthClient();
-    if (!client || busy || cooldown || account?.blocked) return;
+    const requested = sentEmail || email.trim();
+    if (!client || !requested || busy || cooldown || account?.blocked) return;
     setBusy(true);
     setMessage("");
     account?.clearError();
     try {
       const { error } = await client.auth.signInWithOtp({
-        email: email.trim(),
+        email: requested,
+        // Retain same-origin returns for any older link templates during setup.
         options: { emailRedirectTo: signInRedirect(), shouldCreateUser: true },
       });
       if (error) {
         if (error.status === 429) {
           setCooldown(60);
           throw Error(
-            "Please wait a minute before requesting another sign-in link.",
+            "Please wait a minute before requesting another sign-in code.",
           );
         }
         if (error.code === "email_address_not_authorized")
@@ -59,10 +78,12 @@ export function AccountPanel({
             "Sign-in emails aren’t ready for this address yet. You can keep using the app as a guest.",
           );
         throw Error(
-          "We couldn’t send your sign-in link. Try again shortly; guest access still works.",
+          "We couldn’t send your sign-in code. Try again shortly; guest access still works.",
         );
       }
-      setSent(true);
+      refocusCode.current = true;
+      setSentEmail(requested);
+      setCode("");
       setCooldown(60);
     } catch (error) {
       setMessage(
@@ -74,6 +95,63 @@ export function AccountPanel({
       setBusy(false);
     }
   }
+  async function verifyCode(event: React.FormEvent) {
+    event.preventDefault();
+    const client = getAuthClient();
+    if (
+      !client ||
+      !sentEmail ||
+      busy ||
+      verifyWait ||
+      account?.blocked ||
+      !/^[0-9]{6,10}$/.test(code)
+    )
+      return;
+    setBusy(true);
+    setVerifying(true);
+    setMessage("");
+    try {
+      const { data, error } = await client.auth.verifyOtp({
+        email: sentEmail,
+        token: code,
+        type: "email",
+      });
+      if (error) {
+        if (error.status === 429) {
+          setVerifyWait(60);
+          throw Error(
+            "Too many attempts. Wait a minute before trying your code again.",
+          );
+        }
+        if (
+          error.code === "otp_expired" ||
+          [400, 401, 403].includes(error.status ?? 0)
+        )
+          throw Error(
+            "That code is incorrect or has expired. Check the newest email or request a new code.",
+          );
+        throw Error(
+          "We couldn’t verify your code. Check your connection and try again.",
+        );
+      }
+      if (!data.session)
+        throw Error(
+          "We couldn’t finish signing in. Please request a new code.",
+        );
+      setCode("");
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Couldn’t verify your code. Please try again.",
+      );
+      refocusCode.current = true;
+    } finally {
+      setBusy(false);
+      setVerifying(false);
+    }
+  }
+
   return (
     <section className="account-panel" aria-label="Your account">
       <h2 id="account-heading" tabIndex={-1}>
@@ -142,42 +220,103 @@ export function AccountPanel({
             Sign in to keep a personal workout library you can open on any
             device. No password. Guest access stays open.
           </p>
-          <form onSubmit={sendLink} className="account-form">
-            <label>
-              Email address
-              <input
-                type="email"
-                autoComplete="email"
-                required
-                maxLength={254}
-                value={email}
-                disabled={busy}
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  setSent(false);
-                }}
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={busy || cooldown > 0 || account.blocked}
-            >
-              <Mail size={18} aria-hidden="true" />{" "}
-              {busy
-                ? "Sending…"
-                : cooldown > 0
-                  ? `Send again in ${cooldown}s`
-                  : sent
-                    ? "Send another sign-in link"
-                    : "Email me a sign-in link"}
-              <ArrowRight size={17} aria-hidden="true" />
-            </button>
-          </form>
-          {sent && (
-            <p role="status">
-              Check your email. Open the sign-in link in this same browser to
-              finish signing in.
-            </p>
+          {!sent ? (
+            <form onSubmit={sendCode} className="account-form">
+              <label>
+                Email address
+                <input
+                  ref={emailInput}
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                  value={email}
+                  disabled={busy}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={busy || cooldown > 0 || account.blocked}
+              >
+                <Mail size={18} aria-hidden="true" />
+                {busy
+                  ? "Sending…"
+                  : cooldown > 0
+                    ? `Send again in ${cooldown}s`
+                    : "Email me a sign-in code"}
+                <ArrowRight size={17} aria-hidden="true" />
+              </button>
+            </form>
+          ) : (
+            <>
+              <p role="status">
+                Check your email for a sign-in code sent to{" "}
+                <strong className="account-email">{sentEmail}</strong>.
+              </p>
+              <form onSubmit={verifyCode} className="account-form">
+                <label>
+                  Sign-in code
+                  <input
+                    ref={codeInput}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    aria-describedby={message ? "account-message" : undefined}
+                    aria-invalid={message.startsWith("That code") || undefined}
+                    enterKeyHint="done"
+                    pattern="[0-9]{6,10}"
+                    minLength={6}
+                    maxLength={32}
+                    required
+                    value={code}
+                    placeholder="Enter your email code"
+                    disabled={busy || account.blocked || verifyWait > 0}
+                    onChange={(event) => {
+                      setCode(
+                        event.target.value.replace(/[^0-9]/g, "").slice(0, 10),
+                      );
+                      setMessage("");
+                    }}
+                  />
+                </label>
+                <button
+                  type="submit"
+                  disabled={
+                    busy || account.blocked || code.length < 6 || verifyWait > 0
+                  }
+                >
+                  {verifying
+                    ? "Signing in…"
+                    : verifyWait > 0
+                      ? `Try again in ${verifyWait}s`
+                      : "Verify & sign in"}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </button>
+              </form>
+              <div className="actions account-code-actions">
+                <button
+                  type="button"
+                  disabled={busy || cooldown > 0 || account.blocked}
+                  onClick={() => void sendCode()}
+                >
+                  {cooldown > 0
+                    ? `Send again in ${cooldown}s`
+                    : "Send a new code"}
+                </button>
+                <button
+                  type="button"
+                  disabled={busy || account.blocked}
+                  onClick={() => {
+                    setSentEmail("");
+                    setCode("");
+                    setMessage("");
+                  }}
+                >
+                  Use a different email
+                </button>
+              </div>
+            </>
           )}
         </>
       )}
@@ -185,7 +324,9 @@ export function AccountPanel({
         <p>Finish or export your open edits before changing accounts.</p>
       )}
       {(message || account.error) && (
-        <p role="status">{message || account.error}</p>
+        <p id="account-message" role="status">
+          {message || account.error}
+        </p>
       )}
     </section>
   );

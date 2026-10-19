@@ -1,15 +1,37 @@
-# Optional email sign-in
+# Optional email-code sign-in
 
-Guest access stays open. Sign-in is only needed to use a personal account library on another device. The app sends a one-use email link through the existing Supabase project (`kitqovhdwzkhpxlepvfn`); no password, SMS service, new project or paid AI provider is involved.
+F3QBuilder uses one-time codes sent by email. Guest access stays open. Entering a code signs in to a personal workout library; there is no password and no SMS service.
 
-## Shane’s setup: a free sender option
+## If your email sender is already configured
 
-If you already have a transactional email sender, use its SMTP credentials in the generic setup below. Otherwise, Resend is a supported option with a free plan. These steps do not require a paid upgrade.
+Keep the existing sender, DNS and SMTP settings. The only required configuration change for this switch is the two email templates in Supabase. Updating these repository files does not install them in Supabase automatically.
 
-1. Create an account at [Resend](https://resend.com/). Choose its Free plan; no paid plan is needed for this setup.
-2. Open **Domains**, add `auth.f3thefe.com`, and add the DNS records Resend provides at the service where you manage `f3thefe.com`. This uses a separate sending subdomain. When Resend shows **Verified**, continue.
-3. In Resend, open **API Keys** and create a sending key for that verified domain. Keep it private. You will paste it directly into Supabase, not into this chat or the app’s public settings.
-4. Open [Supabase SMTP Settings](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/smtp) and enable custom SMTP. If the direct link moves, use **Authentication → Email → SMTP Settings**. Enter:
+1. Open the project's **Authentication → Email → Templates** page (older dashboards call this **Email Templates**).
+2. Under **Magic link**, use subject **Your F3QBuilder sign-in code** and replace the body with the complete contents of `docs/email-signin.html`. Save. Supabase keeps the “Magic link” template name even when its email contains a code.
+3. Under **Confirm sign up**, use the same subject and replace the body with `docs/email-confirm-signup.html`. Save. Supabase can use this template for a first-time code request.
+4. Both bodies must contain `{{ .Token }}`. That inserts the one-time code. The new templates have no sign-in button or hardcoded site URL.
+5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. Enter the emailed code back in the app and choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
+
+Both templates retain the red wordmark header, charcoal background, readable light text and gold accent. The code is large, selectable text with no external image or font downloads. Set SMTP **Sender name** to **F3QBuilder** if it is not already set.
+
+Real delivery and inbox rendering still require a real mailbox check. The automated checks use a simulated email service and send no messages. A sender configuration reported as complete by the account owner has not been independently verified by the connector.
+
+## How long sign-in lasts
+
+The app stores sessions between visits and automatically refreshes access tokens. Closing and reopening a regular browser does not intentionally sign someone out. There is no fixed logout timer in the app.
+
+Supabase defaults to sessions with no fixed expiry. Signing out, clearing browser storage, revoked sessions, private browsing cleanup or server-configured session lifetime/inactivity rules can require another code. Short-lived access tokens renew automatically; their expiry is separate from the lifetime of the login and the expiry of an unused email code. This change does not modify Supabase's server session policies, which the connector cannot inspect or edit.
+
+The code's own expiry and length are controlled by the Supabase Email provider settings. The app accepts numeric codes from 6 through 10 digits, supports one-time-code autofill and pasted spaces, and leaves validation to Supabase. No code is saved in browser storage, placed in a URL or logged by the app. Requests and verification attempts respect server limits; the UI includes a 60-second resend cooldown and a wait after verification rate-limit errors.
+
+## Sender setup, only if needed
+
+If an SMTP sender is already working, skip this section. Resend is a supported option with a free plan; these steps do not require a paid upgrade.
+
+1. Create an account at [Resend](https://resend.com/). Choose its Free plan.
+2. Under **Domains**, add `auth.f3thefe.com` and add the DNS records Resend provides where you manage `f3thefe.com`. Wait for **Verified**.
+3. Create a sending API key for that verified domain. Keep it private and paste it directly into Supabase.
+4. Open [Supabase SMTP Settings](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/smtp), or **Authentication → Email → SMTP Settings**, and enable custom SMTP:
 
    | Field | Value |
    | --- | --- |
@@ -20,63 +42,35 @@ If you already have a transactional email sender, use its SMTP credentials in th
    | Username | `resend` |
    | Password | Your private Resend API key |
 
-   Save the settings.
-5. Open [Supabase URL Configuration](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/url-configuration). Under **Redirect URLs**, add `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` and save. This lets a staging sign-in return to staging.
-6. Open [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your own email, and open the emailed link in the same browser. This confirms real inbox delivery; the automated checks below already cover the app behavior.
+   Save the settings. Never put SMTP credentials in frontend environment variables or source.
+5. Keep the Email provider enabled and email confirmation required. Install both code templates above. Do not disable confirmation to work around delivery failures.
 
-Sources checked October 19, 2026: [Resend’s Supabase setup guide](https://resend.com/docs/send-with-supabase-smtp), [Resend pricing](https://resend.com/pricing). No Resend account, sender credentials, DNS records or paid subscription was created automatically.
+Supabase's default email sender is restricted to project-team addresses and is not suitable for public sign-in. See [custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp), [Resend's setup guide](https://resend.com/docs/send-with-supabase-smtp) and [Resend pricing](https://resend.com/pricing). No email-provider account, sender credentials, DNS records or paid subscription was created automatically.
 
-## Branded authentication emails
+## Staging and production
 
-The repository now includes two branded email bodies. They are prepared for installation; a Git push does not install them in Supabase.
+Typing a code completes sign-in on the app page where it is entered, without following an email return link. Staging and production retain separate browser sessions and device caches. Accounts and cloud workout records intentionally share the same pre-launch Supabase project.
 
-1. Open the project's **Authentication → Email → Templates** page (older dashboards call this **Email Templates**).
-2. For **Magic link**, set the subject to **Your F3QBuilder sign-in link**. Replace the body with the complete contents of `docs/email-signin.html` and save.
-3. For **Confirm sign up**, set the subject to **Finish signing in to F3QBuilder**. Replace the body with `docs/email-confirm-signup.html` and save. Supabase can use this message for a first-time email-link sign-in.
-4. Set the SMTP **Sender name** to **F3QBuilder**, as shown above. Both templates use a red wordmark header, charcoal background, readable light text and a red button with a gold accent. They have no external images or font downloads.
-5. Keep the button's `{{ .ConfirmationURL }}` exactly as supplied. It includes Supabase verification and the requested return URL. Do not replace it with a hardcoded staging URL, production URL or `{{ .SiteURL }}`. Turn off your email provider's link tracking so it does not rewrite the sign-in link.
-6. After installing, verify a first-time sign-in and a returning sign-in with a real mailbox. Prepared HTML alone does not prove inbox rendering or delivery. Template changes apply to this shared Supabase project, so staging and production use the same branding.
+The same-origin redirect option and old link handling remain compatible with previously delivered email links. Keep the existing URL configuration: allow `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` for staging. Before the production login release, allow `https://q.f3thefe.com/?signin=1#my-workouts` and set **Site URL** to `https://q.f3thefe.com` as the default fallback. A temporary staging Site URL is valid during staging-only testing. Normal code sign-in does not require switching the Site URL between environments.
 
-## Staging and production returns
+## Account storage and preservation
 
-The app derives each sign-in return URL from the browser's current origin. A staging request returns to staging; a production request returns to production once that build is approved and released. Browser sessions and account caches are separate between the sites; accounts and cloud workout records intentionally use the same pre-launch Supabase project.
+- Supabase JS 2.118.0 is pinned with a lockfile. New sign-ins use `signInWithOtp` to send the email and `verifyOtp({ email, token, type: 'email' })` to verify the code. The requested address remains fixed during verification; the UI supports correcting it before requesting another code.
+- The browser uses only the public publishable key plus the user's current access token. Account requests never send a client-selected owner ID or guest recovery code.
+- `fe_private.fe_account_vault` and the authenticated-only `fe_account_plans` RPC enforce `auth.uid()` ownership. Direct table access is revoked and RLS is enabled. The full workout validator, size limits and optimistic versions remain intact.
+- Existing guest vaults and recovery codes are unchanged. Account libraries cannot be accessed through the guest capability RPC.
+- Accounts have separate device workout caches, merge baselines, builder sessions, Markdown drafts and timer state. Signing out restores the guest workspace. Offline account caches remain readable on that browser; expired sessions never cause account uploads to fall back to guest storage.
+- **Add guest workouts to my account** copies existing guest plans explicitly, preserving originals. Identical records are skipped and conflicting IDs become imported copies.
+- Dirty editor changes and storage recovery warnings defer identity switches. Late requests are aborted or ignored when the workspace changes. Background token refresh for the same account preserves the open editor. Successful code verification opens My Workouts.
 
-Both return destinations must be allowed in Supabase. The staging wildcard in the setup above covers staging. Before the production login release, allow the exact production return URL `https://q.f3thefe.com/?signin=1#my-workouts` and set **Site URL** to `https://q.f3thefe.com` as the default fallback. A temporary staging Site URL is valid during staging-only testing. We do not need separate Supabase projects or to keep switching the Site URL between sites during normal use.
+## Verification and release
 
-## What is implemented
+The additive account database script is `docs/account-plan-sync.sql`, already applied to the existing authorized shared pre-launch project. No database change is needed for the email-code switch.
 
-- Sign in / My account in the red app navigation; the account form lives above Saving & recovery.
-- Supabase JS 2.118.0, pinned with a lockfile. PKCE links bind the exchange to the browser that requested the link. The email screen explains that the link must open in the same browser. Sessions persist and refresh through Supabase.
-- Public publishable key only in the browser. Account requests carry the current session token; they never send a client-selected owner ID or guest capability.
-- Separate `fe_private.fe_account_vault` and authenticated-only `fe_account_plans` RPC. The private helper checks `auth.uid()` and scopes every read/write to that verified owner. Direct browser access is revoked; RLS is also enabled. The existing full personal-workout validator, size limit and optimistic versions are retained.
-- The existing guest vault and recovery code flow remain unchanged. No account can inherit a guest vault merely by knowing its user ID.
-- An account gets a separate local workout cache, merge baseline, builder session, Markdown draft and timer state. Sign-out restores the guest workspace. Offline account caches remain available on that browser, including when a stored session needs refreshing. Account uploads never fall back into guest storage.
-- Existing guest workouts can be copied into the account with **Add guest workouts to my account**. Original guest copies are preserved. Identical records are skipped; conflicting IDs become imported copies.
-- Dirty editor changes and storage recovery warnings defer identity switches; account saving pauses when the current credentials no longer match the open workspace. Late requests are aborted/ignored when the workspace changes.
-- Link errors and rate limits have readable messages. Resending has a 60-second cooldown. Callback parameters are removed after session handling. Automated browser checks use a fake auth server and send no real emails.
+Database checks cover owner isolation, guest denial, malformed payloads and stale writes; live transaction-only tests left no synthetic users or records behind. Supabase's security advisor returned no findings when account storage was installed.
 
-## External setup before public email testing
+Code-flow browser fixtures exercise requests, wrong/expired codes, correction and successful verification, reload persistence, explicit guest import, a second browser opening the same account, sign-out restoring guest state and switching to a separate account. Older expired-link callbacks still recover safely. These checks do not establish actual SMTP delivery.
 
-The connector can manage this project's database but does not expose its Auth configuration or an email provider account. The app code cannot configure SMTP credentials or DNS safely. No SMTP settings, providers, templates, billing settings, or production deployments were changed.
+Staging only. No production website deployment or main merge is authorized. Before production, finish real email delivery verification, confirm templates and redirect settings, and follow the existing tested release process.
 
-1. Open [Supabase URL Configuration](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/url-configuration).
-2. Add `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` to **Redirect URLs** and save. Keep the existing Site URL unless you deliberately want to change the default return destination. The app explicitly requests the current origin, so staging sign-ins return to staging. There is no external user-supplied return URL.
-3. Open [Supabase SMTP Settings](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/smtp). Connect or verify a transactional email sender using its host, port, username/password and verified From address. Keep these credentials in Supabase, never in the app's frontend environment variables or source.
-4. Keep the Email provider enabled and email confirmation required. The standard Magic Link template using `{{ .ConfirmationURL }}` works; no SMS provider or phone authentication is needed. Do not disable confirmation to work around email delivery failures.
-5. Once the sender is ready, open [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your own email and open the link in the same browser. This last delivery check requires a real mailbox; automated tests cannot prove inbox delivery.
-
-Supabase's default email sender is restricted to project-team addresses and is not suitable for public sign-in. See [custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp), [passwordless email](https://supabase.com/docs/guides/auth/auth-email-passwordless) and [redirect configuration](https://supabase.com/docs/guides/auth/redirect-urls).
-
-## Database deployment and verification
-
-`docs/account-plan-sync.sql` is an additive script applied to the existing, explicitly authorized shared pre-launch project. It does not alter guest data. Rerunning this create script is unnecessary; check existing objects before applying.
-
-The local PGlite tests verify authentication, account isolation, RLS and stale-write rejection. Live transaction-only checks create two synthetic identities, test ownership/validation/conflicts and guest denial, then roll back. No test identities or account records remain. Supabase's security advisor returned no findings after installation.
-
-Release verification: **308 unit/integration tests and 68 browser checks passed**; four historical comparison checks were intentionally skipped because no before-build was supplied. Lint, typecheck and the staging build passed. Desktop and mobile account screenshots were reviewed.
-
-Browser fixtures verify PKCE email requests and exchanges, repeat-request throttling, initial account loading, explicit guest import, a second browser retrieving the account, sign-out returning to guest state, account switching and failed-link recovery. These are simulated auth checks; they do not establish actual SMTP delivery.
-
-## Release
-
-Staging only. Main and production remain unchanged pending Shane's explicit approval. Before a production release, add the production origin to allowed Redirect URLs if it is not already present, verify the sender and real mailbox delivery, and follow the existing tested release process. Browser caches are separate between staging and production; the same authenticated Supabase account uses the same account vault.
+References: [Passwordless email sign-in](https://supabase.com/docs/guides/auth/auth-email-passwordless), [sessions](https://supabase.com/docs/guides/auth/sessions), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates).

@@ -9,6 +9,7 @@ import {
 import { type Session } from "@supabase/supabase-js";
 import { cachedAccountIdentity, cleanSignInUrl, getAuthClient } from "./auth";
 import { cloneElement } from "react";
+import { writeRoute } from "./navigation";
 
 type Identity = { id: string; email?: string };
 type Account = {
@@ -99,7 +100,10 @@ export function AccountWorkspace({ children }: { children: ReactElement }) {
   }, [auth]);
   const switching = (identity?.id ?? null) !== (workspace?.id ?? null);
   useEffect(() => {
-    if (!loading && !blocked && switching) setWorkspace(identity);
+    if (!loading && !blocked && switching) {
+      if (identity) writeRoute({ tab: "mine" }, true);
+      setWorkspace(identity);
+    }
   }, [loading, blocked, switching, identity]);
   if (loading)
     return (

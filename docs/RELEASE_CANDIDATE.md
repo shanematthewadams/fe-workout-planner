@@ -7,7 +7,7 @@ Scope: automatic private cloud saving with offline fallback, source-backed AO re
 - Desktop uses a permanent red sidebar with a single F3QBuilder wordmark; tablet and phone use a labeled Menu disclosure. Workouts and Tools & resources have their own groups, with all seven destinations available without a More submenu.
 - Destinations are real hash links, supporting bookmarks and opening a link in another tab. A deeper red current-section block, gold edge, directional marker and `aria-current` identify the active page. Icons accompany every label.
 - Mobile navigation closes after an accepted selection, outside interaction or Escape. Escape returns focus to Menu; accepted navigation focuses the page content. Declining the existing unsaved-edit prompt keeps the menu and editor intact. Timer focus mode continues to hide navigation.
-- The navigation pass left account login for the next change. Optional email-link login is now implemented separately; see `docs/EMAIL_SIGN_IN.md` for account isolation, guest migration and external sender/redirect setup.
+- The navigation pass left account login for the next change. Optional email-code login is now implemented separately; see `docs/EMAIL_SIGN_IN.md` for account isolation, guest migration and external sender/redirect setup.
 
 ## Delivered in code
 
