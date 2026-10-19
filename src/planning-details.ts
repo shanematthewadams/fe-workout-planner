@@ -133,7 +133,7 @@ export function planningContext(
       "Q-selected expectations, not a live forecast or measured sunrise/sunset. Date and start time do not establish daylight. Unspecified conditions stay unknown.",
     conditionsInstructions: [
       planning.weather.some((w) => w === "Rain" || w === "Snow / ice")
-        ? "Prefer standing, controlled work and short transitions. Avoid ground-contact core work, jumping, sprints, and direction changes on potentially slippery surfaces. Confirm footing; do not assume shelter."
+        ? "Use standing, controlled work in EVERY section, including warmup and Mary: slow cross-body knee raises, knee drives or bracing holds. Avoid floor exercises, jumping, sprints and fast turns. Covered garages/shelters do not prove dry footing or indoor workout permission. Confirm footing and access."
         : "",
       planning.weather.includes("Wind")
         ? "Avoid loose equipment or objects that can blow away; keep stations close together."

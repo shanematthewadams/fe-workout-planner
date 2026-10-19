@@ -20,7 +20,7 @@ Engineering runs local tests, lint, typecheck/build, then GitHub browser QA for 
 
 The repeatable `npm run eval:planner` runner covers coupon partners with a closed track; an unverified seasonal South Park venue; individual core work in rain with a closed field; and targeted equipment/running removal. It reuses real request/response schemas and the shared plan validator, restricts the host to staging, stops at authentication/rate limits, and never counts template fallback as live AI success. Report output goes to `qa/live-ai-evaluation.json`.
 
-A real staging request on October 18 (America/Chicago) returned HTTP 401 from Netlify's team-login protection before reaching the planner. Live free-provider output quality therefore remains **not verified in this pass**. No authentication protection was weakened and no paid model was used.
+A real staging request on October 18 (America/Chicago) returned HTTP 401 from Netlify's team-login protection before reaching the planner. That initial run did not verify live output. After Shane opened sharing, three scenarios returned schema/constraint-validated Gemini output and one seasonal-venue request hit a Netlify 504; its targeted recheck returned an AI draft in about nine seconds. Manual review caught unsupported indoor wording and floor-heavy rain programming. The follow-up tightens standing-only rain/snow instructions across every phase and explicitly distinguishes covered garages, dry footing, indoor access and gathering-only permission. Live output remains variable; a single sample is not a quality guarantee. No paid model was used.
 
 ### Prepared staging database activation — requires Shane's approval
 
@@ -36,4 +36,4 @@ Only then deploy staging and verify real cross-device cloud saving. Until activa
 
 ### Production release
 
-Keep main and production unchanged until explicit approval. Before release: activate/verify staged cloud storage if approved, complete authenticated live AI evaluation, inspect browser screenshots, and review the tested branch diff. Release via the existing PR workflow only. Do not delete or migrate browser saves silently. Preserve reviewed FE originals and free-only provider routing.
+Keep main and production unchanged until explicit approval. Before release: activate/verify staged cloud storage if approved, complete live AI quality evaluation, inspect browser screenshots, and review the tested branch diff. Release via the existing PR workflow only. Do not delete or migrate browser saves silently. Preserve reviewed FE originals and free-only provider routing.

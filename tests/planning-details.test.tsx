@@ -166,7 +166,7 @@ it("treats dates and conditions as expectations, never measured daylight or a fo
   );
   expect(context.conditionsSource).toContain("not a live forecast");
   expect(context.conditionsInstructions.join(" ")).toContain("no racing");
-  expect(context.conditionsInstructions.join(" ")).toContain("ground-contact");
+  expect(context.conditionsInstructions.join(" ")).toContain("EVERY section");
   expect(
     planningContext(planningDetailsSchema.parse({ date: "2026-12-21" })).light,
   ).toBe("Not sure");
