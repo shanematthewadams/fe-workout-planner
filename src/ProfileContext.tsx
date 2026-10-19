@@ -22,12 +22,32 @@ export function ProfileWorkspace({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
+  const signupName = account?.user?.user_metadata?.f3_name;
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!owner) return;
     let live = true;
     void requestProfile(owner)
-      .then((value) => {
+      .then(async (value) => {
+        if (!live) return;
+        if (
+          !value &&
+          typeof signupName === "string" &&
+          signupName.trim() &&
+          signupName.trim().length <= 80
+        ) {
+          value = await requestProfile(
+            owner,
+            {
+              display_name: signupName.trim(),
+              home_region: "The FE",
+              home_ao: "",
+            },
+            true,
+          );
+          if (!value)
+            throw Error("Couldn’t finish your profile. Retry when connected.");
+        }
         if (live) {
           setProfile(value);
           setReady(true);
@@ -40,7 +60,7 @@ export function ProfileWorkspace({ children }: { children: ReactNode }) {
     return () => {
       live = false;
     };
-  }, [owner, attempt]);
+  }, [owner, attempt, signupName]);
   return (
     <Context.Provider
       value={{
@@ -59,9 +79,8 @@ export function ProfileWorkspace({ children }: { children: ReactNode }) {
       }}
     >
       {owner && ready && !profile && (
-        <aside className="notice no-print">
-          <span>Choose your F3 Name for your profile.</span>
-          <a href="#settings">Complete profile</a>
+        <aside className="profile-onboarding no-print">
+          <FirstProfile />
         </aside>
       )}
       {children}
@@ -87,7 +106,59 @@ export function ProfileEditor() {
         )}
       </div>
     );
-  return <ProfileEditorContent />;
+  return context.profile ? <ProfileEditorContent /> : null;
+}
+function FirstProfile() {
+  const context = useProfile()!;
+  const account = useAccount()!;
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  return (
+    <form
+      className="account-form"
+      onSubmit={async (event) => {
+        event.preventDefault();
+        if (busy || account.blocked || account.switching) return;
+        setBusy(true);
+        try {
+          await context.save({
+            display_name: name,
+            home_region: "The FE",
+            home_ao: "",
+          });
+        } catch (problem) {
+          setMessage(
+            problem instanceof Error
+              ? problem.message
+              : "Couldn’t save your F3 Name.",
+          );
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <h3>What’s your F3 Name?</h3>
+      <p>
+        Your account is open. Add your F3 Name to finish your profile. You can
+        keep browsing below.
+      </p>
+      <label>
+        F3 Name
+        <input
+          required
+          maxLength={80}
+          autoComplete="nickname"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </label>
+      <button disabled={busy || account.blocked || account.switching}>
+        {busy ? "Saving…" : "Save F3 Name"}
+      </button>
+      {message && <p role="status">{message}</p>}
+    </form>
+  );
 }
 function ProfileEditorContent() {
   const context = useProfile()!;

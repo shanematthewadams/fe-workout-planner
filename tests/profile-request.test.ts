@@ -25,12 +25,10 @@ beforeEach(() => {
       detectSessionInUrl: false,
     },
   });
-  getSession = vi
-    .fn()
-    .mockResolvedValue({
-      data: { session: { user: { id: owner } } },
-      error: null,
-    });
+  getSession = vi.fn().mockResolvedValue({
+    data: { session: { user: { id: owner } } },
+    error: null,
+  });
   vi.mocked(getAuthClient).mockReturnValue({
     auth: { getSession },
     from: real.from.bind(real),
@@ -97,4 +95,20 @@ it("distinguishes missing profiles from unavailable or malformed storage", async
     new Response(JSON.stringify([{ user_id: owner }])),
   );
   await expect(requestProfile(owner)).rejects.toThrow("could not be read");
+});
+
+it("seeds a new profile with ignore-duplicates and reads the winner of a concurrent creation", async () => {
+  fetcher
+    .mockResolvedValueOnce(new Response("[]"))
+    .mockResolvedValueOnce(new Response(JSON.stringify([row])));
+  const result = await requestProfile(
+    owner,
+    { display_name: "Stale name", home_region: "The FE", home_ao: "" },
+    true,
+  );
+  expect(result).toEqual(row);
+  expect(
+    new Headers(fetcher.mock.calls[0][1]?.headers).get("Prefer"),
+  ).toContain("resolution=ignore-duplicates");
+  expect(fetcher.mock.calls[1][1]?.method).toBe("GET");
 });

@@ -15,6 +15,7 @@ export type ProfileFields = z.infer<typeof profileFieldsSchema>;
 export async function requestProfile(
   owner: string,
   fields?: ProfileFields,
+  createOnly = false,
 ): Promise<Profile | null> {
   const client = getAuthClient();
   if (!client)
@@ -37,11 +38,11 @@ export async function requestProfile(
             ...(parsedFields?.success ? parsedFields.data : {}),
             user_id: owner,
           },
-          { onConflict: "user_id" },
+          { onConflict: "user_id", ignoreDuplicates: createOnly },
         )
         .select()
         .abortSignal(AbortSignal.timeout(10000))
-        .single()
+        .maybeSingle()
     : await table
         .select()
         .eq("user_id", owner)
@@ -51,6 +52,7 @@ export async function requestProfile(
     throw Error(
       "Couldn’t open or save your profile. Try again when connected. Your workouts are safe.",
     );
+  if (createOnly && !result.data) return requestProfile(owner);
   const parsed = result.data ? profileSchema.safeParse(result.data) : null;
   if (parsed && !parsed.success)
     throw Error(

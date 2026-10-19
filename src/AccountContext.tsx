@@ -12,7 +12,11 @@ import { cloneElement } from "react";
 import { ProfileWorkspace } from "./ProfileContext";
 import { writeRoute } from "./navigation";
 
-type Identity = { id: string; email?: string };
+type Identity = {
+  id: string;
+  email?: string;
+  user_metadata?: Record<string, unknown>;
+};
 type Account = {
   user: Identity | null;
   available: boolean;

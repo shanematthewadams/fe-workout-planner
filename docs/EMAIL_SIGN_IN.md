@@ -12,11 +12,13 @@ The returning-user sign-in email displays a selectable numeric code as plain tex
 2. Under **Magic link**, use subject **Your F3QBuilder sign-in code** and replace the body with the complete contents of `docs/email-signin.html`. Save. Supabase keeps the “Magic link” template name even when its email contains a code.
 3. Under **Confirm sign up**, use subject **Confirm your F3QBuilder email** and replace the body with `docs/email-confirm-signup.html`. Save. New users receive a **Confirm my email** link using `{{ .ConfirmationURL }}`. Open it in the browser where signup started; the app already handles its session callback.
 4. Only **Magic link** contains `{{ .Token }}` as visible text. **Confirm sign up** contains `{{ .ConfirmationURL }}` as its confirmation button destination. Do not replace the signup template with the code template. Neither hardcodes a site URL.
-5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your email, and choose **Email me a sign-in code**. For a new email, open **Confirm my email** in the same browser to complete signup. For an already-confirmed email, copy the emailed code and paste it back in the app, then choose **Verify & sign in**. You can read the email on a different device or in another browser; enter the code on the app page you want to sign into.
+5. On [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Keep my workouts**. New users enter **F3 Name** and email, then choose **Create account** and open the confirmation link in the same browser. Returning users choose **Already have an account? Sign in**, request an email code, and enter it in the app. Returning sign-in never silently creates an account.
+
+Signup carries `f3_name` as display-preference metadata. After confirmation, the app reads the owner’s profile and creates it only if missing, using conflict-ignore semantics so an existing name is never overwritten. Ownership still comes from the authenticated session and RLS, never metadata. Older accounts without a name see a direct **What’s your F3 Name?** form; browsing stays available. Optional home region and AO remain editable in settings.
 
 Both templates retain the red wordmark header, charcoal background, readable light text and gold accent. The code is large, selectable text with no external image or font downloads. Set SMTP **Sender name** to **F3QBuilder** if it is not already set.
 
-Real delivery and inbox rendering still require a real mailbox check. The automated checks use a simulated email service and send no messages. A sender configuration reported as complete by the account owner has not been independently verified by the connector.
+Shane confirmed that inbox signup worked on October 19, 2026. The automated checks use a simulated email service and send no messages. A sender configuration reported as complete by the account owner has not been independently verified by the connector.
 
 ## How long sign-in lasts
 

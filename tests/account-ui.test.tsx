@@ -76,6 +76,9 @@ it("keeps guest use open and requests an email code and preserves a safe return 
     </AccountWorkspace>,
   );
   await screen.findByRole("heading", { name: "Keep your workouts" });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Already have an account? Sign in" }),
+  );
   fireEvent.change(screen.getByLabelText("Email address"), {
     target: { value: "q@example.test" },
   });
@@ -87,7 +90,7 @@ it("keeps guest use open and requests an email code and preserves a safe return 
     email: "q@example.test",
     options: {
       emailRedirectTo: location.origin + "/?signin=1#my-workouts",
-      shouldCreateUser: true,
+      shouldCreateUser: false,
     },
   });
   expect(screen.getByRole("button", { name: /Send again in/ })).toBeDisabled();
@@ -182,6 +185,9 @@ it("reports failed delivery without claiming a code was sent", async () => {
     </AccountWorkspace>,
   );
   await screen.findByRole("heading", { name: "Keep your workouts" });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Already have an account? Sign in" }),
+  );
   fireEvent.change(screen.getByLabelText("Email address"), {
     target: { value: "q@example.test" },
   });
@@ -228,6 +234,9 @@ async function requestCode() {
     </AccountWorkspace>,
   );
   await screen.findByRole("heading", { name: "Keep your workouts" });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Already have an account? Sign in" }),
+  );
   fireEvent.change(screen.getByLabelText("Email address"), {
     target: { value: "q@example.test" },
   });
@@ -319,4 +328,34 @@ it("keeps the signed-in editor open when a session refreshes in the background",
   );
   expect(screen.queryByText(/Your sign-in changed in another tab/)).toBeNull();
   expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+});
+
+it("collects an F3 Name during signup and explains email confirmation without a code form", async () => {
+  render(
+    <AccountWorkspace>
+      <App />
+    </AccountWorkspace>,
+  );
+  await screen.findByRole("heading", { name: "Create your account" });
+  fireEvent.change(screen.getByLabelText("F3 Name"), {
+    target: { value: "  Rug Burn  " },
+  });
+  fireEvent.change(screen.getByLabelText("Email address"), {
+    target: { value: "new@example.test" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Create account" }));
+  await screen.findByText(/Open the confirmation link/);
+  expect(send).toHaveBeenCalledWith({
+    email: "new@example.test",
+    options: {
+      emailRedirectTo: location.origin + "/?signin=1#my-workouts",
+      shouldCreateUser: true,
+      data: { f3_name: "Rug Burn" },
+    },
+  });
+  expect(screen.queryByLabelText("Sign-in code")).toBeNull();
+  expect(screen.getByRole("link", { name: "Build" })).toHaveAttribute(
+    "href",
+    "#build",
+  );
 });

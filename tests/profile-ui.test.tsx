@@ -46,21 +46,18 @@ it("prompts a new account for its F3 Name and saves profile fields", async () =>
       <ProfileEditor />
     </ProfileWorkspace>,
   );
-  await screen.findByText("Complete profile");
-  fireEvent.change(screen.getByLabelText("Display Name"), {
+  await screen.findByText("What’s your F3 Name?");
+  fireEvent.change(screen.getByLabelText("F3 Name"), {
     target: { value: "Rug Burn" },
   });
-  fireEvent.change(screen.getByLabelText("Home AO (optional)"), {
-    target: { value: "Overdraft" },
-  });
   vi.mocked(requestProfile).mockResolvedValue(profile);
-  fireEvent.click(screen.getByRole("button", { name: "Save profile" }));
+  fireEvent.click(screen.getByRole("button", { name: "Save F3 Name" }));
   await screen.findByText("Your F3 profile");
-  expect(screen.getByText("Profile saved.")).toBeTruthy();
+  expect(screen.queryByText("What’s your F3 Name?")).toBeNull();
   expect(requestProfile).toHaveBeenLastCalledWith(owner, {
     display_name: "Rug Burn",
     home_region: "The FE",
-    home_ao: "Overdraft",
+    home_ao: "",
   });
   expect(screen.queryByText("Complete profile")).toBeNull();
   expect(screen.queryByText("private@example.test")).toBeNull();
@@ -126,4 +123,54 @@ it("does not offer editable blank fields while a stored profile is still loading
   expect(screen.queryByLabelText("Display Name")).toBeNull();
   finish(profile);
   await screen.findByDisplayValue("Rug Burn");
+});
+
+it("creates a missing profile from the confirmed signup name without replacing another profile", async () => {
+  vi.mocked(useAccount).mockReturnValue({
+    available: true,
+    switching: false,
+    blocked: false,
+    setBlocked: vi.fn(),
+    error: "",
+    clearError: vi.fn(),
+    user: { id: owner, user_metadata: { f3_name: " Rug Burn " } },
+  });
+  vi.mocked(requestProfile)
+    .mockResolvedValueOnce(null)
+    .mockResolvedValueOnce(profile);
+  render(
+    <ProfileWorkspace>
+      <ProfileEditor />
+    </ProfileWorkspace>,
+  );
+  await screen.findByDisplayValue("Rug Burn");
+  expect(requestProfile).toHaveBeenLastCalledWith(
+    owner,
+    {
+      display_name: "Rug Burn",
+      home_region: "The FE",
+      home_ao: "",
+    },
+    true,
+  );
+  expect(screen.queryByText("What’s your F3 Name?")).toBeNull();
+});
+it("keeps an existing profile even when signup metadata contains an older name", async () => {
+  vi.mocked(useAccount).mockReturnValue({
+    user: { id: owner, user_metadata: { f3_name: "Old name" } },
+    available: true,
+    switching: false,
+    blocked: false,
+    setBlocked: vi.fn(),
+    error: "",
+    clearError: vi.fn(),
+  });
+  vi.mocked(requestProfile).mockResolvedValue(profile);
+  render(
+    <ProfileWorkspace>
+      <ProfileEditor />
+    </ProfileWorkspace>,
+  );
+  await screen.findByDisplayValue("Rug Burn");
+  expect(requestProfile).toHaveBeenCalledTimes(1);
 });

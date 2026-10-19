@@ -160,13 +160,22 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
     .getByRole("button", { name: "Save a private copy", exact: true })
     .click();
   await expect.poll(() => guest.workouts.length).toBe(1);
-  const signIn = page.getByRole("button", { name: "Sign in", exact: true });
+  const signIn = page.getByRole("button", {
+    name: "Keep my workouts",
+    exact: true,
+  });
   if (!(await signIn.isVisible()))
     await page.getByRole("button", { name: "Menu", exact: true }).click();
   await signIn.click();
   await expect(
     page.getByRole("button", { name: "Close", exact: true }),
   ).toHaveCount(0);
+  await page
+    .getByRole("button", {
+      name: "Already have an account? Sign in",
+      exact: true,
+    })
+    .click();
   await page
     .getByLabel("Email address", { exact: true })
     .fill("q@example.test");
@@ -218,10 +227,11 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   ).toHaveCount(0);
   await navigate(page, "Saving & recovery");
   await expect(page.getByText("1@example.test", { exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Complete profile" }),
-  ).toBeVisible();
-  await page.getByLabel("Display Name", { exact: true }).fill("Rug Burn");
+  await page.getByLabel("F3 Name", { exact: true }).fill("Rug Burn");
+  await page.getByRole("button", { name: "Save F3 Name", exact: true }).click();
+  await expect(page.getByLabel("Display Name", { exact: true })).toHaveValue(
+    "Rug Burn",
+  );
   await page
     .getByLabel("Home AO (optional)", { exact: true })
     .fill("Overdraft");
@@ -300,6 +310,12 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   // A different account starts empty; it never inherits the previous account's cache.
   await navigate(page, "Saving & recovery");
   await page
+    .getByRole("button", {
+      name: "Already have an account? Sign in",
+      exact: true,
+    })
+    .click();
+  await page
     .getByLabel("Email address", { exact: true })
     .fill("q@example.test");
   await page
@@ -340,4 +356,108 @@ test("older expired email links leave guest access available and remove callback
   await expect(
     page.getByLabel("Describe your Q", { exact: true }),
   ).toBeVisible();
+});
+
+test("signup explains the benefit and restores the chosen F3 Name after confirmation", async ({
+  page,
+}, info) => {
+  test.skip(
+    !process.env.FE_CLOUD_TEST_DIR || process.env.FE_LIVE_CLOUD === "true",
+    "Requires configured auth fixture",
+  );
+  const confirmed = sessionFor(ownerA);
+  confirmed.user.user_metadata = { f3_name: "Rug Burn" };
+  let profile: Record<string, unknown> | null = null;
+  let emails = 0;
+  let writes = 0;
+  await page.route("https://staging-sync.invalid/**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const fulfill = (body: unknown, status = 200) =>
+      route.fulfill({
+        status,
+        contentType: "application/json",
+        headers: {
+          "access-control-allow-origin": "*",
+          "access-control-allow-headers": "*",
+          "access-control-allow-methods": "GET,POST,OPTIONS",
+        },
+        body: JSON.stringify(body),
+      });
+    if (request.method() === "OPTIONS") return fulfill({}, 204);
+    if (url.pathname === "/auth/v1/otp") {
+      const body = request.postDataJSON();
+      expect(body.create_user).toBe(true);
+      expect(body.data).toEqual({ f3_name: "Rug Burn" });
+      emails++;
+      return fulfill({});
+    }
+    if (url.pathname === "/auth/v1/user") return fulfill(confirmed.user);
+    if (url.pathname === "/rest/v1/fe_profiles") {
+      if (request.method() === "POST") {
+        expect(request.headers().prefer).toContain(
+          "resolution=ignore-duplicates",
+        );
+        expect(profile).toBeNull();
+        profile = {
+          ...request.postDataJSON(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        writes++;
+        return fulfill([profile]);
+      }
+      return fulfill(profile ? [profile] : []);
+    }
+    if (url.pathname === "/rest/v1/rpc/fe_account_plans")
+      return fulfill({ version: 0, workouts: [] });
+    return fulfill([]);
+  });
+  await page.goto("/#settings");
+  await expect(
+    page.getByRole("heading", { name: "Create your account", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/keep your workout library across/),
+  ).toBeVisible();
+  await page.getByLabel("F3 Name", { exact: true }).fill("Rug Burn");
+  await page
+    .getByLabel("Email address", { exact: true })
+    .fill("new@example.test");
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-create-account.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Create account", exact: true })
+    .click();
+  await expect(page.getByText(/Open the confirmation link/)).toBeVisible();
+  await expect(page.getByLabel("Sign-in code", { exact: true })).toHaveCount(0);
+  expect(emails).toBe(1);
+  // Simulate the session returned by the already-tested email confirmation callback.
+  await page.evaluate(
+    (session) =>
+      localStorage.setItem("fe-auth:staging:v1", JSON.stringify(session)),
+    confirmed,
+  );
+  await page.reload();
+  await expect(page.getByLabel("Display Name", { exact: true })).toHaveValue(
+    "Rug Burn",
+  );
+  await expect(
+    page.getByRole("heading", { name: "What’s your F3 Name?", exact: true }),
+  ).toHaveCount(0);
+  expect(writes).toBe(1);
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  await page.reload();
+  await expect(page.getByLabel("Display Name", { exact: true })).toHaveValue(
+    "Rug Burn",
+  );
+  expect(writes).toBe(1);
 });

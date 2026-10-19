@@ -18,6 +18,8 @@ export function AccountPanel({
   onImportGuest: () => boolean;
 }) {
   const account = useAccount();
+  const [creating, setCreating] = useState(true);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sentEmail, setSentEmail] = useState("");
   const [code, setCode] = useState("");
@@ -58,6 +60,10 @@ export function AccountPanel({
     const client = getAuthClient();
     const requested = sentEmail || email.trim();
     if (!client || !requested || busy || cooldown || account?.blocked) return;
+    if (creating && (!name.trim() || name.trim().length > 80)) {
+      setMessage("Enter your F3 Name (up to 80 characters).");
+      return;
+    }
     setBusy(true);
     setMessage("");
     account?.clearError();
@@ -65,7 +71,11 @@ export function AccountPanel({
       const { error } = await client.auth.signInWithOtp({
         email: requested,
         // Retain same-origin returns for any older link templates during setup.
-        options: { emailRedirectTo: signInRedirect(), shouldCreateUser: true },
+        options: {
+          emailRedirectTo: signInRedirect(),
+          shouldCreateUser: creating,
+          ...(creating ? { data: { f3_name: name.trim() } } : {}),
+        },
       });
       if (error) {
         if (error.status === 429) {
@@ -79,7 +89,7 @@ export function AccountPanel({
             "Sign-in emails aren’t ready for this address yet. You can keep using the app as a guest.",
           );
         throw Error(
-          "We couldn’t send your sign-in code. Try again shortly; guest access still works.",
+          "We couldn’t send your email. Check the address and try again. New here? Choose Create account. Guest access still works.",
         );
       }
       refocusCode.current = true;
@@ -219,11 +229,46 @@ export function AccountPanel({
       ) : (
         <>
           <p>
-            Sign in to keep a personal workout library you can open on any
-            device. No password. Guest access stays open.
+            Create a free account to keep your workout library across phones and
+            computers. Your F3 Name identifies your saved workouts. No password
+            needed. You can also keep using the app as a guest.
           </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setCreating(!creating);
+              setSentEmail("");
+              setCode("");
+              setMessage("");
+            }}
+          >
+            {creating
+              ? "Already have an account? Sign in"
+              : "New here? Create account"}
+          </button>
           {!sent ? (
             <form onSubmit={sendCode} className="account-form">
+              <h3>{creating ? "Create your account" : "Welcome back"}</h3>
+              {creating && (
+                <>
+                  <label>
+                    F3 Name
+                    <input
+                      required
+                      maxLength={80}
+                      autoComplete="nickname"
+                      aria-describedby="signup-name-help"
+                      value={name}
+                      disabled={busy}
+                      onChange={(event) => setName(event.target.value)}
+                    />
+                  </label>
+                  <small id="signup-name-help">
+                    Your F3 Name, such as Rug Burn.
+                  </small>
+                </>
+              )}
               <label>
                 Email address
                 <input
@@ -246,7 +291,9 @@ export function AccountPanel({
                   ? "Sending…"
                   : cooldown > 0
                     ? `Send again in ${cooldown}s`
-                    : "Email me a sign-in code"}
+                    : creating
+                      ? "Create account"
+                      : "Email me a sign-in code"}
                 <ArrowRight size={17} aria-hidden="true" />
               </button>
             </form>
@@ -257,49 +304,59 @@ export function AccountPanel({
                 <strong className="account-email">{sentEmail}</strong>.
               </p>
               <p>
-                First time here? Open the confirmation link in that email.
-                Returning? Enter your sign-in code below.
+                {creating
+                  ? "Open the confirmation link to finish creating your account. Your F3 Name will be ready when you return. If this email already has an account, choose Sign in above to use its code."
+                  : "Enter the sign-in code from your newest email."}
               </p>
-              <form onSubmit={verifyCode} className="account-form">
-                <label>
-                  Sign-in code
-                  <input
-                    ref={codeInput}
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    aria-describedby={message ? "account-message" : undefined}
-                    aria-invalid={message.startsWith("That code") || undefined}
-                    enterKeyHint="done"
-                    pattern="[0-9]{6,10}"
-                    minLength={6}
-                    maxLength={32}
-                    required
-                    value={code}
-                    placeholder="Enter your email code"
-                    disabled={busy || account.blocked || verifyWait > 0}
-                    onChange={(event) => {
-                      setCode(
-                        event.target.value.replace(/[^0-9]/g, "").slice(0, 10),
-                      );
-                      setMessage("");
-                    }}
-                  />
-                </label>
-                <button
-                  type="submit"
-                  disabled={
-                    busy || account.blocked || code.length < 6 || verifyWait > 0
-                  }
-                >
-                  {verifying
-                    ? "Signing in…"
-                    : verifyWait > 0
-                      ? `Try again in ${verifyWait}s`
-                      : "Verify & sign in"}
-                  <ArrowRight size={17} aria-hidden="true" />
-                </button>
-              </form>
+              {!creating && (
+                <form onSubmit={verifyCode} className="account-form">
+                  <label>
+                    Sign-in code
+                    <input
+                      ref={codeInput}
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      aria-describedby={message ? "account-message" : undefined}
+                      aria-invalid={
+                        message.startsWith("That code") || undefined
+                      }
+                      enterKeyHint="done"
+                      pattern="[0-9]{6,10}"
+                      minLength={6}
+                      maxLength={32}
+                      required
+                      value={code}
+                      placeholder="Enter your email code"
+                      disabled={busy || account.blocked || verifyWait > 0}
+                      onChange={(event) => {
+                        setCode(
+                          event.target.value
+                            .replace(/[^0-9]/g, "")
+                            .slice(0, 10),
+                        );
+                        setMessage("");
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="submit"
+                    disabled={
+                      busy ||
+                      account.blocked ||
+                      code.length < 6 ||
+                      verifyWait > 0
+                    }
+                  >
+                    {verifying
+                      ? "Signing in…"
+                      : verifyWait > 0
+                        ? `Try again in ${verifyWait}s`
+                        : "Verify & sign in"}
+                    <ArrowRight size={17} aria-hidden="true" />
+                  </button>
+                </form>
+              )}
               <div className="actions account-code-actions">
                 <button
                   type="button"
@@ -308,7 +365,9 @@ export function AccountPanel({
                 >
                   {cooldown > 0
                     ? `Send again in ${cooldown}s`
-                    : "Send a new code"}
+                    : creating
+                      ? "Resend confirmation email"
+                      : "Send a new code"}
                 </button>
                 <button
                   type="button"
@@ -347,7 +406,7 @@ export function AccountEntry({ onOpen }: { onOpen: () => void }) {
       ) : (
         <LogIn size={18} aria-hidden="true" />
       )}
-      {account.user ? "My account" : "Sign in"}
+      {account.user ? "My account" : "Keep my workouts"}
     </button>
   );
 }
