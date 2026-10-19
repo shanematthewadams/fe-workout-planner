@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   fetchNationDirectory,
   directoryCandidates,
@@ -52,13 +53,25 @@ export async function handleNationDirectory(
       candidates: directoryCandidates(directory, local),
     });
   } catch (problem) {
+    const schema = problem instanceof z.ZodError;
     const authorization =
       problem instanceof Error &&
       /read failed \((401|403)\)/.test(problem.message);
     return Response.json(
       {
         status: "unavailable",
-        reason: authorization ? "nation-authorization" : "nation-directory",
+        reason: authorization
+          ? "nation-authorization"
+          : schema
+            ? "nation-schema"
+            : "nation-directory",
+        ...(schema
+          ? {
+              issues: problem.issues
+                .slice(0, 8)
+                .map(({ code, path }) => ({ code, path })),
+            }
+          : {}),
       },
       { status: 502 },
     );
