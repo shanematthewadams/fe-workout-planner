@@ -2,6 +2,30 @@
 
 Guest access stays open. Sign-in is only needed to use a personal account library on another device. The app sends a one-use email link through the existing Supabase project (`kitqovhdwzkhpxlepvfn`); no password, SMS service, new project or paid AI provider is involved.
 
+## Shane’s setup: a free sender option
+
+If you already have a transactional email sender, use its SMTP credentials in the generic setup below. Otherwise, Resend is a supported option with a free plan. These steps do not require a paid upgrade.
+
+1. Create an account at [Resend](https://resend.com/). Choose its Free plan; no paid plan is needed for this setup.
+2. Open **Domains**, add `auth.f3thefe.com`, and add the DNS records Resend provides at the service where you manage `f3thefe.com`. This uses a separate sending subdomain. When Resend shows **Verified**, continue.
+3. In Resend, open **API Keys** and create a sending key for that verified domain. Keep it private. You will paste it directly into Supabase, not into this chat or the app’s public settings.
+4. Open [Supabase SMTP Settings](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/smtp) and enable custom SMTP. If the direct link moves, use **Authentication → Email → SMTP Settings**. Enter:
+
+   | Field | Value |
+   | --- | --- |
+   | Sender email | `signin@auth.f3thefe.com` |
+   | Sender name | `F3 Q Builder` |
+   | Host | `smtp.resend.com` |
+   | Port | `465` |
+   | Username | `resend` |
+   | Password | Your private Resend API key |
+
+   Save the settings.
+5. Open [Supabase URL Configuration](https://supabase.com/dashboard/project/kitqovhdwzkhpxlepvfn/auth/url-configuration). Under **Redirect URLs**, add `https://studio-ux-streamline--fe-workout-planner.netlify.app/**` and save. This lets a staging sign-in return to staging.
+6. Open [staging](https://studio-ux-streamline--fe-workout-planner.netlify.app/), choose **Sign in**, enter your own email, and open the emailed link in the same browser. This confirms real inbox delivery; the automated checks below already cover the app behavior.
+
+Sources checked October 19, 2026: [Resend’s Supabase setup guide](https://resend.com/docs/send-with-supabase-smtp), [Resend pricing](https://resend.com/pricing). No Resend account, sender credentials, DNS records or paid subscription was created automatically.
+
 ## What is implemented
 
 - Sign in / My account in the red app navigation; the account form lives above Saving & recovery.
@@ -31,6 +55,8 @@ Supabase's default email sender is restricted to project-team addresses and is n
 `docs/account-plan-sync.sql` is an additive script applied to the existing, explicitly authorized shared pre-launch project. It does not alter guest data. Rerunning this create script is unnecessary; check existing objects before applying.
 
 The local PGlite tests verify authentication, account isolation, RLS and stale-write rejection. Live transaction-only checks create two synthetic identities, test ownership/validation/conflicts and guest denial, then roll back. No test identities or account records remain. Supabase's security advisor returned no findings after installation.
+
+Release verification: **308 unit/integration tests and 68 browser checks passed**; four historical comparison checks were intentionally skipped because no before-build was supplied. Lint, typecheck and the staging build passed. Desktop and mobile account screenshots were reviewed.
 
 Browser fixtures verify PKCE email requests and exchanges, repeat-request throttling, initial account loading, explicit guest import, a second browser retrieving the account, sign-out returning to guest state, account switching and failed-link recovery. These are simulated auth checks; they do not establish actual SMTP delivery.
 
