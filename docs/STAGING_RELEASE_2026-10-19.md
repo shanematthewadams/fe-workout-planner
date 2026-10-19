@@ -4,6 +4,20 @@ Staging: https://studio-ux-streamline--fe-workout-planner.netlify.app
 
 Shane approved CI/browser verification, the shared database upgrade and staging deployment with “yes run all that.” No production frontend publish or merge to main was authorized or performed.
 
+## Signup flow correction
+
+Shane confirmed inbox signup worked, then flagged that signup and returning sign-in looked identical and F3 Name setup was disconnected. The corrected flow explains the account benefit first, labels the guest entry **Keep my workouts**, and separates **Create account** (F3 Name plus email and confirmation-link instructions) from returning email-code sign-in. Returning sign-in uses `shouldCreateUser: false`.
+
+After confirmation, the authenticated session’s `f3_name` preference seeds a missing owner profile. Conflict-ignore insertion and a subsequent read preserve an existing profile, including concurrent first-login attempts. Metadata never controls authorization. Accounts from the older flow receive an inline **What’s your F3 Name?** form; the planner stays accessible below it. Existing profiles skip this prompt.
+
+- Tested source: `b7a2bcf73f4ed814cec8ef4e99897886494e24cf`.
+- CI: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/39291496625 — **339 tests across 42 files passed**, lint and build passed; **72 browser checks passed**, 4 optional historical comparisons skipped.
+- Added browser coverage for signup instructions, signup-name restoration after confirmation, profile persistence across reloads, and a single profile creation. Returning-user and legacy-profile journeys remain covered across desktop, tablet, mobile Chromium and mobile WebKit.
+- Reviewed desktop and phone signup screenshots from the successful CI artifact. Signup and signed-in profile accessibility assertions passed.
+- Staging release commit: `b6bcd896ac0976674744d61288489241f52d5f2b`, with identical tested tree `df4070ce0f1acc4425329d32262ceb487d33c7ab`.
+- Hosted staging serves `/assets/index-w11RTexV.js`, matching the local staging build byte-for-byte: SHA-256 `3c0681a7970e7d5061d6b2c009c1f3868529bc8d2c78dc33f76156152c639767`.
+- No schema or email-template changes were required. No production merge or publish was performed.
+
 ## Released
 
 F3 Display Name profiles; account settings and first-login prompt; private workout ownership and creator/adaptation metadata; confirmed shared-venue amenities; AO-aware bootcamp/run/ruck planning; route session timing; clearer signup-link versus returning-user code instructions; profile save/loading feedback; and normal guest-import deduplication.
