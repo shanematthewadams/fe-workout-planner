@@ -140,3 +140,35 @@ it("rejects malformed directory results and timeouts without returning a partial
     502,
   );
 });
+it("reports public region identity candidates when the saved region ID has no active AOs", async () => {
+  const fetcher = vi
+    .fn<typeof fetch>()
+    .mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          orgs: [
+            {
+              orgId: 100,
+              name: "South Park",
+              orgType: "ao",
+              hierarchy: [[9, "The FE", "region"]],
+              activeLocations: [],
+              email: "private@example.test",
+            },
+          ],
+        }),
+      ),
+    );
+  const response = await handleNationDirectory(request(), env, fetcher);
+  const body = await response.json();
+  expect(body).toMatchObject({
+    reason: "nation-region",
+    regionId: 5,
+    organizationCount: 1,
+    aoCount: 1,
+    localNameMatches: [
+      { id: 100, name: "South Park", regions: [{ id: 9, name: "The FE" }] },
+    ],
+  });
+  expect(JSON.stringify(body)).not.toContain("private");
+});

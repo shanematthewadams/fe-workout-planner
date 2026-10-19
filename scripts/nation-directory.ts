@@ -24,6 +24,12 @@ const orgSchema = z.object({
     }),
   ),
 });
+export class NationRegionError extends Error {
+  constructor(readonly organizations: z.infer<typeof orgSchema>[]) {
+    super("No regional AOs returned; verify the official region identity.");
+    this.name = "NationRegionError";
+  }
+}
 /** Uses the official OpenAPI contract retrieved 2026-10-19. Strip contact/leadership data. */
 export async function fetchNationDirectory({
   token,
@@ -51,21 +57,18 @@ export async function fetchNationDirectory({
       );
     return response.json();
   };
-  const orgs = z
+  const organizations = z
     .object({ orgs: z.array(orgSchema.nullable()) })
     .parse(await get("org-chart"))
-    .orgs.filter(
-      (org): org is z.infer<typeof orgSchema> =>
-        !!org &&
-        org.orgType === "ao" &&
-        org.hierarchy.some(
-          ([ancestor, , type]) => ancestor === regionId && type === "region",
-        ),
-    );
-  if (!orgs.length)
-    throw Error(
-      "No regional AOs returned; retain the existing snapshot and verify token scope and region ID.",
-    );
+    .orgs.filter((org): org is z.infer<typeof orgSchema> => !!org);
+  const orgs = organizations.filter(
+    (org) =>
+      org.orgType === "ao" &&
+      org.hierarchy.some(
+        ([ancestor, , type]) => ancestor === regionId && type === "region",
+      ),
+  );
+  if (!orgs.length) throw new NationRegionError(organizations);
   if (new Set(orgs.map((org) => org.orgId)).size !== orgs.length)
     throw Error("Duplicate official AO identity; import stopped.");
   const locationIds = [
