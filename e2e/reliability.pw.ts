@@ -1,6 +1,96 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { Workout } from "../src/model";
+import { navigate } from "./navigation";
+
+test("saved private copy stays selected for preview, editing and reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Save a private copy", exact: true })
+    .click();
+  const saved = await page.evaluate<Workout>(
+    () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
+  );
+  await page
+    .getByRole("button", { name: "Preview & print", exact: true })
+    .click();
+  await expect(page).toHaveURL(new RegExp(`#workout/${saved.id}$`));
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: saved.title, exact: true }),
+  ).toBeVisible();
+  await navigate(page, "Build");
+  await page
+    .getByRole("button", { name: "Edit the details", exact: true })
+    .click();
+  await expect(page).toHaveURL(new RegExp(`#edit/${saved.id}$`));
+  await page
+    .getByLabel("Workout title", { exact: true })
+    .fill("Edited saved private copy");
+  await page
+    .getByRole("button", { name: "Save & view workout", exact: true })
+    .click();
+  const workouts = await page.evaluate<Workout[]>(
+    () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts,
+  );
+  expect(workouts).toHaveLength(1);
+  expect(workouts[0].id).toBe(saved.id);
+  expect(workouts[0].title).toBe("Edited saved private copy");
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: workouts[0].title, exact: true }),
+  ).toBeVisible();
+});
+
+test("Lead recovery follows the saved private copy reopened from My Workouts", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Save a private copy", exact: true })
+    .click();
+  const saved = await page.evaluate<Workout>(
+    () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
+  );
+  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`#lead/${saved.id}$`));
+  await page
+    .getByRole("button", { name: "Session timer", exact: true })
+    .click();
+  await page.clock.install();
+  await page.getByRole("button", { name: "Start timer", exact: true }).click();
+  await page.clock.runFor(75000);
+  await expect(page.getByRole("timer")).toHaveText("43:45");
+  await page
+    .getByRole("button", { name: "← Back to plan", exact: true })
+    .click();
+  await navigate(page, "My Workouts");
+  await page.getByRole("button", { name: saved.title, exact: true }).click();
+  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Session timer", exact: true })
+    .click();
+  await expect(page.getByRole("timer")).toHaveText("43:45");
+  await expect(
+    page.getByRole("button", { name: "Resume", exact: true }),
+  ).toBeEnabled();
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: saved.title, exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Session timer", exact: true })
+    .click();
+  await expect(page.getByRole("timer")).toHaveText("43:45");
+});
 
 test("a delayed cloud bookmark opens the exact saved workout without a missing warning", async ({
   page,

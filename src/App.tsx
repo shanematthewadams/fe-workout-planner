@@ -805,16 +805,20 @@ export default function App() {
                   );
                   return false;
                 }
-                const copy = {
-                  ...structuredClone(w),
-                  id: uid(),
-                  originId: w.id,
-                };
+                const copy = attributeWorkout(
+                  {
+                    ...structuredClone(w),
+                    id: uid(),
+                    originId: w.id,
+                  },
+                  account?.user?.id,
+                  profile?.display_name,
+                );
                 if (
                   persist({ ...state, workouts: [...state.workouts, copy] })
                 ) {
                   setNotice("Personal workout saved.");
-                  return true;
+                  return copy;
                 }
                 return false;
               }}

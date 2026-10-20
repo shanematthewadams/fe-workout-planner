@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -31,7 +32,7 @@ const empty = { overrides: {}, notes: "" };
 const props = {
   onEdit: vi.fn(),
   onPreview: vi.fn(),
-  onSave: () => true,
+  onSave: (workout: Workout) => workout,
   onReference: vi.fn(),
 };
 it("propagates unpublished AO changes through directory, builder, API context and validator", async () => {

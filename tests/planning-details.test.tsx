@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   cleanup,
@@ -22,7 +23,7 @@ import { contextFor } from "../server/planner-context";
 import { validatePlan } from "../server/planner-service";
 import { SESSION_KEY, restorePlannerSession } from "../src/planner-session";
 const props = {
-  onSave: () => true,
+  onSave: (workout: Workout) => workout,
   onEdit: () => {},
   onPreview: () => {},
   onReference: () => {},

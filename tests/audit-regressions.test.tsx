@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   cleanup,
@@ -17,7 +18,7 @@ import { siteContext } from "../src/ao-context";
 import { workoutPhases } from "../src/session";
 import { cloudRequest, CloudSnapshotError } from "../src/cloud";
 const props = {
-  onSave: () => true,
+  onSave: (workout: Workout) => workout,
   onEdit: () => {},
   onPreview: () => {},
   onReference: () => {},

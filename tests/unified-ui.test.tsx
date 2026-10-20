@@ -32,6 +32,8 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   );
   fireEvent.click(screen.getByRole("button", { name: "Save a private copy" }));
   fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  const saved = JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0];
+  expect(location.hash).toBe(`#workout/${saved.id}`);
   expect(
     screen.getByRole("heading", { name: "Digging for gold" }),
   ).toBeVisible();

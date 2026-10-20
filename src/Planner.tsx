@@ -33,7 +33,7 @@ export function Planner({
   onLead?: (w: Workout) => void;
   onEdit: (w: Workout) => void;
   onPreview: (w: Workout) => void;
-  onSave: (w: Workout) => boolean;
+  onSave: (w: Workout) => Workout | false;
   onReference: (id: string) => void;
 }) {
   const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
@@ -706,7 +706,13 @@ export function Planner({
           revision={revision}
           setRevision={setRevision}
           ask={ask}
-          onSave={onSave}
+          onSave={(workout) => {
+            const copy = onSave(workout);
+            if (!copy) return false;
+            // Continue editing, printing and leading the persisted private copy.
+            setResult({ ...result, workout: copy });
+            return true;
+          }}
           onLead={onLead}
           onEdit={onEdit}
           onPreview={onPreview}

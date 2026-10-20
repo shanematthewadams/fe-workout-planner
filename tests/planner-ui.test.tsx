@@ -11,6 +11,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { Planner } from "../src/Planner";
+import type { Workout } from "../src/model";
 import { generatePlan } from "../server/planner-service";
 import { GOLD_RUSH_EXAMPLE } from "../src/planner-contract";
 import { planFixture } from "./fixtures/plan";
@@ -44,7 +45,7 @@ it("creates, refines without losing the last good draft, saves and previews priv
         { status: 429 },
       ),
     );
-  const onSave = vi.fn(() => true),
+  const onSave = vi.fn((workout: Workout) => workout),
     onPreview = vi.fn(),
     onEdit = vi.fn();
   render(
@@ -103,7 +104,7 @@ it("ignores a cancelled stale response and does not persist it over a later sess
   );
   render(
     <Planner
-      onSave={() => true}
+      onSave={(workout) => workout}
       onPreview={() => {}}
       onEdit={() => {}}
       onReference={() => {}}
@@ -139,7 +140,7 @@ it.each([504, 503, 400])(
       );
     render(
       <Planner
-        onSave={() => true}
+        onSave={(workout) => workout}
         onPreview={() => {}}
         onEdit={() => {}}
         onReference={() => {}}
@@ -167,7 +168,7 @@ it.each([504, 503, 400])(
 it("aborts a stalled provider once without losing the current draft or retrying", async () => {
   render(
     <Planner
-      onSave={() => true}
+      onSave={(workout) => workout}
       onPreview={() => {}}
       onEdit={() => {}}
       onReference={() => {}}
