@@ -1,6 +1,6 @@
-# Reliability sprint — verified locally, staging release pending
+# Reliability sprint — staging release verified
 
-Implementation commit: `ce80a93b9cd1f70331b8ffc3a660206e3de6e1bd` on `studio/ux-streamline`, based on `f7bfbbf`. The implementation and this report are local and unpushed. No new branch, application, infrastructure, database migration, remote build or deployment was created. Main and production were not changed.
+Local implementation commit: `ce80a93b9cd1f70331b8ffc3a660206e3de6e1bd`, based on `f7bfbbf`. Shane subsequently approved the staging build/deployment. Published release: `dbfac72375f574bcfb7ffbb243c9945db228ced1` on `studio/ux-streamline`, tree `9050f432188a5f14a4509ae7b831e998d5ac5516`. The connected GitHub app published a consolidated commit after the terminal lacked write credentials; its complete source tree matched the local release tree exactly. No application or test code changed after local verification. Main and production were not changed.
 
 ## Changes
 
@@ -32,9 +32,9 @@ The initial print failure was environmental: the local browser selected Nimbus S
 
 The final Lead recovery checks assert zero uncaught page errors, console errors and failed requests. Existing and new axe assertions and layout-overflow checks passed. Desktop and mobile WebKit session recovery screenshots were visually inspected, along with the failing print screenshot during diagnosis. Existing browser tests exercised isolated auth, guest import/account isolation, expired callbacks/codes, offline recovery, navigation, voice, circuit timers and AO handling. Tests used synthetic services; no real emails, user workouts or live AI calls were used.
 
-Local Chromium and WebKit were made operational using official browser downloads and extracted Ubuntu dependency libraries. WebKit's host-wide package-presence preflight was skipped because its libraries were loaded from the browser's local library directory; WebKit itself launched and executed the tests. No permission escalation or remote CI was needed. There is **no new GitHub Actions run or CI result to cite**.
+Local Chromium and WebKit were made operational using official browser downloads and extracted Ubuntu dependency libraries. WebKit's host-wide package-presence preflight was skipped because its libraries were loaded from the browser's local library directory; WebKit itself launched and executed the tests. No permission escalation was needed for local verification. Fresh remote evidence for the approved release is recorded below.
 
-Logs and screenshots are in ignored local QA files (`qa/reliability-verification`, `qa/screenshots`); they are supplementary, not published CI artifacts.
+Local logs, hosted hash evidence and screenshots are in ignored QA files (`qa/reliability-verification`, `qa/screenshots`). CI uploaded the fresh `browser-qa` artifact (ID `12235859479`) for release commit `dbfac72`; its screenshots/reports are separate from local evidence.
 
 ## Prepared staging build
 
@@ -43,25 +43,27 @@ A final local build reused only the existing public Supabase URL/publishable-key
 - JavaScript: `dist/assets/index-BYhH8v0x.js`
 - SHA-256: `ed480ab46c6b032b235abc8772d42f9fef1b67edec47d3a1aadf72eba014494d`
 
-This is a local artifact fingerprint, **not a hosted deployment verification**. Test builds also exercised the same source with unconfigured cloud and an isolated fake backend. Netlify context overrides must be checked and the actual hosted bundle reproduced/compared before calling staging ready.
+The actual staging HTML references this exact asset. All 20 current HTML, service-worker, referenced JavaScript/CSS/font and bundled-license files match their local counterparts byte-for-byte. Unreferenced older local build assets are excluded from this comparison. The downloaded hosted JavaScript matches the prepared local build **byte-for-byte**, including the SHA-256 above. The deploy is a `branch-deploy` for the exact release commit, not a production publish. Isolated browser tests additionally exercised the same source with unconfigured cloud and a fake backend.
 
-## Release gate and next executable action
+## Authorized staging release
 
-`AGENTS.md` requires: “Netlify preview deploys and remote builds that consume credits also require approval.” The sprint prompt explicitly preserves that gate. No push was made because it can trigger a Netlify build.
+- Staging: https://studio-ux-streamline--fe-workout-planner.netlify.app/
+- Netlify deploy: `6ad6d1934a3a28c0c24412f9`, **ready**, exact commit `dbfac72375f574bcfb7ffbb243c9945db228ced1`, `studio/ux-streamline`, `branch-deploy` context.
+- Deploy details: https://app.netlify.com/projects/fe-workout-planner/deploys/6ad6d1934a3a28c0c24412f9
+- Immutable preview: https://6ad6d1934a3a28c0c24412f9--fe-workout-planner.netlify.app/
+- GitHub Actions: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/39359011599 — **success: 378 tests across 48 files; lint, TypeScript and build; 92 browser checks passed, 4 optional historical comparisons skipped**
+- Hosted smoke checks passed on desktop Chromium and mobile WebKit: explicit offline template, Lead mode, timer start, pause-on-exit, reopen, unchanged elapsed time and Resume. No uncaught page errors or horizontal overflow. No live AI request, email or saved-workout mutation was performed. Mobile WebKit canceled one read-only catalog request after its loader timed out; the bundled catalog fallback remained usable. Both hosted screenshots were inspected.
+- Browser smoke used the managed network proxy; its certificate was ignored in the browser context only. The independent HTTPS asset download used the environment's normal certificate verification.
+- Production remains at Netlify deploy `6ad40f99b56825e4ed9504b4`; main remains `07ff6315a6c36f357eb8446e6fd30939948f773d`.
 
-After Shane approves credit-consuming staging verification/deployment:
-
-1. Recheck the remote development head and preserve any concurrent Studio edits. Publish the tested source to the same branch. A later report-only commit must not accidentally suppress the intended staging build; use an explicit release commit with the same tested application files if needed.
-2. Run the existing GitHub workflow for fresh remote evidence if required, without enabling optional live-cloud mutation checks. Inspect its reports, not historical results.
-3. Release only the existing staging branch. Do not merge main, publish production or change the shared database.
-4. Check deploy commit/tree, effective public build configuration, hosted HTML/asset name and bundle SHA-256 against a reproduced build. Record deploy/CI URLs and the successful comparison here.
+The approval gate in `AGENTS.md` was satisfied by Shane's explicit “approve the staging build deployment.” No main merge, production deployment or shared database change was performed. The source tree, Netlify commit metadata and hosted bundle comparison agree. Future production publication still requires separate approval.
 
 ## Remaining limitations
 
-**Engineering/release:** no known failing automated application checks after the documented print-environment correction and targeted rerun. Staging publication, remote CI and hosted source verification remain pending approval. Real inbox delivery and current live-provider output were not newly tested. Timer recovery is device-local, same-day and tied to the workout revision; browser termination can interrupt recovery/audio.
+**Engineering/release:** no known failing automated application checks after the documented print-environment correction and targeted rerun. Staging publication and hosted source verification are complete. The complete CI browser run passed after publication. Real inbox delivery and current live-provider output were not newly tested. Timer recovery is device-local, same-day and tied to the workout revision; browser termination can interrupt recovery/audio.
 
 **Physical device:** emulated mobile WebKit is not an iPhone hardware test. Locked-screen/background sound, actual voice output, long sessions, OS wake-lock behavior and physical touch/double-tap behavior still need device verification.
 
 **Shane's post-summit inventory:** collect the remaining AO reports, convert source-backed updates into comparison input, review ambiguous/conflicting facts and approve supported proposals through the existing maintainer process. No actual inventory reconciliation has been performed.
 
-The short participant walkthrough is `docs/SMALL_GROUP_PREVIEW_2026-10-23.md`. Do not present the old staging deployment as containing this sprint's changes.
+The short participant walkthrough is `docs/SMALL_GROUP_PREVIEW_2026-10-23.md`. The staging URL now serves this sprint's verified source.
