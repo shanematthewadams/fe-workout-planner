@@ -2,7 +2,7 @@
 
 Target preview: Friday, October 23, 2026. Staging only: https://studio-ux-streamline--fe-workout-planner.netlify.app/
 
-The reliability release is on staging. Engineering verified that the hosted bundle matches the tested source; see `RELIABILITY_SPRINT_VERIFICATION.md` for the deployment and test evidence.
+The preview-readiness follow-up is on staging. Engineering verified the saved-workout identity fix and that hosted files match the tested source; see `PREVIEW_READINESS_2026-10-20.md` for the current deployment and test evidence.
 
 ## First workout (no account required)
 
