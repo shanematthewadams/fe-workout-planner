@@ -169,7 +169,7 @@ export function IntervalTimer({
   speakRef.current = speak;
   useEffect(() => () => cancelTimerVoice(), []);
   const prior = useRef({ key: phase.key, seconds: Math.ceil(phase.remaining) });
-  useWakeLock(running);
+  const wakeNotice = useWakeLock(running);
   useEffect(() => {
     onRunning(running);
   }, [running, onRunning]);
@@ -444,7 +444,12 @@ export function IntervalTimer({
       />
       <div className="actions">
         {running ? (
-          <button className="create" onClick={pause}>
+          <button
+            className="create"
+            onClick={(event) => {
+              if (event.detail <= 1) pause();
+            }}
+          >
             <AppIcon name="pause" />
             Pause intervals
           </button>
@@ -452,7 +457,9 @@ export function IntervalTimer({
           <button
             className="create"
             disabled={phase.stage === "Complete"}
-            onClick={start}
+            onClick={(event) => {
+              if (event.detail <= 1) start();
+            }}
           >
             <AppIcon name="play" />
             {timer.elapsed > 0 ? "Resume intervals" : "Start intervals"}
@@ -510,6 +517,7 @@ export function IntervalTimer({
           {error}
         </p>
       )}
+      {wakeNotice && <p role="status">{wakeNotice}</p>}
       {storageError && <p role="alert">{storageError}</p>}
     </section>
   );

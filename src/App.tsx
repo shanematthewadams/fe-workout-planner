@@ -233,7 +233,7 @@ export default function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
   const [timerOpen, setTimerOpen] = useState(false);
-  const unresolvedRoute = useRef<string | null>(null);
+  const [unresolvedRoute, setUnresolvedRoute] = useState<string | null>(null);
   const navigation = useRef({
     dirty,
     state,
@@ -279,7 +279,7 @@ export default function App() {
       setSelected(null);
       setTimerOpen(false);
       if (route.view && workout) {
-        unresolvedRoute.current = null;
+        setUnresolvedRoute(null);
         if (route.view === "edit") {
           setEditing(structuredClone(workout));
           editingBase.current = structuredClone(workout);
@@ -288,10 +288,7 @@ export default function App() {
           setTimerOpen(route.view === "lead");
         }
       } else if (route.view) {
-        unresolvedRoute.current = routeHash(route);
-        setNotice(
-          "That workout is not saved on this device. Your saved plans are still here.",
-        );
+        setUnresolvedRoute(routeHash(route));
         setTab("mine");
       }
     };
@@ -301,14 +298,13 @@ export default function App() {
     return () => window.removeEventListener("popstate", pop);
   }, []);
   useEffect(() => {
-    if (!unresolvedRoute.current || unresolvedRoute.current !== location.hash)
-      return;
+    if (!unresolvedRoute || unresolvedRoute !== location.hash) return;
     const route = readRoute();
     const workout = [...state.workouts, ...sources].find(
       (value) => value.id === route.id,
     );
     if (!workout) return;
-    unresolvedRoute.current = null;
+    setUnresolvedRoute(null);
     setNotice("");
     setTab(route.tab);
     if (route.view === "edit") {
@@ -318,7 +314,7 @@ export default function App() {
       setSelected(workout);
       setTimerOpen(route.view === "lead");
     }
-  }, [state.workouts, sources]);
+  }, [state.workouts, sources, unresolvedRoute]);
   useEffect(() => {
     account?.setBlocked(dirty || blocked || storageChanged);
     return () => account?.setBlocked(false);
@@ -712,6 +708,17 @@ export default function App() {
         }}
       />
 
+      {unresolvedRoute === location.hash && (
+        <aside
+          className="notice no-print"
+          role="status"
+          aria-label="Opening saved workout"
+        >
+          Looking for this workout. It will open when your library loads. If you
+          saved it elsewhere, sign in or open Saving & recovery to connect that
+          library. Your saved plans are safe.
+        </aside>
+      )}
       <div
         role="status"
         aria-live="polite"

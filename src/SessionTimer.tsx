@@ -91,7 +91,7 @@ export function SessionTimer({
         [5, 10].includes(raw.cot) &&
         typeof raw.wall === "boolean"
       )
-        return raw;
+        return raw.wall ? raw : { ...raw, anchor: null };
     } catch {
       /* Preserve workout when timer state cannot be read. */
     }
@@ -143,15 +143,62 @@ export function SessionTimer({
       : 0;
   const currentExercise = phaseExercises[exerciseIndex];
   const previous = useRef(elapsed);
+  const latest = useRef({ timer, cursor, standard, hardStop });
+  latest.current = { timer, cursor, standard, hardStop };
+  useEffect(() => {
+    // Countdown sessions pause on exit; live sessions retain their wall-clock schedule.
+    const persistExit = () => {
+      const current = latest.current;
+      const next = current.timer.wall
+        ? current.timer
+        : {
+            ...current.timer,
+            elapsed: elapsedAt(current.timer, Date.now(), current.hardStop),
+            anchor: null,
+          };
+      cancelTimerVoice();
+      try {
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            ...next,
+            cursor: current.cursor,
+            standard: current.standard,
+            date: today,
+            revision: workout.updatedAt,
+          }),
+        );
+      } catch {
+        /* Keep the workout usable without timer recovery. */
+      }
+      return next;
+    };
+    const hidePage = () => {
+      const next = persistExit();
+      latest.current = { ...latest.current, timer: next };
+      setTimer(next);
+    };
+    window.addEventListener("pagehide", hidePage);
+    return () => {
+      window.removeEventListener("pagehide", hidePage);
+      persistExit();
+    };
+  }, [key, today, workout.updatedAt]);
   useEffect(() => {
     const tick = () => setNow(Date.now());
+    const visible = () => {
+      const current = latest.current;
+      previous.current = elapsedAt(current.timer, Date.now(), current.hardStop);
+      if (document.visibilityState !== "visible") cancelTimerVoice();
+      tick();
+    };
     const i = setInterval(tick, 250);
-    window.addEventListener("focus", tick);
-    document.addEventListener("visibilitychange", tick);
+    window.addEventListener("focus", visible);
+    document.addEventListener("visibilitychange", visible);
     return () => {
       clearInterval(i);
-      window.removeEventListener("focus", tick);
-      document.removeEventListener("visibilitychange", tick);
+      window.removeEventListener("focus", visible);
+      document.removeEventListener("visibilitychange", visible);
     };
   }, []);
   useEffect(() => {
@@ -175,7 +222,12 @@ export function SessionTimer({
       timer.anchor !== null &&
       (sound || voice) &&
       document.visibilityState === "visible" &&
-      phases.some((p) => previous.current < p.end && elapsed >= p.end)
+      phases.some(
+        (p) =>
+          previous.current < p.end &&
+          elapsed >= p.end &&
+          elapsed - p.end <= 0.5,
+      )
     ) {
       if (
         voice &&
@@ -193,7 +245,7 @@ export function SessionTimer({
     if (elapsed >= total && timer.anchor !== null)
       setTimer({ ...timer, elapsed: total, anchor: null });
   }, [elapsed, timer.anchor, sound, phases]);
-  useWakeLock(timer.anchor !== null);
+  const wakeNotice = useWakeLock(timer.anchor !== null);
   useEffect(() => {
     onRunning(timer.anchor !== null);
   }, [timer.anchor, onRunning]);
@@ -255,7 +307,8 @@ export function SessionTimer({
         {timer.anchor !== null && elapsed < total ? (
           <button
             className="create"
-            onClick={() => {
+            onClick={(event) => {
+              if (event.detail > 1) return;
               update({
                 ...timer,
                 elapsed: elapsedAt(timer, Date.now(), hardStop),
@@ -271,7 +324,9 @@ export function SessionTimer({
             <button
               className="create"
               disabled={!ready || elapsed >= total}
-              onClick={() => start(false)}
+              onClick={(event) => {
+                if (event.detail <= 1) start(false);
+              }}
             >
               {timer.elapsed ? "Resume" : "Start timer"}
             </button>
@@ -336,6 +391,10 @@ export function SessionTimer({
           )}
         </section>
       )}
+      <p className="muted">
+        Countdowns pause when you leave Lead mode. Live schedules keep following
+        the clock.
+      </p>
       <progress aria-label="Session progress" value={elapsed} max={total} />
       {!currentExercise && <p>{phase.detail}</p>}
       <details className="field-overview">
@@ -368,6 +427,7 @@ export function SessionTimer({
           ))}
         </div>
       </details>
+      {wakeNotice && <p role="status">{wakeNotice}</p>}
       {storageError && <p role="alert">{storageError}</p>}
     </section>
   );

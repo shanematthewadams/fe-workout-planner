@@ -285,7 +285,11 @@ export function Planner({
     controller.current?.abort();
     const abort = new AbortController();
     controller.current = abort;
-    const timeout = setTimeout(() => abort.abort(), 55000);
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      abort.abort();
+    }, 55000);
     setBusy(true);
     setError("");
     try {
@@ -300,9 +304,9 @@ export function Planner({
         const message =
           response.status === 429
             ? "Free AI has reached its current limit. Your previous draft is safe. Try later."
-            : typeof data?.error === "string"
-              ? data.error
-              : "Free AI is unavailable. Your previous draft is safe.";
+            : response.status === 504 || response.status === 408
+              ? "Free AI took too long. Your previous draft is safe. Try again or use an offline template."
+              : "Free AI is unavailable. Your previous draft is safe. Try again later or use an offline template.";
         throw Error(message);
       }
       const parsed = plannerResponseSchema.safeParse(data);
@@ -313,8 +317,7 @@ export function Planner({
       const next = parsed.data;
       if (result && next.provider === "Template")
         throw Error(
-          next.fallbackReason ??
-            "Free AI could not make a new draft. Your current draft is unchanged. Use the offline template button if you want to replace it.",
+          "Free AI could not make a new draft. Your current draft is unchanged. Use the offline template button if you want to replace it.",
         );
       workoutSchema.parse(next.workout);
       if (sequence !== epoch.current) return;
@@ -340,6 +343,12 @@ export function Planner({
       setSaved(false);
       setRevision("");
     } catch (e) {
+      const failure =
+        e instanceof TypeError
+          ? "Could not reach free AI. Your previous draft is safe. Check your connection or use an offline template."
+          : e instanceof Error
+            ? e.message
+            : "Could not make a draft. Your previous draft is safe. Try again.";
       if (
         sequence === epoch.current &&
         !refine &&
@@ -347,10 +356,7 @@ export function Planner({
         !abort.signal.aborted
       ) {
         const next = fallbackPlan(request.data);
-        next.fallbackReason =
-          e instanceof Error
-            ? e.message.slice(0, 500)
-            : "Free AI could not complete this request.";
+        next.fallbackReason = failure;
         setResult(next);
         setView("review");
         setLastRequest(resolved);
@@ -360,10 +366,10 @@ export function Planner({
       } else if (sequence === epoch.current)
         setError(
           abort.signal.aborted
-            ? "Generation stopped. Your previous draft is safe."
-            : e instanceof Error
-              ? e.message
-              : "Could not make a draft. Your previous draft is safe.",
+            ? timedOut
+              ? "Free AI took too long. Your previous draft is safe. Try again or use an offline template."
+              : "Generation stopped. Your previous draft is safe."
+            : failure,
         );
     } finally {
       clearTimeout(timeout);

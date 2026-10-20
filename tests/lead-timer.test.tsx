@@ -317,3 +317,87 @@ it("catches up after a hidden tab without replaying missed sound cues", () => {
   jump(12);
   expect(playCountdownPip).toHaveBeenCalledTimes(1);
 });
+
+function session(w = workout()) {
+  render(<FieldTimer workout={w} onExit={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  const standard = screen.queryByRole("button", {
+    name: "Use standard 45-minute timer",
+  });
+  if (standard) fireEvent.click(standard);
+  return w;
+}
+it("pauses session countdowns on exit and reopens at the saved second", () => {
+  const w = session();
+  fireEvent.click(screen.getByRole("button", { name: "Start timer" }));
+  jump(75);
+  cleanup();
+  jump(120);
+  session(w);
+  expect(screen.getByRole("timer")).toHaveTextContent("43:45");
+  expect(screen.getByRole("button", { name: "Resume" })).toBeEnabled();
+  fireEvent.click(screen.getByRole("button", { name: "Resume" }));
+  jump(15);
+  fireEvent(window, new Event("focus"));
+  expect(screen.getByRole("timer")).toHaveTextContent("43:30");
+});
+it("pauses a session in the page cache and ignores missed section cues", () => {
+  session();
+  fireEvent.change(screen.getByRole("combobox", { name: "Timer sound" }), {
+    target: { value: "beeps" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Start timer" }));
+  vi.clearAllMocks();
+  act(() => vi.setSystemTime(Date.now() + 310000));
+  fireEvent(document, new Event("visibilitychange"));
+  expect(screen.getByRole("timer")).toHaveTextContent("39:50");
+  expect(playSectionWhistle).not.toHaveBeenCalled();
+  fireEvent(window, new Event("pagehide"));
+  jump(120);
+  fireEvent(window, new Event("pageshow"));
+  expect(screen.getByRole("timer")).toHaveTextContent("39:50");
+  expect(screen.getByRole("button", { name: "Resume" })).toBeEnabled();
+});
+it("keeps a live session on its wall-clock schedule after reopening", () => {
+  const w = session();
+  fireEvent.click(screen.getByRole("button", { name: /Join live/ }));
+  jump(60);
+  cleanup();
+  jump(120);
+  session(w);
+  expect(screen.getByRole("timer")).toHaveTextContent("42:00");
+  expect(screen.getByRole("button", { name: "Stop live timer" })).toBeEnabled();
+});
+it("ignores the second click of a double tap on either timer toggle", () => {
+  session();
+  fireEvent.click(screen.getByRole("button", { name: "Start timer" }), {
+    detail: 1,
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Pause" }), { detail: 2 });
+  expect(screen.getByRole("button", { name: "Pause" })).toBeEnabled();
+  fireEvent.click(screen.getByRole("button", { name: "Pause" }), { detail: 1 });
+  fireEvent.click(screen.getByRole("button", { name: "Intervals" }));
+  fireEvent.click(screen.getByRole("button", { name: "Start intervals" }), {
+    detail: 1,
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Pause intervals" }), {
+    detail: 2,
+  });
+  expect(screen.getByRole("button", { name: "Pause intervals" })).toBeEnabled();
+});
+
+it("finishes a session once, disables resume and resets deliberately", () => {
+  session();
+  fireEvent.click(screen.getByRole("button", { name: "Start timer" }));
+  jump(2700);
+  fireEvent(window, new Event("focus"));
+  expect(screen.getByText("Physical work is over. Circle up.")).toBeVisible();
+  jump(600);
+  fireEvent(window, new Event("focus"));
+  expect(screen.getByRole("heading", { name: "COT complete" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Resume" })).toBeDisabled();
+  expect(screen.getByRole("timer")).toHaveTextContent("0:00");
+  fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+  expect(screen.getByRole("button", { name: "Start timer" })).toBeEnabled();
+  expect(screen.getByRole("timer")).toHaveTextContent("45:00");
+});

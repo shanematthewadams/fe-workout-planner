@@ -38,3 +38,30 @@ it("deduplicates pending screen locks and releases a late grant after stopping",
     else Reflect.deleteProperty(navigator, "wakeLock");
   }
 });
+
+it("explains a denied wake lock and leaves the timer usable", async () => {
+  const original = Object.getOwnPropertyDescriptor(navigator, "wakeLock");
+  const visibility = vi
+    .spyOn(document, "visibilityState", "get")
+    .mockReturnValue("visible");
+  const request = vi.fn().mockRejectedValue(new Error("NotAllowedError"));
+  Object.defineProperty(navigator, "wakeLock", {
+    configurable: true,
+    value: { request },
+  });
+  const hook = renderHook(({ running }) => useWakeLock(running), {
+    initialProps: { running: true },
+  });
+  try {
+    await act(async () => {});
+    expect(hook.result.current).toContain("Keep it awake manually");
+    expect(request).toHaveBeenCalledTimes(1);
+    hook.rerender({ running: false });
+    expect(hook.result.current).toBe("");
+  } finally {
+    hook.unmount();
+    visibility.mockRestore();
+    if (original) Object.defineProperty(navigator, "wakeLock", original);
+    else Reflect.deleteProperty(navigator, "wakeLock");
+  }
+});

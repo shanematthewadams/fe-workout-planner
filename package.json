@@ -18,7 +18,8 @@
     "eval:planner": "vite build --ssr scripts/evaluate-planner.ts --outDir qa/evaluator --emptyOutDir && node qa/evaluator/evaluate-planner.js",
     "sync:schema": "node scripts/export-sync-schema.mjs",
     "catalog:nation-directory": "node --experimental-strip-types scripts/collect-nation-directory.ts",
-    "catalog:sync-site-qs": "node --experimental-strip-types scripts/import-site-q-roster.ts"
+    "catalog:sync-site-qs": "node --experimental-strip-types scripts/import-site-q-roster.ts",
+    "catalog:compare-inventory": "node --experimental-strip-types scripts/compare-ao-inventory.ts"
   },
   "dependencies": {
     "@fontsource/big-shoulders-display": "5.3.0",

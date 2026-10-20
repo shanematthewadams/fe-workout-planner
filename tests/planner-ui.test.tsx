@@ -3,6 +3,7 @@ import React from "react";
 import { it, expect, vi, afterEach } from "vitest";
 import {
   render,
+  act,
   screen,
   fireEvent,
   cleanup,
@@ -120,4 +121,87 @@ it("ignores a cancelled stale response and does not persist it over a later sess
     ).toBeNull(),
   );
   expect(screen.getByRole("alert")).toHaveTextContent("previous draft is safe");
+});
+
+it.each([504, 503, 400])(
+  "keeps a draft intact and hides backend details after HTTP %i",
+  async (status) => {
+    const result = await responseFixture();
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify(result)))
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            error: "internal provider diagnostic: credential rejected",
+          }),
+          { status },
+        ),
+      );
+    render(
+      <Planner
+        onSave={() => true}
+        onPreview={() => {}}
+        onEdit={() => {}}
+        onReference={() => {}}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("Describe your Q"), {
+      target: { value: GOLD_RUSH_EXAMPLE },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
+    await screen.findByRole("heading", { name: "Stake Your Claim" });
+    fireEvent.change(screen.getByLabelText("What would you change?"), {
+      target: { value: "Less running" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Refine this draft" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "previous draft is safe",
+    );
+    expect(screen.getByRole("alert")).not.toHaveTextContent("credential");
+    expect(
+      screen.getByRole("heading", { name: "Stake Your Claim" }),
+    ).toBeVisible();
+  },
+);
+
+it("aborts a stalled provider once without losing the current draft or retrying", async () => {
+  render(
+    <Planner
+      onSave={() => true}
+      onPreview={() => {}}
+      onEdit={() => {}}
+      onReference={() => {}}
+    />,
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
+  const title = screen.getByRole("heading", { level: 1 }).textContent;
+  const f = vi.spyOn(globalThis, "fetch").mockImplementation(
+    (_url, options) =>
+      new Promise((_resolve, reject) => {
+        options?.signal?.addEventListener(
+          "abort",
+          () => reject(new DOMException("Aborted", "AbortError")),
+          { once: true },
+        );
+      }),
+  );
+  vi.useFakeTimers();
+  try {
+    fireEvent.change(screen.getByLabelText("What would you change?"), {
+      target: { value: "Less running" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Refine this draft" }));
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(55000);
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent("took too long");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(title!);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(120000);
+    });
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(f.mock.calls[0][1]?.signal?.aborted).toBe(true);
+  } finally {
+    vi.useRealTimers();
+  }
 });

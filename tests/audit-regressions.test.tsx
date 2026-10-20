@@ -169,7 +169,7 @@ it("retains an existing draft when a new request returns a server fallback", asy
       new Response(
         JSON.stringify({
           ...fallbackPlan(input()),
-          fallbackReason: "Free AI is busy.",
+          fallbackReason: "PRIVATE provider diagnostic",
         }),
       ),
     );
@@ -181,7 +181,10 @@ it("retains an existing draft when a new request returns a server fallback", asy
   await screen.findByRole("heading", { name: "Keep the good draft" });
   fireEvent.click(screen.getByRole("button", { name: "← Back to setup" }));
   fireEvent.click(screen.getByRole("button", { name: "Make a new draft" }));
-  expect(await screen.findByRole("alert")).toHaveTextContent("Free AI is busy");
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "current draft is unchanged",
+  );
+  expect(screen.getByRole("alert")).not.toHaveTextContent("PRIVATE");
   fireEvent.click(
     screen.getByRole("button", { name: "Return to current draft" }),
   );

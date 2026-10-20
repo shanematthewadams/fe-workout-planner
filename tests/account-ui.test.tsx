@@ -359,3 +359,61 @@ it("collects an F3 Name during signup and explains email confirmation without a 
     "#build",
   );
 });
+
+it.each([true, false])(
+  "resends a delayed signup=%s email after cooldown without changing guest work",
+  async (creating) => {
+    const guest = newWorkout();
+    guest.title = "Safe while waiting for email";
+    writeState({ workouts: [guest], favorites: [] });
+    render(
+      <AccountWorkspace>
+        <App />
+      </AccountWorkspace>,
+    );
+    await screen.findByRole("heading", { name: "Keep your workouts" });
+    if (!creating)
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: "Already have an account? Sign in",
+        }),
+      );
+    else
+      fireEvent.change(screen.getByLabelText("F3 Name"), {
+        target: { value: "Rug Burn" },
+      });
+    fireEvent.change(screen.getByLabelText("Email address"), {
+      target: { value: "q@example.test" },
+    });
+    vi.useFakeTimers();
+    try {
+      await act(async () => {
+        fireEvent.click(
+          screen.getByRole("button", {
+            name: creating ? "Create account" : "Email me a sign-in code",
+          }),
+        );
+      });
+      expect(screen.getByText(/Check your email/)).toBeVisible();
+      for (let second = 0; second < 60; second++)
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(1000);
+        });
+      await act(async () =>
+        fireEvent.click(
+          screen.getByRole("button", {
+            name: creating ? "Resend confirmation email" : "Send a new code",
+          }),
+        ),
+      );
+      expect(send).toHaveBeenCalledTimes(2);
+      expect(send.mock.calls[1][0].options.shouldCreateUser).toBe(creating);
+      expect(screen.queryByLabelText("Sign-in code") !== null).toBe(!creating);
+      if (creating)
+        expect(send.mock.calls[1][0].options.data.f3_name).toBe("Rug Burn");
+      expect(readState().workouts).toEqual([guest]);
+    } finally {
+      vi.useRealTimers();
+    }
+  },
+);
