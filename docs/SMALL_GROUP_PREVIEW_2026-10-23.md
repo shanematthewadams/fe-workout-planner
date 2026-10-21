@@ -2,7 +2,7 @@
 
 Target preview: Friday, October 23, 2026. Staging only: https://studio-ux-streamline--fe-workout-planner.netlify.app/
 
-The preview-readiness follow-up is on staging. Engineering verified the saved-workout identity fix and that hosted files match the tested source; see `PREVIEW_READINESS_2026-10-20.md` for the current deployment and test evidence.
+The October 21 pilot candidate is on staging. Engineering verified the guest workflow, real private cloud save, hosted desktop/mobile WebKit recovery and available AO reports. See `PILOT_READINESS_2026-10-21.md` for the deployed commit, tests and explicit limitations. Three real AI cases passed; a fourth timed out and recovered with a labeled template.
 
 ## First workout (no account required)
 
