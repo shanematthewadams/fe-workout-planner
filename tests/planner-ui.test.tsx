@@ -206,3 +206,29 @@ it("aborts a stalled provider once without losing the current draft or retrying"
     vi.useRealTimers();
   }
 });
+
+it("Surprise Me preserves no-running and no-Mary conditions from the current idea", async () => {
+  const f = vi
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValue(new Response("{}", { status: 503 }));
+  render(
+    <Planner
+      onSave={(w) => w}
+      onPreview={() => {}}
+      onEdit={() => {}}
+      onReference={() => {}}
+    />,
+  );
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: {
+      value: "Coupons today. No running. No Mary. The track is closed.",
+    },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Surprise Me!" }));
+  await waitFor(() => expect(f).toHaveBeenCalledTimes(1));
+  const request = JSON.parse(String(f.mock.calls[0][1]?.body));
+  expect(request.running).toBe("None");
+  expect(request.mary).toBe(false);
+  expect(request.equipment).toBe("Coupon");
+  expect(request.site.overrides.track).toBe("unavailable");
+});

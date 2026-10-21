@@ -106,16 +106,18 @@ export function Planner({
         "The long road home",
       ]);
     // Only gear explicitly confirmed by Q can enter a wildcard roll.
-    const resolvedEquipment = resolveRequest({
+    const resolvedPreferences = resolveRequest({
       prompt: prompt.trim().length >= 3 ? prompt : "Surprise me",
       equipment,
-    }).equipment;
+      running,
+      mary,
+    });
     const availableGear =
       mode === "formal"
         ? gear
-        : resolvedEquipment === "Coupon"
+        : resolvedPreferences.equipment === "Coupon"
           ? ["Coupon"]
-          : resolvedEquipment === "None"
+          : resolvedPreferences.equipment === "None"
             ? []
             : /coupon|cindy/i.test(prompt)
               ? ["Coupon"]
@@ -136,8 +138,8 @@ export function Planner({
         : chosenGear.length
           ? ("From prompt" as const)
           : ("None" as const),
-      running,
-      mary,
+      running: resolvedPreferences.running,
+      mary: resolvedPreferences.mary,
       provider,
       strictSchedule: true,
       planning,
