@@ -1,7 +1,7 @@
 name: Checks
 on:
   push:
-    branches: [main, studio/ux-streamline]
+    branches: [main, develop, studio/ux-streamline]
   workflow_dispatch:
     inputs:
       live_cloud:
@@ -33,7 +33,7 @@ jobs:
       - run: npm test -- --maxWorkers=1
       - run: npm run build
         env:
-          VITE_APP_ENV: ${{ github.ref == 'refs/heads/studio/ux-streamline' && 'staging' || 'production' }}
+          VITE_APP_ENV: ${{ github.ref != 'refs/heads/main' && 'staging' || 'production' }}
       - name: Build cloud test app
         run: |
           python - <<'PYBUILD'
@@ -58,7 +58,16 @@ jobs:
         env:
           CI: true
           FE_CLOUD_TEST_DIR: qa/cloud-app
-          FE_STAGING_TEST: ${{ github.ref == 'refs/heads/studio/ux-streamline' && 'true' || 'false' }}
+          FE_STAGING_TEST: ${{ github.ref != 'refs/heads/main' && 'true' || 'false' }}
+      - name: Verify deployed staging commit and hosted journey
+        if: github.ref == 'refs/heads/studio/ux-streamline'
+        run: node scripts/verify-staging.mjs
+      - name: Evaluate real free AI on staging
+        if: github.ref == 'refs/heads/studio/ux-streamline'
+        run: |
+          npm run eval:planner -- https://studio-ux-streamline--fe-workout-planner.netlify.app qa/pilot/live-ai.json || {
+            echo "::warning::Live AI evaluation did not pass; inspect qa/pilot/live-ai.json. Template fallback does not prove provider availability."
+          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

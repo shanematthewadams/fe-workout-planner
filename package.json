@@ -13,7 +13,7 @@
     "catalog:import": "node --experimental-strip-types scripts/import-catalog.ts",
     "catalog:sync-aos": "node scripts/sync-aos.mjs",
     "catalog:export-sql": "node --experimental-strip-types scripts/export-regional-sql.ts",
-    "postbuild": "node scripts/build-offline.mjs && node scripts/probe-nation.mjs",
+    "postbuild": "node scripts/build-info.mjs && node scripts/build-offline.mjs && node scripts/probe-nation.mjs",
     "test:browser": "playwright test",
     "eval:planner": "vite build --ssr scripts/evaluate-planner.ts --outDir qa/evaluator --emptyOutDir && node qa/evaluator/evaluate-planner.js",
     "sync:schema": "node scripts/export-sync-schema.mjs",

@@ -13,7 +13,10 @@ import {
   type Plan,
 } from "../src/planner-contract.ts";
 import { workoutSchema } from "../src/model.ts";
-import { movementConflicts } from "../src/plan-constraints.ts";
+import {
+  movementConflicts,
+  refinementConflicts,
+} from "../src/plan-constraints.ts";
 import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
 export type AIEnvironment = {
   OPENROUTER_API_KEY?: string;
@@ -134,6 +137,8 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
           ". Your previous draft is safe.",
       );
   }
+  const refinement = refinementConflicts(p, input);
+  if (refinement.length) throw new PlannerError(422, refinement.join(" "));
   return p;
 }
 function parseJSON(text: string) {

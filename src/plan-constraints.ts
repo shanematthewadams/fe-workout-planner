@@ -42,3 +42,59 @@ export function movementConflicts(plan: Plan, request: PlannerRequest) {
       : []),
   ];
 }
+
+/** Guard explicit single-exercise swaps; broad redesign requests remain AI work. */
+export function refinementConflicts(plan: Plan, request: PlannerRequest) {
+  const current = request.current;
+  const match = request.prompt
+    .trim()
+    .match(
+      /^(?:please\s+)?(?:replace|swap|change)\s+(.+?)\s+(?:with|for|to)\s+([^.!?]+)[.!?]?$/i,
+    );
+  if (!current || !match) return [];
+  const normalize = (name: string) => name.trim().toLowerCase();
+  const matches = current.sections.flatMap((section, si) =>
+    section.blocks.flatMap((block, bi) =>
+      block.exercises.flatMap((exercise, ei) =>
+        normalize(exercise.name) === normalize(match[1])
+          ? [{ si, bi, ei }]
+          : [],
+      ),
+    ),
+  );
+  // Repeated names and compound requests need broader contextual interpretation.
+  if (matches.length !== 1 || /\b(?:and|then|also)\b/i.test(match[2]))
+    return [];
+  const target = matches[0];
+  const preserve = (value: Plan) => ({
+    title: value.title,
+    running: value.running,
+    format: value.format,
+    sections: value.sections.map((section, si) => ({
+      kind: section.kind,
+      title: section.title,
+      blocks: section.blocks.map((block, bi) => ({
+        title: block.title,
+        minutes: block.minutes,
+        instructions:
+          si === target.si && bi === target.bi ? null : block.instructions,
+        exercises: block.exercises.map((exercise, ei) =>
+          si === target.si && bi === target.bi && ei === target.ei
+            ? null
+            : {
+                name: exercise.name,
+                amount: exercise.amount,
+                unit: exercise.unit,
+                counting: exercise.counting,
+                instructions: exercise.instructions,
+              },
+        ),
+      })),
+    })),
+  });
+  return JSON.stringify(preserve(plan)) === JSON.stringify(preserve(current))
+    ? []
+    : [
+        "The AI made unrequested changes outside the selected exercise. Your previous draft is safe. Try the change again or use Edit the details.",
+      ];
+}
