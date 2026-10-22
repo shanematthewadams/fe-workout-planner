@@ -45,11 +45,20 @@ export function Planner({
   const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
   const [initial] = useState(() => {
       const restored = restorePlannerSession(sessionKey);
+      let wasSavedToDevice = false;
+      try {
+        wasSavedToDevice =
+          JSON.parse(sessionStorage.getItem(sessionKey) ?? "null")
+            ?.savedToDevice === true;
+      } catch {
+        /* Preserve recovered edits. */
+      }
       const latest = savedWorkouts.find(
         (w) => w.id === restored.result?.workout.id,
       );
       if (
         restored.result &&
+        wasSavedToDevice &&
         latest &&
         latest.updatedAt > restored.result.workout.updatedAt
       ) {
@@ -337,6 +346,7 @@ export function Planner({
         JSON.stringify({
           prompt,
           result,
+          savedToDevice: saved,
           revision,
           request: lastRequest,
           mode,
@@ -372,6 +382,7 @@ export function Planner({
     startTime,
     site,
     revision,
+    saved,
     lastRequest,
     mode,
     title,

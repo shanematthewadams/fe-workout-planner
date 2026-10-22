@@ -13,7 +13,7 @@ import App from "../src/App";
 import { Planner } from "../src/Planner";
 import { conceptsFor, VIBES } from "../src/workout-concepts";
 import { SESSION_KEY } from "../src/planner-session";
-import { type Workout, STORAGE_KEY } from "../src/model";
+import { type Workout, STORAGE_KEY, writeState } from "../src/model";
 import { resolveRequest } from "../src/planner-contract";
 import { fallbackPlan } from "../src/fallback";
 const props = {
@@ -298,4 +298,33 @@ it("keeps the visible quick choices aligned with notes and sends concrete defaul
     equipment: "None",
     running: "Light",
   });
+});
+
+it("recovers unsaved open edits after refresh while keeping a newer stored version", () => {
+  const first = render(<App />);
+  click("I have an idea");
+  click("Use offline template");
+  const newer = structuredClone(saved()[0]);
+  newer.title = "Newer version in another tab";
+  newer.updatedAt = new Date(Date.now() + 60000).toISOString();
+  writeState({ workouts: [newer], favorites: [] });
+  fireEvent.change(screen.getByLabelText("Workout name"), {
+    target: { value: "My unsaved recovery edits" },
+  });
+  expect(screen.getByText(/Could not save on this device/)).toBeVisible();
+  expect(JSON.parse(sessionStorage.getItem(SESSION_KEY)!).savedToDevice).toBe(
+    false,
+  );
+  first.unmount();
+  render(<App />);
+  expect(
+    screen.getByRole("heading", { name: /My unsaved recovery edits/ }),
+  ).toBeVisible();
+  expect(saved()).toHaveLength(2);
+  expect(saved().some((w) => w.title === "Newer version in another tab")).toBe(
+    true,
+  );
+  expect(
+    saved().some((w) => w.title.includes("My unsaved recovery edits")),
+  ).toBe(true);
 });
