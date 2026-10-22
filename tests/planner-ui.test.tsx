@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { startPlanning, openCreativeHelp } from "./planning-helpers";
 import React from "react";
 import { it, expect, vi, afterEach } from "vitest";
 import {
@@ -56,6 +57,7 @@ it("creates, refines without losing the last good draft, saves and previews priv
       onReference={() => {}}
     />,
   );
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: GOLD_RUSH_EXAMPLE },
   });
@@ -63,6 +65,7 @@ it("creates, refines without losing the last good draft, saves and previews priv
   expect(
     await screen.findByRole("heading", { name: "Stake Your Claim" }),
   ).toBeVisible();
+  openCreativeHelp();
   fireEvent.change(screen.getByLabelText("What would you change?"), {
     target: { value: "Less running, keep everything else." },
   });
@@ -74,11 +77,11 @@ it("creates, refines without losing the last good draft, saves and previews priv
   const body = JSON.parse(String(f.mock.calls[1][1]?.body));
   expect(body.current).toEqual(result.plan);
   expect(body.prompt).toContain("Less running");
-  fireEvent.click(screen.getByRole("button", { name: "Save workout" }));
-  expect(onSave).toHaveBeenCalledWith(result.workout);
-  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  expect(screen.getByText(/Saved on this device/)).toBeVisible();
+  expect(onSave).toHaveBeenCalledWith(result.workout, undefined);
+  fireEvent.click(screen.getByRole("button", { name: "Print workout" }));
   expect(onPreview).toHaveBeenCalledWith(result.workout);
-  fireEvent.click(screen.getByRole("button", { name: "Edit the details" }));
+  fireEvent.click(screen.getByRole("button", { name: "More editing options" }));
   expect(onEdit).toHaveBeenCalledWith(result.workout);
   cleanup();
   render(
@@ -89,6 +92,7 @@ it("creates, refines without losing the last good draft, saves and previews priv
       onReference={() => {}}
     />,
   );
+  startPlanning();
   expect(
     screen.getByRole("heading", { name: "Stake Your Claim" }),
   ).toBeVisible();
@@ -110,6 +114,7 @@ it("ignores a cancelled stale response and does not persist it over a later sess
       onReference={() => {}}
     />,
   );
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: GOLD_RUSH_EXAMPLE },
   });
@@ -146,11 +151,13 @@ it.each([504, 503, 400])(
         onReference={() => {}}
       />,
     );
+    startPlanning();
     fireEvent.change(screen.getByLabelText("Describe your Q"), {
       target: { value: GOLD_RUSH_EXAMPLE },
     });
     fireEvent.click(screen.getByRole("button", { name: "Build my workout" }));
     await screen.findByRole("heading", { name: "Stake Your Claim" });
+    openCreativeHelp();
     fireEvent.change(screen.getByLabelText("What would you change?"), {
       target: { value: "Less running" },
     });
@@ -174,6 +181,7 @@ it("aborts a stalled provider once without losing the current draft or retrying"
       onReference={() => {}}
     />,
   );
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
   const title = screen.getByRole("heading", { level: 1 }).textContent;
   const f = vi.spyOn(globalThis, "fetch").mockImplementation(
@@ -188,6 +196,7 @@ it("aborts a stalled provider once without losing the current draft or retrying"
   );
   vi.useFakeTimers();
   try {
+    openCreativeHelp();
     fireEvent.change(screen.getByLabelText("What would you change?"), {
       target: { value: "Less running" },
     });
@@ -219,6 +228,7 @@ it("Surprise Me preserves no-running and no-Mary conditions from the current ide
       onReference={() => {}}
     />,
   );
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: {
       value: "Coupons today. No running. No Mary. The track is closed.",

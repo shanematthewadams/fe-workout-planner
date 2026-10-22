@@ -786,6 +786,7 @@ export default function App() {
         <main id="main" tabIndex={-1} className="main">
           {tab === "builder" && (
             <Planner
+              savedWorkouts={state.workouts}
               onImport={() => go("markdown")}
               onLead={(w) => {
                 open(w);
@@ -798,8 +799,25 @@ export default function App() {
                 setThangOnly(false);
                 open(w);
               }}
-              onSave={(w) => {
-                if (state.workouts.length >= 200) {
+              onSave={(w, base) => {
+                const parsed = workoutSchema.safeParse(w);
+                if (!parsed.success) return false;
+                const existing = state.workouts.find(
+                  (item) => item.id === w.id,
+                );
+                if (
+                  existing &&
+                  JSON.stringify(workoutSchema.parse(existing)) ===
+                    JSON.stringify(parsed.data)
+                )
+                  return existing;
+                const conflict =
+                  existing &&
+                  (!base ||
+                    JSON.stringify(workoutSchema.parse(existing)) !==
+                      JSON.stringify(workoutSchema.parse(base)));
+                const newCopy = !existing || conflict;
+                if (newCopy && state.workouts.length >= 200) {
                   setNotice(
                     "This browser has 200 drafts. Export a backup before adding more.",
                   );
@@ -807,17 +825,29 @@ export default function App() {
                 }
                 const copy = attributeWorkout(
                   {
-                    ...structuredClone(w),
-                    id: uid(),
-                    originId: w.id,
+                    ...structuredClone(parsed.data),
+                    ...(newCopy ? { id: uid(), originId: w.id } : {}),
+                    ...(conflict
+                      ? { title: titledCopy(w.title, " · conflict copy") }
+                      : {}),
+                    updatedAt: new Date().toISOString(),
                   },
                   account?.user?.id,
                   profile?.display_name,
                 );
                 if (
-                  persist({ ...state, workouts: [...state.workouts, copy] })
+                  persist({
+                    ...state,
+                    workouts: [
+                      ...state.workouts.filter((item) => item.id !== copy.id),
+                      copy,
+                    ],
+                  })
                 ) {
-                  setNotice("Personal workout saved.");
+                  if (conflict)
+                    setNotice(
+                      "Both versions kept. Your edits are a separate conflict copy.",
+                    );
                   return copy;
                 }
                 return false;

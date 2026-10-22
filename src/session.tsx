@@ -61,8 +61,12 @@ export function workoutPhases(workout: Workout, cot = 10): Phase[] | null {
     name: "Fellowship & trust",
     start,
     end: start + cot * 60,
-    detail:
+    detail: [
       "Count-o-Rama · Name-o-Rama / FNG naming · Announcements · Ball of Man / closing",
+      workout.rawNotes,
+    ]
+      .filter(Boolean)
+      .join("\n"),
   });
   return phases;
 }
@@ -199,6 +203,7 @@ export function qSheet(w: Workout) {
       ]),
     ]),
     "\nAfter physical work: Count-o-Rama · Name-o-Rama / FNG naming · Announcements · BOM / closing",
+    w.rawNotes ? `Personal notes: ${w.rawNotes}` : "",
     w.adaptationNotes,
   ]
     .filter(Boolean)

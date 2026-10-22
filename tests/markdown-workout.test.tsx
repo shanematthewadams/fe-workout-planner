@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { startPlanning } from "./planning-helpers";
 import React from "react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
@@ -138,6 +139,7 @@ it("flags inconsistent timing instead of inventing a schedule", () => {
 });
 it("reviews locally, invalidates edited previews, and saves only through the existing editor", () => {
   render(<App />);
+  startPlanning();
   expect(screen.getByRole("link", { name: "F3QBuilder" })).toBeVisible();
   expect(within(screen.getByRole("banner")).queryByText(/OLATHE/)).toBeNull();
   fireEvent.click(
@@ -178,6 +180,7 @@ it("does not let a stale file replace newer pasted text", async () => {
     resolve = r;
   });
   render(<MarkdownImport onEdit={vi.fn()} />);
+  startPlanning();
   const file = new File(["placeholder"], "workout.md", {
     type: "text/markdown",
   });
@@ -203,6 +206,7 @@ it("imports a file, keeps it across navigation, copies the prompt, and renders H
   });
   const onEdit = vi.fn();
   const ui = render(<MarkdownImport onEdit={onEdit} />);
+  startPlanning();
   const raw = "# Markup\n## The Thang\n<script>alert('no')</script>";
   const file = new File([raw], "workout.md");
   Object.defineProperty(file, "text", { value: async () => raw });
@@ -214,6 +218,7 @@ it("imports a file, keeps it across navigation, copies the prompt, and renders H
   );
   ui.unmount();
   render(<MarkdownImport onEdit={onEdit} />);
+  startPlanning();
   expect(screen.getByLabelText("Workout Markdown")).toHaveValue(raw);
   fireEvent.click(screen.getByRole("button", { name: "Copy chat prompt" }));
   await waitFor(() => expect(writeText).toHaveBeenCalledWith(MARKDOWN_PROMPT));

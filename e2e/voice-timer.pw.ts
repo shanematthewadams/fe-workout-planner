@@ -1,3 +1,4 @@
+import { startPlanning } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -30,10 +31,13 @@ test("voice cues follow the clock and cancel cleanly on phones and desktops", as
     });
   });
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
   await page.getByRole("button", { name: "Intervals", exact: true }).click();
   await page.clock.install();
   const sound = () =>

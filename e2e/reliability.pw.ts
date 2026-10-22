@@ -1,3 +1,4 @@
+import { saveWorkout, startPlanning, openCreativeHelp } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { Workout } from "../src/model";
@@ -7,17 +8,16 @@ test("saved private copy stays selected for preview, editing and reload", async 
   page,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Save workout", exact: true })
-    .click();
+  await saveWorkout(page);
   const saved = await page.evaluate<Workout>(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
   );
   await page
-    .getByRole("button", { name: "Preview & print", exact: true })
+    .getByRole("button", { name: "Print workout", exact: true })
     .click();
   await expect(page).toHaveURL(new RegExp(`#workout/${saved.id}$`));
   await page.reload();
@@ -26,7 +26,7 @@ test("saved private copy stays selected for preview, editing and reload", async 
   ).toBeVisible();
   await navigate(page, "Build");
   await page
-    .getByRole("button", { name: "Edit the details", exact: true })
+    .getByRole("button", { name: "More editing options", exact: true })
     .click();
   await expect(page).toHaveURL(new RegExp(`#edit/${saved.id}$`));
   await page
@@ -51,16 +51,17 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
   page,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Save workout", exact: true })
-    .click();
+  await saveWorkout(page);
   const saved = await page.evaluate<Workout>(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
   );
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
   await expect(page).toHaveURL(new RegExp(`#lead/${saved.id}$`));
   await page
     .getByRole("button", { name: "Session timer", exact: true })
@@ -74,7 +75,9 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
     .click();
   await navigate(page, "My Workouts");
   await page.getByRole("button", { name: saved.title, exact: true }).click();
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -100,6 +103,7 @@ test("a delayed cloud bookmark opens the exact saved workout without a missing w
     "Uses only the isolated fake cloud build",
   );
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
@@ -158,6 +162,7 @@ for (const failure of ["timeout", "unavailable", "invalid"] as const) {
     page,
   }) => {
     await page.goto("/");
+    await startPlanning(page);
     await page
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
@@ -174,6 +179,7 @@ for (const failure of ["timeout", "unavailable", "invalid"] as const) {
             : { error: "PRIVATE provider diagnostic" },
       }),
     );
+    await openCreativeHelp(page);
     await page.getByLabel("What would you change?").fill("Less running");
     await page
       .getByRole("button", { name: "Refine this draft", exact: true })
@@ -189,7 +195,7 @@ for (const failure of ["timeout", "unavailable", "invalid"] as const) {
       JSON.parse(before!).result.workout,
     );
     await expect(
-      page.getByRole("button", { name: "Save workout", exact: true }),
+      page.getByRole("button", { name: "Lead this workout", exact: true }),
     ).toBeEnabled();
   });
 }
@@ -215,13 +221,14 @@ test("session recovery, double taps and denied screen wake keep Lead usable", as
     }),
   );
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
+  await saveWorkout(page);
   await page
-    .getByRole("button", { name: "Save workout", exact: true })
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -242,7 +249,9 @@ test("session recovery, double taps and denied screen wake keep Lead usable", as
     .getByRole("button", { name: "← Back to plan", exact: true })
     .click();
   await page.clock.runFor(60000);
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { startPlanning, openCreativeHelp } from "./planning-helpers";
 import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
@@ -39,6 +40,7 @@ afterEach(() => {
 });
 it("removes the header credit and Gold Rush promotion", () => {
   render(<App />);
+  startPlanning();
   expect(screen.getByRole("banner")).not.toHaveTextContent("Rug Burn");
   expect(
     screen.queryByRole("button", { name: "Try the Gold Rush idea" }),
@@ -50,6 +52,7 @@ it("removes the header credit and Gold Rush promotion", () => {
 });
 it("collects and recovers all workout details in idea mode", () => {
   const first = render(<Planner {...props} />);
+  startPlanning();
   fireEvent.click(
     screen.getByText("Workout details", { exact: false, selector: "summary" }),
   );
@@ -75,6 +78,7 @@ it("collects and recovers all workout details in idea mode", () => {
   fireEvent.click(screen.getByLabelText("Wind"));
   first.unmount();
   render(<Planner {...props} />);
+  startPlanning();
   expect(screen.getByLabelText("PAX count")).toHaveValue(11);
   expect(screen.getByLabelText("Fitness focus")).toHaveValue("Upper body");
   expect(screen.getByLabelText("How much running")).toHaveValue("None");
@@ -93,6 +97,7 @@ it("sends selected conditions, focus, count, and grouping through generation and
     .spyOn(globalThis, "fetch")
     .mockImplementation(async () => new Response(JSON.stringify(response)));
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: "Bodyweight partners" },
   });
@@ -119,6 +124,7 @@ it("sends selected conditions, focus, count, and grouping through generation and
     light: "Dark",
     weather: ["Snow / ice"],
   });
+  openCreativeHelp();
   fireEvent.change(screen.getByLabelText("What would you change?"), {
     target: { value: "Make this individual. 15 guys. Focus on core." },
   });
@@ -135,6 +141,7 @@ it("sends selected conditions, focus, count, and grouping through generation and
 });
 it("keeps PAX and body focus shared when switching builder modes", () => {
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("PAX count"), {
     target: { value: "17" },
   });
@@ -264,6 +271,7 @@ it("takes a stated turnout from the idea when the count is left blank", () => {
 });
 it("keeps an unknown turnout blank after restoring formal mode", () => {
   const first = render(<Planner {...props} />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Formal Builder" }));
   fireEvent.change(screen.getByLabelText("PAX count"), {
     target: { value: "17" },
@@ -273,6 +281,7 @@ it("keeps an unknown turnout blank after restoring formal mode", () => {
   });
   first.unmount();
   render(<Planner {...props} />);
+  startPlanning();
   expect(screen.getByLabelText("PAX count")).toHaveValue(null);
 });
 it("does not discard valid older preferences when new planning details are invalid", () => {

@@ -1,3 +1,4 @@
+import { saveWorkout } from "./navigation";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { navigate, openOtherWays } from "./navigation";
@@ -157,7 +158,7 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page.getByRole("button", { name: "Save workout", exact: true }).click();
+  await saveWorkout(page);
   await expect.poll(() => guest.workouts.length).toBe(1);
   const signIn = page.getByRole("button", {
     name: "Keep my workouts",

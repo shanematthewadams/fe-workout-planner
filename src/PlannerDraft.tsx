@@ -1,13 +1,17 @@
-import type { RefObject } from "react";
+import { useState, type RefObject } from "react";
 import type { PlannerResponse } from "./planner-contract";
 import type { Workout } from "./model";
+import { AppIcon } from "./AppIcon";
+import { qSheet } from "./session";
+import { exerciseSchema } from "./model";
 import { SessionTimeline } from "./session";
 export function PlannerDraft({
   result,
   resultRef,
   busy,
   saved,
-  setSaved,
+  saveError,
+  onChange,
   revision,
   setRevision,
   ask,
@@ -22,7 +26,8 @@ export function PlannerDraft({
   resultRef: RefObject<HTMLDivElement | null>;
   busy: boolean;
   saved: boolean;
-  setSaved: (saved: boolean) => void;
+  saveError: boolean;
+  onChange: (next: PlannerResponse) => void;
   revision: string;
   setRevision: (text: string) => void;
   ask: (refine: boolean) => Promise<void>;
@@ -33,6 +38,21 @@ export function PlannerDraft({
   onReference: (id: string) => void;
   onSetup: () => void;
 }) {
+  const [editExercise, setEditExercise] = useState<string | null>(null);
+  const [copyMessage, setCopyMessage] = useState("");
+  function changeExercise(
+    si: number,
+    bi: number,
+    ei: number,
+    patch: Partial<
+      Workout["sections"][number]["blocks"][number]["exercises"][number]
+    >,
+  ) {
+    const next = structuredClone(result);
+    Object.assign(next.workout.sections[si].blocks[bi].exercises[ei], patch);
+    Object.assign(next.plan.sections[si].blocks[bi].exercises[ei], patch);
+    onChange(next);
+  }
   return (
     <div
       ref={resultRef}
@@ -74,44 +94,85 @@ export function PlannerDraft({
           )}
         </div>
       )}
-      <p className="draft-next-step">
-        {saved
-          ? "Saved in My Workouts. Open Lead workout when you’re ready to Q."
-          : "Review the exercises, make any changes, then save this workout to My Workouts."}
+      <p className="draft-next-step" role="status">
+        {saveError
+          ? "Could not save on this device. Your open workout is still here. Retry saving before leaving."
+          : saved
+            ? "Saved on this device · Find it in My Workouts. Cloud status is shown separately."
+            : "Saving on this device…"}
       </p>
       <div className="assistant-actions">
-        <button
-          className={saved ? "" : "create"}
-          type="button"
-          disabled={busy || saved}
-          onClick={() => {
-            if (onSave(result.workout)) setSaved(true);
-          }}
-        >
-          {saved ? "Saved in My Workouts" : "Save workout"}
-        </button>
+        {saveError && (
+          <button type="button" onClick={() => onSave(result.workout)}>
+            <AppIcon name="reset" />
+            Retry saving
+          </button>
+        )}
         {onLead && (
           <button
-            className={saved ? "create" : ""}
+            className="create"
             type="button"
+            disabled={busy || !saved}
             onClick={() => onLead(structuredClone(result.workout))}
           >
-            Lead workout
+            <AppIcon name="play" />
+            Lead this workout
           </button>
         )}
         <button
           type="button"
-          onClick={() => onEdit(structuredClone(result.workout))}
+          onClick={() => onPreview(structuredClone(result.workout))}
         >
-          Edit the details
+          <AppIcon name="sheet" />
+          Print workout
         </button>
         <button
           type="button"
-          onClick={() => onPreview(structuredClone(result.workout))}
+          onClick={() => {
+            if (!navigator.clipboard) {
+              setCopyMessage(
+                "Clipboard unavailable. Print your workout to keep a copy.",
+              );
+              return;
+            }
+            void navigator.clipboard
+              .writeText(qSheet(result.workout))
+              .then(() => setCopyMessage("Workout copied for Slack."))
+              .catch(() =>
+                setCopyMessage(
+                  "Clipboard unavailable. Print your workout to keep a copy.",
+                ),
+              );
+          }}
         >
-          Preview & print
+          <AppIcon name="sheet" />
+          Copy for Slack
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => onEdit(structuredClone(result.workout))}
+        >
+          <AppIcon name="details" />
+          More editing options
         </button>
       </div>
+      {copyMessage && <p role="status">{copyMessage}</p>}
+      <label className="workout-title-edit">
+        Workout name
+        <input
+          aria-label="Workout name"
+          maxLength={160}
+          value={result.workout.title}
+          disabled={busy}
+          onChange={(event) => {
+            const next = structuredClone(result);
+            next.workout.title = event.target.value;
+            next.plan.title = event.target.value;
+            onChange(next);
+          }}
+        />
+      </label>
       <SessionTimeline workout={result.workout} />
       <div className="assistant-sections">
         {result.plan.sections.map((s, i) => {
@@ -132,15 +193,177 @@ export function PlannerDraft({
                   <h3>
                     {b.title} <span>~{b.minutes} min</span>
                   </h3>
+                  <label className="block-time-edit">
+                    Block minutes
+                    <input
+                      type="number"
+                      aria-label={`${s.title} block ${j + 1} minutes`}
+                      min={1}
+                      max={60}
+                      value={b.minutes}
+                      disabled={busy}
+                      onChange={(event) => {
+                        const value = Number(event.target.value);
+                        if (value < 1 || value > 60) return;
+                        const next = structuredClone(result);
+                        next.plan.sections[i].blocks[j].minutes = value;
+                        next.workout.sections[i].blocks[j].minutes = value;
+                        // Physical session stays 45 minutes; timeline shows any mismatch.
+                        onChange(next);
+                      }}
+                    />
+                  </label>
                   <p className="source-text">{b.instructions}</p>
                   <ul>
                     {b.exercises.map((e, k) => (
                       <li key={k}>
+                        <button
+                          className="exercise-edit-trigger"
+                          type="button"
+                          disabled={busy}
+                          aria-expanded={editExercise === `${i}-${j}-${k}`}
+                          onClick={() =>
+                            setEditExercise(
+                              editExercise === `${i}-${j}-${k}`
+                                ? null
+                                : `${i}-${j}-${k}`,
+                            )
+                          }
+                        >
+                          <AppIcon name="details" />
+                          Edit {e.name}
+                        </button>
                         <strong>
                           {e.name}: {e.amount} {e.unit}
                           {e.sets ? ` × ${e.sets} sets` : ""}
                         </strong>
                         <span className="count-label">{e.counting}</span>
+                        {editExercise === `${i}-${j}-${k}` && (
+                          <fieldset className="inline-exercise" disabled={busy}>
+                            <legend>Edit this exercise</legend>
+                            <label>
+                              Exercise
+                              <input
+                                value={e.name}
+                                maxLength={120}
+                                onChange={(event) =>
+                                  changeExercise(i, j, k, {
+                                    name: event.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Reps or duration
+                              <input
+                                value={e.amount}
+                                maxLength={120}
+                                onChange={(event) =>
+                                  changeExercise(i, j, k, {
+                                    amount: event.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Unit
+                              <select
+                                value={e.unit}
+                                onChange={(event) =>
+                                  changeExercise(i, j, k, {
+                                    unit: event.target.value as typeof e.unit,
+                                  })
+                                }
+                              >
+                                {exerciseSchema.shape.unit.options.map(
+                                  (unit) => (
+                                    <option key={unit}>{unit}</option>
+                                  ),
+                                )}
+                              </select>
+                            </label>
+                            <label>
+                              Counting
+                              <select
+                                value={e.counting}
+                                onChange={(event) =>
+                                  changeExercise(i, j, k, {
+                                    counting: event.target
+                                      .value as typeof e.counting,
+                                  })
+                                }
+                              >
+                                {exerciseSchema.shape.counting.options.map(
+                                  (count) => (
+                                    <option key={count}>{count}</option>
+                                  ),
+                                )}
+                              </select>
+                            </label>
+                            <label>
+                              Instructions
+                              <textarea
+                                value={e.instructions}
+                                maxLength={3000}
+                                onChange={(event) =>
+                                  changeExercise(i, j, k, {
+                                    instructions: event.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <button
+                              type="button"
+                              disabled={k === 0}
+                              onClick={() => {
+                                const next = structuredClone(result);
+                                for (const sections of [
+                                  next.plan.sections,
+                                  next.workout.sections,
+                                ]) {
+                                  const exercises =
+                                    sections[i].blocks[j].exercises;
+                                  [exercises[k - 1], exercises[k]] = [
+                                    exercises[k],
+                                    exercises[k - 1],
+                                  ];
+                                }
+                                setEditExercise(`${i}-${j}-${k - 1}`);
+                                onChange(next);
+                              }}
+                            >
+                              Move up
+                            </button>
+                            <button
+                              type="button"
+                              disabled={k === b.exercises.length - 1}
+                              onClick={() => {
+                                const next = structuredClone(result);
+                                for (const sections of [
+                                  next.plan.sections,
+                                  next.workout.sections,
+                                ]) {
+                                  const exercises =
+                                    sections[i].blocks[j].exercises;
+                                  [exercises[k + 1], exercises[k]] = [
+                                    exercises[k],
+                                    exercises[k + 1],
+                                  ];
+                                }
+                                setEditExercise(`${i}-${j}-${k + 1}`);
+                                onChange(next);
+                              }}
+                            >
+                              Move down
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditExercise(null)}
+                            >
+                              Done editing
+                            </button>
+                          </fieldset>
+                        )}
                         <details className="movement-help">
                           <summary>Movement details</summary>
                           <p>{e.instructions}</p>
@@ -152,18 +375,31 @@ export function PlannerDraft({
               ))}
             </article>
           );
-          return s.kind === "thang" ? (
-            content
-          ) : (
-            <details className="supporting-phase" key={s.kind}>
-              <summary>
-                {s.title} · {s.blocks.reduce((n, b) => n + b.minutes, 0)} min
-              </summary>
-              {content}
-            </details>
-          );
+          return content;
         })}
       </div>
+      <section className="draft-section draft-cot">
+        <header>
+          <span>COT · AFTER THE WORKOUT</span>
+        </header>
+        <h2>Circle of Trust</h2>
+        <p>Count-o-Rama · Name-o-Rama · Announcements · Closing.</p>
+        <label>
+          Your closing thought
+          <textarea
+            rows={2}
+            maxLength={2000}
+            disabled={busy}
+            value={result.workout.rawNotes}
+            onChange={(event) => {
+              const next = structuredClone(result);
+              next.workout.rawNotes = event.target.value;
+              onChange(next);
+            }}
+            placeholder="What do you want the PAX to take with them?"
+          />
+        </label>
+      </section>
       <details className="assistant-notes">
         <summary>Review notes & modifications</summary>
         <strong>Before you lead</strong>
@@ -177,44 +413,49 @@ export function PlannerDraft({
           leading. This is a personal draft.
         </p>
       </details>
-      <form
-        className="assistant-refine"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void ask(true);
-        }}
-      >
-        <label>
-          What would you change?
-          <textarea
-            value={revision}
-            disabled={busy}
-            maxLength={1800}
-            rows={2}
-            onChange={(e) => setRevision(e.target.value)}
-            placeholder="Keep the structure, add partner work, and simplify the counts…"
-          />
-        </label>
-        <div className="refine-chips">
-          {[
-            "Less running, keep everything else.",
-            "Make the main work partner-based.",
-            "Simplify the instructions and transitions.",
-          ].map((text) => (
-            <button
-              key={text}
-              type="button"
+      <details className="creative-help">
+        <summary>
+          <AppIcon name="builder" /> Help me change this
+        </summary>
+        <form
+          className="assistant-refine"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void ask(true);
+          }}
+        >
+          <label>
+            What would you change?
+            <textarea
+              value={revision}
               disabled={busy}
-              onClick={() => setRevision(text)}
-            >
-              {text}
-            </button>
-          ))}
-        </div>
-        <button type="submit" disabled={busy || revision.trim().length < 3}>
-          Refine this draft
-        </button>
-      </form>
+              maxLength={1800}
+              rows={2}
+              onChange={(e) => setRevision(e.target.value)}
+              placeholder="Keep the structure, add partner work, and simplify the counts…"
+            />
+          </label>
+          <div className="refine-chips">
+            {[
+              "Less running, keep everything else.",
+              "Make the main work partner-based.",
+              "Simplify the instructions and transitions.",
+            ].map((text) => (
+              <button
+                key={text}
+                type="button"
+                disabled={busy}
+                onClick={() => setRevision(text)}
+              >
+                {text}
+              </button>
+            ))}
+          </div>
+          <button type="submit" disabled={busy || revision.trim().length < 3}>
+            Refine this draft
+          </button>
+        </form>
+      </details>
       <details className="assistant-references">
         <summary>F3 context & workout references</summary>
         <p>

@@ -1,3 +1,4 @@
+import { saveWorkout, startPlanning } from "./navigation";
 import { navigate, openOtherWays } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -14,6 +15,7 @@ test("icons, seasonal venues, AO review and browser history stay clear on every 
   page,
 }, info) => {
   await page.goto("/");
+  await startPlanning(page);
   await expect(
     page.locator('.navigation-links a[href="#build"] svg').first(),
   ).toHaveAttribute("aria-hidden", "true");
@@ -209,9 +211,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     await page
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "Save workout", exact: true })
-      .click();
+    await saveWorkout(page);
     await navigate(page, "My Workouts");
     await expect
       .poll(() =>
@@ -320,6 +320,7 @@ test("navigation exposes every destination and mobile menu works by keyboard", a
   page,
 }, info) => {
   await page.goto("/");
+  await startPlanning(page);
   const menu = page.getByRole("button", { name: "Menu", exact: true });
   const compact = (page.viewportSize()?.width ?? 1440) <= 1000;
   if (compact) {

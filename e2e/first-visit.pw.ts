@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { navigate } from "./navigation";
+import { navigate, startPlanning, saveWorkout } from "./navigation";
 
 // Keep provider mocks deterministic in WebKit after the offline worker takes
 // control. The separate offline-cache journey exercises the real worker.
@@ -33,13 +33,17 @@ test("a first-time PAX can understand the path and start from an example without
     page.getByRole("button", { name: "Formal Builder", exact: true }),
   ).toBeHidden();
   await expect(
-    page.getByRole("button", { name: "Build my workout", exact: true }),
-  ).toBeDisabled();
-  await expect(page.locator(".surprise-label")).toHaveText("Surprise me");
+    page.getByRole("button", { name: "I have an idea", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Help me find one", exact: true }),
+  ).toBeVisible();
+
   await page.screenshot({
     path: `qa/screenshots/${info.project.name}-first-visit.png`,
     fullPage: true,
   });
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Try an example", exact: true })
     .click();
@@ -61,11 +65,13 @@ test("a first-time PAX can understand the path and start from an example without
     page.getByLabel("Generated workout draft", { exact: true }),
   ).toBeVisible();
   expect(calls).toBe(1);
-  await expect(steps.locator('[aria-current="step"]')).toContainText("Review");
-  await page.getByRole("button", { name: "Save workout", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Saved in My Workouts", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("heading", { name: "Circle of Trust", exact: true }),
+  ).toBeVisible();
+  await saveWorkout(page);
+  await expect(
+    page.getByRole("button", { name: "Lead this workout", exact: true }),
+  ).toBeEnabled();
   await expect(steps.locator('[aria-current="step"]')).toContainText(
     "Save & lead",
   );

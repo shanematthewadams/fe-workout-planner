@@ -1,3 +1,4 @@
+import { saveWorkout, startPlanning, openCreativeHelp } from "./navigation";
 import { navigate, openOtherWays } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -21,10 +22,13 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
     };
   });
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page.getByRole("button", { name: "Lead workout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
   await expect(page.getByRole("timer")).toHaveCount(0);
   await expect(
     page.getByText("Four-count cadence", { exact: true }),
@@ -135,6 +139,7 @@ test("Markdown file review, correction and personal save", async ({
   page,
 }, info) => {
   await page.goto("/");
+  await startPlanning(page);
   await expect(page.getByRole("banner")).toContainText("F3QBuilder");
   await expect(page.getByRole("banner")).not.toContainText("OLATHE");
   const prompt = page.getByLabel("Describe your Q", { exact: true });
@@ -208,6 +213,7 @@ test("workout details recover and shape a weather-aware offline draft", async ({
   page,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await expect(page.getByRole("banner")).not.toContainText(
     "Created by Rug Burn",
   );
@@ -264,6 +270,7 @@ test("staging stays labeled and missing cloud configuration leaves device saves 
     await route.abort();
   });
   await page.goto("/");
+  await startPlanning(page);
   await expect(
     page.getByLabel("Staging version", { exact: true }),
   ).toBeVisible();
@@ -345,8 +352,9 @@ test.describe("deterministic planner client", () => {
       await route.fulfill({ json: result });
     });
     await page.goto("/");
+    await startPlanning(page);
     await expect(
-      page.getByRole("heading", { name: /Build your next Q/ }),
+      page.getByRole("heading", { name: /Let’s make it yours/ }),
     ).toBeVisible();
     await page.screenshot({
       path: `${pictures}/${info.project.name}-after.png`,
@@ -378,6 +386,7 @@ test.describe("deterministic planner client", () => {
     await expect(
       page.getByText("Offline template ·", { exact: false }),
     ).toHaveCount(0);
+    await openCreativeHelp(page);
     await page
       .getByLabel("What would you change?")
       .fill("No running, keep everything else.");
@@ -399,7 +408,7 @@ test.describe("deterministic planner client", () => {
       path: `${pictures}/${info.project.name}-workout.png`,
       fullPage: true,
     });
-    await page.getByRole("button", { name: "Edit the details" }).click();
+    await page.getByRole("button", { name: "More editing options" }).click();
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     await page
       .getByLabel("Workout title", { exact: true })
@@ -444,7 +453,9 @@ test.describe("deterministic planner client", () => {
     await page.emulateMedia({ media: "screen" });
     await page.getByLabel("Print only The Thang", { exact: true }).uncheck();
     await page.clock.install();
-    await page.getByRole("button", { name: "Lead workout" }).click();
+    await page
+      .getByRole("button", { name: /^Lead (?:this )?workout$/ })
+      .click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -468,7 +479,7 @@ test.describe("deterministic planner client", () => {
       .getByRole("button", { name: "← Back to plan", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Lead workout", exact: true })
+      .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
       .click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
@@ -502,6 +513,7 @@ test("real preview API has a safe offline fallback and retains prior draft on re
 }) => {
   // Static production preview has no function runtime: the client must handle it honestly.
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByLabel("Describe your Q", { exact: true })
     .fill("No running. Bodyweight grinder.");
@@ -515,6 +527,7 @@ test("real preview API has a safe offline fallback and retains prior draft on re
     .getByLabel("Generated workout draft")
     .getByRole("heading", { level: 1 })
     .textContent();
+  await openCreativeHelp(page);
   await page
     .getByLabel("What would you change?")
     .fill("Less running, keep everything else.");
@@ -531,6 +544,7 @@ test("library favorites and AO edits stay consistent with the builder", async ({
   page,
 }, info) => {
   await page.goto("/");
+  await startPlanning(page);
   await navigate(page, "Library");
   await expect(
     page.getByRole("button", { name: "View workout", exact: true }),
@@ -580,6 +594,7 @@ test("library quick filters, direct copy, and movement insertion", async ({
   page,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await navigate(page, "Library");
   await page.getByRole("button", { name: "No running", exact: true }).click();
   await expect(page.getByLabel("Running", { exact: true })).toHaveValue("None");
@@ -625,6 +640,7 @@ test("movement guide exposes requirements and alternatives without card sprawl",
   page,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await navigate(page, "Exicon & Lexicon");
   await page.getByLabel("Search reference", { exact: true }).fill("WW3");
   await page.locator(".movement-entry summary").click();
@@ -648,6 +664,7 @@ test("movement guide exposes requirements and alternatives without card sprawl",
 
 test("formal setup survives navigation and reload", async ({ page }) => {
   await page.goto("/");
+  await startPlanning(page);
   await openOtherWays(page);
   await page
     .getByRole("button", { name: "Formal Builder", exact: true })
@@ -675,6 +692,7 @@ test("real offline cache reopens saved plans and creates explicit templates", as
   context,
 }) => {
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
@@ -682,7 +700,7 @@ test("real offline cache reopens saved plans and creates explicit templates", as
     .getByLabel("Generated workout draft")
     .getByRole("heading", { level: 1 })
     .textContent();
-  await page.getByRole("button", { name: "Save workout", exact: true }).click();
+  await saveWorkout(page);
   await navigate(page, "My Workouts");
   await expect(
     page.getByRole("button", { name: title!, exact: true }),

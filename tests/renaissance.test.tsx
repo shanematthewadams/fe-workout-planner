@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { startPlanning } from "./planning-helpers";
 import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -37,6 +38,7 @@ const props = {
 };
 it("propagates unpublished AO changes through directory, builder, API context and validator", async () => {
   render(<App />);
+  startPlanning();
   fireEvent.click(screen.getByRole("link", { name: "AO Directory" }));
   fireEvent.change(screen.getByLabelText("Search AOs"), {
     target: { value: "Gold Rush" },
@@ -126,6 +128,7 @@ it("surprise without an AO sends a neutral location with no fabricated facility 
         ),
     );
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: "No coupons. The track is closed." },
   });
@@ -141,6 +144,7 @@ it("surprise without an AO sends a neutral location with no fabricated facility 
 });
 it("formal portable gear never confirms fixed terrain", () => {
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Formal Builder" }));
   expect(screen.queryByLabelText("Bleachers / stairs")).toBeNull();
   fireEvent.click(screen.getByLabelText("Coupon"));
@@ -154,6 +158,7 @@ it("formal portable gear never confirms fixed terrain", () => {
 });
 it("groups workout destinations and keeps backup controls out of library", () => {
   render(<App />);
+  startPlanning();
   const nav = screen.getByRole("navigation", { name: "Planner navigation" });
   expect(
     Array.from(nav.querySelectorAll(".navigation-group:first-child a")).map(
@@ -180,6 +185,7 @@ it("can stop a live timer and move through exercises without changing phase time
     }),
   ).workout;
   render(<FieldTimer workout={workout} onExit={() => {}} />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
@@ -208,8 +214,9 @@ it("keeps Q confirmations through refinement without overriding today's unknown"
 
 it("keeps offline provenance visible when reopening the printable plan", () => {
   render(<App />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
-  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  fireEvent.click(screen.getByRole("button", { name: "Print workout" }));
   expect(
     screen.getByText(
       "Template-generated personal draft · not AI-generated or a reviewed regional original",

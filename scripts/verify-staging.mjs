@@ -49,16 +49,27 @@ for (const [name, engine, device] of [
   try {
     await page.goto(origin, { waitUntil: "domcontentloaded" });
     await page
+      .getByRole("button", { name: "Help me find one", exact: true })
+      .click();
+    await page.getByRole("button", { name: /Work together/ }).click();
+    await page.getByLabel("Q location", { exact: true }).fill("Gold Rush");
+    await page.getByRole("button", { name: /Show me some ideas/ }).click();
+    await page.getByRole("button", { name: /The Buddy System/ }).click();
+    await page.getByRole("button", { name: "Yes", exact: true }).click();
+    await page.getByRole("button", { name: "None", exact: true }).click();
+    await page
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
+    await expect(page.getByText(/Saved on this device/)).toBeVisible();
     await page
-      .getByRole("button", { name: "Save workout", exact: true })
-      .click();
+      .getByLabel("Workout name", { exact: true })
+      .fill("Synthetic enjoyable-flow verification");
+    await expect(page.getByText(/Saved on this device/)).toBeVisible();
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
     );
     await page
-      .getByRole("button", { name: "Preview & print", exact: true })
+      .getByRole("button", { name: "Print workout", exact: true })
       .click();
     assert.equal(new URL(page.url()).hash, "#workout/" + saved.id);
     await page.reload();

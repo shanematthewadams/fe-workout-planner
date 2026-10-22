@@ -20,3 +20,40 @@ export async function openOtherWays(page: Page) {
   if ((await choices.getAttribute("open")) === null)
     await choices.locator("summary").click();
 }
+
+/** Enter the idea path for existing detailed workflow scenarios. */
+export async function startPlanning(page: Page) {
+  const choice = page.getByRole("button", {
+    name: "I have an idea",
+    exact: true,
+  });
+  if (await choice.isVisible()) await choice.click();
+}
+export async function openCreativeHelp(page: Page) {
+  const help = page.locator(".creative-help");
+  if ((await help.count()) && (await help.getAttribute("open")) === null)
+    await help.locator("summary").click();
+}
+export async function saveWorkout(page: Page) {
+  const manual = page
+    .getByRole("button", { name: "Save workout", exact: true })
+    .first();
+  if (await manual.isVisible()) await manual.click();
+  else {
+    await expect(
+      page.getByText(/Saved on this device · Find it in My Workouts/),
+    ).toBeVisible();
+    const persisted = await page.evaluate(() => {
+      const session = JSON.parse(
+        sessionStorage.getItem("fe-planner:assistant:v1") ?? "null",
+      );
+      const workouts =
+        JSON.parse(localStorage.getItem("fe-planner:v1") ?? "null")?.workouts ??
+        [];
+      return workouts.some(
+        (workout: { id: string }) => workout.id === session?.result?.workout.id,
+      );
+    });
+    expect(persisted).toBe(true);
+  }
+}

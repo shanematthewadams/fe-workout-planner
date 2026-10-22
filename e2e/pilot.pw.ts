@@ -1,3 +1,4 @@
+import { saveWorkout, startPlanning } from "./navigation";
 import { test, expect } from "@playwright/test";
 
 test("Surprise Me keeps current restrictions through provider failure and saving", async ({
@@ -11,6 +12,7 @@ test("Surprise Me keeps current restrictions through provider failure and saving
     }),
   );
   await page.goto("/");
+  await startPlanning(page);
   await page
     .getByLabel("Describe your Q", { exact: true })
     .fill("Coupons today. No running. No Mary. The track is closed.");
@@ -21,9 +23,7 @@ test("Surprise Me keeps current restrictions through provider failure and saving
   expect(request.mary).toBe(false);
   expect(request.equipment).toBe("Coupon");
   expect(request.site.overrides.track).toBe("unavailable");
-  await page
-    .getByRole("button", { name: "Save workout", exact: true })
-    .click();
+  await saveWorkout(page);
   const saved = await page.evaluate(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
   );
@@ -33,7 +33,7 @@ test("Surprise Me keeps current restrictions through provider failure and saving
     saved.sections.map((section: { kind: string }) => section.kind),
   ).toEqual(["warmup", "thang"]);
   await page
-    .getByRole("button", { name: "Preview & print", exact: true })
+    .getByRole("button", { name: "Print workout", exact: true })
     .click();
   await page.reload();
   await expect(

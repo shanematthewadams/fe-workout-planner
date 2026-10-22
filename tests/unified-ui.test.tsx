@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { startPlanning } from "./planning-helpers";
 import { afterEach, beforeEach, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -18,6 +19,7 @@ afterEach(() => {
 });
 it("builds an offline formal plan, saves it, and leads the same plan in the field", () => {
   render(<App />);
+  startPlanning();
   expect(screen.getByRole("button", { name: /Surprise Me!/ })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: /Formal Builder/ }));
   fireEvent.change(screen.getByLabelText("Plan title"), {
@@ -30,14 +32,16 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "29 min",
   );
-  fireEvent.click(screen.getByRole("button", { name: "Save workout" }));
-  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  expect(screen.getByText(/Saved on this device/)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Print workout" }));
   const saved = JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0];
   expect(location.hash).toBe(`#workout/${saved.id}`);
   expect(
     screen.getByRole("heading", { name: "Digging for gold" }),
   ).toBeVisible();
-  fireEvent.click(screen.getByRole("button", { name: "Lead workout" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: /^Lead (?:this )?workout$/ }),
+  );
   expect(screen.queryByRole("timer")).toBeNull();
   expect(screen.queryByText("Four-count cadence")).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
@@ -56,6 +60,7 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
 });
 it("skipping Mary yields 35 minutes of The Thang and searchable reference terms", () => {
   render(<App />);
+  startPlanning();
   fireEvent.click(screen.getByText("Session preferences"));
   fireEvent.click(screen.getByLabelText("Include closing Mary"));
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
