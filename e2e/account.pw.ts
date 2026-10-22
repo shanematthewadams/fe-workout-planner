@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { navigate } from "./navigation";
+import { navigate, openOtherWays } from "./navigation";
 import type { Workout } from "../src/model";
 test.use({ trace: "off" });
 const ownerA = "11111111-1111-4111-8111-111111111111";
@@ -149,6 +149,7 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   };
   await fixture(page);
   await page.goto("http://127.0.0.1:4175/");
+  await openOtherWays(page);
   await page
     .getByRole("button", { name: "Formal Builder", exact: true })
     .click();
@@ -156,9 +157,7 @@ test("optional email codes preserve guest plans and isolate signed-in libraries"
   await page
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Save workout", exact: true }).click();
   await expect.poll(() => guest.workouts.length).toBe(1);
   const signIn = page.getByRole("button", {
     name: "Keep my workouts",

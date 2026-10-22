@@ -1,4 +1,4 @@
-import { navigate } from "./navigation";
+import { navigate, openOtherWays } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import proposal from "../data/ao-proposals/fe-ao-heartland.json" with { type: "json" };
@@ -201,6 +201,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
     await intercept(page);
     await intercept(second);
     await page.goto("http://127.0.0.1:4175/#build");
+    await openOtherWays(page);
     await page
       .getByRole("button", { name: "Formal Builder", exact: true })
       .click();
@@ -209,7 +210,7 @@ test("cloud saving needs no setup, supports recovery on another device and retri
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Save a private copy", exact: true })
+      .getByRole("button", { name: "Save workout", exact: true })
       .click();
     await navigate(page, "My Workouts");
     await expect
@@ -331,6 +332,8 @@ test("navigation exposes every destination and mobile menu works by keyboard", a
     ).toHaveAttribute("aria-expanded", "true");
   }
   const nav = page.getByRole("navigation", { name: "Planner navigation" });
+  await expect(nav.getByRole("link")).toHaveCount(3);
+  await nav.locator(".navigation-resources > summary").click();
   await expect(nav.getByRole("link")).toHaveCount(7);
   await expect(
     nav.getByRole("link", { name: "Build", exact: true }),

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { AppIcon } from "./AppIcon";
 import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
@@ -95,6 +96,14 @@ export function Planner({
     terrain: "Use confirmed AO features and today's overrides only",
     pax: pax ?? 12,
   };
+  function chooseMode(next: "idea" | "formal") {
+    flushSync(() => setMode(next));
+    const field =
+      next === "formal"
+        ? document.querySelector<HTMLInputElement>(".formal-builder input")
+        : document.getElementById("q-description");
+    field?.focus();
+  }
   function surprise() {
     const pick = <T,>(values: readonly T[]) =>
       values[Math.floor(Math.random() * values.length)];
@@ -159,7 +168,9 @@ export function Planner({
   useEffect(() => {
     if (view === "review" && result && resultRef.current) {
       resultRef.current.focus({ preventScroll: true });
-      resultRef.current.scrollIntoView?.({
+      const review =
+        resultRef.current.closest(".assistant") ?? resultRef.current;
+      review.scrollIntoView?.({
         behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
           .matches
           ? "auto"
@@ -380,11 +391,31 @@ export function Planner({
   }
   return (
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
+      <ol className="planner-journey" aria-label="Workout planning steps">
+        {["Describe", "Review", "Save & lead"].map((label, index) => (
+          <li
+            key={label}
+            aria-current={
+              (view === "build" ? 0 : saved ? 2 : 1) === index
+                ? "step"
+                : undefined
+            }
+          >
+            <span aria-hidden="true">{index + 1}</span>
+            {label}
+          </li>
+        ))}
+      </ol>
       <div hidden={view === "review"} className="planner-build">
         <div className="assistant-intro">
           <p className="eyebrow">YOUR NEXT BEATDOWN STARTS HERE</p>
           <h1>Build your next Q.</h1>
-          <p className="assistant-subhead">Bring an idea. Leave with a plan.</p>
+          <p className="assistant-subhead">
+            Turn an idea into an F3 workout you can edit, save, print, and lead.
+          </p>
+          <p className="planner-welcome-note">
+            No account needed. Start with what you have in mind.
+          </p>
         </div>
 
         <form
@@ -394,26 +425,6 @@ export function Planner({
           }}
         >
           <div className="planner-idea">
-            <div className="entry-modes" aria-label="Choose how to build">
-              <button
-                type="button"
-                disabled={busy}
-                aria-pressed={mode === "idea"}
-                onClick={() => setMode("idea")}
-              >
-                <AppIcon name="builder" />
-                Enter an Idea
-              </button>
-              <button
-                type="button"
-                disabled={busy}
-                aria-pressed={mode === "formal"}
-                onClick={() => setMode("formal")}
-              >
-                <AppIcon name="details" />
-                Formal Builder
-              </button>
-            </div>
             {mode === "formal" && (
               <fieldset disabled={busy} className="formal-builder">
                 <legend>Build your beatdown</legend>
@@ -500,8 +511,26 @@ export function Planner({
                   <span className="surprise-icon" aria-hidden="true">
                     <Dices size={30} strokeWidth={1.8} />
                   </span>
+                  <span className="surprise-label">Surprise me</span>
                 </button>
               </div>
+              {mode === "idea" && !prompt.trim() && (
+                <div className="idea-starter">
+                  <span>Not sure what to write?</span>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setPrompt(
+                        "Gold Rush. Coupons and partners for 12 PAX. No running. A gold-mining theme.",
+                      );
+                      document.getElementById("q-description")?.focus();
+                    }}
+                  >
+                    Try an example
+                  </button>
+                </div>
+              )}
             </div>
             <div className="assistant-actions">
               <button
@@ -571,17 +600,6 @@ export function Planner({
                 </button>
               )}
             </div>
-            {onImport && (
-              <p className="import-entry">
-                <strong>
-                  Already planned your workout in ChatGPT or Gemini?
-                </strong>
-                <span>Bring it here to edit, save, print, and lead.</span>
-                <button type="button" onClick={onImport}>
-                  Import a workout
-                </button>
-              </p>
-            )}
             <div className="planner-location">
               <AOContextPanel
                 ao={ao}
@@ -674,6 +692,42 @@ export function Planner({
                   Include closing Mary
                 </label>
               </div>
+            </details>
+            <details className="planner-other-ways">
+              <summary>Other ways to start</summary>
+              <p>
+                Use the form to choose a workout style and gear, or import a
+                plan you already have.
+              </p>
+              <div className="entry-modes" aria-label="Choose how to build">
+                <button
+                  type="button"
+                  disabled={busy}
+                  aria-pressed={mode === "idea"}
+                  onClick={() => chooseMode("idea")}
+                >
+                  <AppIcon name="builder" />
+                  Enter an Idea
+                </button>
+                <button
+                  type="button"
+                  disabled={busy}
+                  aria-pressed={mode === "formal"}
+                  onClick={() => chooseMode("formal")}
+                >
+                  <AppIcon name="details" />
+                  Formal Builder
+                </button>
+              </div>
+              {onImport && (
+                <p className="import-entry">
+                  <strong>Already have a workout?</strong>
+                  <span>Bring it here to edit, save, print, and lead.</span>
+                  <button type="button" onClick={onImport}>
+                    Import a workout
+                  </button>
+                </p>
+              )}
             </details>
             <p className="assistant-privacy">
               Your idea, workout details, site details and current draft go to

@@ -1,4 +1,4 @@
-import { navigate } from "./navigation";
+import { navigate, openOtherWays } from "./navigation";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { PlannerResponse } from "../src/planner-contract";
@@ -143,6 +143,7 @@ test("Markdown file review, correction and personal save", async ({
     rollBox = await roll.boundingBox();
   expect(rollBox!.x).toBeGreaterThan(promptBox!.x + promptBox!.width);
   expect(Math.abs(rollBox!.y - promptBox!.y)).toBeLessThan(3);
+  await openOtherWays(page);
   await page
     .getByRole("main")
     .getByRole("button", { name: "Import a workout", exact: true })
@@ -647,6 +648,7 @@ test("movement guide exposes requirements and alternatives without card sprawl",
 
 test("formal setup survives navigation and reload", async ({ page }) => {
   await page.goto("/");
+  await openOtherWays(page);
   await page
     .getByRole("button", { name: "Formal Builder", exact: true })
     .click();
@@ -680,9 +682,7 @@ test("real offline cache reopens saved plans and creates explicit templates", as
     .getByLabel("Generated workout draft")
     .getByRole("heading", { level: 1 })
     .textContent();
-  await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Save workout", exact: true }).click();
   await navigate(page, "My Workouts");
   await expect(
     page.getByRole("button", { name: title!, exact: true }),

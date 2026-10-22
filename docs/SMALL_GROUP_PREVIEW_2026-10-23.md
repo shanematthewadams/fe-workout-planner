@@ -7,9 +7,9 @@ The October 21 pilot candidate is on staging. Engineering verified the guest wor
 ## First workout (no account required)
 
 1. Open staging and choose **Build**. Describe your workout idea, for example: "I have a Q at Gold Rush, want coupons, and want a digging-for-gold theme."
-2. Optionally open **Workout details** and choose the workout type (**Bootcamp**, **Run**, or **Ruck**), length, AO, equipment and other preferences. Confirm today's site conditions yourself. Unknown AO features are not promises of availability.
+2. If you need a starting point, choose **Try an example**; it fills the idea without calling AI. **Other ways to start** contains Formal Builder and workout import. Optionally open **Workout details** and choose the workout type (**Bootcamp**, **Run**, or **Ruck**), length, AO, equipment and other preferences. Confirm today's site conditions yourself. Unknown AO features are not promises of availability.
 3. Choose **Build my workout**, or choose **Use offline template** if the AI service is unavailable. Review the actual exercises, counts, timing and conditions before leading. AI output is a draft, not a safety inspection.
-4. Choose **Edit the details**, make changes, then **Save & view workout**. To keep the draft as shown, choose **Save a private copy**. **Saved to cloud** confirms cloud backup; **Saved on this device** means the browser copy is safe but upload is pending or unavailable.
+4. Choose **Edit the details**, make changes, then **Save & view workout**. To keep the draft as shown, choose **Save workout**. **Saved to cloud** confirms cloud backup; **Saved on this device** means the browser copy is safe but upload is pending or unavailable.
 5. Open **My Workouts** to find the saved workout, reopen it, and choose **Lead workout**. Lead opens a readable sheet; starting a timer is optional. Use **Session timer** for the workout timeline or **Intervals** for a circuit.
 
 ## Optional account and return visit

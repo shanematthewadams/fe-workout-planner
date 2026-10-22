@@ -3473,3 +3473,88 @@ footer {
 .profile-onboarding p {
   margin: 0;
 }
+
+/* A short visible path; alternate starting modes remain available on demand. */
+.planner-journey {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 20px auto 8px;
+  max-width: 850px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.planner-journey li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+}
+.planner-journey li > span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.planner-journey li[aria-current="step"] {
+  color: var(--ink);
+  font-weight: 800;
+}
+.planner-journey li[aria-current="step"] > span {
+  color: #151618;
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.planner-welcome-note, .idea-starter {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.planner-welcome-note { margin: 12px 0 0; }
+.idea-starter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.idea-starter button {
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  padding: 4px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.surprise-button { flex-direction: column; gap: 8px; }
+.surprise-label { font-size: 0.7rem; line-height: 1.1; }
+.planner-other-ways {
+  margin: 16px 0;
+  border-block: 1px solid var(--line);
+}
+.planner-other-ways > summary { font-weight: 700; }
+.planner-other-ways > p { color: var(--muted); font-size: 0.9rem; }
+.planner-other-ways .import-entry { border: 0; padding: 12px 0; margin: 0; }
+.draft-next-step { color: var(--muted); font-size: 0.9rem; }
+@media (max-width: 600px) {
+  .planner-journey { font-size: 0.72rem; gap: 4px; }
+  .planner-journey li { gap: 5px; }
+  .assistant { scroll-margin-top: 90px; }
+}
+.navigation-resources > summary {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 12px;
+  min-height: 48px;
+}
+.navigation-resources > summary:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.navigation-resources > .navigation-group { margin-top: 8px; }
+
+.assistant { scroll-margin-top: 24px; }
+@media (max-width: 1000px) { .assistant { scroll-margin-top: 90px; } }

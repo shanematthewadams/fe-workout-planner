@@ -22,7 +22,7 @@ test("Surprise Me keeps current restrictions through provider failure and saving
   expect(request.equipment).toBe("Coupon");
   expect(request.site.overrides.track).toBe("unavailable");
   await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
+    .getByRole("button", { name: "Save workout", exact: true })
     .click();
   const saved = await page.evaluate(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],

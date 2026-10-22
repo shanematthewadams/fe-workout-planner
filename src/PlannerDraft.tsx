@@ -74,19 +74,25 @@ export function PlannerDraft({
           )}
         </div>
       )}
+      <p className="draft-next-step">
+        {saved
+          ? "Saved in My Workouts. Open Lead workout when you’re ready to Q."
+          : "Review the exercises, make any changes, then save this workout to My Workouts."}
+      </p>
       <div className="assistant-actions">
         <button
-          className="create"
+          className={saved ? "" : "create"}
           type="button"
           disabled={busy || saved}
           onClick={() => {
             if (onSave(result.workout)) setSaved(true);
           }}
         >
-          {saved ? "Copy saved on this device" : "Save a private copy"}
+          {saved ? "Saved in My Workouts" : "Save workout"}
         </button>
         {onLead && (
           <button
+            className={saved ? "create" : ""}
             type="button"
             onClick={() => onLead(structuredClone(result.workout))}
           >

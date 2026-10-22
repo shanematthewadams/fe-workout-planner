@@ -88,6 +88,19 @@ export function CloudSync({
         : save.config
           ? CloudOff
           : Cloud;
+  // Keep first arrival focused on planning. The hook still runs so an existing
+  // account or guest collection can restore; recovery/error states stay visible.
+  if (
+    compact &&
+    !workouts.length &&
+    !save.config &&
+    !save.recovery &&
+    !save.settingsRecovery &&
+    !save.needsRetry &&
+    save.status === "Workouts save automatically" &&
+    !blocked
+  )
+    return null;
   if (compact)
     return (
       <aside className="cloud-statusbar no-print" aria-label="Saving status">

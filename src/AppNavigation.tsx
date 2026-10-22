@@ -127,29 +127,41 @@ export function AppNavigation({
         className="navigation-links"
         aria-label="Planner navigation"
       >
-        {groups.map((group) => (
-          <div className="navigation-group" key={group.label}>
-            <p className="navigation-label">{group.label}</p>
-            {group.items.map(([key, label]) => (
-              <a
-                key={key}
-                href={routeHash({ tab: key })}
-                aria-current={active === key ? "page" : undefined}
-                onClick={(event) => navigate(event, key)}
-              >
-                <AppIcon name={key} size={20} />
-                <span>{label}</span>
-                {active === key && (
-                  <ArrowUpRight
-                    className="navigation-current"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                )}
-              </a>
-            ))}
-          </div>
-        ))}
+        {groups.map((group, index) => {
+          const links = group.items.map(([key, label]) => (
+            <a
+              key={key}
+              href={routeHash({ tab: key })}
+              aria-current={active === key ? "page" : undefined}
+              onClick={(event) => navigate(event, key)}
+            >
+              <AppIcon name={key} size={20} />
+              <span>{label}</span>
+              {active === key && (
+                <ArrowUpRight
+                  className="navigation-current"
+                  size={16}
+                  aria-hidden="true"
+                />
+              )}
+            </a>
+          ));
+          return index === 0 ? (
+            <div className="navigation-group" key={group.label}>
+              <p className="navigation-label">{group.label}</p>
+              {links}
+            </div>
+          ) : (
+            <details
+              className="navigation-resources"
+              key={group.label}
+              open={group.items.some(([key]) => key === active)}
+            >
+              <summary>{group.label}</summary>
+              <div className="navigation-group">{links}</div>
+            </details>
+          );
+        })}
         {accountEntry?.(() => open("data"))}
       </nav>
     </header>

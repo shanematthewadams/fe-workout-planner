@@ -11,7 +11,7 @@ test("saved private copy stays selected for preview, editing and reload", async 
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
+    .getByRole("button", { name: "Save workout", exact: true })
     .click();
   const saved = await page.evaluate<Workout>(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
@@ -55,7 +55,7 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
+    .getByRole("button", { name: "Save workout", exact: true })
     .click();
   const saved = await page.evaluate<Workout>(
     () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
@@ -189,7 +189,7 @@ for (const failure of ["timeout", "unavailable", "invalid"] as const) {
       JSON.parse(before!).result.workout,
     );
     await expect(
-      page.getByRole("button", { name: "Save a private copy", exact: true }),
+      page.getByRole("button", { name: "Save workout", exact: true }),
     ).toBeEnabled();
   });
 }
@@ -219,7 +219,7 @@ test("session recovery, double taps and denied screen wake keep Lead usable", as
     .getByRole("button", { name: "Use offline template", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Save a private copy", exact: true })
+    .getByRole("button", { name: "Save workout", exact: true })
     .click();
   await page.getByRole("button", { name: "Lead workout", exact: true }).click();
   await page

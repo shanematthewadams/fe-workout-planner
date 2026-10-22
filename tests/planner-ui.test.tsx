@@ -74,7 +74,7 @@ it("creates, refines without losing the last good draft, saves and previews priv
   const body = JSON.parse(String(f.mock.calls[1][1]?.body));
   expect(body.current).toEqual(result.plan);
   expect(body.prompt).toContain("Less running");
-  fireEvent.click(screen.getByRole("button", { name: "Save a private copy" }));
+  fireEvent.click(screen.getByRole("button", { name: "Save workout" }));
   expect(onSave).toHaveBeenCalledWith(result.workout);
   fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
   expect(onPreview).toHaveBeenCalledWith(result.workout);

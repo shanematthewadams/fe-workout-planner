@@ -52,7 +52,7 @@ for (const [name, engine, device] of [
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Save a private copy", exact: true })
+      .getByRole("button", { name: "Save workout", exact: true })
       .click();
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
