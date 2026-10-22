@@ -1,6 +1,6 @@
 # The next Q is yours
 
-Historical redesign notes follow. The current October 22, 2026 palette is warm charcoal, red, gold and supporting steel blue; see [DESIGN_PALETTE.md](DESIGN_PALETTE.md) for the approved tokens and usage. Current branch/deployment authority is in `AGENTS.md` and `STAGING.md`.
+Historical redesign notes follow. The current October 22, 2026 palette is warm charcoal, red, gold and supporting steel blue; see [DESIGN_PALETTE.md](DESIGN_PALETTE.md) for the approved tokens and usage. The current approved vibe-first flow and autosave boundaries are in [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md). Current branch/deployment authority is in `AGENTS.md` and `STAGING.md`.
 
 ## Design decision
 

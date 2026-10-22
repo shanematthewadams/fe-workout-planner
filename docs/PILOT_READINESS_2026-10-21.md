@@ -1,14 +1,16 @@
 # F3 Q Builder pilot verification — October 21, 2026
 
-October 22 update: the steel-blue palette sweep is implementation commit `19827fa011ed7534b14a3c0d1ecf9a9e3ebb72e9`, deployed and verified at `19d10a466e99a19bb11dd1f2228bceb4427d522c` after a CI-only installation-timeout guard. See [DESIGN_PALETTE.md](DESIGN_PALETTE.md) for current deployment and verification evidence. The reliability/flow history below is retained; the latest separate AI evaluation had three HTTP 504 creation failures and could not run refinement. The palette change does not resolve the recorded AI-provider consistency limitation.
+Latest October 22 update: the approved vibe-first UX and autosaved working Q sheet are deployed at `ffba554586e5cec3907b2784aa12bfeded824aee`. Development and staging CI each passed 397 unit/component tests and 112 browser checks (four existing historical comparisons skipped). Exact-commit hosted desktop/mobile WebKit smoke, a separate real private cloud acknowledgement, refresh/reopen/Lead and compact print were verified. The fresh AI probe returned templates for all three creation cases and could not exercise AI refinement. See [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md) for the current release, complete verification and limitations. Production remains unchanged.
+
+Earlier October 22 palette work is recorded in [DESIGN_PALETTE.md](DESIGN_PALETTE.md). The historical release details below remain for provenance; they are superseded by the latest dated update above.
 
 ## Decision
 
 **CONDITIONAL — the small October 23 pilot can proceed.** The hosted guest flow, private save, recovery, print and Lead experience are verified. Shane separately confirmed real email delivery and completed the short phone acceptance test successfully. Free AI can time out and fall back to a clearly labeled template; continuous locked-screen/background behavior remains device-dependent. Staging only; production was not promoted.
 
-## Latest release: first-visit flow follow-up
+## Historical release: first-visit flow follow-up
 
-This section supersedes the original release identifiers and counts below. Verified on October 21 in America/Chicago (October 22 UTC).
+This historical section superseded the original release identifiers and counts below; the latest October 22 update above is now authoritative. Verified on October 21 in America/Chicago (October 22 UTC).
 
 - Deployed application commit: `5925045f9b79202f9f51635c12edff33fcd4fcc5`; source tree: `005c176c698734956df2aecd59504420befee603`. Canonical branch: `develop`; existing staging mirror: `studio/ux-streamline`. Production `main` remains `07ff6315a6c36f357eb8446e6fd30939948f773d`.
 - Staging: https://studio-ux-streamline--fe-workout-planner.netlify.app/. `build-info.json` independently returned the exact application commit and `staging` environment. Deployment confirmed; no production promotion.

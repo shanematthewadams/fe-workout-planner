@@ -2,15 +2,17 @@
 
 Target preview: Friday, October 23, 2026. Staging only: https://studio-ux-streamline--fe-workout-planner.netlify.app/
 
-The October 21 pilot candidate, including the clearer first-visit flow, is on staging. Engineering verified the guest workflow, real private cloud save, hosted desktop/mobile WebKit recovery and available AO reports. See the latest release section in `PILOT_READINESS_2026-10-21.md` for the deployed commit, tests and limitations. AI is connected but inconsistent: the latest complex-case batch used labeled templates, while a separate simpler Gemini request succeeded. The template/manual planning path remains available.
+The October 22 candidate includes the new vibe-first flow, icon choices and an autosaved working Q sheet. Engineering verified private saving, cloud acknowledgement, hosted desktop/mobile WebKit recovery, printing and Lead. See `ENJOYABLE_FLOW.md` for the exact deployed commit and verification. The current real AI probe used labeled templates for all three creation cases, so creative generation is not guaranteed. Offline templates and manual editing remain available.
 
 ## First workout (no account required)
 
-1. Open staging and choose **Build**. Describe your workout idea, for example: "I have a Q at Gold Rush, want coupons, and want a digging-for-gold theme."
-2. If you need a starting point, choose **Try an example**; it fills the idea without calling AI. **Other ways to start** contains Formal Builder and workout import. Optionally open **Workout details** and choose the workout type (**Bootcamp**, **Run**, or **Ruck**), length, AO, equipment and other preferences. Confirm today's site conditions yourself. Unknown AO features are not promises of availability.
-3. Choose **Build my workout**, or choose **Use offline template** if the AI service is unavailable. Review the actual exercises, counts, timing and conditions before leading. AI output is a draft, not a safety inspection.
-4. Choose **Edit the details**, make changes, then **Save & view workout**. To keep the draft as shown, choose **Save workout**. **Saved to cloud** confirms cloud backup; **Saved on this device** means the browser copy is safe but upload is pending or unavailable.
-5. Open **My Workouts** to find the saved workout, reopen it, and choose **Lead workout**. Lead opens a readable sheet; starting a timer is optional. Use **Session timer** for the workout timeline or **Intervals** for a circuit.
+1. Choose **I have an idea** to describe your Q, or **Help me find one** for inspiration. The inspiration path asks for a vibe and AO, then offers three short concepts. Browsing uses no AI.
+2. Under **Anything else?**, choose coupons **Yes/No** and running **Lots/Some/None**. Add an optional note, then **Build my workout**. **Use offline template** is also available, including while AI is working. Unknown AO features are not promises of availability; confirm today’s conditions yourself.
+3. Review the entire workout in order. Tap **Edit [exercise]** for reps, movement instructions, counting or order; simple edits use no AI. **Help me change this** provides optional creative refinement. Template output may need manual changes to match a selected concept or theme.
+4. The working Q sheet saves automatically. **Saved on this device** confirms the browser copy; **Saved to cloud** separately confirms upload. Retry a failed save before leaving. **More editing options** opens the established advanced editor, which still has explicit Save controls. Formal Builder/import remain under **Other ways to start**.
+5. Choose **Lead this workout**, **Print workout**, or **Copy for Slack**. You can also reopen it from **My Workouts**. Lead starts with a readable sheet; **Session timer** and **Intervals** are optional.
+
+If a previous draft opens first, choose **Back to setup → Choose another starting point** to see the new welcome. Your saved workout stays in My Workouts.
 
 ## Optional account and return visit
 
