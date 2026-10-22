@@ -3818,3 +3818,7 @@ footer {
 .assistant-prompt[hidden] {
   display: none;
 }
+/* Connection/recovery notices must never intercept the fixed Build controls. */
+#root:has(.planner-build:not([hidden])) .notice {
+  bottom: max(160px, calc(140px + env(safe-area-inset-bottom)));
+}

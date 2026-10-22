@@ -25,9 +25,6 @@ test("a first-time PAX can understand the path and start from an example without
     }),
   ).toBeVisible();
   const steps = page.getByRole("list", { name: "Workout planning steps" });
-  await expect(steps.locator('[aria-current="step"]')).toContainText(
-    "Describe",
-  );
   await expect(page.getByLabel("Saving status")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Formal Builder", exact: true }),
@@ -43,7 +40,11 @@ test("a first-time PAX can understand the path and start from an example without
     path: `qa/screenshots/${info.project.name}-first-visit.png`,
     fullPage: true,
   });
+  await expect(steps).toHaveCount(0);
   await startPlanning(page);
+  await expect(steps.locator('[aria-current="step"]')).toContainText(
+    "Describe",
+  );
   await page
     .getByRole("button", { name: "Try an example", exact: true })
     .click();
