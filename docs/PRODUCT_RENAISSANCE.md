@@ -1,5 +1,7 @@
 # The next Q is yours
 
+Historical redesign notes follow. The current October 22, 2026 palette is warm charcoal, red, gold and supporting steel blue; see [DESIGN_PALETTE.md](DESIGN_PALETTE.md) for the approved tokens and usage. Current branch/deployment authority is in `AGENTS.md` and `STAGING.md`.
+
 ## Design decision
 
 Two palettes were considered for Athletic Editorial × Modern Outdoor:

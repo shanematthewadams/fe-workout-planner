@@ -1,5 +1,7 @@
 # F3 Q Builder pilot verification — October 21, 2026
 
+October 22 update: the steel-blue palette sweep is implementation commit `19827fa011ed7534b14a3c0d1ecf9a9e3ebb72e9`, deployed and verified at `19d10a466e99a19bb11dd1f2228bceb4427d522c` after a CI-only installation-timeout guard. See [DESIGN_PALETTE.md](DESIGN_PALETTE.md) for current deployment and verification evidence. The reliability/flow history below is retained; the latest separate AI evaluation had three HTTP 504 creation failures and could not run refinement. The palette change does not resolve the recorded AI-provider consistency limitation.
+
 ## Decision
 
 **CONDITIONAL — the small October 23 pilot can proceed.** The hosted guest flow, private save, recovery, print and Lead experience are verified. Shane separately confirmed real email delivery and completed the short phone acceptance test successfully. Free AI can time out and fall back to a clearly labeled template; continuous locked-screen/background behavior remains device-dependent. Staging only; production was not promoted.
