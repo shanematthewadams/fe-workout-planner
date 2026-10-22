@@ -258,3 +258,44 @@ it("lets a Q leave a stalled provider for an immediate offline draft and ignores
   );
   expect(fetcher).toHaveBeenCalledTimes(1);
 });
+
+it("keeps the visible quick choices aligned with notes and sends concrete defaults", async () => {
+  const response = fallbackPlan(
+    resolveRequest({ prompt: "bodyweight circuit" }),
+  );
+  const fetcher = vi
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValue(new Response(JSON.stringify(response)));
+  render(<Planner {...props} />);
+  click("I have an idea");
+  fireEvent.change(screen.getByLabelText("Describe your Q"), {
+    target: { value: "A simple circuit" },
+  });
+  expect(screen.getByRole("button", { name: "No" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(screen.getByRole("button", { name: "Some" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const note = screen.getByLabelText("Anything we should know? (Optional)");
+  fireEvent.change(note, {
+    target: { value: "Coupons available today. No running." },
+  });
+  expect(screen.getByRole("button", { name: "Yes" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(screen.getByRole("button", { name: "None" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  fireEvent.change(note, { target: { value: "Keep it simple." } });
+  click("Build my workout");
+  await screen.findByLabelText("Generated workout draft");
+  expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toMatchObject({
+    equipment: "None",
+    running: "Light",
+  });
+});

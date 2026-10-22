@@ -192,6 +192,25 @@ export function Planner({
     ),
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);
+  const ideaText = [prompt, extraNote].filter(Boolean).join("\n");
+  const quickPreferences = resolveRequest({
+    prompt:
+      ideaText.trim().length >= 3 ? ideaText.slice(0, 1800) : "Build a workout",
+    equipment,
+    running,
+  });
+  const sessionEquipment =
+    mode === "formal"
+      ? gear.includes("Coupon")
+        ? "Coupon"
+        : "None"
+      : quickPreferences.equipment === "From prompt"
+        ? "None"
+        : quickPreferences.equipment;
+  const sessionRunning =
+    quickPreferences.running === "From prompt"
+      ? "Light"
+      : quickPreferences.running;
   const planning = { ...conditions, focus, pax };
   const selectedConcept = CONCEPTS.find((concept) => concept.prompt === prompt);
   const formal = {
@@ -369,7 +388,7 @@ export function Planner({
         prompt: refine
           ? revision
           : mode === "formal"
-            ? `Build ${style}. Focus: ${focus}. PAX: ${pax ?? "Q to confirm"}. ${prompt}`
+            ? `Build ${style}. Focus: ${focus}. PAX: ${pax ?? "Q to confirm"}. ${ideaText}`
             : [prompt, extraNote].filter(Boolean).join("\n"),
         ao,
         startTime,
@@ -390,8 +409,8 @@ export function Planner({
                 : gear.length
                   ? "From prompt"
                   : "None"
-              : equipment,
-        running: refine && lastRequest ? lastRequest.running : running,
+              : sessionEquipment,
+        running: refine && lastRequest ? lastRequest.running : sessionRunning,
         mary,
         provider,
         strictSchedule: true,
@@ -761,19 +780,16 @@ export function Planner({
                       <button
                         type="button"
                         key={value}
-                        aria-pressed={
-                          resolveRequest({
-                            prompt:
-                              prompt.trim().length >= 3
-                                ? prompt
-                                : "Build a workout",
-                            equipment,
-                          }).equipment === value ||
-                          (value === "None" &&
-                            equipment === "From prompt" &&
-                            !/coupon|cindy/i.test(prompt))
-                        }
-                        onClick={() => setEquipment(value)}
+                        aria-pressed={sessionEquipment === value}
+                        onClick={() => {
+                          setEquipment(value);
+                          if (mode === "formal")
+                            setGear((previous) =>
+                              value === "Coupon"
+                                ? [...new Set([...previous, "Coupon"])]
+                                : previous.filter((item) => item !== "Coupon"),
+                            );
+                        }}
                       >
                         <AppIcon name="exicon" />
                         {label}
@@ -796,23 +812,7 @@ export function Planner({
                       <button
                         type="button"
                         key={value}
-                        aria-pressed={
-                          (resolveRequest({
-                            prompt:
-                              prompt.trim().length >= 3
-                                ? prompt
-                                : "Build a workout",
-                            running,
-                          }).running === "From prompt"
-                            ? "Light"
-                            : resolveRequest({
-                                prompt:
-                                  prompt.trim().length >= 3
-                                    ? prompt
-                                    : "Build a workout",
-                                running,
-                              }).running) === value
-                        }
+                        aria-pressed={sessionRunning === value}
                         onClick={() => setRunning(value)}
                       >
                         <AppIcon name="running" />
@@ -873,8 +873,8 @@ export function Planner({
                               : gear.length
                                 ? "From prompt"
                                 : "None"
-                            : equipment,
-                        running,
+                            : sessionEquipment,
+                        running: sessionRunning,
                         mary,
                         strictSchedule: true,
                         planning,
