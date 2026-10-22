@@ -52,6 +52,7 @@ jobs:
           VITE_SUPABASE_URL: https://staging-sync.invalid
           VITE_SUPABASE_PUBLISHABLE_KEY: test-public-fixture
       - name: Install Chromium and WebKit
+        timeout-minutes: 5
         run: npx playwright install --with-deps chromium webkit
       - name: Verify desktop, tablet and mobile
         run: npm run test:browser
