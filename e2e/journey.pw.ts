@@ -307,6 +307,7 @@ test.describe("deterministic planner client", () => {
     // browser modules or their bundler-only JSON imports.
     const fixturePage = await context.newPage();
     await fixturePage.goto("/");
+    await startPlanning(fixturePage);
     await fixturePage
       .getByLabel("Q location", { exact: true })
       .fill("Gold Rush");

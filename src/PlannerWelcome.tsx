@@ -134,7 +134,7 @@ export function PlannerWelcome({
                   </button>
                 ))}
               </div>
-              <p>No AI used yet. Coupons and running are up to you next.</p>
+              <p>You’ll choose coupons and running next.</p>
             </>
           )}
         </>
