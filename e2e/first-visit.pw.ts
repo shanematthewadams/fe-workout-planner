@@ -2,6 +2,10 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { navigate } from "./navigation";
 
+// Keep provider mocks deterministic in WebKit after the offline worker takes
+// control. The separate offline-cache journey exercises the real worker.
+test.use({ serviceWorkers: "block" });
+
 test("a first-time PAX can understand the path and start from an example without signing in", async ({
   page,
 }, info) => {
