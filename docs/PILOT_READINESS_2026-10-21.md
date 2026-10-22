@@ -2,7 +2,25 @@
 
 ## Decision
 
-**CONDITIONAL — the small October 23 pilot can proceed.** The hosted guest flow, private save, recovery, print and Lead experience are verified. Free AI can time out and fall back to a clearly labeled template; physical-phone background behavior and fresh email delivery are not established. Staging only; production was not promoted.
+**CONDITIONAL — the small October 23 pilot can proceed.** The hosted guest flow, private save, recovery, print and Lead experience are verified. Shane separately confirmed real email delivery and completed the short phone acceptance test successfully. Free AI can time out and fall back to a clearly labeled template; continuous locked-screen/background behavior remains device-dependent. Staging only; production was not promoted.
+
+## Latest release: first-visit flow follow-up
+
+This section supersedes the original release identifiers and counts below. Verified on October 21 in America/Chicago (October 22 UTC).
+
+- Deployed application commit: `5925045f9b79202f9f51635c12edff33fcd4fcc5`; source tree: `005c176c698734956df2aecd59504420befee603`. Canonical branch: `develop`; existing staging mirror: `studio/ux-streamline`. Production `main` remains `07ff6315a6c36f357eb8446e6fd30939948f773d`.
+- Staging: https://studio-ux-streamline--fe-workout-planner.netlify.app/. `build-info.json` independently returned the exact application commit and `staging` environment. Deployment confirmed; no production promotion.
+- The first screen now explains the product and optional account, provides a no-AI example starter, labels Surprise Me visibly, and shows Describe → Review → Save & lead. Formal Builder/import sit under Other ways to start. Main navigation prioritizes Build, Library and My Workouts, with the remaining destinations under Tools & resources.
+- Save a private copy is now Save workout. Successful saving names My Workouts and highlights Lead. Empty first visits omit the idle saving bar; restoration hooks and error/recovery states remain active. Existing save formats, identity, authentication, AO validation and print behavior are preserved.
+- `npm ci`, lint, 387 unit/component tests across 50 files, and build/typecheck passed in both final CI runs. Full browser suite: 108 passed across desktop, tablet, mobile Chromium and mobile WebKit; four pre-existing optional historical comparisons skipped. No remaining failed application assertions.
+- Development CI: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/39703756493. Staging CI: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/39704415466. Staging artifact `browser-qa`, ID `12394850756`, includes screenshots, rendered print PDFs, hosted verification and live AI results.
+- The first browser run had one failure: WebKit's offline worker bypassed the new test's provider mock, returning the static preview's 404. The trace established the cause. The mocked first-visit test now blocks service workers; the separate real offline-cache test still exercises them. The exact provider-call assertion remains and all four first-visit profiles pass.
+- Inspected desktop and phone first-visit screenshots. Hosted desktop Chromium/mobile WebKit smoke passed saved ID, bookmark refresh, My Workouts reopening, Lead, paused 43:45 timer recovery after navigation/reload, Resume, no uncaught errors and no horizontal overflow. These hosted smoke tests isolate external services; they do not assert live cloud/provider success.
+- Separately exercised the actual deployed UI with a new clearly labeled synthetic workout: example fill → real request timeout → labeled template → manual title edit → save → Saved to cloud → My Workouts → reopen/refresh → Lead. No existing workout was edited or deleted. Captured the actual staging screen.
+- Live Nation read again returned HTTP 200, 21 AOs and 17 locations; the application still uses a reviewed snapshot rather than automatic live synchronization.
+- **Important: live AI batch did not pass.** All three complex creation cases returned templates (one malformed/incomplete response and two timeouts); the AI refinement case was skipped because the batch had no validated AI draft. CI emits an explicit warning and retains `live-ai.json`; overall workflow success does not mean this separate evaluation passed. Netlify request logs showed invalid provider responses and timeouts. A separate explicit Gemini request, “A coupon workout for partners. No running.” at Gold Rush, returned a validated Gemini `gemini-3.5-flash-lite` workout with HTTP 200 in 8,167 ms. This proves a working connection, not reliable availability or success for the failed complex cases. No credentials, shared environment settings, billing or provider validation were changed.
+- Blocker: none found in the verified template/manual/save/Lead journey. Important: AI output/latency consistency and device background behavior. Later: remaining AO reports and minor polish. The conditional pilot should retain the visible template option; this is not evidence for an AI-reliability claim.
+- Production recommendation: retain staging for the pilot and collect first-use feedback; address provider consistency before a wider public rollout. Promotion still requires Shane's explicit approval.
 
 ## Implemented
 
@@ -26,7 +44,7 @@
 - Inspected the actual rendered print PDFs: representative full Q sheet is two readable Letter pages; Thang-only is one. No clipped exercise/count text or site controls. OS mobile print dialogs were not tested on physical hardware.
 - Hosted browser: exact build-info commit and staging environment verified; created only a clearly labeled synthetic guest workout, observed Saved to cloud, reopened it through My Workouts and refresh, then opened Lead. No existing private workout, account, production configuration or database schema was modified.
 
-## Release
+## Original reliability sprint release
 
 - Repository: shanematthewadams/fe-workout-planner.
 - App commit: a01b9b169fcc3b1775b366e9df8a022dc8d16ed1.
@@ -44,8 +62,8 @@
 ## Remaining risks
 
 - Blocker: none identified in the verified guest pilot flow.
-- Important: real email delivery was not newly exercised. Signup is optional; tested guest planning, device saving and private guest cloud saving remain available. Do not describe simulated email verification as inbox delivery.
-- Important: physical iPhone lock-screen audio, installed voices, long background sessions and OS wake-lock remain unverified. Mobile Chromium/WebKit emulation is not hardware verification. Keep Lead visible for timer/audio use; saved plans and print remain available.
+- Verified by Shane: real email delivery and the short phone acceptance test passed. Engineering's mocked authentication coverage remains separate evidence from that successful inbox test.
+- Important: continuous iPhone lock-screen audio, installed voices, long background sessions and OS wake-lock behavior were not separately instrumented. Shane's successful phone test and mobile Chromium/WebKit automation do not establish every device power/background mode. Keep Lead visible for timer/audio use; saved plans and print remain available.
 - Important: the real rainy-core request timed out. AI availability, output consistency and broad-refinement fidelity remain provider-dependent; templates are labeled, existing drafts survive refinement errors and manual editing remains available. This is the explicit limitation behind the CONDITIONAL decision.
 - Later: remaining AO reports, uncertain distances, nearby access and seasonal changes remain explicit unknowns or review candidates. The app uses reviewed Nation/AO snapshots rather than scheduled live synchronization.
 - Later: minor offline-template wording can be tightened; this does not prevent following the listed exercises or timing.

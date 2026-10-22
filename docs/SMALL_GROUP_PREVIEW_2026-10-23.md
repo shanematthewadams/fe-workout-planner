@@ -2,7 +2,7 @@
 
 Target preview: Friday, October 23, 2026. Staging only: https://studio-ux-streamline--fe-workout-planner.netlify.app/
 
-The October 21 pilot candidate is on staging. Engineering verified the guest workflow, real private cloud save, hosted desktop/mobile WebKit recovery and available AO reports. See `PILOT_READINESS_2026-10-21.md` for the deployed commit, tests and explicit limitations. Three real AI cases passed; a fourth timed out and recovered with a labeled template.
+The October 21 pilot candidate, including the clearer first-visit flow, is on staging. Engineering verified the guest workflow, real private cloud save, hosted desktop/mobile WebKit recovery and available AO reports. See the latest release section in `PILOT_READINESS_2026-10-21.md` for the deployed commit, tests and limitations. AI is connected but inconsistent: the latest complex-case batch used labeled templates, while a separate simpler Gemini request succeeded. The template/manual planning path remains available.
 
 ## First workout (no account required)
 
@@ -29,7 +29,7 @@ Confirm the AO and any seasonal venue selection, weather, surface condition, equ
 - AO amenities, Site Q names and Nation locations are **reviewed snapshots**, not automatic live synchronization. Some information remains unknown or pending Site Q review.
 - AI availability and quality depend on the free eligible providers; a template fallback is different from generated output.
 - Cloud acknowledgement is distinct from a device save. Offline copies remain device-dependent until successfully synchronized.
-- Browser emulation covers phone layouts and timer behavior, but physical-device background audio, locked-screen timing, voice output and wake-lock operation have **not** been verified on a real iPhone.
+- Shane completed the short phone acceptance test and separately verified email delivery. Continuous locked-screen audio/timing, installed voices and wake-lock behavior remain device-dependent; keep Lead visible when using timers or audio.
 - Shared/public workout publishing and a public AO editing system are not part of this preview.
 
 ## Engineer release gate
