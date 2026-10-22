@@ -112,7 +112,7 @@ export function AOContextPanel({
           <p>{context.accessNotes}</p>
         </details>
       )}
-      <p className="ao-quick-summary">
+      <p className="ao-quick-summary" data-available={context.available.length > 0}>
         {profile ? `${profile.name} · ` : ao ? "Custom AO · " : ""}
         {context.available.length
           ? `Available for this Q: ${context.available.map((f) => FEATURES[f]).join(", ")}.`

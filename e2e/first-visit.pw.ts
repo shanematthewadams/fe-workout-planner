@@ -49,6 +49,10 @@ test("a first-time PAX can understand the path and start from an example without
   await expect(page.getByLabel("Describe your Q", { exact: true })).toHaveValue(
     /Gold Rush.*No running/,
   );
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-planning-focus.png`,
+    fullPage: true,
+  });
   expect(calls).toBe(0);
   await page
     .getByRole("button", { name: "Build my workout", exact: true })

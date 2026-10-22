@@ -103,7 +103,11 @@ export function CloudSync({
     return null;
   if (compact)
     return (
-      <aside className="cloud-statusbar no-print" aria-label="Saving status">
+      <aside
+        className="cloud-statusbar no-print"
+        aria-label="Saving status"
+        data-cloud-saved={save.status.startsWith("Saved to cloud")}
+      >
         <span>
           <StatusIcon size={17} aria-hidden="true" />
           {save.status}
@@ -128,7 +132,9 @@ export function CloudSync({
           Cloud saving is not configured. Your device saves still work.
         </p>
       )}
-      <p role="status">{save.status}</p>
+      <p role="status" data-cloud-saved={save.status.startsWith("Saved to cloud")}>
+        {save.status}
+      </p>
       {save.available && save.config && save.needsRetry && (
         <button disabled={save.busy || blocked} onClick={save.retry}>
           <RefreshCw size={17} aria-hidden="true" /> Retry saving

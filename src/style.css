@@ -2118,16 +2118,19 @@ fieldset,
   }
 }
 
-/* Charcoal / gold / red. Big Shoulders display with Manrope for readable plans. */
+/* Warm charcoal, red and gold; steel blue supports context and interaction. */
 :root {
   color-scheme: dark;
   --ink: #f8f5ed;
-  --charcoal: #151618;
-  --ground: #151618;
-  --surface: #202225;
-  --surface-raised: #2c2f33;
-  --muted: #bdc0c5;
-  --line: #71767e;
+  --charcoal: #1c1d1a;
+  --ground: #1c1d1a;
+  --surface: #292b26;
+  --surface-raised: #343730;
+  --muted: #c1c2b8;
+  --line: #85877e;
+  --steel: #527d9c;
+  --steel-text: #8eafc6;
+  --steel-soft: #263541;
   --gold: #ffaa00;
   --gold-hover: #ffc247;
   --red: #ff001e;
@@ -2144,7 +2147,7 @@ fieldset,
 input[type="checkbox"],
 input[type="range"],
 progress {
-  accent-color: var(--gold);
+  accent-color: var(--steel-text);
 }
 
 body {
@@ -2161,7 +2164,7 @@ button,
 button:hover,
 .button:hover {
   background: var(--surface-raised);
-  border-color: var(--gold);
+  border-color: var(--steel-text);
 }
 button:focus-visible,
 a:focus-visible,
@@ -2169,7 +2172,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--steel-text);
   outline-offset: 4px;
 }
 input,
@@ -2184,10 +2187,13 @@ textarea,
   border-radius: 5px;
   font-size: 1rem;
 }
+textarea:focus,
+input:focus,
+select:focus,
 .assistant textarea:focus,
 .assistant input:focus,
 .assistant select:focus {
-  border-color: var(--gold);
+  border-color: var(--steel-text);
   box-shadow: 0 0 0 2px var(--surface-raised);
 }
 .create,
@@ -2381,7 +2387,7 @@ summary {
 .entry-modes button[aria-pressed="true"] {
   background: transparent;
   color: var(--ink);
-  box-shadow: inset 0 -3px var(--gold);
+  box-shadow: inset 0 -3px var(--steel-text);
   border: 0;
 }
 .assistant-prompt {
@@ -2452,7 +2458,7 @@ summary {
 .import-entry button {
   background: transparent;
   border: 0;
-  color: var(--gold);
+  color: var(--steel-text);
   padding: 6px 0;
   min-height: 44px;
   text-decoration: underline;
@@ -2600,7 +2606,7 @@ summary {
 .assistant-notes,
 .site-context-note {
   background: var(--surface);
-  border-color: var(--gold);
+  border-color: var(--steel);
 }
 .assistant-refine {
   background: var(--surface-raised);
@@ -2686,7 +2692,7 @@ summary {
   box-shadow: none;
 }
 .card:hover {
-  border-color: var(--gold);
+  border-color: var(--steel-text);
   box-shadow: 0 5px 20px #0003;
 }
 .card h3 {
@@ -2698,8 +2704,8 @@ summary {
 }
 .chip,
 .ao-features span {
-  background: var(--surface-raised);
-  color: var(--ink);
+  background: var(--steel-soft);
+  color: var(--steel-text);
 }
 .heart.hearted {
   background: var(--surface);
@@ -2722,8 +2728,8 @@ summary {
 }
 .site-q-pill {
   white-space: normal;
-  color: var(--muted);
-  background: var(--surface-raised);
+  color: var(--steel-text);
+  background: var(--steel-soft);
   border: 0;
 }
 .site-q-pill strong {
@@ -2956,6 +2962,9 @@ footer {
 @media print {
   :root {
     color-scheme: light;
+    --steel: #000;
+    --steel-text: #000;
+    --steel-soft: transparent;
   }
   html,
   body {
@@ -3024,7 +3033,7 @@ footer {
 }
 .session-timeline .phase-welcome,
 .session-timeline .phase-warmup {
-  border-color: var(--line);
+  border-color: var(--steel);
 }
 .session-timeline .phase-thang,
 .session-timeline .phase-mary {
@@ -3506,7 +3515,7 @@ footer {
   font-weight: 800;
 }
 .planner-journey li[aria-current="step"] > span {
-  color: #151618;
+  color: var(--charcoal);
   background: var(--gold);
   border-color: var(--gold);
 }
@@ -3558,3 +3567,31 @@ footer {
 
 .assistant { scroll-margin-top: 24px; }
 @media (max-width: 1000px) { .assistant { scroll-margin-top: 90px; } }
+
+/* Supporting information stays quieter than gold actions and the red rail. */
+@media screen {
+  :where(.main, .account-panel, .cloud-sync) a:not(.button),
+  .footer-links a {
+    color: var(--steel-text);
+    text-underline-offset: 3px;
+  }
+  :where(.main, .account-panel, .cloud-sync) a:not(.button):hover,
+  .footer-links a:hover {
+    color: var(--ink);
+  }
+  .ao-context .icon-label .app-icon,
+  .discovery h2 .app-icon,
+  .account-panel h2 svg,
+  .cloud-sync h2 svg,
+  .card-metrics svg,
+  .section-time,
+  .ao-quick-summary[data-available="true"],
+  [data-cloud-saved="true"] > span,
+  p[data-cloud-saved="true"] {
+    color: var(--steel-text);
+  }
+  /* White remains the strongest focus indicator on the red navigation. */
+  .app-navigation :focus-visible {
+    outline-color: #fff;
+  }
+}

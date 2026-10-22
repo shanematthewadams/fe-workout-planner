@@ -79,9 +79,9 @@
   border-radius: 24px;
 }
 .quick-filters button[aria-pressed="true"] {
-  background: var(--gold);
-  color: var(--charcoal);
-  border-color: var(--gold);
+  background: var(--steel-soft);
+  color: var(--steel-text);
+  border-color: var(--steel-text);
 }
 .library-controls .favorites-filter {
   margin: 0;
@@ -108,7 +108,7 @@
   flex-direction: column;
   min-width: 0;
   padding: 20px;
-  border-top: 3px solid var(--gold);
+  border-top: 3px solid var(--steel);
 }
 .workout-card .card-top {
   margin-bottom: 8px;
@@ -192,7 +192,7 @@
   min-height: 60px;
 }
 .movement-entry[open] > summary {
-  border-left: 4px solid var(--gold);
+  border-left: 4px solid var(--steel-text);
   padding-left: 14px;
 }
 .movement-name {
@@ -327,7 +327,7 @@
   font: 0.88rem/1.7 monospace;
 }
 .markdown-import .button:focus-within {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--steel-text);
   outline-offset: 4px;
 }
 .markdown-review {
@@ -335,7 +335,7 @@
   padding: 24px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--gold);
+  border-top: 3px solid var(--steel);
   border-radius: var(--radius);
   overflow-wrap: anywhere;
 }
@@ -520,13 +520,13 @@
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: clamp(16px, 4vw, 32px);
-  background: #1c1d20;
+  background: var(--surface);
 }
 .interval-rest {
-  --phase-color: #f6f1e8;
+  --phase-color: var(--steel-text);
 }
 .interval-get-ready {
-  --phase-color: #f6f1e8;
+  --phase-color: var(--steel-text);
 }
 .interval-toolbar,
 .interval-totals {
