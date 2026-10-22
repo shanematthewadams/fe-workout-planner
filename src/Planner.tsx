@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AppIcon } from "./AppIcon";
 import { PlannerWelcome, type WelcomeStep } from "./PlannerWelcome";
-import type { Vibe } from "./workout-concepts";
+import { CONCEPTS, type Vibe } from "./workout-concepts";
 import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import type { PlannerRequest } from "./planner-contract";
@@ -193,6 +193,7 @@ export function Planner({
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);
   const planning = { ...conditions, focus, pax };
+  const selectedConcept = CONCEPTS.find((concept) => concept.prompt === prompt);
   const formal = {
     title,
     qName,
@@ -654,7 +655,23 @@ export function Planner({
                   </div>
                 </fieldset>
               )}
-              <div className="assistant-prompt">
+              {selectedConcept && (
+                <article className="chosen-concept">
+                  <p className="eyebrow">
+                    <AppIcon name="builder" /> YOUR STARTING IDEA
+                  </p>
+                  <h2>{selectedConcept.title}</h2>
+                  <p>{selectedConcept.description}</p>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => setWelcomeStep("concept")}
+                  >
+                    Choose another idea
+                  </button>
+                </article>
+              )}
+              <div className="assistant-prompt" hidden={!!selectedConcept}>
                 <label htmlFor="q-description">
                   {mode === "formal"
                     ? "Additional instructions (optional)"
@@ -706,7 +723,14 @@ export function Planner({
                   </div>
                 )}
               </div>
-              <div className="planner-location">
+              <details
+                className="planner-location"
+                open={!selectedConcept || undefined}
+              >
+                <summary>
+                  <AppIcon name="aos" /> {ao || "AO to confirm"} ·{" "}
+                  {startTime || "Start time to confirm"} · Location & time
+                </summary>
                 <AOContextPanel
                   ao={ao}
                   prompt={prompt}
@@ -717,7 +741,7 @@ export function Planner({
                   onSite={setSite}
                   onAO={chooseAO}
                 />
-              </div>
+              </details>
               <section
                 className="quick-preferences"
                 aria-label="Anything else?"

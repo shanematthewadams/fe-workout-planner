@@ -1,4 +1,4 @@
-import { saveWorkout } from "./navigation";
+import { saveWorkout, startPlanning } from "./navigation";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { navigate, openOtherWays } from "./navigation";
@@ -353,6 +353,7 @@ test("older expired email links leave guest access available and remove callback
   ).toBeVisible();
   await expect(page).toHaveURL(/\/#settings$/);
   await navigate(page, "Build");
+  await startPlanning(page);
   await expect(
     page.getByLabel("Describe your Q", { exact: true }),
   ).toBeVisible();

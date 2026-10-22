@@ -3761,3 +3761,17 @@ footer {
     margin: 0.5rem 0;
   }
 }
+.chosen-concept {
+  border-left: 3px solid var(--steel);
+  padding: 1.25rem;
+  background: var(--surface);
+  margin: 1.25rem 0;
+}
+.chosen-concept h2 {
+  margin-top: 0.5rem;
+}
+.planner-location > summary {
+  padding: 1rem 0;
+  cursor: pointer;
+  color: var(--steel-text);
+}

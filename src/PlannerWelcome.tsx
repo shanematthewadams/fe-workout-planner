@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { AppIcon } from "./AppIcon";
 import { VIBES, conceptsFor, type Vibe } from "./workout-concepts";
 export type WelcomeStep = "welcome" | "vibe" | "location" | "concept" | "ready";
@@ -16,13 +17,17 @@ export function PlannerWelcome({
   onConcept: (prompt: string) => void;
   location: React.ReactNode;
 }) {
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    heading.current?.focus({ preventScroll: true });
+  }, [step]);
   if (step === "ready") return null;
   return (
     <section className="planner-discovery" aria-label="Find your next Q">
       {step === "welcome" ? (
         <>
           <p className="eyebrow">F3 Q BUILDER</p>
-          <h1>
+          <h1 ref={heading} tabIndex={-1}>
             You’ve got the Q.
             <br />
             Let’s make it a good one.
@@ -71,7 +76,7 @@ export function PlannerWelcome({
           >
             ← Back
           </button>
-          <h1>
+          <h1 ref={heading} tabIndex={-1}>
             {step === "vibe"
               ? "What sounds good?"
               : step === "location"

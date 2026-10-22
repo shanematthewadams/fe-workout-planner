@@ -55,6 +55,10 @@ it("offers two clear entries and three terrain-independent concepts per vibe wit
   expect(fetcher).not.toHaveBeenCalled();
   click(/The Buddy System/);
   expect(screen.getByRole("heading", { name: "Anything else?" })).toBeVisible();
+  expect(
+    screen.getByRole("heading", { name: "The Buddy System" }),
+  ).toBeVisible();
+  expect(screen.getByLabelText("Describe your Q")).not.toBeVisible();
   expect(screen.getByLabelText("Q location")).toHaveValue(
     "Unknown downrange AO",
   );

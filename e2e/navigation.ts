@@ -16,6 +16,7 @@ export async function navigate(page: Page, label: string) {
 }
 
 export async function openOtherWays(page: Page) {
+  await startPlanning(page);
   const choices = page.locator(".planner-other-ways");
   if ((await choices.getAttribute("open")) === null)
     await choices.locator("summary").click();
