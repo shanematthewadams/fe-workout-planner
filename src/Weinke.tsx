@@ -54,7 +54,7 @@ export function makeWeinke(fields: Fields, base?: Workout): Workout {
         ];
       },
     ),
-    rawNotes: fields.cot,
+    rawNotes: "",
     adaptationNotes: fields.cot,
     provenance: {
       status: "personal",

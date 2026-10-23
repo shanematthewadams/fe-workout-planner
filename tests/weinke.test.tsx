@@ -9,6 +9,11 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import App from "../src/App";
+import { Planner } from "../src/Planner";
+import { SESSION_KEY } from "../src/planner-session";
+import { fallbackPlan } from "../src/fallback";
+import { resolveRequest } from "../src/planner-contract";
+import { qSheet } from "../src/session";
 import { Weinke, makeWeinke } from "../src/Weinke";
 import { STORAGE_KEY, type Workout } from "../src/model";
 const fields = {
@@ -39,6 +44,7 @@ it("keeps literal words, order and unknown timing without inventing exercises or
   });
   expect(w.duration).toBeNull();
   expect(w.adaptationNotes).toBe(fields.cot);
+  expect(qSheet(w).split(fields.cot)).toHaveLength(2);
   expect(w.provenance.issues?.join(" ")).toContain("not inferred");
   expect(() => makeWeinke({ ...fields, thang: "  " })).toThrow(/Add The Thang/);
   const changed = makeWeinke({ ...fields, thang: "Merkins x17 OMD" }, w);
@@ -153,4 +159,30 @@ it("updates the saved identity and starts a separate sheet without deleting the 
   click("Save & open Weinke");
   expect(stored).toHaveLength(2);
   expect(stored[1].id).not.toBe(first.id);
+});
+
+it("restores the chosen Weinke form while retaining a previous generated draft", () => {
+  sessionStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      result: fallbackPlan(resolveRequest({ prompt: "test" })),
+    }),
+  );
+  sessionStorage.setItem(
+    SESSION_KEY + ":flow",
+    JSON.stringify({ step: "weinke" }),
+  );
+  sessionStorage.setItem(SESSION_KEY + ":weinke", JSON.stringify({ fields }));
+  render(
+    <Planner
+      onSave={(w) => w}
+      onEdit={vi.fn()}
+      onPreview={vi.fn()}
+      onReference={vi.fn()}
+    />,
+  );
+  expect(screen.getByLabelText("The Thang")).toHaveValue(fields.thang);
+  expect(
+    JSON.parse(sessionStorage.getItem(SESSION_KEY)!).result,
+  ).not.toBeNull();
 });

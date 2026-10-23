@@ -101,9 +101,18 @@ export function Planner({
   useEffect(() => {
     if (initial.result) onDraft?.(initial.result.workout);
   }, []);
-  const [view, setView] = useState<"build" | "review">(
-    initial.result ? "review" : "build",
-  );
+  const [view, setView] = useState<"build" | "review">(() => {
+    try {
+      if (
+        JSON.parse(sessionStorage.getItem(sessionKey + ":flow") ?? "null")
+          ?.step === "weinke"
+      )
+        return "build";
+    } catch {
+      /* Keep the generated draft recoverable. */
+    }
+    return initial.result ? "review" : "build";
+  });
   const [welcomeStep, setWelcomeStep] = useState<WelcomeStep>(() => {
     try {
       const value = JSON.parse(
