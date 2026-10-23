@@ -300,3 +300,14 @@ it("keeps block identities distinct when adding plain notes to a structured-only
       .blocks[0].id,
   ).toBe(edited.sections[0].blocks[0].id);
 });
+
+it("preserves authored set counts alongside reps and counting in Lead", () => {
+  const workout = fallbackPlan(
+    resolveRequest({ prompt: "Synthetic sets" }),
+  ).workout;
+  workout.sections[1].blocks[0].exercises[0].sets = 3;
+  render(<FieldTimer workout={workout} onExit={vi.fn()} />);
+  expect(screen.getByLabelText("Workout to lead")).toHaveTextContent(
+    "× 3 sets",
+  );
+});

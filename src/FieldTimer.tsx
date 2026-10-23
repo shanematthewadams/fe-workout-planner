@@ -172,6 +172,7 @@ export function FieldTimer({
                           {exercise.unit !== "instructions"
                             ? ` ${exercise.unit}`
                             : ""}
+                          {exercise.sets ? ` × ${exercise.sets} sets` : ""}
                         </strong>
                         {exercise.counting !== "not applicable" && (
                           <span className="count-label">
