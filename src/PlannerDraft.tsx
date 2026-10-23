@@ -308,6 +308,7 @@ export function PlannerDraft({
                             <label>
                               Unit
                               <select
+                                aria-label="Unit"
                                 value={e.unit}
                                 onChange={(event) =>
                                   changeExercise(i, j, k, {
@@ -325,6 +326,7 @@ export function PlannerDraft({
                             <label>
                               Counting
                               <select
+                                aria-label="Counting"
                                 value={e.counting}
                                 onChange={(event) =>
                                   changeExercise(i, j, k, {

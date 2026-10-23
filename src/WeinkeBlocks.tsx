@@ -92,6 +92,7 @@ export function WeinkeBlocks({
                 <label>
                   Unit
                   <select
+                    aria-label="Unit"
                     value={exercise.unit}
                     onChange={(e) =>
                       change({ unit: e.target.value as typeof exercise.unit })
@@ -105,6 +106,7 @@ export function WeinkeBlocks({
                 <label>
                   Counting
                   <select
+                    aria-label="Counting"
                     value={exercise.counting}
                     onChange={(e) =>
                       change({
