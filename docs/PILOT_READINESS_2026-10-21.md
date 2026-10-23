@@ -1,5 +1,7 @@
 # F3 Q Builder pilot verification — October 21, 2026
 
+Latest persistence follow-up: **Start a new workout** is verified on staging at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. Development/staging each passed 406 tests and 120 browser checks, plus hosted desktop/mobile reset/refresh checks preserving the saved collection. See [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md), starting-fresh verification, for current evidence and the continuing CONDITIONAL provider status.
+
 Latest October 22 update: the three-choice welcome now includes the direct, AI-free **Make a Weinke** path, verified at `14aa00571dd90218ea30f04efb19dac9acac2172`. Development and staging CI each passed 402 unit/component tests and 116 browser checks (four existing historical comparisons skipped). Hosted desktop/mobile WebKit smoke, exact deployed commit, a separate real cloud acknowledgement, refresh/reopen/Lead and compact print were verified. The new live AI probe succeeded for two creation cases and targeted refinement; one creation case returned HTTP 504, so overall readiness remains CONDITIONAL. See [WEINKE.md](WEINKE.md) for the current release and complete verification, and [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md) for the earlier vibe-first implementation. Production remains unchanged.
 
 Earlier October 22 palette work is recorded in [DESIGN_PALETTE.md](DESIGN_PALETTE.md). The historical release details below remain for provenance; they are superseded by the latest dated update above.

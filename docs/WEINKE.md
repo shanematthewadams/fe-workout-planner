@@ -1,5 +1,7 @@
 # Direct Weinke authoring
 
+Latest follow-up: the unified **Start a new workout** action is deployed at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. Both CI runs passed 406 tests and 120 browser checks; hosted reset/refresh preserved saved workouts. See [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md) for current verification and provider results. The initial Weinke release evidence below remains historical.
+
 Shane approved a third welcome choice, **Make a Weinke**, alongside the existing idea and inspiration paths. This is a focused addition to the existing application, not another generator.
 
 - Enter The Thang; name, warmup, Mary and COT/reminders are optional.
