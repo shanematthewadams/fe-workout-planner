@@ -1,3 +1,4 @@
+import { Weinke } from "./Weinke";
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AppIcon } from "./AppIcon";
@@ -109,7 +110,7 @@ export function Planner({
         sessionStorage.getItem(sessionKey + ":flow") ?? "null",
       );
       if (
-        ["welcome", "vibe", "location", "concept", "ready"].includes(
+        ["welcome", "vibe", "location", "concept", "ready", "weinke"].includes(
           value?.step,
         )
       )
@@ -598,6 +599,15 @@ export function Planner({
               onAO={chooseAO}
             />
           }
+        />
+      )}
+      {view === "build" && welcomeStep === "weinke" && (
+        <Weinke
+          key={sessionKey}
+          storageKey={sessionKey + ":weinke"}
+          onBack={() => setWelcomeStep("welcome")}
+          onSave={onSave}
+          onLead={onLead}
         />
       )}
       {welcomeStep === "ready" && (

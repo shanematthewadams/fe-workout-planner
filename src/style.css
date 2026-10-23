@@ -3822,3 +3822,30 @@ footer {
 #root:has(.planner-build:not([hidden])) .notice {
   bottom: max(160px, calc(140px + env(safe-area-inset-bottom)));
 }
+
+/* Direct, literal workout authoring shares the existing mobile Lead sheet. */
+.weinke {
+  max-width: 780px;
+}
+.weinke form > div {
+  margin-block: 1.5rem;
+}
+.weinke textarea,
+.weinke input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.weinke article {
+  margin-block: 1.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 8px;
+}
+.weinke .import-directions {
+  overflow-wrap: anywhere;
+}
+
+.weinke .import-directions,
+.lead-workout .import-directions {
+  white-space: pre-wrap;
+}

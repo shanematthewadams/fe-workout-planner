@@ -128,6 +128,65 @@ for (const [name, engine, device] of [
       name +
         ": hosted saved-ID, bookmark reload, My Workouts and 43:45 timer recovery passed; no page errors or overflow.",
     );
+    // A second fresh context verifies direct authoring without touching cloud records.
+    const direct = await browser.newContext({
+      ...device,
+      ignoreHTTPSErrors: true,
+      serviceWorkers: "block",
+    });
+    try {
+      const sheet = await direct.newPage();
+      await sheet.route("**/*", (route) => {
+        const u = new URL(route.request().url());
+        return u.origin === origin && !u.pathname.startsWith("/api/")
+          ? route.continue()
+          : route.abort();
+      });
+      await sheet.goto(origin);
+      await sheet
+        .getByRole("button", { name: "Make a Weinke", exact: true })
+        .click();
+      const words =
+        "11s: heavy squats and merkins.\nHammers 2=1. Down and back x4.";
+      await sheet
+        .getByLabel("Workout name (optional)", { exact: true })
+        .fill("Synthetic hosted Weinke");
+      await sheet.getByLabel("The Thang", { exact: true }).fill(words);
+      await sheet.reload();
+      await expect(sheet.getByLabel("The Thang", { exact: true })).toHaveValue(
+        words,
+      );
+      await sheet
+        .getByRole("button", { name: "Preview my Weinke", exact: true })
+        .click();
+      await sheet
+        .getByRole("button", { name: "Save & open Weinke", exact: true })
+        .click();
+      await expect(sheet).toHaveURL(/#lead\//);
+      await sheet.reload();
+      await expect(
+        sheet.getByLabel("Workout to lead", { exact: true }),
+      ).toContainText(words);
+      await expect(
+        sheet.getByRole("button", { name: "No timer", exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+      assert.equal(
+        await sheet.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        true,
+      );
+      await sheet.screenshot({
+        path: `qa/pilot/hosted-${name}-weinke.png`,
+        fullPage: true,
+      });
+      console.log(
+        name +
+          ": hosted direct Weinke draft recovery, save and Lead reload passed without AI.",
+      );
+    } finally {
+      await direct.close();
+    }
   } finally {
     await context.close();
     await browser.close();

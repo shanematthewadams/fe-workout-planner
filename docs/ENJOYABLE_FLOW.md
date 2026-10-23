@@ -4,7 +4,7 @@ Shane approved this product flow in the conversation following the steel-blue re
 
 ## Approved experience
 
-1. “You’ve got the Q. Let’s make it a good one.” Two entries: **I have an idea** and **Help me find one**.
+1. “You’ve got the Q. Let’s make it a good one.” Three entries: **I have an idea**, **Help me find one**, and **Make a Weinke**. The direct, AI-free authoring path is documented in `docs/WEINKE.md`.
 2. Inspiration: vibe first → AO → three curated concepts. All three steps use ordinary code, with no provider calls. Ideas require no undocumented site amenities. Unknown/downrange locations remain supported; confirmed AO context is supplied to generation through the existing grounding path.
 3. “Anything else?” Exactly two primary preferences: coupons Yes/No and running Lots/Some/None, plus an optional note. Lots maps to the existing Moderate running value; Some to Light. Yes confirms equipment for this session, not coupon storage at the AO. Visible defaults are concrete No coupons / Some running; notes can suggest other values, and explicit button choices take priority. Formal Builder coupon controls share the same gear selection. Duration remains the existing 45-minute FE schedule; advanced options remain available.
 4. Show the entire workout in order, including warmup, Thang, Mary when included, and COT. Inline exercise/count/unit/instruction/order and block-time edits use ordinary code and keep the refinement plan and saved workout aligned. Additional established editing capabilities remain under **More editing options**.

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { AppIcon } from "./AppIcon";
 import { VIBES, conceptsFor, type Vibe } from "./workout-concepts";
-export type WelcomeStep = "welcome" | "vibe" | "location" | "concept" | "ready";
+export type WelcomeStep =
+  "welcome" | "vibe" | "location" | "concept" | "ready" | "weinke";
 export function PlannerWelcome({
   step,
   vibe,
@@ -21,7 +22,7 @@ export function PlannerWelcome({
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
   }, [step]);
-  if (step === "ready") return null;
+  if (step === "ready" || step === "weinke") return null;
   return (
     <section className="planner-discovery" aria-label="Find your next Q">
       {step === "welcome" ? (
@@ -57,6 +58,17 @@ export function PlannerWelcome({
               <AppIcon name="builder" size={28} />
               <strong>Help me find one</strong>
               <span>A little inspiration goes a long way.</span>
+            </button>
+            <button
+              type="button"
+              aria-label="Make a Weinke"
+              onClick={() => onStep("weinke")}
+            >
+              <AppIcon name="sheet" size={28} />
+              <strong>Make a Weinke</strong>
+              <span>
+                Already know your workout? Create a phone-friendly crib sheet.
+              </span>
             </button>
           </div>
         </>

@@ -36,10 +36,11 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
 });
-it("offers two clear entries and three terrain-independent concepts per vibe without AI", () => {
+it("offers three clear entries and three terrain-independent concepts per vibe without AI", () => {
   const fetcher = vi.spyOn(globalThis, "fetch");
   render(<Planner {...props} />);
   expect(screen.getByRole("button", { name: "I have an idea" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Make a Weinke" })).toBeVisible();
   expect(screen.queryByLabelText("Describe your Q")).toBeNull();
   click("Help me find one");
   click(/Work together/);
