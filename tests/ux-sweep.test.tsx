@@ -265,3 +265,38 @@ it("does not overwrite an unreadable structured recovery record", () => {
   ).toBeDisabled();
   expect(save).not.toHaveBeenCalled();
 });
+
+it("keeps block identities distinct when adding plain notes to a structured-only saved Weinke", () => {
+  const fields = {
+    title: "Synthetic",
+    thang: "",
+    warmup: "",
+    mary: "",
+    cot: "",
+    blocks: [
+      {
+        id: "structured",
+        title: "Rounds",
+        rounds: "3",
+        minutes: null,
+        instructions: "Partners",
+        exercises: [newExercise()],
+      },
+    ],
+  };
+  const original = makeWeinke(fields);
+  const edited = makeWeinke(
+    { ...fields, thang: "Keep these opening notes" },
+    original,
+  );
+  expect(edited.id).toBe(original.id);
+  expect(edited.sections[0].blocks.map((b) => b.id)).toEqual([
+    expect.any(String),
+    "structured",
+  ]);
+  expect(new Set(edited.sections[0].blocks.map((b) => b.id)).size).toBe(2);
+  expect(
+    makeWeinke({ ...fields, thang: "Updated notes" }, edited).sections[0]
+      .blocks[0].id,
+  ).toBe(edited.sections[0].blocks[0].id);
+});

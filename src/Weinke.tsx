@@ -55,7 +55,10 @@ export function makeWeinke(fields: Fields, base?: Workout): Workout {
               ...(text
                 ? [
                     {
-                      id: previous?.blocks[0]?.id ?? uid(),
+                      id:
+                        previous?.blocks.find(
+                          (b) => !blocks.some((added) => added.id === b.id),
+                        )?.id ?? uid(),
                       title: labels[kind],
                       minutes: null,
                       instructions: text,
