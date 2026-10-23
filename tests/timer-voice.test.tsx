@@ -69,6 +69,8 @@ const advance = (seconds: number) => {
 };
 function launch() {
   render(<FieldTimer workout={newWorkout()} onExit={() => {}} />);
+  if (!screen.queryByRole("button", { name: "Intervals" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Intervals" }));
   fireEvent.change(screen.getByRole("combobox", { name: "Timer sound" }), {
     target: { value: "voice" },
@@ -224,6 +226,8 @@ it("cancels hidden speech and discards old cues on return", () => {
 });
 it("supports session voice without changing its schedule and cancels on pause", () => {
   render(<FieldTimer workout={newWorkout()} onExit={() => {}} />);
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(
     screen.getByRole("button", { name: "Use standard 45-minute timer" }),

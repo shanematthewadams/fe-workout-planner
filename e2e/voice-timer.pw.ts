@@ -38,6 +38,12 @@ test("voice cues follow the clock and cancel cleanly on phones and desktops", as
   await page
     .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
+  if (
+    !(await page
+      .getByRole("button", { name: "Intervals", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page.getByRole("button", { name: "Intervals", exact: true }).click();
   await page.clock.install();
   const sound = () =>

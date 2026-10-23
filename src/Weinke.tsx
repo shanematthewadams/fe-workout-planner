@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { AppIcon } from "./AppIcon";
+import {
+  WeinkeBlocks,
+  weinkeBlocksSchema,
+  type WeinkeBlock,
+} from "./WeinkeBlocks";
 import { workoutSchema, uid, type Workout, type Section } from "./model";
 
 type Fields = {
@@ -8,6 +13,7 @@ type Fields = {
   thang: string;
   mary: string;
   cot: string;
+  blocks?: WeinkeBlock[];
 };
 const empty: Fields = { title: "", warmup: "", thang: "", mary: "", cot: "" };
 const labels = {
@@ -19,7 +25,11 @@ const labels = {
 
 /** Literal authoring: no exercise inference, generated counts, or invented timing. */
 export function makeWeinke(fields: Fields, base?: Workout): Workout {
-  if (!fields.thang.trim())
+  const blocks = weinkeBlocksSchema.parse(fields.blocks ?? []);
+  if (
+    !fields.thang.trim() &&
+    !blocks.some((b) => b.instructions.trim() || b.exercises.length)
+  )
     throw Error("Add The Thang so you have a workout to lead.");
   return workoutSchema.parse({
     schemaVersion: 1,
@@ -34,7 +44,7 @@ export function makeWeinke(fields: Fields, base?: Workout): Workout {
     sections: (["warmup", "thang", "mary"] as const).flatMap(
       (kind): Section[] => {
         const text = fields[kind].trim();
-        if (!text) return [];
+        if (!text && !(kind === "thang" && blocks.length)) return [];
         const previous = base?.sections.find((s) => s.kind === kind);
         return [
           {
@@ -42,13 +52,28 @@ export function makeWeinke(fields: Fields, base?: Workout): Workout {
             kind,
             title: labels[kind],
             blocks: [
-              {
-                id: previous?.blocks[0]?.id ?? uid(),
-                title: labels[kind],
-                minutes: null,
-                instructions: text,
-                exercises: [],
-              },
+              ...(text
+                ? [
+                    {
+                      id: previous?.blocks[0]?.id ?? uid(),
+                      title: labels[kind],
+                      minutes: null,
+                      instructions: text,
+                      exercises: [],
+                    },
+                  ]
+                : []),
+              ...(kind === "thang"
+                ? blocks.map(({ rounds, ...block }) => ({
+                    ...block,
+                    instructions: [
+                      rounds.trim() ? `Rounds: ${rounds}` : "",
+                      block.instructions,
+                    ]
+                      .filter(Boolean)
+                      .join("\n"),
+                  }))
+                : []),
             ],
           },
         ];
@@ -88,20 +113,27 @@ export function Weinke({
   const [initial] = useState(() => {
     try {
       const value = JSON.parse(sessionStorage.getItem(storageKey) ?? "null");
-      const fields = { ...empty };
-      for (const key of Object.keys(empty) as (keyof Fields)[])
+      const fields: Fields = { ...empty };
+      for (const key of ["title", "warmup", "thang", "mary", "cot"] as const)
         if (typeof value?.fields?.[key] === "string")
           fields[key] = value.fields[key].slice(
             0,
             key === "title" ? 160 : 20000,
           );
+      const blocks = weinkeBlocksSchema.safeParse(value?.fields?.blocks ?? []);
+      if (blocks.success) fields.blocks = blocks.data;
       const parsed = workoutSchema.safeParse(value?.base);
-      return { fields, base: parsed.success ? parsed.data : undefined };
+      return {
+        fields,
+        base: parsed.success ? parsed.data : undefined,
+        blocksError: !blocks.success,
+      };
     } catch {
-      return { fields: empty, base: undefined };
+      return { fields: empty, base: undefined, blocksError: false };
     }
   });
   const [fields, setFields] = useState(initial.fields);
+  const [recoveryBlocked, setRecoveryBlocked] = useState(initial.blocksError);
   const [base, setBase] = useState(initial.base);
   const [preview, setPreview] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -111,6 +143,7 @@ export function Weinke({
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   function remember(next: Fields, saved = base) {
+    if (recoveryBlocked) return; // Preserve the original recovery record.
     try {
       sessionStorage.setItem(
         storageKey,
@@ -123,6 +156,7 @@ export function Weinke({
     }
   }
   function save() {
+    if (recoveryBlocked) return;
     setError("");
     try {
       const saved = onSave(makeWeinke(fields, base), base);
@@ -158,6 +192,7 @@ export function Weinke({
             )
               return;
             setFields({ ...empty });
+            setRecoveryBlocked(false);
             setBase(undefined);
             setPreview(false);
             setError("");
@@ -188,6 +223,13 @@ export function Weinke({
         Keep reps, rounds and counting rules in your notes exactly as you want
         to call them.
       </p>
+      {recoveryBlocked && (
+        <p role="alert">
+          Some recovered blocks could not be read. Your original recovery record
+          is untouched. Copy the notes you can see before starting a new
+          workout; saving is paused to protect your work.
+        </p>
+      )}
       {!preview ? (
         <form
           onSubmit={(event) => {
@@ -216,7 +258,12 @@ export function Weinke({
               <textarea
                 id={`weinke-${key}`}
                 rows={key === "thang" ? 8 : 3}
-                required={key === "thang"}
+                required={
+                  key === "thang" &&
+                  !fields.blocks?.some(
+                    (b) => b.instructions.trim() || b.exercises.length,
+                  )
+                }
                 maxLength={20000}
                 value={fields[key]}
                 placeholder={
@@ -232,9 +279,23 @@ export function Weinke({
               />
             </div>
           ))}
+          <WeinkeBlocks
+            blocks={fields.blocks ?? []}
+            onChange={(blocks) => {
+              const next = { ...fields, blocks };
+              setFields(next);
+              remember(next);
+            }}
+          />
           <button
             className="create"
-            disabled={!fields.thang.trim()}
+            disabled={
+              recoveryBlocked ||
+              (!fields.thang.trim() &&
+                !fields.blocks?.some(
+                  (b) => b.instructions.trim() || b.exercises.length,
+                ))
+            }
             type="submit"
           >
             <AppIcon name="sheet" /> Preview my Weinke
@@ -247,10 +308,32 @@ export function Weinke({
           </h2>
           {(["warmup", "thang", "mary", "cot"] as const).map(
             (key) =>
-              fields[key].trim() && (
+              (fields[key].trim() ||
+                (key === "thang" && !!fields.blocks?.length)) && (
                 <article key={key}>
                   <h3>{labels[key]}</h3>
                   <p className="import-directions">{fields[key]}</p>
+                  {key === "thang" &&
+                    fields.blocks?.map((block) => (
+                      <div key={block.id}>
+                        <h4>{block.title}</h4>
+                        {block.rounds && <p>Rounds: {block.rounds}</p>}
+                        <p className="import-directions">
+                          {block.instructions}
+                        </p>
+                        {block.exercises.map((exercise) => (
+                          <p key={exercise.id}>
+                            {exercise.name} · {exercise.amount}{" "}
+                            {exercise.unit !== "instructions"
+                              ? exercise.unit
+                              : ""}{" "}
+                            · {exercise.counting}
+                            <br />
+                            {exercise.instructions}
+                          </p>
+                        ))}
+                      </div>
+                    ))}
                 </article>
               ),
           )}

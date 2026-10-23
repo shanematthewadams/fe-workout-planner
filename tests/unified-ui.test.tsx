@@ -44,6 +44,8 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   );
   expect(screen.queryByRole("timer")).toBeNull();
   expect(screen.queryByText("Four-count cadence")).toBeNull();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
   expect(screen.getByRole("combobox", { name: "Timer sound" })).toBeVisible();

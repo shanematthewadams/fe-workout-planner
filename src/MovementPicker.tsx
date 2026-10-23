@@ -17,18 +17,25 @@ export function exerciseFromMovement(movement: Movement): Exercise {
 export function MovementPicker({
   onAdd,
   disabled = false,
+  action = "Add",
 }: {
   onAdd: (exercise: Exercise) => void;
   disabled?: boolean;
+  action?: "Add" | "Swap";
 }) {
   const [query, setQuery] = useState("");
   const candidates = searchMovements(query);
   return (
     <details className="movement-picker">
-      <summary>Add from movement guide</summary>
+      <summary>
+        {action === "Swap"
+          ? "Swap from movement guide"
+          : "Add from movement guide"}
+      </summary>
       <p>
-        Choose a movement, then set its reps or time in the editor. Gear and AO
-        settings do not change automatically.
+        {action === "Swap"
+          ? "Replace the name and instructions; existing reps, unit and counting stay. Review counting and confirm any gear or terrain before leading."
+          : "Choose a movement, then set its reps or time in the editor. Gear and AO settings do not change automatically."}
       </p>
       {disabled && (
         <p role="status">
@@ -57,14 +64,15 @@ export function MovementPicker({
               </span>
             </div>
             <button
+              type="button"
               disabled={disabled}
-              aria-label={`Add ${movement.name}`}
+              aria-label={`${action} ${movement.name}`}
               onClick={() => {
                 onAdd(exerciseFromMovement(movement));
                 setQuery("");
               }}
             >
-              Add
+              {action}
             </button>
           </li>
         ))}

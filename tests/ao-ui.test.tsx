@@ -47,6 +47,8 @@ it("plans at a custom start with a one-workout closure while keeping the common 
   fireEvent.click(
     screen.getByRole("button", { name: /^Lead (?:this )?workout$/ }),
   );
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(

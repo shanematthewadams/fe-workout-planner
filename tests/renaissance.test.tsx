@@ -186,6 +186,8 @@ it("can stop a live timer and move through exercises without changing phase time
   ).workout;
   render(<FieldTimer workout={workout} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(

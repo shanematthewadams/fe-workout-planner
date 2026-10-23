@@ -106,6 +106,20 @@ for (const [name, engine, device] of [
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
     );
+    const firstExercise = saved.sections[0].blocks[0].exercises[0];
+    await page
+      .getByRole("button", { name: `Edit ${firstExercise.name}`, exact: true })
+      .click();
+    await page.getByLabel("Reps or duration", { exact: true }).fill("17");
+    await page
+      .getByRole("button", { name: "Undo last edit", exact: true })
+      .click();
+    await expect(page.getByText(/Saved on this device/)).toBeVisible();
+    const undone = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
+    );
+    assert.equal(undone.id, saved.id);
+    assert.deepEqual(undone.sections, saved.sections);
     await page
       .getByRole("button", { name: "Print workout", exact: true })
       .click();
@@ -118,6 +132,12 @@ for (const [name, engine, device] of [
       .getByRole("button", { name: "Lead workout", exact: true })
       .click();
     assert.equal(new URL(page.url()).hash, "#lead/" + saved.id);
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -131,6 +151,12 @@ for (const [name, engine, device] of [
     await page
       .getByRole("button", { name: "Lead workout", exact: true })
       .click();
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -151,6 +177,12 @@ for (const [name, engine, device] of [
     await page
       .getByRole("button", { name: "Lead workout", exact: true })
       .click();
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -159,6 +191,12 @@ for (const [name, engine, device] of [
     await page
       .getByRole("heading", { name: saved.title, exact: true })
       .waitFor();
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -200,6 +238,21 @@ for (const [name, engine, device] of [
         .getByLabel("Workout name (optional)", { exact: true })
         .fill("Synthetic hosted Weinke");
       await sheet.getByLabel("The Thang", { exact: true }).fill(words);
+      await sheet
+        .getByText("Organize The Thang into blocks (optional)", { exact: true })
+        .click();
+      await sheet
+        .getByRole("button", { name: "Add block", exact: true })
+        .click();
+      await sheet
+        .getByLabel("Rounds (optional)", { exact: true })
+        .fill("3, together");
+      await sheet
+        .getByRole("button", { name: "Add exercise", exact: true })
+        .click();
+      await sheet.getByLabel("Exercise name", { exact: true }).fill("Hammers");
+      await sheet.getByLabel("Reps or duration", { exact: true }).fill("17");
+      await sheet.getByLabel("Counting", { exact: true }).selectOption("2=1");
       await sheet.reload();
       await expect(sheet.getByLabel("The Thang", { exact: true })).toHaveValue(
         words,
@@ -216,7 +269,23 @@ for (const [name, engine, device] of [
         sheet.getByLabel("Workout to lead", { exact: true }),
       ).toContainText(words);
       await expect(
-        sheet.getByRole("button", { name: "No timer", exact: true }),
+        sheet.getByLabel("Workout to lead", { exact: true }),
+      ).toContainText("Rounds: 3, together");
+      await expect(
+        sheet.getByLabel("Workout to lead", { exact: true }),
+      ).toContainText("Hammers · 17 reps");
+      await expect(sheet.locator(".lead-workout .count-label")).toHaveText(
+        "2=1",
+      );
+      await expect(
+        sheet.getByRole("button", { name: "Session timer", exact: true }),
+      ).not.toBeVisible();
+      await expect(
+        sheet.getByRole("button", {
+          name: "No timer",
+          exact: true,
+          includeHidden: true,
+        }),
       ).toHaveAttribute("aria-pressed", "true");
       assert.equal(
         await sheet.evaluate(
@@ -235,6 +304,26 @@ for (const [name, engine, device] of [
         name: "Menu",
         exact: true,
       });
+      if (await directMenu.isVisible()) await directMenu.click();
+      await sheet
+        .getByRole("link", { name: "My Workouts", exact: true })
+        .click();
+      const card = sheet
+        .locator(".workout-card")
+        .filter({
+          has: sheet.getByRole("heading", {
+            name: "Synthetic hosted Weinke",
+            exact: true,
+          }),
+        });
+      await expect(card).toContainText("AO not set · Edited");
+      await card.getByRole("button", { name: "Lead", exact: true }).click();
+      await expect(
+        sheet.getByLabel("Workout to lead", { exact: true }),
+      ).toContainText("Hammers · 17 reps");
+      await sheet
+        .getByRole("button", { name: "← Back to plan", exact: true })
+        .click();
       if (await directMenu.isVisible()) await directMenu.click();
       await sheet.getByRole("link", { name: "Build", exact: true }).click();
       const kept = await sheet.evaluate(
@@ -263,7 +352,7 @@ for (const [name, engine, device] of [
       assert.deepEqual(directErrors, []);
       console.log(
         name +
-          ": hosted direct Weinke recovery, save, Lead reload and start-fresh preservation passed without AI.",
+          ": hosted structured Weinke recovery, counts, direct-card Lead, reload and start-fresh preservation passed without AI.",
       );
     } finally {
       await direct.close();

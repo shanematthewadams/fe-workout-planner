@@ -57,6 +57,8 @@ function jump(seconds: number) {
 }
 function launch(w = workout()) {
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  if (!screen.queryByRole("button", { name: "Intervals" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Intervals" }));
   return w;
 }
@@ -144,6 +146,8 @@ it("opens a readable workout with no clock or cadence trainer", () => {
   ).toBeVisible();
   expect(screen.queryByText(/Four-count cadence/)).toBeNull();
   expect(playCadenceBeep).not.toHaveBeenCalled();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   expect(screen.getByRole("button", { name: "Start timer" })).toBeDisabled();
   fireEvent.click(
@@ -320,6 +324,8 @@ it("catches up after a hidden tab without replaying missed sound cues", () => {
 
 function session(w = workout()) {
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   const standard = screen.queryByRole("button", {
     name: "Use standard 45-minute timer",
@@ -376,6 +382,8 @@ it("ignores the second click of a double tap on either timer toggle", () => {
   fireEvent.click(screen.getByRole("button", { name: "Pause" }), { detail: 2 });
   expect(screen.getByRole("button", { name: "Pause" })).toBeEnabled();
   fireEvent.click(screen.getByRole("button", { name: "Pause" }), { detail: 1 });
+  if (!screen.queryByRole("button", { name: "Intervals" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Intervals" }));
   fireEvent.click(screen.getByRole("button", { name: "Start intervals" }), {
     detail: 1,

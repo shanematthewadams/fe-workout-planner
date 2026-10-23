@@ -98,10 +98,9 @@ it("creates, saves, reopens and leads a literal sheet with no AI calls and no ti
   expect(screen.getByLabelText("Workout to lead")).toHaveTextContent(
     "Hammers 2=1",
   );
-  expect(screen.getByRole("button", { name: "No timer" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  expect(
+    screen.getByRole("button", { name: "No timer", hidden: true }),
+  ).toHaveAttribute("aria-pressed", "true");
   const workouts: Workout[] = JSON.parse(
     localStorage.getItem(STORAGE_KEY)!,
   ).workouts;

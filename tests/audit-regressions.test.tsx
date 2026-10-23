@@ -208,6 +208,8 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   const w = fallbackPlan(input()).workout;
   render(<FieldTimer workout={w} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
@@ -217,6 +219,8 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   cleanup();
   render(<FieldTimer workout={w} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByText("2 of 4")).toBeVisible();
@@ -230,6 +234,8 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   vi.setSystemTime(new Date(2026, 9, 18, 5, 20));
   render(<FieldTimer workout={w} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
@@ -243,6 +249,8 @@ it("uses saved block timing and requires consent to use a generic schedule for u
   expect(phases[0].end).toBe(300);
   render(<FieldTimer workout={w} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("30:00");
@@ -250,6 +258,8 @@ it("uses saved block timing and requires consent to use a generic schedule for u
   w.sections[0].blocks[0].minutes = null;
   render(<FieldTimer workout={w} onExit={() => {}} />);
   startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
   fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
   fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("button", { name: "Start timer" })).toBeDisabled();

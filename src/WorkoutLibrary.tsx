@@ -27,6 +27,8 @@ export function WorkoutLibrary({
   onOpen,
   onUse,
   onCreate,
+  onLead,
+  onEdit,
 }: {
   sources: Workout[];
   workouts: Workout[];
@@ -41,6 +43,8 @@ export function WorkoutLibrary({
   onOpen: (workout: Workout) => void;
   onUse: (workout: Workout) => void;
   onCreate: () => void;
+  onLead?: (workout: Workout) => void;
+  onEdit?: (workout: Workout) => void;
 }) {
   const { favoritesOnly, sort } = preferences;
   const base = personal ? workouts : sources;
@@ -306,8 +310,8 @@ export function WorkoutLibrary({
             <span className="card-number">
               {w.kind === "personal"
                 ? w.provenance.generation
-                  ? "AI-ASSISTED DRAFT"
-                  : "PERSONAL DRAFT"
+                  ? "SAVED · AI-ASSISTED"
+                  : "SAVED WORKOUT"
                 : statusLabel(w.provenance.status).toUpperCase()}
             </span>
             <h3>
@@ -316,10 +320,20 @@ export function WorkoutLibrary({
             <p className="card-summary">
               {w.summary || "Your plan, your way."}
             </p>
-            {w.provenance.ao && (
+            {!personal && w.provenance.ao && (
               <p className="source-meta">
                 {w.provenance.ao} · {w.provenance.q ?? "Q unknown"} ·{" "}
                 {w.provenance.eventDate ?? "Date unknown"}
+              </p>
+            )}
+            {personal && (
+              <p className="source-meta">
+                {w.provenance.ao || "AO not set"} · Edited{" "}
+                {new Date(w.updatedAt).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </p>
             )}
             <div className="card-metrics">
@@ -349,13 +363,31 @@ export function WorkoutLibrary({
             </div>
             {!!w.provenance.issues?.length && (
               <p className="source-meta">
-                {w.provenance.issues.length} source notes · check details
+                {w.provenance.issues.length} {personal ? "workout" : "source"}{" "}
+                notes · check details
               </p>
             )}
             <div className="workout-card-actions">
               <button className="card-open" onClick={() => onOpen(w)}>
                 View workout <ArrowUpRight size={18} />
               </button>
+              {personal && (
+                <>
+                  {onLead && (
+                    <button className="create" onClick={() => onLead(w)}>
+                      <AppIcon name="sheet" /> Lead
+                    </button>
+                  )}
+                  {onEdit && (
+                    <button onClick={() => onEdit(w)}>
+                      <AppIcon name="details" /> Edit
+                    </button>
+                  )}
+                  <button onClick={() => onUse(w)}>
+                    <Copy size={16} /> Duplicate
+                  </button>
+                </>
+              )}
               {!personal && (
                 <button
                   className="use-workout"

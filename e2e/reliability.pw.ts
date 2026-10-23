@@ -63,6 +63,12 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
     .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
   await expect(page).toHaveURL(new RegExp(`#lead/${saved.id}$`));
+  if (
+    !(await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -78,6 +84,12 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
   await page
     .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
+  if (
+    !(await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -89,6 +101,12 @@ test("Lead recovery follows the saved private copy reopened from My Workouts", a
   await expect(
     page.getByRole("heading", { name: saved.title, exact: true }),
   ).toBeVisible();
+  if (
+    !(await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -229,6 +247,12 @@ test("session recovery, double taps and denied screen wake keep Lead usable", as
   await page
     .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
+  if (
+    !(await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();
@@ -252,6 +276,12 @@ test("session recovery, double taps and denied screen wake keep Lead usable", as
   await page
     .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
     .click();
+  if (
+    !(await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page
     .getByRole("button", { name: "Session timer", exact: true })
     .click();

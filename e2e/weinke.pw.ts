@@ -48,7 +48,11 @@ test("direct Weinke preserves literal notes through refresh, save, reopen and mo
     page.getByLabel("Workout to lead", { exact: true }),
   ).toContainText(words);
   await expect(
-    page.getByRole("button", { name: "No timer", exact: true }),
+    page.getByRole("button", {
+      name: "No timer",
+      exact: true,
+      includeHidden: true,
+    }),
   ).toHaveAttribute("aria-pressed", "true");
   expect(
     await page.evaluate(

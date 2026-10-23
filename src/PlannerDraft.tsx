@@ -1,6 +1,8 @@
-import { useState, type RefObject } from "react";
+import { useRef, useState, type RefObject } from "react";
 import type { PlannerResponse } from "./planner-contract";
 import type { Workout } from "./model";
+import { Undo2 } from "lucide-react";
+import { MovementPicker } from "./MovementPicker";
 import { AppIcon } from "./AppIcon";
 import { qSheet } from "./session";
 import { exerciseSchema } from "./model";
@@ -40,6 +42,28 @@ export function PlannerDraft({
 }) {
   const [editExercise, setEditExercise] = useState<string | null>(null);
   const [copyMessage, setCopyMessage] = useState("");
+  const [history, setHistory] = useState<PlannerResponse[]>([]);
+  const editedPlan = useRef(result.plan);
+  const validHistory = editedPlan.current === result.plan ? history : [];
+  function commit(next: PlannerResponse) {
+    setHistory([...validHistory.slice(-19), structuredClone(result)]);
+    editedPlan.current = next.plan;
+    onChange(next);
+  }
+  function undo() {
+    const previous = validHistory.at(-1);
+    if (!previous) return;
+    const next = structuredClone(previous);
+    // Saving may assign a private copy identity; Undo only changes its content.
+    next.workout.id = result.workout.id;
+    next.workout.attribution = result.workout.attribution;
+    next.workout.originId = result.workout.originId;
+    next.workout.updatedAt = new Date().toISOString();
+    setHistory(validHistory.slice(0, -1));
+    editedPlan.current = next.plan;
+    setEditExercise(null);
+    onChange(next);
+  }
   function changeExercise(
     si: number,
     bi: number,
@@ -51,7 +75,7 @@ export function PlannerDraft({
     const next = structuredClone(result);
     Object.assign(next.workout.sections[si].blocks[bi].exercises[ei], patch);
     Object.assign(next.plan.sections[si].blocks[bi].exercises[ei], patch);
-    onChange(next);
+    commit(next);
   }
   return (
     <div
@@ -157,6 +181,13 @@ export function PlannerDraft({
           More editing options
         </button>
       </div>
+      <button
+        type="button"
+        disabled={busy || !validHistory.length}
+        onClick={undo}
+      >
+        <Undo2 size={16} aria-hidden="true" /> Undo last edit
+      </button>
       {copyMessage && <p role="status">{copyMessage}</p>}
       <label className="workout-title-edit">
         Workout name
@@ -169,7 +200,7 @@ export function PlannerDraft({
             const next = structuredClone(result);
             next.workout.title = event.target.value;
             next.plan.title = event.target.value;
-            onChange(next);
+            commit(next);
           }}
         />
       </label>
@@ -209,7 +240,7 @@ export function PlannerDraft({
                         next.plan.sections[i].blocks[j].minutes = value;
                         next.workout.sections[i].blocks[j].minutes = value;
                         // Physical session stays 45 minutes; timeline shows any mismatch.
-                        onChange(next);
+                        commit(next);
                       }}
                     />
                   </label>
@@ -241,6 +272,15 @@ export function PlannerDraft({
                         {editExercise === `${i}-${j}-${k}` && (
                           <fieldset className="inline-exercise" disabled={busy}>
                             <legend>Edit this exercise</legend>
+                            <MovementPicker
+                              action="Swap"
+                              onAdd={(replacement) =>
+                                changeExercise(i, j, k, {
+                                  name: replacement.name,
+                                  instructions: replacement.instructions,
+                                })
+                              }
+                            />
                             <label>
                               Exercise
                               <input
@@ -329,7 +369,7 @@ export function PlannerDraft({
                                   ];
                                 }
                                 setEditExercise(`${i}-${j}-${k - 1}`);
-                                onChange(next);
+                                commit(next);
                               }}
                             >
                               Move up
@@ -351,11 +391,39 @@ export function PlannerDraft({
                                   ];
                                 }
                                 setEditExercise(`${i}-${j}-${k + 1}`);
-                                onChange(next);
+                                commit(next);
                               }}
                             >
                               Move down
                             </button>
+                            <p className="muted">
+                              To swap, change the exercise name and instructions
+                              above. Reps, timing and other exercises stay as
+                              they are.
+                            </p>
+                            <button
+                              type="button"
+                              disabled={b.exercises.length <= 1}
+                              onClick={() => {
+                                const next = structuredClone(result);
+                                next.workout.sections[i].blocks[
+                                  j
+                                ].exercises.splice(k, 1);
+                                next.plan.sections[i].blocks[
+                                  j
+                                ].exercises.splice(k, 1);
+                                setEditExercise(null);
+                                commit(next);
+                              }}
+                            >
+                              Remove exercise
+                            </button>
+                            {b.exercises.length <= 1 && (
+                              <p className="muted">
+                                Keep one exercise in this block. Rename it to
+                                swap.
+                              </p>
+                            )}
                             <button
                               type="button"
                               onClick={() => setEditExercise(null)}
@@ -394,7 +462,7 @@ export function PlannerDraft({
             onChange={(event) => {
               const next = structuredClone(result);
               next.workout.rawNotes = event.target.value;
-              onChange(next);
+              commit(next);
             }}
             placeholder="What do you want the PAX to take with them?"
           />

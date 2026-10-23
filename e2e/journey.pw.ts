@@ -37,6 +37,12 @@ test("Lead starts simply and runs optional Tabata intervals with sound cues", as
     page.getByLabel("Workout to lead", { exact: true }),
   ).toBeVisible();
   await page.clock.install();
+  if (
+    !(await page
+      .getByRole("button", { name: "Intervals", exact: true })
+      .isVisible())
+  )
+    await page.getByText("Timer options", { exact: true }).click();
   await page.getByRole("button", { name: "Intervals", exact: true }).click();
   await expect(page.getByRole("timer")).toHaveText("00:10");
   await expect(
@@ -457,6 +463,12 @@ test.describe("deterministic planner client", () => {
     await page
       .getByRole("button", { name: /^Lead (?:this )?workout$/ })
       .click();
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
@@ -482,6 +494,12 @@ test.describe("deterministic planner client", () => {
     await page
       .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
       .click();
+    if (
+      !(await page
+        .getByRole("button", { name: "Session timer", exact: true })
+        .isVisible())
+    )
+      await page.getByText("Timer options", { exact: true }).click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();

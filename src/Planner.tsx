@@ -446,7 +446,9 @@ function PlannerSession({
     pax,
     conditions,
   ]);
+  const [failedRefinement, setFailedRefinement] = useState(false);
   async function ask(refine: boolean, override?: unknown) {
+    setFailedRefinement(refine);
     const request = plannerRequestSchema.safeParse(
       override ?? {
         prompt: refine
@@ -588,7 +590,10 @@ function PlannerSession({
         !abort.signal.aborted
       ) {
         const next = fallbackPlan(request.data);
-        next.fallbackReason = failure;
+        next.fallbackReason = failure.replace(
+          "Your previous draft is safe.",
+          "Your idea is still here.",
+        );
         setResult(next);
         setView("review");
         setLastRequest(resolved);
@@ -1107,9 +1112,21 @@ function PlannerSession({
         </div>
       )}
       {error && (
-        <p className="assistant-error" role="alert">
-          {error}
-        </p>
+        <div className="assistant-error" role="alert">
+          <p>{error}</p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void ask(failedRefinement)}
+          >
+            Try again
+          </button>
+          {result && (
+            <button type="button" onClick={() => setView("review")}>
+              Keep working on this draft
+            </button>
+          )}
+        </div>
       )}
       {storageError && (
         <p className="assistant-error" role="alert">
@@ -1120,6 +1137,35 @@ function PlannerSession({
         <button type="button" onClick={() => setView("review")}>
           Return to current draft
         </button>
+      )}
+      {view === "review" && result?.provider === "Template" && (
+        <aside className="generation-recovery" aria-label="Generation recovery">
+          <details>
+            <summary>Your original idea</summary>
+            <p className="import-directions">{lastRequest?.prompt || prompt}</p>
+          </details>
+          <p>
+            This template is ready to edit without AI. Your idea is still here
+            if you want another attempt.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Try AI again? This replaces the open template and its edits if it succeeds. Saved workouts stay in My Workouts.",
+                )
+              )
+                void ask(false, lastRequest ?? undefined);
+            }}
+          >
+            Try AI again
+          </button>
+          <button type="button" onClick={() => resultRef.current?.focus()}>
+            Use this offline template
+          </button>
+        </aside>
       )}
       {view === "review" && result && (
         <PlannerDraft

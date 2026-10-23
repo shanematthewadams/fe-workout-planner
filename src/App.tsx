@@ -719,20 +719,25 @@ export default function App() {
           library. Your saved plans are safe.
         </aside>
       )}
-      <div
-        role="status"
-        aria-live="polite"
-        className={notice ? "notice no-print" : "sr-only"}
-      >
-        {notice && (
-          <>
-            <span>{notice}</span>
-            <button aria-label="Dismiss message" onClick={() => setNotice("")}>
-              <X size={16} />
-            </button>
-          </>
-        )}
-      </div>
+      {!(timerOpen && selected) && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={notice ? "notice no-print" : "sr-only"}
+        >
+          {notice && (
+            <>
+              <span>{notice}</span>
+              <button
+                aria-label="Dismiss message"
+                onClick={() => setNotice("")}
+              >
+                <X size={16} />
+              </button>
+            </>
+          )}
+        </div>
+      )}
       {storageChanged && (
         <aside
           className="storage-warning no-print"
@@ -777,6 +782,19 @@ export default function App() {
         <FieldTimer
           key={selected.id}
           workout={selected}
+          notice={
+            notice ? (
+              <div role="status" className="lead-inline-notice">
+                <span>{notice}</span>
+                <button
+                  aria-label="Dismiss message"
+                  onClick={() => setNotice("")}
+                >
+                  ×
+                </button>
+              </div>
+            ) : undefined
+          }
           onExit={() => {
             setTimerOpen(false);
             writeRoute({ tab, view: "workout", id: selected.id }, true);
@@ -894,6 +912,14 @@ export default function App() {
                     onFavorite={favorite}
                     onOpen={open}
                     onUse={useWorkout}
+                    onEdit={(w) => {
+                      if (leave()) begin(w);
+                    }}
+                    onLead={(w) => {
+                      open(w);
+                      setTimerOpen(true);
+                      writeRoute({ tab: "mine", view: "lead", id: w.id });
+                    }}
                     onCreate={() => {
                       if (leave()) begin(newWorkout());
                     }}
@@ -1455,7 +1481,9 @@ export default function App() {
           <div className="actions no-print detail-actions">
             <button className="create" onClick={() => useWorkout(selected)}>
               <Copy size={17} />
-              Copy to my workouts
+              {state.workouts.some((w) => w.id === selected.id)
+                ? "Duplicate workout"
+                : "Copy to my workouts"}
             </button>
             {selected.kind === "personal" && (
               <button onClick={() => begin(selected)}>Edit workout</button>

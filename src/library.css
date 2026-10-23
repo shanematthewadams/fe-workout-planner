@@ -841,3 +841,61 @@ body:has(.staging-notice) .lead-focused {
   align-items: center;
   gap: 10px;
 }
+
+/* A Q's sheet is the first screen; timer configuration is optional. */
+.field-timer.lead-view .lead-workout-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  margin: 8px 0 12px;
+}
+.lead-view > .eyebrow {
+  margin-bottom: 4px;
+}
+.lead-timer-disclosure > summary {
+  width: fit-content;
+  font-size: 0.9rem;
+  color: var(--steel-text);
+}
+.lead-view .lead-plan-panel {
+  margin-top: 12px;
+}
+.lead-inline-notice {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+.lead-inline-notice span {
+  flex: 1;
+}
+.lead-inline-notice button {
+  padding: 4px 10px;
+}
+.weinke-blocks {
+  margin: 20px 0;
+}
+.weinke-blocks fieldset {
+  min-width: 0;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+}
+.weinke-blocks label {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+}
+.weinke-blocks input,
+.weinke-blocks textarea,
+.weinke-blocks select {
+  max-width: 100%;
+}
+.generation-recovery {
+  padding: 16px;
+  border: 1px solid var(--steel);
+  margin-bottom: 16px;
+}
+.workout-card-actions {
+  flex-wrap: wrap;
+}

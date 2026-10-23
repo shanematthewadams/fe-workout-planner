@@ -16,8 +16,10 @@ export { elapsedAt, liveTimer } from "./SessionTimer";
 export function FieldTimer({
   workout,
   onExit,
+  notice,
 }: {
   workout: Workout;
+  notice?: React.ReactNode;
   onExit: () => void;
 }) {
   const [mode, setMode] = useState<"off" | "session" | "intervals">("off");
@@ -83,32 +85,38 @@ export function FieldTimer({
       </div>
       <p className="eyebrow">LEAD YOUR Q</p>
       <h1 className="lead-workout-title">{workout.title}</h1>
-      <div
-        className="lead-timer-options"
-        role="group"
-        aria-label="Optional timer"
-      >
-        {(
-          [
-            ["off", "No timer"],
-            ["session", "Session timer"],
-            ["intervals", "Intervals"],
-          ] as const
-        ).map(([key, label]) => (
-          <button
-            key={key}
-            aria-pressed={mode === key}
-            disabled={running && mode !== key}
-            onClick={() => {
-              cancelTimerVoice();
-              setMode(key);
-            }}
-          >
-            <AppIcon name={key === "off" ? "sheet" : "timer"} />
-            {label}
-          </button>
-        ))}
-      </div>
+      {notice}
+      <details className="lead-timer-disclosure">
+        <summary>
+          <AppIcon name="timer" /> Timer options
+        </summary>
+        <div
+          className="lead-timer-options"
+          role="group"
+          aria-label="Optional timer"
+        >
+          {(
+            [
+              ["off", "No timer"],
+              ["session", "Session timer"],
+              ["intervals", "Intervals"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              aria-pressed={mode === key}
+              disabled={running && mode !== key}
+              onClick={() => {
+                cancelTimerVoice();
+                setMode(key);
+              }}
+            >
+              <AppIcon name={key === "off" ? "sheet" : "timer"} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </details>
       {running && <p className="muted">Pause before switching timer modes.</p>}
       {mode === "session" && (
         <SessionTimer
@@ -141,11 +149,6 @@ export function FieldTimer({
           for cues; locked phones can silence browser audio.
         </p>
       )}
-      {mode === "off" ? (
-        <p className="muted">
-          Your plan, ready to lead. Turn on a timer whenever you need one.
-        </p>
-      ) : null}
       <details className="lead-plan-panel" open={mode === "off"}>
         <summary>
           <AppIcon name="sheet" />
@@ -170,6 +173,11 @@ export function FieldTimer({
                             ? ` ${exercise.unit}`
                             : ""}
                         </strong>
+                        {exercise.counting !== "not applicable" && (
+                          <span className="count-label">
+                            {exercise.counting}
+                          </span>
+                        )}
                         {exercise.instructions && (
                           <p>{exercise.instructions}</p>
                         )}
