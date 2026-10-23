@@ -113,6 +113,9 @@ it("creates, saves, reopens and leads a literal sheet with no AI calls and no ti
   expect(screen.getByLabelText("Workout to lead")).toHaveTextContent(
     "Hammers 2=1",
   );
+  click("← Back to plan");
+  expect(screen.getByText("Equipment unknown", { exact: true })).toBeVisible();
+  expect(screen.getByText("Running unknown", { exact: true })).toBeVisible();
 });
 it("updates the saved identity and starts a separate sheet without deleting the first", () => {
   vi.spyOn(window, "confirm").mockReturnValue(true);

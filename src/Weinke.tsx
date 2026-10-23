@@ -61,7 +61,9 @@ export function makeWeinke(fields: Fields, base?: Workout): Workout {
       label: "Personal Weinke · written by you",
       durationBasis: "unknown",
       issues: [
-        "Equipment, running requirements and timing are not inferred from your notes. Review your instructions before leading. Timer setup is optional and separate.",
+        "Equipment not specified; confirm the full workout before leading.",
+        "Running requirement not supplied; confirm before leading.",
+        "Timing is not inferred from your notes. Timer setup is optional and separate.",
       ],
     },
     ...(base?.attribution ? { attribution: base.attribution } : {}),
