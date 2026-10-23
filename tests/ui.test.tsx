@@ -15,7 +15,7 @@ import { catalog } from "../src/catalog";
 import { copyWorkout, STORAGE_KEY, writeState, readState } from "../src/model";
 function render(element: React.ReactElement) {
   const view = renderUI(element);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   return view;
 }
 beforeEach(() => {
@@ -84,7 +84,7 @@ describe("library UI", () => {
     expect(JSON.stringify(catalog[0])).toBe(before);
     app.unmount();
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
+    fireEvent.click(screen.getByRole("link", { name: /My workouts/i }));
     expect(
       screen.getByRole("button", { name: "My changed workout" }),
     ).toBeVisible();
@@ -157,8 +157,7 @@ describe("library UI", () => {
           favorites: [],
         }),
     });
-    fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+    fireEvent.click(screen.getByRole("link", { name: "Saving & recovery" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -177,8 +176,7 @@ describe("library UI", () => {
     render(<App />);
     const file = new File([""], "bad.json");
     Object.defineProperty(file, "text", { value: async () => "{bad" });
-    fireEvent.click(screen.getByText("More", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+    fireEvent.click(screen.getByRole("link", { name: "Saving & recovery" }));
     fireEvent.change(screen.getByLabelText("Import backup"), {
       target: { files: [file] },
     });
@@ -189,7 +187,7 @@ describe("library UI", () => {
     const original = copyWorkout(catalog[0]);
     writeState({ workouts: [original], favorites: [] });
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
+    fireEvent.click(screen.getByRole("link", { name: /My workouts/i }));
     fireEvent.click(screen.getByRole("button", { name: original.title }));
     fireEvent.click(screen.getByRole("button", { name: "Edit workout" }));
     fireEvent.change(screen.getByLabelText("Workout title"), {
@@ -285,7 +283,9 @@ describe("library UI", () => {
     expect(screen.getByRole("main")).toHaveClass("q-mode");
     fireEvent.click(screen.getByRole("button", { name: "Edit workout" }));
     expect(screen.getByLabelText("Workout title")).toHaveValue("Ready to Q");
-    expect(screen.getByText("Saved on this device")).toBeVisible();
+    expect(screen.getByLabelText("Saving status")).toHaveTextContent(
+      "Saved on this device",
+    );
   });
   it("keeps the editor open when save and view cannot save", () => {
     render(<App />);
@@ -365,7 +365,7 @@ describe("library UI", () => {
       screen.getAllByRole("button", { name: "Create a workout" })[0],
     );
     vi.mocked(window.confirm).mockReturnValue(false);
-    fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
+    fireEvent.click(screen.getByRole("link", { name: "My Workouts" }));
     expect(screen.getByLabelText("Workout title")).toBeVisible();
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });

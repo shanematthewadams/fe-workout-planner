@@ -4,10 +4,7 @@ import {
   ArrowLeft,
   Heart,
   Plus,
-  Search,
   Clock3,
-  Footprints,
-  Dumbbell,
   Copy,
   Printer,
   Maximize2,
@@ -15,12 +12,20 @@ import {
   Upload,
   X,
   Check,
-  Layers3,
 } from "lucide-react";
+import { readRoute, writeRoute, routeHash } from "./navigation";
+import { AccountPanel, AccountEntry } from "./AccountPanel";
+import { attributeWorkout, sameGuestContent } from "./attribution";
+import { useProfile } from "./ProfileContext";
+import { useAccount } from "./AccountContext";
+import { accountStorageKey } from "./auth";
+import { AppNavigation } from "./AppNavigation";
 import { importStudio } from "./studio/import";
 import { CloudSync } from "./CloudSync";
 import { FieldTimer } from "./FieldTimer";
 import { OfflineStatus } from "./OfflineStatus";
+import { StagingNotice } from "./StagingNotice";
+import { MarkdownImport } from "./MarkdownImport";
 import {
   SessionTimeline,
   sessionStart,
@@ -32,18 +37,18 @@ import {
 import { ExiconBrowser } from "./ExiconBrowser";
 import { Planner } from "./Planner";
 import { Discovery } from "./Discovery";
-import { aoProfiles, statusLabel } from "./discovery";
+import { statusLabel } from "./discovery";
+import { WorkoutLibrary, type LibraryPreferences } from "./WorkoutLibrary";
+import { MovementPicker } from "./MovementPicker";
 import { catalog } from "./catalog";
 import { SupabaseCatalog } from "./repository";
 import {
-  STORAGE_KEY,
+  STORAGE_KEY as GUEST_STORAGE_KEY,
   type Workout,
   type Section,
   type LocalState,
-  type Filters,
   type Exercise,
   filtersEmpty,
-  matches,
   copyWorkout,
   newWorkout,
   newSection,
@@ -128,11 +133,11 @@ function TimingSummary({ workout }: { workout: Workout }) {
     </aside>
   );
 }
-function load() {
+function load(key = GUEST_STORAGE_KEY) {
   try {
     return {
-      data: readState(),
-      raw: localStorage.getItem(STORAGE_KEY),
+      data: readState(localStorage, key),
+      raw: localStorage.getItem(key),
       error: "",
     };
   } catch {
@@ -145,6 +150,9 @@ function load() {
   }
 }
 export default function App() {
+  const account = useAccount();
+  const profile = useProfile()?.profile;
+  const STORAGE_KEY = accountStorageKey(account?.user?.id);
   const [sources, setSources] = useState(catalog);
   const [catalogOrigin, setCatalogOrigin] = useState("snapshot");
   useEffect(() => {
@@ -180,7 +188,7 @@ export default function App() {
       controller.abort();
     };
   }, []);
-  const [initial] = useState(load);
+  const [initial] = useState(() => load(STORAGE_KEY));
   const savedSnapshot = useRef(initial.raw);
   const [storageChanged, setStorageChanged] = useState(false);
   useEffect(() => {
@@ -204,7 +212,7 @@ export default function App() {
   const [state, setState] = useState(initial.data),
     [notice, setNotice] = useState(initial.error),
     [blocked, setBlocked] = useState(!!initial.error),
-    [tab, setTab] = useState("builder"),
+    [tab, setTab] = useState(() => readRoute().tab),
     [filters, setFilters] = useState(filtersEmpty),
     [selected, setSelected] = useState<Workout | null>(null),
     [editing, setEditing] = useState<Workout | null>(null),
@@ -225,7 +233,94 @@ export default function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
   const [timerOpen, setTimerOpen] = useState(false);
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [unresolvedRoute, setUnresolvedRoute] = useState<string | null>(null);
+  const navigation = useRef({
+    dirty,
+    state,
+    sources,
+    tab,
+    selected,
+    editing,
+    timerOpen,
+  });
+  navigation.current = {
+    dirty,
+    state,
+    sources,
+    tab,
+    selected,
+    editing,
+    timerOpen,
+  };
+  useEffect(() => {
+    const restore = (initial = false) => {
+      const current = navigation.current;
+      if (
+        !initial &&
+        current.dirty &&
+        !confirm("Leave without saving these changes?")
+      ) {
+        const hash = routeHash(
+          current.editing
+            ? { tab: current.tab, view: "edit", id: current.editing.id }
+            : { tab: current.tab },
+        );
+        history.pushState({}, "", hash);
+        return;
+      }
+      const route = readRoute();
+      const workout = [...current.state.workouts, ...current.sources].find(
+        (value) => value.id === route.id,
+      );
+      setTab(route.tab);
+      setQ(false);
+      setDirty(false);
+      setEditing(null);
+      setSelected(null);
+      setTimerOpen(false);
+      if (route.view && workout) {
+        setUnresolvedRoute(null);
+        if (route.view === "edit") {
+          setEditing(structuredClone(workout));
+          editingBase.current = structuredClone(workout);
+        } else {
+          setSelected(workout);
+          setTimerOpen(route.view === "lead");
+        }
+      } else if (route.view) {
+        setUnresolvedRoute(routeHash(route));
+        setTab("mine");
+      }
+    };
+    restore(true);
+    const pop = () => restore();
+    window.addEventListener("popstate", pop);
+    return () => window.removeEventListener("popstate", pop);
+  }, []);
+  useEffect(() => {
+    if (!unresolvedRoute || unresolvedRoute !== location.hash) return;
+    const route = readRoute();
+    const workout = [...state.workouts, ...sources].find(
+      (value) => value.id === route.id,
+    );
+    if (!workout) return;
+    setUnresolvedRoute(null);
+    setNotice("");
+    setTab(route.tab);
+    if (route.view === "edit") {
+      setEditing(structuredClone(workout));
+      editingBase.current = structuredClone(workout);
+    } else {
+      setSelected(workout);
+      setTimerOpen(route.view === "lead");
+    }
+  }, [state.workouts, sources, unresolvedRoute]);
+  useEffect(() => {
+    account?.setBlocked(dirty || blocked || storageChanged);
+    return () => account?.setBlocked(false);
+  }, [dirty, blocked, storageChanged, account?.setBlocked]);
+  const [libraryPreferences, setLibraryPreferences] =
+    useState<LibraryPreferences>({ favoritesOnly: false, sort: "recommended" });
   const persist = (next: LocalState) => {
     if (blocked) {
       setNotice(
@@ -241,7 +336,13 @@ export default function App() {
         );
         return false;
       }
-      writeState(next);
+      next = {
+        ...next,
+        workouts: next.workouts.map((workout) =>
+          attributeWorkout(workout, account?.user?.id, profile?.display_name),
+        ),
+      };
+      writeState(next, localStorage, STORAGE_KEY);
       savedSnapshot.current = localStorage.getItem(STORAGE_KEY);
       setState(next);
       return true;
@@ -254,7 +355,7 @@ export default function App() {
   };
   const loadLatest = () => {
     try {
-      const latest = readState();
+      const latest = readState(localStorage, STORAGE_KEY);
       const raw = localStorage.getItem(STORAGE_KEY);
       setState(latest);
       savedSnapshot.current = raw;
@@ -262,6 +363,7 @@ export default function App() {
       setSelected(null);
       setPending(null);
       if (editing) {
+        editingBase.current = null;
         setEditing({
           ...structuredClone(editing),
           id: uid(),
@@ -283,28 +385,52 @@ export default function App() {
   const leave = () =>
     !dirty || window.confirm("Leave without saving these changes?");
   const go = (next: string) => {
-    if (!leave()) return;
+    if (!leave()) return false;
     setTimerOpen(false);
     setEditing(null);
     setDirty(false);
     setSelected(null);
     setQ(false);
     setTab(next);
+    writeRoute({ tab: next });
+    return true;
   };
   const open = (w: Workout) => {
+    writeRoute({ tab, view: "workout", id: w.id });
     setSelected(w);
     setTimerOpen(false);
     setQ(false);
     window.scrollTo(0, 0);
   };
+  const editingBase = useRef<Workout | null>(null);
   const begin = (
     w: Workout,
     saved = state.workouts.some((item) => item.id === w.id),
   ) => {
+    writeRoute({ tab: "mine", view: "edit", id: w.id });
+    editingBase.current = saved ? structuredClone(w) : null;
     setEditing(structuredClone(w));
     setSelected(null);
     setDirty(!saved);
     window.scrollTo(0, 0);
+  };
+  const useWorkout = (workout: Workout) => {
+    if (!leave()) return;
+    if (state.workouts.length >= 200) {
+      setNotice(
+        "This browser has 200 drafts. Export a backup before adding more.",
+      );
+      return;
+    }
+    const copied = attributeWorkout(
+      copyWorkout(workout),
+      account?.user?.id,
+      profile?.display_name,
+    );
+    if (persist({ ...state, workouts: [...state.workouts, copied] })) {
+      begin(copied, true);
+      setNotice("Personal copy created. Your source is unchanged.");
+    }
   };
   const favorite = (id: string) => {
     const has = state.favorites.includes(id);
@@ -316,9 +442,7 @@ export default function App() {
           : [...state.favorites, id],
       })
     )
-      setNotice(
-        has ? "Removed from favorites." : "Saved to favorites on this device.",
-      );
+      setNotice(has ? "Removed from favorites." : "Saved to favorites.");
   };
   const save = () => {
     if (!editing) return;
@@ -336,7 +460,32 @@ export default function App() {
       setNotice("Please check the draft: " + result.error.issues[0].message);
       return;
     }
-    const w = { ...result.data, updatedAt: new Date().toISOString() };
+    const existing = state.workouts.find((item) => item.id === editing.id);
+    const conflict =
+      editingBase.current &&
+      (!existing ||
+        JSON.stringify(workoutSchema.parse(existing)) !==
+          JSON.stringify(workoutSchema.parse(editingBase.current)));
+    if (conflict && state.workouts.length >= 200) {
+      setNotice(
+        "A conflict copy would exceed 200 plans. Export a backup and free space; your edits are still here.",
+      );
+      return;
+    }
+    const w = attributeWorkout(
+      {
+        ...result.data,
+        ...(conflict
+          ? {
+              id: uid(),
+              title: titledCopy(result.data.title, " · conflict copy"),
+            }
+          : {}),
+        updatedAt: new Date().toISOString(),
+      },
+      account?.user?.id,
+      profile?.display_name,
+    );
     const next = {
       ...state,
       workouts: [...state.workouts.filter((x) => x.id !== w.id), w],
@@ -344,7 +493,12 @@ export default function App() {
     if (persist(next)) {
       setDirty(false);
       setEditing(w);
-      setNotice("Workout saved on this device.");
+      editingBase.current = structuredClone(w);
+      setNotice(
+        conflict
+          ? "Both versions kept. Your edits are a separate conflict copy."
+          : "Workout saved.",
+      );
       return w;
     }
   };
@@ -367,7 +521,7 @@ export default function App() {
           }
         : state;
       const raw = recovery
-        ? (localStorage.getItem("fe-planner:v1") ?? "")
+        ? (localStorage.getItem(STORAGE_KEY) ?? "")
         : JSON.stringify(
             {
               format: "fe-workout-backup",
@@ -472,100 +626,118 @@ export default function App() {
       setPending(null);
     }
   };
-  const all = [...sources, ...state.workouts];
-  const base = tab === "mine" ? state.workouts : sources;
-  const equipmentOptions = [
-    ...new Set(all.flatMap((workout) => workout.equipment)),
-  ]
-    .filter(Boolean)
-    .sort();
-  const visible = base.filter(
-    (w) =>
-      matches(w, filters) && (!favoritesOnly || state.favorites.includes(w.id)),
-  );
   const update = (w: Workout) => {
     setEditing(w);
     setDirty(true);
   };
   return (
     <>
-      <a className="skip-link no-print" href="#main">
+      <a
+        className="skip-link no-print"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
         Skip to workouts
       </a>
+      <StagingNotice />
+
       {!timerOpen && (
-        <>
-          <header className="header no-print">
-            <button
-              className="brand"
-              onClick={() => go("builder")}
-              title="Home"
-            >
-              <span>
-                F3 THE FE<span className="brand-sub">WORKOUT PLANNER</span>
-              </span>
-            </button>
-            <div className="header-meta">
-              <span className="rug-burn-tag">Created by Rug Burn</span>
-              <span className="region">
-                F3 THE FE <span> / </span> OLATHE, KS
-              </span>
-            </div>
-          </header>
-          <nav className="app-nav no-print" aria-label="Planner navigation">
-            {[
-              ["builder", "Build"],
-              ["library", "Library"],
-              ["mine", "My Workouts"],
-            ].map(([key, label]) => (
-              <button
-                key={key}
-                aria-current={
-                  !selected && !editing && tab === key ? "page" : undefined
-                }
-                onClick={() => go(key)}
-              >
-                {label}
-              </button>
-            ))}
-            <details className="more-nav">
-              <summary>More</summary>
-              <div className="more-menu">
-                {[
-                  ["aos", "AO Directory"],
-                  ["exicon", "Exicon & Lexicon"],
-                  ["data", "Sync & backups"],
-                ].map(([key, label]) => (
-                  <button
-                    key={key}
-                    onClick={(event) => {
-                      go(key);
-                      event.currentTarget
-                        .closest("details")
-                        ?.removeAttribute("open");
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </details>
-          </nav>
-        </>
+        <AppNavigation
+          active={tab}
+          onNavigate={go}
+          accountEntry={(onOpen) => <AccountEntry onOpen={onOpen} />}
+        />
       )}
-      <div
-        role="status"
-        aria-live="polite"
-        className={notice ? "notice no-print" : "sr-only"}
-      >
-        {notice && (
-          <>
-            <span>{notice}</span>
-            <button aria-label="Dismiss message" onClick={() => setNotice("")}>
-              <X size={16} />
-            </button>
-          </>
-        )}
-      </div>
+      {!timerOpen && tab === "data" && !selected && !editing && (
+        <AccountPanel
+          onImportGuest={() => {
+            try {
+              const incoming = readState().workouts.filter(
+                (workout) =>
+                  !state.workouts.some((existing) =>
+                    sameGuestContent(
+                      workoutSchema.parse(existing),
+                      workoutSchema.parse(workout),
+                    ),
+                  ),
+              );
+              const merged = mergeBackup(
+                state.workouts,
+                incoming,
+                sources.map((workout) => workout.id),
+              );
+              if (merged.workouts.length > 200)
+                throw Error(
+                  "Adding guest workouts would exceed 200 plans. Export a backup and free space first.",
+                );
+              return persist({ ...state, workouts: merged.workouts });
+            } catch (error) {
+              setNotice(
+                error instanceof Error
+                  ? error.message
+                  : "Guest workouts could not be read. Their original copy is unchanged.",
+              );
+              return false;
+            }
+          }}
+        />
+      )}
+      <CloudSync
+        compact={tab !== "data" || !!selected || !!editing}
+        hidden={timerOpen}
+        blocked={blocked || storageChanged || dirty}
+        onSettings={() => go("data")}
+        workouts={state.workouts}
+        onMerge={(workouts) => persist({ ...state, workouts })}
+        onStudio={(workouts) => {
+          const existing = new Set(state.workouts.map((w) => w.originId));
+          const fresh = workouts.filter((w) => !existing.has(w.originId));
+          if (state.workouts.length + fresh.length > 200) {
+            setNotice(
+              "Import would exceed 200 plans. Export a backup and free space first.",
+            );
+            return false;
+          }
+          return persist({
+            ...state,
+            workouts: [...state.workouts, ...fresh],
+          });
+        }}
+      />
+
+      {unresolvedRoute === location.hash && (
+        <aside
+          className="notice no-print"
+          role="status"
+          aria-label="Opening saved workout"
+        >
+          Looking for this workout. It will open when your library loads. If you
+          saved it elsewhere, sign in or open Saving & recovery to connect that
+          library. Your saved plans are safe.
+        </aside>
+      )}
+      {!(timerOpen && selected) && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={notice ? "notice no-print" : "sr-only"}
+        >
+          {notice && (
+            <>
+              <span>{notice}</span>
+              <button
+                aria-label="Dismiss message"
+                onClick={() => setNotice("")}
+              >
+                <X size={16} />
+              </button>
+            </>
+          )}
+        </div>
+      )}
       {storageChanged && (
         <aside
           className="storage-warning no-print"
@@ -610,39 +782,91 @@ export default function App() {
         <FieldTimer
           key={selected.id}
           workout={selected}
-          onExit={() => setTimerOpen(false)}
+          notice={
+            notice ? (
+              <div role="status" className="lead-inline-notice">
+                <span>{notice}</span>
+                <button
+                  aria-label="Dismiss message"
+                  onClick={() => setNotice("")}
+                >
+                  ×
+                </button>
+              </div>
+            ) : undefined
+          }
+          onExit={() => {
+            setTimerOpen(false);
+            writeRoute({ tab, view: "workout", id: selected.id }, true);
+          }}
         />
       ) : !selected && !editing ? (
-        <main id="main" className="main">
+        <main id="main" tabIndex={-1} className="main">
           {tab === "builder" && (
             <Planner
+              savedWorkouts={state.workouts}
+              onImport={() => go("markdown")}
               onLead={(w) => {
                 open(w);
                 setNotice("");
                 setTimerOpen(true);
+                writeRoute({ tab: "mine", view: "lead", id: w.id });
               }}
               onEdit={(w) => begin(w)}
               onPreview={(w) => {
                 setThangOnly(false);
                 open(w);
               }}
-              onSave={(w) => {
-                if (state.workouts.length >= 200) {
+              onSave={(w, base) => {
+                const parsed = workoutSchema.safeParse(w);
+                if (!parsed.success) return false;
+                const existing = state.workouts.find(
+                  (item) => item.id === w.id,
+                );
+                if (
+                  existing &&
+                  JSON.stringify(workoutSchema.parse(existing)) ===
+                    JSON.stringify(parsed.data)
+                )
+                  return existing;
+                const conflict =
+                  existing &&
+                  (!base ||
+                    JSON.stringify(workoutSchema.parse(existing)) !==
+                      JSON.stringify(workoutSchema.parse(base)));
+                const newCopy = !existing || conflict;
+                if (newCopy && state.workouts.length >= 200) {
                   setNotice(
                     "This browser has 200 drafts. Export a backup before adding more.",
                   );
                   return false;
                 }
-                const copy = {
-                  ...structuredClone(w),
-                  id: uid(),
-                  originId: w.id,
-                };
+                const copy = attributeWorkout(
+                  {
+                    ...structuredClone(parsed.data),
+                    ...(newCopy ? { id: uid(), originId: w.id } : {}),
+                    ...(conflict
+                      ? { title: titledCopy(w.title, " · conflict copy") }
+                      : {}),
+                    updatedAt: new Date().toISOString(),
+                  },
+                  account?.user?.id,
+                  profile?.display_name,
+                );
                 if (
-                  persist({ ...state, workouts: [...state.workouts, copy] })
+                  persist({
+                    ...state,
+                    workouts: [
+                      ...state.workouts.filter((item) => item.id !== copy.id),
+                      copy,
+                    ],
+                  })
                 ) {
-                  setNotice("AI-assisted copy saved privately on this device.");
-                  return true;
+                  if (conflict)
+                    setNotice(
+                      "Both versions kept. Your edits are a separate conflict copy.",
+                    );
+                  return copy;
                 }
                 return false;
               }}
@@ -656,25 +880,8 @@ export default function App() {
               }}
             />
           )}
-          {tab === "data" && (
-            <CloudSync
-              workouts={state.workouts}
-              onMerge={(workouts) => persist({ ...state, workouts })}
-              onStudio={(workouts) => {
-                const existing = new Set(state.workouts.map((w) => w.originId));
-                const fresh = workouts.filter((w) => !existing.has(w.originId));
-                if (state.workouts.length + fresh.length > 200) {
-                  setNotice(
-                    "Import would exceed 200 plans. Export a backup and free space first.",
-                  );
-                  return false;
-                }
-                return persist({
-                  ...state,
-                  workouts: [...state.workouts, ...fresh],
-                });
-              }}
-            />
+          {tab === "markdown" && (
+            <MarkdownImport onEdit={(w) => begin(w, false)} />
           )}
           {tab === "exicon" ? (
             <ExiconBrowser />
@@ -690,277 +897,41 @@ export default function App() {
                       go("library");
                     }}
                   />
-                ) : tab === "data" ? null : (
-                  <>
-                    {tab === "library" && (
-                      <aside className="catalog-status">
-                        <strong>
-                          {
-                            sources.filter(
-                              (w) =>
-                                w.provenance.status === "regional-reviewed",
-                            ).length
-                          }{" "}
-                          reviewed FE workouts ·{" "}
-                          {
-                            sources.filter(
-                              (w) => w.provenance.status === "illustrative",
-                            ).length
-                          }{" "}
-                          illustrative starters
-                        </strong>
-                        <p>
-                          {catalogOrigin === "published"
-                            ? "Latest published library loaded."
-                            : "Saved library snapshot."}{" "}
-                          Backblasts may have timing or exercise gaps; check
-                          source notes before leading. Starters are illustrative
-                          examples.
-                        </p>
-                      </aside>
-                    )}
-                    <section className="library-head">
-                      <div>
-                        <p className="eyebrow">
-                          {tab === "library"
-                            ? "THE STARTING LINE"
-                            : "YOUR CORNER"}
-                        </p>
-                        <h2>
-                          {tab === "library"
-                            ? "Find your next workout"
-                            : tab === "mine"
-                              ? "Made yours. Ready to lead."
-                              : "Keep the good ones close."}
-                        </h2>
-                      </div>
-                      <div className="library-head-actions">
-                        <button
-                          className="create"
-                          onClick={() => {
-                            if (leave()) begin(newWorkout());
-                          }}
-                        >
-                          <Plus size={16} /> Create a workout
-                        </button>
-                      </div>
-                    </section>
-                    <label className="checkbox favorites-filter">
-                      <input
-                        type="checkbox"
-                        checked={favoritesOnly}
-                        onChange={(e) => setFavoritesOnly(e.target.checked)}
-                      />{" "}
-                      Favorites only
-                    </label>
-                    <section className="filters" aria-label="Filter workouts">
-                      <label className="search">
-                        <Search size={18} />
-                        <input
-                          aria-label="Search workouts"
-                          placeholder="Search workouts…"
-                          value={filters.query}
-                          onChange={(e) =>
-                            setFilters({ ...filters, query: e.target.value })
-                          }
-                        />
-                      </label>
-                      <details className="filter-details">
-                        <summary>Filter workouts</summary>
-                        <div className="filter-options">
-                          {(
-                            [
-                              [
-                                "duration",
-                                "Duration",
-                                ["All", "30 or less", "31–45", "46+"],
-                              ],
-                              [
-                                "equipment",
-                                "Equipment",
-                                ["All", "None", ...equipmentOptions],
-                              ],
-                              [
-                                "running",
-                                "Running",
-                                ["All", "None", "Light", "Moderate"],
-                              ],
-                              ["format", "Format", ["All", ...formatOptions]],
-                              [
-                                "status",
-                                "Source status",
-                                [
-                                  "All",
-                                  "regional-reviewed",
-                                  "illustrative",
-                                  "personal",
-                                ],
-                              ],
-                              [
-                                "ao",
-                                "Source AO",
-                                [
-                                  "All",
-                                  ...new Set([
-                                    ...aoProfiles.map((a) => a.name),
-                                    ...all.flatMap((w) =>
-                                      w.provenance.ao ? [w.provenance.ao] : [],
-                                    ),
-                                  ]),
-                                ],
-                              ],
-                            ] as [keyof Filters, string, string[]][]
-                          ).map(([key, label, options]) => (
-                            <label className="filter" key={key}>
-                              <span>{label}</span>
-                              <select
-                                aria-label={label}
-                                value={filters[key]}
-                                onChange={(e) =>
-                                  setFilters({
-                                    ...filters,
-                                    [key]: e.target.value,
-                                  })
-                                }
-                              >
-                                {options.map((o) => (
-                                  <option key={o} value={o}>
-                                    {key === "status" && o !== "All"
-                                      ? statusLabel(o)
-                                      : o}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          ))}
-                        </div>
-                      </details>
-                    </section>
-                    <div className="result-line">
-                      <span>
-                        {visible.length}{" "}
-                        {visible.length === 1 ? "workout" : "workouts"}{" "}
-                        <span className="muted">
-                          · a starting point, not a prescription
-                        </span>
-                      </span>
-                      <button
-                        className="text-button"
-                        onClick={() => setFilters({ ...filtersEmpty })}
-                      >
-                        Reset filters
-                      </button>
-                    </div>
-                    <div className="cards">
-                      {visible.map((w, i) => (
-                        <article className="card" key={w.id}>
-                          <div className="card-top">
-                            <span className="chip">{w.format}</span>
-                            <button
-                              className={
-                                "heart " +
-                                (state.favorites.includes(w.id)
-                                  ? "hearted"
-                                  : "")
-                              }
-                              aria-label={
-                                (state.favorites.includes(w.id)
-                                  ? "Unfavorite "
-                                  : "Favorite ") + w.title
-                              }
-                              aria-pressed={state.favorites.includes(w.id)}
-                              onClick={() => favorite(w.id)}
-                            >
-                              <Heart size={20} />
-                            </button>
-                          </div>
-                          <span className="card-number">
-                            {String(i + 1).padStart(2, "0")} /{" "}
-                            {w.kind === "personal"
-                              ? w.provenance.generation
-                                ? "AI-ASSISTED DRAFT"
-                                : "PERSONAL DRAFT"
-                              : statusLabel(w.provenance.status).toUpperCase()}
-                          </span>
-                          <h3>
-                            <button onClick={() => open(w)}>{w.title}</button>
-                          </h3>
-                          <p className="card-summary">
-                            {w.summary || "Your plan, your way."}
-                          </p>
-                          {w.provenance.ao && (
-                            <p className="source-meta">
-                              {w.provenance.ao} ·{" "}
-                              {w.provenance.q ?? "Q unknown"} ·{" "}
-                              {w.provenance.eventDate ?? "Date unknown"}
-                            </p>
-                          )}
-                          {!!w.provenance.issues?.length && (
-                            <p className="source-meta">
-                              {w.provenance.issues.length} source notes · check
-                              details
-                            </p>
-                          )}
-                          <div className="card-metrics">
-                            <span>
-                              <Clock3 />
-                              {w.duration
-                                ? `~${w.duration} min`
-                                : "Time not set"}
-                            </span>
-                            <span>
-                              <Dumbbell />
-                              {w.equipment.join(", ") ||
-                                (w.provenance.issues?.some((i) =>
-                                  i.startsWith("Equipment not"),
-                                )
-                                  ? "Equipment unknown"
-                                  : "No gear")}
-                            </span>
-                            <span>
-                              <Footprints />
-                              {w.provenance.issues?.some((i) =>
-                                i.startsWith("Running requirement"),
-                              )
-                                ? "Running unknown"
-                                : w.running === "None"
-                                  ? "No running"
-                                  : w.running + " running"}
-                            </span>
-                          </div>
-                          <button className="card-open" onClick={() => open(w)}>
-                            View workout <ArrowUpRight size={20} />
-                          </button>
-                        </article>
-                      ))}
-                    </div>
-                    {!visible.length && (
-                      <section className="empty">
-                        <Layers3 size={34} />
-                        <h3>
-                          {base.length
-                            ? "No workouts match those filters."
-                            : "A little room for your next idea."}
-                        </h3>
-                        <p>
-                          {base.length
-                            ? "Try a different format or clear your filters."
-                            : "Copy a library workout, create a plan, or import your drafts."}
-                        </p>
-                        <button onClick={() => setFilters({ ...filtersEmpty })}>
-                          Reset filters
-                        </button>
-                      </section>
-                    )}
-                  </>
+                ) : tab === "data" || tab === "markdown" ? null : (
+                  <WorkoutLibrary
+                    key={tab}
+                    sources={sources}
+                    workouts={state.workouts}
+                    favorites={state.favorites}
+                    catalogOrigin={catalogOrigin}
+                    personal={tab === "mine"}
+                    filters={filters}
+                    preferences={libraryPreferences}
+                    onPreferences={setLibraryPreferences}
+                    onFilters={setFilters}
+                    onFavorite={favorite}
+                    onOpen={open}
+                    onUse={useWorkout}
+                    onEdit={(w) => {
+                      if (leave()) begin(w);
+                    }}
+                    onLead={(w) => {
+                      open(w);
+                      setTimerOpen(true);
+                      writeRoute({ tab: "mine", view: "lead", id: w.id });
+                    }}
+                    onCreate={() => {
+                      if (leave()) begin(newWorkout());
+                    }}
+                  />
                 )}
                 {tab === "data" && (
                   <section className="backup">
                     <div>
-                      <h3>Your plans travel with you.</h3>
+                      <h3>Backup & recovery</h3>
                       <p>
-                        Browser storage is device-specific and can be cleared.
-                        Export a backup to keep your drafts and favorites.
+                        Export a copy of your saved workouts and favorites
+                        whenever you want an extra backup.
                       </p>
                     </div>
                     <div className="actions">
@@ -989,13 +960,13 @@ export default function App() {
           )}
         </main>
       ) : editing ? (
-        <main id="main" className="editor main">
+        <main id="main" tabIndex={-1} className="editor main">
           <div className="page-top">
             <button onClick={() => go("mine")}>
               <ArrowLeft size={17} /> My workouts
             </button>
             <span className="editor-status">
-              {dirty ? "Unsaved changes" : "Saved on this device"}
+              {dirty ? "Unsaved changes" : "Saved"}
             </span>
             <button className="create" onClick={save}>
               <Check size={17} />
@@ -1323,8 +1294,18 @@ export default function App() {
                         </fieldset>
                       );
                     })}
+                    <MovementPicker
+                      disabled={b.exercises.length >= 100}
+                      onAdd={(exercise) =>
+                        changeBlock({
+                          ...b,
+                          exercises: [...b.exercises, exercise],
+                        })
+                      }
+                    />
                     <div className="actions">
                       <button
+                        disabled={b.exercises.length >= 100}
                         onClick={() =>
                           changeBlock({
                             ...b,
@@ -1448,6 +1429,7 @@ export default function App() {
       ) : selected ? (
         <main
           id="main"
+          tabIndex={-1}
           className={
             "main detail " +
             (q ? "q-mode " : "") +
@@ -1497,26 +1479,11 @@ export default function App() {
             </span>
           </div>
           <div className="actions no-print detail-actions">
-            <button
-              className="create"
-              onClick={() => {
-                if (state.workouts.length >= 200) {
-                  setNotice(
-                    "This browser has 200 drafts. Export a backup before adding more.",
-                  );
-                  return;
-                }
-                const copied = copyWorkout(selected);
-                if (
-                  persist({ ...state, workouts: [...state.workouts, copied] })
-                ) {
-                  begin(copied, true);
-                  setNotice("Personal copy created. Your source is unchanged.");
-                }
-              }}
-            >
+            <button className="create" onClick={() => useWorkout(selected)}>
               <Copy size={17} />
-              Copy to my workouts
+              {state.workouts.some((w) => w.id === selected.id)
+                ? "Duplicate workout"
+                : "Copy to my workouts"}
             </button>
             {selected.kind === "personal" && (
               <button onClick={() => begin(selected)}>Edit workout</button>
@@ -1546,9 +1513,10 @@ export default function App() {
             onClick={() => {
               setNotice("");
               setTimerOpen(true);
+              writeRoute({ tab, view: "lead", id: selected.id });
             }}
           >
-            Launch Field Q-Timer
+            Lead workout
           </button>
           <SessionTimeline workout={selected} />
           {selected.schedule?.siteSummary && (

@@ -13,7 +13,10 @@ import {
   type Plan,
 } from "../src/planner-contract.ts";
 import { workoutSchema } from "../src/model.ts";
-import { movementConflicts } from "../src/plan-constraints.ts";
+import {
+  movementConflicts,
+  refinementConflicts,
+} from "../src/plan-constraints.ts";
 import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
 export type AIEnvironment = {
   OPENROUTER_API_KEY?: string;
@@ -33,7 +36,43 @@ export { resolveRequest } from "../src/planner-contract.ts";
 export function validatePlan(value: unknown, input: PlannerRequest) {
   const p = planSchema.parse(value),
     kinds = p.sections.map((s) => s.kind);
-  if (kinds.join(",") !== (input.mary ? "warmup,thang,mary" : "warmup,thang"))
+  // Current AO facts confirm outdoor features, not indoor workout permission.
+  // Check prominent claims; caveats in notes do not establish access.
+  const description = `${p.title}. ${p.summary}`.replace(
+    /\b(?:not|never|no|without|avoid)\s+indoor(?:s)?\b/gi,
+    "",
+  );
+  if (/\bindoor(?:s)?\b/i.test(description))
+    throw new PlannerError(
+      422,
+      "The AI claimed unconfirmed indoor workout access. A covered shelter does not establish indoor permission.",
+    );
+  if (
+    (input.planning?.pax === 1 || input.planning?.grouping === "Individual") &&
+    (p.format === "Partner" ||
+      p.sections.some((s) =>
+        s.blocks.some((b) =>
+          /\b(?:pair up|partner [ab]|your partner|partners? alternate|swap partners?)\b/i.test(
+            b.instructions,
+          ),
+        ),
+      ))
+  )
+    throw new PlannerError(
+      422,
+      "The draft requires a partner despite your individual-work setup.",
+    );
+  const routeSession = input.planning && input.planning.activity !== "Bootcamp";
+  if (
+    kinds.join(",") !==
+    (routeSession
+      ? input.mary
+        ? "thang,mary"
+        : "thang"
+      : input.mary
+        ? "warmup,thang,mary"
+        : "warmup,thang")
+  )
     throw new PlannerError(
       422,
       "The AI left out or reordered a section. Your previous draft is safe. Try again.",
@@ -47,8 +86,9 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
         .find((s) => s.kind === kind)
         ?.blocks.reduce((n, b) => n + b.minutes, 0) ?? 0;
     if (
-      byKind("warmup") !== 8 ||
-      byKind("thang") !== (input.mary ? 29 : 35) ||
+      byKind("warmup") !== (routeSession ? 0 : 8) ||
+      byKind("thang") !==
+        (routeSession ? (input.mary ? 37 : 43) : input.mary ? 29 : 35) ||
       (input.mary && byKind("mary") !== 6)
     )
       throw new PlannerError(
@@ -97,6 +137,8 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
           ". Your previous draft is safe.",
       );
   }
+  const refinement = refinementConflicts(p, input);
+  if (refinement.length) throw new PlannerError(422, refinement.join(" "));
   return p;
 }
 function parseJSON(text: string) {
@@ -112,12 +154,18 @@ export async function generatePlan(
 ) {
   const input = resolveRequest(raw),
     context = contextFor(input);
-  const system =
+  let system =
     F3_BRIEF +
+    "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions in EVERY section: when Rain or Snow / ice is selected, use only controlled standing exercises, including standing core work for Mary. Do not prescribe floor exercises or jumps merely because shelter is available. Never turn a covered garage into claimed indoor access. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
     "\nReturn ONLY JSON matching this shape (example exercises are not a required plan): " +
     JSON.stringify(OUTPUT_SHAPE) +
     "\nUse ONLY these case-sensitive enums: running None|Light|Moderate; format Circuit|11s|EMOM|AMRAP|Ladder|Partner|Stations|Chipper|Custom; exercise unit reps|seconds|minutes|meters|rounds|instructions; counting total|1=1|2=1|per side|cadence|time|distance|not applicable. amount MUST be a string. No extra top-level fields. " +
     `\n${input.strictSchedule ? "STRICT SCHEDULE: 2 minutes welcome/disclaimer is reserved by the app outside these exercise sections. Warmup EXACTLY 8 minutes; The Thang EXACTLY " + (input.mary ? "29" : "35") + " minutes; Mary " + (input.mary ? "EXACTLY 6 minutes" : "OMITTED") + ". Fellowship/COT happens AFTER the 45-minute hard stop and must NOT appear in physical sections." : ""} All block minutes MUST sum to ${input.minutes - (input.strictSchedule ? 2 : 0)}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
+  const routeSession = input.planning && input.planning.activity !== "Bootcamp";
+  const routeInstructions = routeSession
+    ? `\nROUTE SESSION overrides bootcamp phase rules above: ${input.planning!.activity}. Required sections: ${input.mary ? "thang,mary" : "thang"}. No warmup section. ${input.strictSchedule ? `Thang exactly ${input.mary ? 37 : 43} minutes; ${input.mary ? "Mary exactly 6 minutes." : "No Mary."}` : "Fit the requested time."} Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
+    : "";
+  system += routeInstructions;
   const message = JSON.stringify({ request: input, verifiedContext: context });
   const deadline = AbortSignal.any([
     AbortSignal.timeout(22000),

@@ -1,5 +1,6 @@
 import { siteContext, describeSite } from "./ao-context";
 import { workoutSchema } from "./model";
+import { planningContext } from "./planning-details";
 import {
   resolveRequest,
   type PlannerRequest,
@@ -26,16 +27,25 @@ export const GEAR = [
 export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
   const input = resolveRequest(raw),
     builder = input.builder;
+  const details = planningContext(input.planning, builder);
+  const wet = details.weather.some((w) => w === "Rain" || w === "Snow / ice");
   const coupon =
     input.equipment === "Coupon" ||
     (input.equipment !== "None" && /coupon|cindy|cinder/i.test(input.prompt));
-  const style =
+  let style =
     builder?.style ??
     STYLES.find((s) => input.prompt.toLowerCase().includes(s.toLowerCase())) ??
     (/\bdora\b/i.test(input.prompt) ? "Dora 1-2-3" : "The Grinder");
-  const running =
+  if (
+    wet ||
+    details.pax === 1 ||
+    (details.grouping === "Individual" && style === "Dora 1-2-3")
+  )
+    style = "The Grinder";
+  else if (details.grouping === "Partners" && !builder) style = "Dora 1-2-3";
+  let running =
     input.running === "From prompt"
-      ? /\b(no|without|skip) running\b/i.test(input.prompt)
+      ? wet || /\b(no|without|skip) running\b/i.test(input.prompt)
         ? "None"
         : "Light"
       : input.running;
@@ -52,11 +62,13 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     counting: "1=1" | "time" | "not applicable" = "1=1",
   ) => ({ name, amount, unit, counting, instructions });
   const push = ex(
-    useCoupon ? "Coupon chest press" : "Merkins",
+    wet ? "Standing air presses" : useCoupon ? "Coupon chest press" : "Merkins",
     "10",
-    useCoupon
-      ? "Lie on your back; press one intact coupon with control. Use bodyweight merkins if needed."
-      : "One full push-up is one rep; elevate hands or lower knees as needed.",
+    wet
+      ? "Stand with empty hands and press upward through a comfortable range; no load. This is not equivalent to a loaded press. A full up-and-down cycle is one rep."
+      : useCoupon
+        ? "Lie on your back; press one intact coupon with control. Use bodyweight merkins if needed."
+        : "One full push-up is one rep; elevate hands or lower knees as needed.",
   );
   const lower = ex(
     useCoupon ? "Goblet squat" : "Squat",
@@ -66,16 +78,24 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       : "Lower hips then stand. Adjust depth and reps.",
   );
   const core = ex(
-    "LBCs",
+    wet ? "Standing knee drives" : "LBCs",
     "20",
-    "Small controlled crunch; one lift and lower is one rep. Rest as needed.",
+    wet
+      ? "Stand and bring one knee toward the opposite hand with control. Each knee drive counts once; alternate sides."
+      : "Small controlled crunch; one lift and lower is one rep. Rest as needed.",
   );
   const pull = ex(
-    useCoupon ? "Coupon bent-over row" : "Prone W raises",
+    wet
+      ? "Standing W squeezes"
+      : useCoupon
+        ? "Coupon bent-over row"
+        : "Prone W raises",
     "10",
-    useCoupon
-      ? "Hinge at hips, pull coupon toward torso, lower with control."
-      : "Lie face down, bend arms into a W and gently lift hands; keep neck neutral.",
+    wet
+      ? "Stand with elbows bent into a W, draw shoulder blades gently together, then release. One squeeze and release counts once."
+      : useCoupon
+        ? "Hinge at hips, pull coupon toward torso, lower with control."
+        : "Lie face down, bend arms into a W and gently lift hands; keep neck neutral.",
   );
   const travel =
     running === "None"
@@ -83,6 +103,48 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       : "Partner B walks or jogs a marked 20-meter down-and-back (10 meters each way).";
   let instructions = "",
     exercises = [push, lower, pull, core];
+  if (details.focus === "Upper body")
+    exercises = [
+      push,
+      pull,
+      ex(
+        "Standing air presses",
+        "10",
+        "Empty hands; press up and lower through a comfortable range. One up-and-down cycle counts once.",
+      ),
+    ];
+  if (details.focus === "Lower body" || details.focus === "Legs")
+    exercises = [
+      lower,
+      ex(
+        "Reverse lunges",
+        "10 each side",
+        "Step back and return with control, using a comfortable range. Do ten on each side; stay in place.",
+      ),
+      ex(
+        "Squat hold",
+        "20",
+        "Hold a comfortable squat for up to 20 seconds, then rest.",
+        "seconds",
+        "time",
+      ),
+    ];
+  if (details.focus === "Core")
+    exercises = [
+      core,
+      ex(
+        "Standing oblique knee drives",
+        "10 each side",
+        "Stand tall, lift one knee toward the same-side elbow through a comfortable range. Do ten each side; no jumping.",
+      ),
+      ex(
+        "Standing balance brace",
+        "20",
+        "Brace gently while standing, lift one foot slightly if comfortable, then change sides halfway. Rest as needed; no breath-holding.",
+        "seconds",
+        "time",
+      ),
+    ];
   let format: Plan["format"] = "Circuit";
   if (style === "Dora 1-2-3") {
     format = "Partner";
@@ -141,8 +203,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     instructions =
       "IPC-inspired adaptation, NOT an official Iron PAX benchmark. Repeat the four exercises at a steady pace, recovering between rounds as needed. Count rounds only for personal reference. Stop at the scheduled cap. For an official benchmark use its published year/week and exact rules.";
   } else {
-    instructions =
-      "Four stations: work 45 seconds, then recover and rotate for 15 seconds. Complete five circuits (20 minutes), then 2 minutes recovery. Repeat while time remains; stop at the section cap. Smaller groups can move through the list together.";
+    instructions = `${exercises.length} stations: work 45 seconds, then recover and rotate for 15 seconds. Complete five circuits (${exercises.length * 5} minutes), then 2 minutes recovery. Repeat while time remains; stop at the section cap. Smaller groups can move through the list together.`;
     format = "Stations";
     exercises = exercises.map((e) => ({
       ...e,
@@ -156,6 +217,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       ? 29
       : 35
     : input.minutes - 5 - (input.mary ? 5 : 0);
+  instructions += ` ${details.groupingInstructions} ${wet ? "Use controlled standing work on checked footing and keep transitions short." : ""} ${details.light === "Dark" || details.light === "Dawn / dusk" ? "Stay together in a compact, Q-checked working area." : ""} All listed station counts are per person unless explicitly marked as a team total.`;
   const plan: Plan = {
     title: builder?.title || `${style} · draft`,
     summary:
@@ -175,9 +237,11 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
               "Demonstrate movements, warm up gradually and allow recovery. IC: Q calls 1-2-3, PAX calls the completed rep on count four; demonstrate a full cycle. Use remaining time for easy marching and transitions.",
             exercises: [
               ex(
-                "Side straddle hops",
-                "10 IC",
-                "Step out or jump; one complete four-count cycle is one counted rep.",
+                wet ? "Side steps" : "Side straddle hops",
+                wet ? "10" : "10 IC",
+                wet
+                  ? "Step out and back without jumping; each complete out-and-back is one rep. Check footing and use a small range."
+                  : "Step out or jump; one complete four-count cycle is one counted rep.",
                 "reps",
                 "1=1",
               ),
@@ -212,8 +276,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
                 {
                   title: "Closing core",
                   minutes: input.strictSchedule ? 6 : 5,
-                  instructions:
-                    "Alternate 30 seconds work and 30 seconds rest between LBCs and dead bugs. Repeat to the time cap; allow transitions and stop at the whistle.",
+                  instructions: `Alternate 30 seconds work and 30 seconds rest between ${core.name} and ${wet ? "standing oblique knee drives" : "dead bugs"}. Repeat to the time cap; allow transitions and stop at the whistle.`,
                   exercises: [
                     {
                       ...core,
@@ -222,9 +285,11 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
                       counting: "time" as const,
                     },
                     ex(
-                      "Dead bugs",
+                      wet ? "Standing oblique knee drives" : "Dead bugs",
                       "30",
-                      "Lie on your back; slowly extend opposite arm and leg, alternate sides.",
+                      wet
+                        ? "Stand and slowly bring the knee toward the same-side elbow; alternate sides without jumping."
+                        : "Lie on your back; slowly extend opposite arm and leg, alternate sides.",
                       "seconds",
                       "time",
                     ),
@@ -238,8 +303,58 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     notes: [
       "Template fallback; additional theme, focus and gear requests are not guaranteed. Edit the draft as needed.",
       "Q confirms available equipment, terrain, partner setup and modifications.",
+      `Requested focus: ${details.focus}. ${details.groupingInstructions}`,
+      `Expected conditions: ${details.weather.join(", ") || "not supplied"}; light: ${details.light}; date: ${details.date || "not supplied"}. These are Q expectations, not a live forecast.`,
+      ...details.conditionsInstructions,
     ],
   };
+  if (details.activity !== "Bootcamp") {
+    const routeMinutes =
+      input.minutes -
+      (input.strictSchedule ? 2 : 0) -
+      (input.mary ? (input.strictSchedule ? 6 : 5) : 0);
+    const instructions = `Q confirms route and access before departure. ${details.route ? "Q-supplied route: " + details.route : "Use a Q-checked out-and-back; route unconfirmed."} ${details.distance ? "Target distance (not measured by the app): " + details.distance + "." : "Use time rather than an assumed distance."} ${details.pace || "Use a conversational effort; allow a walking option."} Turn back by halfway through the route time or earlier for the group. Regroup at turns and return together by the hard stop.`;
+    running =
+      details.activity === "Ruck"
+        ? "None"
+        : input.running === "None"
+          ? "None"
+          : "Moderate";
+    plan.title = `${details.activity} · route draft`;
+    plan.summary =
+      "Q-confirmed route planning template. Check distance, access and group logistics before leading.";
+    plan.format = "Custom";
+    plan.running = running;
+    plan.equipment = details.activity === "Ruck" ? ["Ruck"] : [];
+    plan.sections = [
+      {
+        kind: "thang",
+        title: details.activity + " route",
+        blocks: [
+          {
+            title: "Out and back together",
+            instructions,
+            minutes: routeMinutes,
+            exercises: [
+              {
+                name: details.activity,
+                amount: String(routeMinutes),
+                unit: "minutes",
+                counting: "time",
+                instructions,
+              },
+            ],
+          },
+        ],
+      },
+      ...plan.sections.filter(
+        (section) => input.mary && section.kind === "mary",
+      ),
+    ];
+    plan.notes.push(
+      "COT and fellowship follow the physical hard stop. Optional exercise stops from your idea need manual review in this template.",
+    );
+  }
   const id = "template-" + crypto.randomUUID();
   const workout = workoutSchema.parse({
     schemaVersion: 1,
@@ -250,7 +365,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
     duration: input.minutes,
     equipment: plan.equipment,
     running,
-    format,
+    format: plan.format,
     schedule: {
       startTime: input.startTime,
       requiredFeatures: [],

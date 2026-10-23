@@ -1,9 +1,12 @@
 // @vitest-environment jsdom
+import { startPlanning } from "./planning-helpers";
 import { afterEach, beforeEach, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import App from "../src/App";
 beforeEach(() => {
+  vi.stubEnv("VITE_SUPABASE_URL", "https://production.example");
+  vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "test-public");
   localStorage.clear();
   sessionStorage.clear();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
@@ -12,9 +15,11 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 it("builds an offline formal plan, saves it, and leads the same plan in the field", () => {
   render(<App />);
+  startPlanning();
   expect(screen.getByRole("button", { name: /Surprise Me!/ })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: /Formal Builder/ }));
   fireEvent.change(screen.getByLabelText("Plan title"), {
@@ -27,38 +32,44 @@ it("builds an offline formal plan, saves it, and leads the same plan in the fiel
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "29 min",
   );
-  fireEvent.click(screen.getByRole("button", { name: "Save a private copy" }));
-  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  expect(screen.getByText(/Saved on this device/)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Print workout" }));
+  const saved = JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0];
+  expect(location.hash).toBe(`#workout/${saved.id}`);
   expect(
     screen.getByRole("heading", { name: "Digging for gold" }),
   ).toBeVisible();
-  fireEvent.click(screen.getByRole("button", { name: "Launch Field Q-Timer" }));
-  expect(screen.getByRole("timer")).toHaveTextContent("45:00");
   fireEvent.click(
-    screen.getByText("Four-count cadence", { selector: "summary" }),
+    screen.getByRole("button", { name: /^Lead (?:this )?workout$/ }),
   );
-  expect(screen.getByRole("button", { name: "Start cadence" })).toBeVisible();
+  expect(screen.queryByRole("timer")).toBeNull();
+  expect(screen.queryByText("Four-count cadence")).toBeNull();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  expect(screen.getByRole("timer")).toHaveTextContent("45:00");
+  expect(screen.getByRole("combobox", { name: "Timer sound" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "← Back to plan" }));
-  fireEvent.click(screen.getByRole("button", { name: "My Workouts" }));
+  fireEvent.click(screen.getByRole("link", { name: "My Workouts" }));
   expect(
     screen.getByRole("button", { name: "Digging for gold" }),
   ).toBeVisible();
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Sync & backups" }));
+  fireEvent.click(screen.getByRole("link", { name: "Saving & recovery" }));
   expect(
-    screen.getByRole("button", { name: "Enable cloud sync" }),
-  ).toBeVisible();
+    screen.queryByRole("button", { name: "Connect my devices" }),
+  ).toBeNull();
+  expect(localStorage.getItem("fe-sync:v1")).not.toBeNull();
 });
 it("skipping Mary yields 35 minutes of The Thang and searchable reference terms", () => {
   render(<App />);
+  startPlanning();
   fireEvent.click(screen.getByText("Session preferences"));
   fireEvent.click(screen.getByLabelText("Include closing Mary"));
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
   expect(screen.getByLabelText("45-minute Q timeline")).toHaveTextContent(
     "35 min",
   );
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "Exicon & Lexicon" }));
+  fireEvent.click(screen.getByRole("link", { name: "Exicon & Lexicon" }));
   fireEvent.click(screen.getByRole("button", { name: "Lexicon" }));
   fireEvent.change(screen.getByLabelText("Search reference"), {
     target: { value: "mumblechatter" },

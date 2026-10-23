@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { startPlanning } from "./planning-helpers";
+import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -31,24 +33,24 @@ const empty = { overrides: {}, notes: "" };
 const props = {
   onEdit: vi.fn(),
   onPreview: vi.fn(),
-  onSave: () => true,
+  onSave: (workout: Workout) => workout,
   onReference: vi.fn(),
 };
 it("propagates unpublished AO changes through directory, builder, API context and validator", async () => {
   render(<App />);
-  fireEvent.click(screen.getByText("More", { selector: "summary" }));
-  fireEvent.click(screen.getByRole("button", { name: "AO Directory" }));
+  startPlanning();
+  fireEvent.click(screen.getByRole("link", { name: "AO Directory" }));
   fireEvent.change(screen.getByLabelText("Search AOs"), {
     target: { value: "Gold Rush" },
   });
   expect(
-    screen.getByText("Unknown", { selector: ".site-q-pill" }),
+    screen.getByText(/Woodpecker/, { selector: ".site-q-pill" }),
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Edit local AO notes" }));
   fireEvent.change(screen.getByLabelText("Track for Gold Rush"), {
     target: { value: "unavailable" },
   });
-  fireEvent.click(screen.getByRole("button", { name: "Build" }));
+  fireEvent.click(screen.getByRole("link", { name: "Build" }));
   fireEvent.change(screen.getByLabelText("Q location"), {
     target: { value: "Gold Rush" },
   });
@@ -98,7 +100,7 @@ it("temporary closures and unknown override local availability without publishin
     }).features.track,
   ).toBe("unavailable");
 });
-it("rejects corrupt local terrain and never defaults unknown Site Qs to people", () => {
+it("rejects corrupt local terrain and keeps the explicit regional Site Q roster separate", () => {
   localStorage.setItem(
     TERRAIN_KEY,
     '{"fe-ao-gold-rush":{"track":{"state":"maybe"}}}',
@@ -126,6 +128,7 @@ it("surprise without an AO sends a neutral location with no fabricated facility 
         ),
     );
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: "No coupons. The track is closed." },
   });
@@ -141,6 +144,7 @@ it("surprise without an AO sends a neutral location with no fabricated facility 
 });
 it("formal portable gear never confirms fixed terrain", () => {
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Formal Builder" }));
   expect(screen.queryByLabelText("Bleachers / stairs")).toBeNull();
   fireEvent.click(screen.getByLabelText("Coupon"));
@@ -152,19 +156,21 @@ it("formal portable gear never confirms fixed terrain", () => {
   expect(stored.result.workout.equipment).toEqual(["Coupon"]);
   expect(stored.preferences.site.overrides).toEqual({});
 });
-it("keeps exactly three primary destinations and moves backup controls out of library", () => {
+it("groups workout destinations and keeps backup controls out of library", () => {
   render(<App />);
+  startPlanning();
   const nav = screen.getByRole("navigation", { name: "Planner navigation" });
   expect(
-    Array.from(nav.querySelectorAll(":scope > button")).map(
+    Array.from(nav.querySelectorAll(".navigation-group:first-child a")).map(
       (b) => b.textContent,
     ),
   ).toEqual(["Build", "Library", "My Workouts"]);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   expect(
     screen.queryByRole("navigation", { name: "Workout collections" }),
   ).toBeNull();
   expect(screen.queryByText("Import backup")).toBeNull();
+  fireEvent.click(screen.getByText(/reviewed FE workouts ·/));
   expect(
     screen.getByText(/Backblasts may have timing or exercise gaps/),
   ).toBeVisible();
@@ -179,7 +185,11 @@ it("can stop a live timer and move through exercises without changing phase time
     }),
   ).workout;
   render(<FieldTimer workout={workout} onExit={() => {}} />);
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );
@@ -206,8 +216,9 @@ it("keeps Q confirmations through refinement without overriding today's unknown"
 
 it("keeps offline provenance visible when reopening the printable plan", () => {
   render(<App />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
-  fireEvent.click(screen.getByRole("button", { name: "Preview & print" }));
+  fireEvent.click(screen.getByRole("button", { name: "Print workout" }));
   expect(
     screen.getByText(
       "Template-generated personal draft · not AI-generated or a reviewed regional original",

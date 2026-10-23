@@ -61,8 +61,12 @@ export function workoutPhases(workout: Workout, cot = 10): Phase[] | null {
     name: "Fellowship & trust",
     start,
     end: start + cot * 60,
-    detail:
+    detail: [
       "Count-o-Rama · Name-o-Rama / FNG naming · Announcements · Ball of Man / closing",
+      workout.rawNotes,
+    ]
+      .filter(Boolean)
+      .join("\n"),
   });
   return phases;
 }
@@ -135,25 +139,28 @@ export function sessionMatches(w: Workout) {
     (!w.sections.some((s) => s.kind === "mary") || minutes("mary") === 6)
   );
 }
-export function SessionTimeline({ workout }: { workout: Workout }) {
-  if (!sessionMatches(workout)) return null;
-  return (
-    <SessionTimelineContent
-      mary={workout.sections.some((s) => s.kind === "mary")}
-      start={sessionStart(workout)}
-    />
-  );
+function timelinePhases(workout: Workout): Phase[] | null {
+  if (sessionMatches(workout))
+    return sessionPhases(
+      workout.sections.some((section) => section.kind === "mary"),
+    );
+  // Route sessions use their saved blocks, with no invented bootcamp warmup.
+  if (
+    workout.duration === 45 &&
+    !workout.sections.some((section) => section.kind === "warmup")
+  ) {
+    const phases = workoutPhases(workout);
+    if (phases?.[0].id === "welcome") return phases;
+  }
+  return null;
 }
-function SessionTimelineContent({
-  mary,
-  start,
-}: {
-  mary: boolean;
-  start: number;
-}) {
+export function SessionTimeline({ workout }: { workout: Workout }) {
+  const phases = timelinePhases(workout);
+  if (!phases) return null;
+  const start = sessionStart(workout);
   return (
     <section className="session-timeline" aria-label="45-minute Q timeline">
-      {sessionPhases(mary).map((p) => (
+      {phases.map((p) => (
         <div key={p.id} className={`phase-${p.id}`}>
           <small>
             {clockLabel(p.start, start)} – {clockLabel(p.end, start)}
@@ -171,13 +178,14 @@ function SessionTimelineContent({
 }
 
 export function qSheet(w: Workout) {
+  const phases = timelinePhases(w);
   return [
     `*${w.title}*`,
     w.provenance.ao ? `AO: ${w.provenance.ao}` : "",
     w.provenance.q ? `Q: ${w.provenance.q}` : "",
     "Q PLAN · not a completed backblast",
-    sessionMatches(w)
-      ? sessionPhases(w.sections.some((s) => s.kind === "mary"))
+    phases
+      ? phases
           .filter((p) => p.id !== "cot")
           .map((p) => `${clockLabel(p.start, sessionStart(w))} ${p.name}`)
           .join(" · ") +
@@ -195,6 +203,7 @@ export function qSheet(w: Workout) {
       ]),
     ]),
     "\nAfter physical work: Count-o-Rama · Name-o-Rama / FNG naming · Announcements · BOM / closing",
+    w.rawNotes ? `Personal notes: ${w.rawNotes}` : "",
     w.adaptationNotes,
   ]
     .filter(Boolean)

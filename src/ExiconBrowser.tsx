@@ -1,10 +1,11 @@
 import { useState } from "react";
 import {
-  EXICON_DATABASE,
   F3_LEXICON,
   WORKOUT_STYLE_TEMPLATES,
   F3_FIVE_CORE_PRINCIPLES,
 } from "./studio/reference";
+import { MovementGuide } from "./MovementGuide";
+import { movements } from "./movements";
 export function ExiconBrowser() {
   const [query, setQuery] = useState(""),
     [tab, setTab] = useState("exercises");
@@ -15,7 +16,7 @@ export function ExiconBrowser() {
       <p className="eyebrow">THE FIELD GUIDE</p>
       <h1>Know the movement. Speak the language.</h1>
       <p>
-        Movement and style descriptions imported from the Studio guide. Confirm
+        Movement and style descriptions adapted from the app guide. Confirm
         local variations and cadence before leading. IPC-inspired plans are
         adaptations, not official benchmarks.
       </p>
@@ -23,7 +24,7 @@ export function ExiconBrowser() {
         {["exercises", "lexicon", "styles", "principles"].map((t) => (
           <button key={t} aria-pressed={tab === t} onClick={() => setTab(t)}>
             {t === "exercises"
-              ? `Exicon (${EXICON_DATABASE.length})`
+              ? `Exicon (${movements.length})`
               : t === "lexicon"
                 ? "Lexicon"
                 : t === "styles"
@@ -40,22 +41,8 @@ export function ExiconBrowser() {
           placeholder="Exercise, term, equipment or style…"
         />
       </label>
+      {tab === "exercises" && <MovementGuide query={query} />}
       <div className="cards">
-        {tab === "exercises" &&
-          EXICON_DATABASE.filter(match).map((e) => (
-            <article className="card" key={e.name}>
-              <span className="count-label">
-                {e.category} · {e.defaultCadence}
-              </span>
-              <h2>{e.name}</h2>
-              {e.aka && <p>Also called: {e.aka}</p>}
-              <p>{e.description}</p>
-              <p>
-                <strong>Q tip:</strong> {e.coachingTip}
-              </p>
-              <p>{e.equipment || "Bodyweight"}</p>
-            </article>
-          ))}
         {tab === "lexicon" &&
           F3_LEXICON.filter(match).map((t) => (
             <article className="card" key={t.term}>

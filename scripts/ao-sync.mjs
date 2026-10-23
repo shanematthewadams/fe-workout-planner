@@ -61,3 +61,24 @@ export function parseSchedule(html, checkedAt) {
     );
   return rows;
 }
+
+/** Refresh schedule fields without losing reviewed identity links or local-only AOs. */
+export function mergeSchedule(previous, incoming) {
+  for (const rows of [previous, incoming]) {
+    if (
+      !Array.isArray(rows) ||
+      rows.some((row) => typeof row.id !== "string") ||
+      new Set(rows.map((row) => row.id)).size !== rows.length
+    )
+      throw Error("Invalid or duplicate AO identity; snapshot retained.");
+  }
+  return [
+    ...incoming.map((row) => ({
+      ...previous.find((existing) => existing.id === row.id),
+      ...row,
+    })),
+    ...previous.filter(
+      (existing) => !incoming.some((row) => row.id === existing.id),
+    ),
+  ];
+}

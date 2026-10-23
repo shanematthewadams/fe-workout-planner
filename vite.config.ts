@@ -20,6 +20,7 @@ export default defineConfig(({ mode, command }) => {
     }
   }
   return {
+    test: { setupFiles: ["./tests/setup.ts"] },
     define,
     plugins: [
       plannerDevApi({

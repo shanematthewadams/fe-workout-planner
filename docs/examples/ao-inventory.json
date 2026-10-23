@@ -1,0 +1,19 @@
+{
+  "format": "fe-ao-inventory",
+  "version": 1,
+  "reports": [
+    {
+      "aoId": "fe-ao-south-park",
+      "venueId": "brougham-elementary",
+      "source": "Illustrative proposal only; replace with the actual report author",
+      "sourceUrl": "https://example.test/replace-with-source",
+      "checkedAt": "2026-10-20",
+      "facts": {
+        "features.shelter": { "state": "unknown", "detail": "Confirm current access" },
+        "lightningShelter": "unknown",
+        "indoorCoffeeteria": "unknown",
+        "indoorWorkoutPermission": "unknown"
+      }
+    }
+  ]
+}

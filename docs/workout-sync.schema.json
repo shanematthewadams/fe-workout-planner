@@ -17,6 +17,61 @@
           "type": "string",
           "maxLength": 100
         },
+        "attribution": {
+          "type": "object",
+          "properties": {
+            "ownerId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            },
+            "creatorId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            },
+            "creatorDisplayName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "visibility": {
+              "type": "string",
+              "const": "private"
+            },
+            "adaptedFrom": {
+              "type": "object",
+              "properties": {
+                "workoutId": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "creatorId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                },
+                "creatorDisplayName": {
+                  "type": "string",
+                  "maxLength": 80
+                }
+              },
+              "required": [
+                "workoutId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "createdAt",
+            "visibility"
+          ],
+          "additionalProperties": false
+        },
         "title": {
           "type": "string",
           "minLength": 1,

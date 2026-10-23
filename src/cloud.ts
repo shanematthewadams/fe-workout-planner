@@ -12,6 +12,11 @@ export class CloudSnapshotError extends Error {
     );
   }
 }
+export function parseCloudSnapshot(raw: unknown): Snapshot {
+  const parsed = cloudSnapshot.safeParse(raw);
+  if (!parsed.success) throw new CloudSnapshotError(raw);
+  return parsed.data;
+}
 export function cloudKey() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -60,6 +65,19 @@ export function mergeCloud(
     );
   return { workouts: result, conflicts };
 }
+/** Staging and production share the existing pre-launch private workout store. */
+export function cloudConnection() {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
+  try {
+    const target = new URL(url);
+    if (target.protocol !== "https:") return null;
+    return { url: target.origin, key, rpc: "fe_sync_plans" };
+  } catch {
+    return null;
+  }
+}
 export async function cloudRequest(
   token: string,
   operation: "get" | "put",
@@ -67,15 +85,13 @@ export async function cloudRequest(
   workouts: Workout[] = [],
   signal?: AbortSignal,
 ): Promise<Snapshot> {
+  const connection = cloudConnection();
+  if (!connection)
+    throw Error("Cloud saving is not configured. Your device copy is safe.");
   if (!/^[a-f0-9]{64}$/.test(token))
-    throw Error("Enter the full 64-character sync code.");
-  const url = import.meta.env.VITE_SUPABASE_URL,
-    key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key)
-    throw Error(
-      "Cloud connection is not configured. Your local plans are safe.",
-    );
-  const response = await fetch(new URL("/rest/v1/rpc/fe_sync_plans", url), {
+    throw Error("Enter the full 64-character connection code.");
+  const { url, key, rpc } = connection;
+  const response = await fetch(new URL(`/rest/v1/rpc/${rpc}`, url), {
     method: "POST",
     headers: { apikey: key, "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -98,8 +114,5 @@ export async function cloudRequest(
       "Cloud sync unavailable. Your local plans are safe; retry when connected.",
     );
   }
-  const raw: unknown = await response.json();
-  const parsed = cloudSnapshot.safeParse(raw);
-  if (!parsed.success) throw new CloudSnapshotError(raw);
-  return parsed.data;
+  return parseCloudSnapshot(await response.json());
 }

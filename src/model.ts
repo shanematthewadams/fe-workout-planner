@@ -1,6 +1,16 @@
 import { scheduleSchema } from "./site-contract";
 import { z } from "zod";
+import { mentionedMovements } from "./movements";
 const text = z.string().max(20000);
+// pg_jsonschema does not enforce format:uuid in this project. Keep an explicit
+// pattern as well as Zod's UUID check so hosted and client validation agree.
+const accountId = z
+  .string()
+  .uuid()
+  .regex(
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+  );
+
 export const exerciseSchema = z.object({
   id: z.string().min(1).max(100),
   name: text,
@@ -44,6 +54,22 @@ export const workoutSchema = z
     schemaVersion: z.literal(1),
     id: z.string().min(1).max(100),
     originId: z.string().max(100).optional(),
+    attribution: z
+      .object({
+        ownerId: accountId.optional(),
+        creatorId: accountId.optional(),
+        creatorDisplayName: z.string().trim().min(1).max(80).optional(),
+        createdAt: z.string().datetime(),
+        visibility: z.literal("private"),
+        adaptedFrom: z
+          .object({
+            workoutId: z.string().max(100),
+            creatorId: accountId.optional(),
+            creatorDisplayName: z.string().max(80).optional(),
+          })
+          .optional(),
+      })
+      .optional(),
     title: z.string().trim().min(1).max(160),
     summary: text,
     kind: z.enum(["source", "personal"]),
@@ -172,14 +198,33 @@ export function titledCopy(title: string, suffix: string) {
   return title.slice(0, 160 - suffix.length) + suffix;
 }
 export function copyWorkout(w: Workout): Workout {
-  return {
+  return workoutSchema.parse({
     ...structuredClone(w),
     id: uid(),
     originId: w.originId ?? w.id,
+    attribution: {
+      ...(w.attribution?.creatorId
+        ? { creatorId: w.attribution.creatorId }
+        : {}),
+      ...(w.attribution?.creatorDisplayName
+        ? { creatorDisplayName: w.attribution.creatorDisplayName }
+        : {}),
+      createdAt: new Date().toISOString(),
+      visibility: "private",
+      adaptedFrom: w.attribution?.adaptedFrom ?? {
+        workoutId: w.id,
+        ...(w.attribution?.creatorId
+          ? { creatorId: w.attribution.creatorId }
+          : {}),
+        ...(w.attribution?.creatorDisplayName
+          ? { creatorDisplayName: w.attribution.creatorDisplayName }
+          : {}),
+      },
+    },
     title: titledCopy(w.title, " · my copy"),
     kind: "personal",
     updatedAt: new Date().toISOString(),
-  };
+  });
 }
 export const filtersEmpty = {
   query: "",
@@ -195,11 +240,24 @@ export function aoKey(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 export function matches(w: Workout, f: Filters) {
+  const directions = w.sections
+    .flatMap((s) =>
+      s.blocks.flatMap((b) => [
+        b.instructions,
+        ...b.exercises.map((e) => `${e.name} ${e.instructions}`),
+      ]),
+    )
+    .join(" ");
+  const known = mentionedMovements(directions);
+  const searchable =
+    `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${directions} ${known.flatMap((m) => [m.name, ...m.aliases]).join(" ")}`.toLowerCase();
   return (
     (!f.query ||
-      `${w.title} ${w.summary} ${w.provenance.q ?? ""} ${w.provenance.ao ?? ""} ${w.sections.flatMap((s) => s.blocks.flatMap((b) => [b.instructions, ...b.exercises.map((e) => e.name)])).join(" ")}`
+      f.query
+        .trim()
         .toLowerCase()
-        .includes(f.query.trim().toLowerCase())) &&
+        .split(/\s+/)
+        .every((word) => searchable.includes(word))) &&
     (f.duration === "All" ||
       (w.duration !== null &&
         (f.duration === "30 or less"
@@ -210,12 +268,14 @@ export function matches(w: Workout, f: Filters) {
     (f.equipment === "All" ||
       (f.equipment === "None"
         ? w.equipment.length === 0 &&
+          !known.some((m) => m.equipment.length) &&
           !w.provenance.issues?.some((i) =>
             i.startsWith("Equipment not specified"),
           )
         : w.equipment.includes(f.equipment))) &&
     (f.running === "All" ||
       (w.running === f.running &&
+        (f.running !== "None" || !known.some((m) => m.running)) &&
         !w.provenance.issues?.some((i) =>
           i.startsWith("Running requirement not supplied"),
         ))) &&
@@ -283,6 +343,7 @@ export type LocalState = { workouts: Workout[]; favorites: string[] };
 export function writeState(
   state: LocalState,
   storage: Pick<Storage, "setItem"> = localStorage,
+  key = STORAGE_KEY,
 ) {
   const backup = {
     format: "fe-workout-backup",
@@ -291,12 +352,13 @@ export function writeState(
     ...state,
   };
   parseBackup(JSON.stringify(backup));
-  storage.setItem(STORAGE_KEY, JSON.stringify(backup));
+  storage.setItem(key, JSON.stringify(backup));
 }
 export function readState(
   storage: Pick<Storage, "getItem"> = localStorage,
+  key = STORAGE_KEY,
 ): LocalState {
-  const raw = storage.getItem(STORAGE_KEY);
+  const raw = storage.getItem(key);
   if (!raw) return { workouts: [], favorites: [] };
   return parseBackup(raw);
 }

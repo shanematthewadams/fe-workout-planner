@@ -1,4 +1,10 @@
+import { Weinke } from "./Weinke";
 import React, { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { AppIcon } from "./AppIcon";
+import { PlannerWelcome, type WelcomeStep } from "./PlannerWelcome";
+import { CONCEPTS, type Vibe } from "./workout-concepts";
+import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import type { PlannerRequest } from "./planner-contract";
 import { findAO } from "./ao-context";
@@ -7,29 +13,117 @@ import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
 import {
-  GOLD_RUSH_EXAMPLE,
   plannerRequestSchema,
   resolveRequest,
   plannerResponseSchema,
+  planSchema,
 } from "./planner-contract";
-import { restorePlannerSession, SESSION_KEY } from "./planner-session";
+import {
+  clearPlannerSession,
+  restorePlannerSession,
+  SESSION_KEY,
+} from "./planner-session";
+import { useAccount } from "./AccountContext";
+import { scopedDraftKey } from "./auth";
 import { PlannerDraft } from "./PlannerDraft";
-export function Planner({
+import { WorkoutDetails } from "./WorkoutDetails";
+import { planningDetailsSchema, refinePlanning } from "./planning-details";
+type PlannerProps = {
+  savedWorkouts?: Workout[];
+  onImport?: () => void;
+  onDraft?: (w: Workout) => void;
+  onLead?: (w: Workout) => void;
+  onEdit: (w: Workout) => void;
+  onPreview: (w: Workout) => void;
+  onSave: (w: Workout, base?: Workout) => Workout | false;
+  onReference: (id: string) => void;
+};
+
+export function Planner(props: PlannerProps) {
+  const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
+  const [generation, setGeneration] = useState(0);
+  const [resetError, setResetError] = useState("");
+  function startNew() {
+    if (
+      !window.confirm(
+        "Start a new workout? Saved workouts stay in My Workouts. Unsaved setup and notes will be cleared.",
+      )
+    )
+      return;
+    if (!clearPlannerSession(sessionKey)) {
+      setResetError(
+        "Couldn’t start fresh in this browser. Your open workout is still here. Keep a copy of unsaved notes and try again.",
+      );
+      return;
+    }
+    setResetError("");
+    setGeneration((value) => value + 1);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  return (
+    <>
+      {resetError && (
+        <p role="alert" className="assistant-error">
+          {resetError}
+        </p>
+      )}
+      <PlannerSession
+        key={sessionKey + ":" + generation}
+        {...props}
+        onStartNew={startNew}
+      />
+    </>
+  );
+}
+function PlannerSession({
   onEdit,
   onPreview,
   onSave,
   onReference,
   onDraft,
   onLead,
-}: {
-  onDraft?: (w: Workout) => void;
-  onLead?: (w: Workout) => void;
-  onEdit: (w: Workout) => void;
-  onPreview: (w: Workout) => void;
-  onSave: (w: Workout) => boolean;
-  onReference: (id: string) => void;
-}) {
-  const [initial] = useState(restorePlannerSession),
+  onImport,
+  savedWorkouts = [],
+  onStartNew,
+}: PlannerProps & { onStartNew: () => void }) {
+  const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
+  const [initial] = useState(() => {
+      const restored = restorePlannerSession(sessionKey);
+      let wasSavedToDevice = false;
+      try {
+        wasSavedToDevice =
+          JSON.parse(sessionStorage.getItem(sessionKey) ?? "null")
+            ?.savedToDevice === true;
+      } catch {
+        /* Preserve recovered edits. */
+      }
+      const latest = savedWorkouts.find(
+        (w) => w.id === restored.result?.workout.id,
+      );
+      if (
+        restored.result &&
+        wasSavedToDevice &&
+        latest &&
+        latest.updatedAt > restored.result.workout.updatedAt
+      ) {
+        const plan = planSchema.safeParse({
+          ...restored.result.plan,
+          title: latest.title,
+          summary: latest.summary,
+          equipment: latest.equipment,
+          running: latest.running,
+          format: latest.format,
+          sections: latest.sections,
+        });
+        if (plan.success)
+          restored.result = {
+            ...restored.result,
+            workout: latest,
+            plan: plan.data,
+          };
+      }
+      return restored;
+    }),
     [prompt, setPrompt] = useState(initial.prompt),
     [result, setResult] = useState(initial.result),
     [revision, setRevision] = useState(initial.revision),
@@ -50,19 +144,137 @@ export function Planner({
   useEffect(() => {
     if (initial.result) onDraft?.(initial.result.workout);
   }, []);
-  const [view, setView] = useState<"build" | "review">(
-    initial.result ? "review" : "build",
-  );
+  const [view, setView] = useState<"build" | "review">(() => {
+    try {
+      if (
+        JSON.parse(sessionStorage.getItem(sessionKey + ":flow") ?? "null")
+          ?.step === "weinke"
+      )
+        return "build";
+    } catch {
+      /* Keep the generated draft recoverable. */
+    }
+    return initial.result ? "review" : "build";
+  });
+  const [welcomeStep, setWelcomeStep] = useState<WelcomeStep>(() => {
+    try {
+      const value = JSON.parse(
+        sessionStorage.getItem(sessionKey + ":flow") ?? "null",
+      );
+      if (
+        ["welcome", "vibe", "location", "concept", "ready", "weinke"].includes(
+          value?.step,
+        )
+      )
+        return value.step;
+    } catch {
+      /* Existing draft remains recoverable. */
+    }
+    return initial.prompt || initial.result ? "ready" : "welcome";
+  });
+  const [vibe, setVibe] = useState<Vibe>(() => {
+    try {
+      const value = JSON.parse(
+        sessionStorage.getItem(sessionKey + ":flow") ?? "null",
+      )?.vibe;
+      if (["together", "heavy", "moving", "mix", "surprise"].includes(value))
+        return value;
+    } catch {
+      /* Use the first curated collection. */
+    }
+    return "together";
+  });
+  const [extraNote, setExtraNote] = useState(() => {
+    try {
+      return String(
+        JSON.parse(sessionStorage.getItem(sessionKey + ":flow") ?? "null")
+          ?.note ?? "",
+      ).slice(0, 250);
+    } catch {
+      return "";
+    }
+  });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        sessionKey + ":flow",
+        JSON.stringify({ step: welcomeStep, note: extraNote, vibe }),
+      );
+    } catch {
+      /* Main session effect reports storage failures. */
+    }
+  }, [welcomeStep, extraNote, sessionKey, vibe]);
+  const saveCallback = useRef(onSave);
+  saveCallback.current = onSave;
+  const saveBase = useRef<Workout | undefined>(initial.result?.workout);
+  const attemptedSave = useRef<Workout | null>(null);
+  const [saveError, setSaveError] = useState(false);
+  function saveCurrent(workout: Workout) {
+    const copy = saveCallback.current(workout, saveBase.current);
+    if (!copy) {
+      setSaved(false);
+      setSaveError(true);
+      return false;
+    }
+    saveBase.current = copy;
+    attemptedSave.current = copy;
+    setResult((previous) =>
+      previous ? { ...previous, workout: copy } : previous,
+    );
+    setSaved(true);
+    setSaveError(false);
+    return true;
+  }
+  useEffect(() => {
+    if (!result || busy || attemptedSave.current === result.workout) return;
+    attemptedSave.current = result.workout;
+    saveCurrent(result.workout);
+  }, [result, busy]);
   const [lastRequest, setLastRequest] = useState(initial.request);
   const [mode, setMode] = useState<"idea" | "formal">(initial.mode);
-  const [focus, setFocus] = useState(initial.builder.focus),
+  const [conditions, setConditions] = useState(
+    planningDetailsSchema.parse(initial.preferences.planning ?? {}),
+  );
+  const [focus, setFocus] = useState(
+      initial.preferences.planning?.focus ??
+        (initial.builder.focus === "Legs"
+          ? "Lower body"
+          : initial.builder.focus),
+    ),
     [style, setStyle] = useState<(typeof STYLES)[number]>(
       initial.builder.style,
     ),
     [gear, setGear] = useState<string[]>(initial.builder.gear),
-    [pax, setPax] = useState(initial.builder.pax),
+    [pax, setPax] = useState<number | undefined>(
+      initial.preferences.planning
+        ? initial.preferences.planning.pax
+        : initial.mode === "formal"
+          ? initial.builder.pax
+          : undefined,
+    ),
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);
+  const ideaText = [prompt, extraNote].filter(Boolean).join("\n");
+  const quickPreferences = resolveRequest({
+    prompt:
+      ideaText.trim().length >= 3 ? ideaText.slice(0, 1800) : "Build a workout",
+    equipment,
+    running,
+  });
+  const sessionEquipment =
+    mode === "formal"
+      ? gear.includes("Coupon")
+        ? "Coupon"
+        : "None"
+      : quickPreferences.equipment === "From prompt"
+        ? "None"
+        : quickPreferences.equipment;
+  const sessionRunning =
+    quickPreferences.running === "From prompt"
+      ? "Light"
+      : quickPreferences.running;
+  const planning = { ...conditions, focus, pax };
+  const selectedConcept = CONCEPTS.find((concept) => concept.prompt === prompt);
   const formal = {
     title,
     qName,
@@ -70,8 +282,33 @@ export function Planner({
     style,
     gear: gear as NonNullable<PlannerRequest["builder"]>["gear"],
     terrain: "Use confirmed AO features and today's overrides only",
-    pax,
+    pax: pax ?? 12,
   };
+  function chooseAO(value: string) {
+    setAO(value);
+    setSite({ overrides: {}, notes: "" });
+    const matched = findAO(value);
+    if (matched) {
+      setStartTime(matched.sessions[0]?.time ?? "05:30");
+      const format = matched.sessions[0]?.format;
+      const activity =
+        format === "Ruck"
+          ? "Ruck"
+          : format === "Run / ruck"
+            ? "Run"
+            : "Bootcamp";
+      setConditions((previous) => ({ ...previous, activity }));
+      setMary(activity === "Bootcamp");
+    }
+  }
+  function chooseMode(next: "idea" | "formal") {
+    flushSync(() => setMode(next));
+    const field =
+      next === "formal"
+        ? document.querySelector<HTMLInputElement>(".formal-builder input")
+        : document.getElementById("q-description");
+    field?.focus();
+  }
   function surprise() {
     const pick = <T,>(values: readonly T[]) =>
       values[Math.floor(Math.random() * values.length)];
@@ -83,16 +320,18 @@ export function Planner({
         "The long road home",
       ]);
     // Only gear explicitly confirmed by Q can enter a wildcard roll.
-    const resolvedEquipment = resolveRequest({
+    const resolvedPreferences = resolveRequest({
       prompt: prompt.trim().length >= 3 ? prompt : "Surprise me",
       equipment,
-    }).equipment;
+      running,
+      mary,
+    });
     const availableGear =
       mode === "formal"
         ? gear
-        : resolvedEquipment === "Coupon"
+        : resolvedPreferences.equipment === "Coupon"
           ? ["Coupon"]
-          : resolvedEquipment === "None"
+          : resolvedPreferences.equipment === "None"
             ? []
             : /coupon|cindy/i.test(prompt)
               ? ["Coupon"]
@@ -113,10 +352,11 @@ export function Planner({
         : chosenGear.length
           ? ("From prompt" as const)
           : ("None" as const),
-      running,
-      mary,
+      running: resolvedPreferences.running,
+      mary: resolvedPreferences.mary,
       provider,
       strictSchedule: true,
+      planning,
       builder: {
         ...formal,
         style: chosen,
@@ -133,7 +373,9 @@ export function Planner({
   useEffect(() => {
     if (view === "review" && result && resultRef.current) {
       resultRef.current.focus({ preventScroll: true });
-      resultRef.current.scrollIntoView?.({
+      const review =
+        resultRef.current.closest(".assistant") ?? resultRef.current;
+      review.scrollIntoView?.({
         behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
           .matches
           ? "auto"
@@ -141,7 +383,7 @@ export function Planner({
         block: "start",
       });
     }
-  }, [result, view]);
+  }, [result?.workout.id, view]);
 
   useEffect(
     () => () => {
@@ -153,10 +395,11 @@ export function Planner({
   useEffect(() => {
     try {
       sessionStorage.setItem(
-        SESSION_KEY,
+        sessionKey,
         JSON.stringify({
           prompt,
           result,
+          savedToDevice: saved,
           revision,
           request: lastRequest,
           mode,
@@ -170,6 +413,7 @@ export function Planner({
             provider,
             startTime,
             site,
+            planning,
           },
         }),
       );
@@ -191,6 +435,7 @@ export function Planner({
     startTime,
     site,
     revision,
+    saved,
     lastRequest,
     mode,
     title,
@@ -199,20 +444,27 @@ export function Planner({
     style,
     gear,
     pax,
+    conditions,
   ]);
+  const [failedRefinement, setFailedRefinement] = useState(false);
   async function ask(refine: boolean, override?: unknown) {
+    setFailedRefinement(refine);
     const request = plannerRequestSchema.safeParse(
       override ?? {
         prompt: refine
           ? revision
           : mode === "formal"
-            ? `Build ${style}. Focus: ${focus}. PAX: ${pax}. ${prompt}`
-            : prompt,
+            ? `Build ${style}. Focus: ${focus}. PAX: ${pax ?? "Q to confirm"}. ${ideaText}`
+            : [prompt, extraNote].filter(Boolean).join("\n"),
         ao,
         startTime,
         site: refine
           ? retainQContext(ao, prompt, site)
-          : withLocalAO(ao, prompt, site),
+          : withLocalAO(
+              ao,
+              [prompt, extraNote].filter(Boolean).join("\n"),
+              site,
+            ),
         minutes: 45,
         equipment:
           refine && lastRequest
@@ -223,11 +475,14 @@ export function Planner({
                 : gear.length
                   ? "From prompt"
                   : "None"
-              : equipment,
-        running: refine && lastRequest ? lastRequest.running : running,
+              : sessionEquipment,
+        running: refine && lastRequest ? lastRequest.running : sessionRunning,
         mary,
         provider,
         strictSchedule: true,
+        planning: refine
+          ? refinePlanning(lastRequest?.planning ?? planning, revision)
+          : planning,
         ...(mode === "formal" ? { builder: formal } : {}),
         ...(refine && result ? { current: result.plan } : {}),
       },
@@ -256,7 +511,11 @@ export function Planner({
     controller.current?.abort();
     const abort = new AbortController();
     controller.current = abort;
-    const timeout = setTimeout(() => abort.abort(), 55000);
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      abort.abort();
+    }, 55000);
     setBusy(true);
     setError("");
     try {
@@ -271,9 +530,9 @@ export function Planner({
         const message =
           response.status === 429
             ? "Free AI has reached its current limit. Your previous draft is safe. Try later."
-            : typeof data?.error === "string"
-              ? data.error
-              : "Free AI is unavailable. Your previous draft is safe.";
+            : response.status === 504 || response.status === 408
+              ? "Free AI took too long. Your previous draft is safe. Try again or use an offline template."
+              : "Free AI is unavailable. Your previous draft is safe. Try again later or use an offline template.";
         throw Error(message);
       }
       const parsed = plannerResponseSchema.safeParse(data);
@@ -282,16 +541,28 @@ export function Planner({
           "The AI returned an incomplete draft. Your previous draft is safe. Try again.",
         );
       const next = parsed.data;
+      if (refine && result)
+        next.workout = {
+          ...next.workout,
+          id: result.workout.id,
+          originId: result.workout.originId,
+          attribution: result.workout.attribution,
+          rawNotes: result.workout.rawNotes,
+        };
       if (result && next.provider === "Template")
         throw Error(
-          next.fallbackReason ??
-            "Free AI could not make a new draft. Your current draft is unchanged. Use the offline template button if you want to replace it.",
+          "Free AI could not make a new draft. Your current draft is unchanged. Use the offline template button if you want to replace it.",
         );
       workoutSchema.parse(next.workout);
       if (sequence !== epoch.current) return;
       setResult(next);
       setView("review");
       setLastRequest(resolved);
+      if (resolved.planning) {
+        setConditions(resolved.planning);
+        setFocus(resolved.planning.focus);
+        setPax(resolved.planning.pax);
+      }
       setSite(
         retainQContext(
           resolved.ao,
@@ -306,6 +577,12 @@ export function Planner({
       setSaved(false);
       setRevision("");
     } catch (e) {
+      const failure =
+        e instanceof TypeError
+          ? "Could not reach free AI. Your previous draft is safe. Check your connection or use an offline template."
+          : e instanceof Error
+            ? e.message
+            : "Could not make a draft. Your previous draft is safe. Try again.";
       if (
         sequence === epoch.current &&
         !refine &&
@@ -313,10 +590,10 @@ export function Planner({
         !abort.signal.aborted
       ) {
         const next = fallbackPlan(request.data);
-        next.fallbackReason =
-          e instanceof Error
-            ? e.message.slice(0, 500)
-            : "Free AI could not complete this request.";
+        next.fallbackReason = failure.replace(
+          "Your previous draft is safe.",
+          "Your idea is still here.",
+        );
         setResult(next);
         setView("review");
         setLastRequest(resolved);
@@ -326,10 +603,10 @@ export function Planner({
       } else if (sequence === epoch.current)
         setError(
           abort.signal.aborted
-            ? "Generation stopped. Your previous draft is safe."
-            : e instanceof Error
-              ? e.message
-              : "Could not make a draft. Your previous draft is safe.",
+            ? timedOut
+              ? "Free AI took too long. Your previous draft is safe. Try again or use an offline template."
+              : "Generation stopped. Your previous draft is safe."
+            : failure,
         );
     } finally {
       clearTimeout(timeout);
@@ -338,303 +615,518 @@ export function Planner({
   }
   return (
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
-      <div hidden={view === "review"} className="planner-build">
-        <div className="assistant-intro">
-          <p className="eyebrow">THE FE / Q PLANNER</p>
-          <h1>Build your next Q.</h1>
-          <p className="assistant-subhead">Bring an idea. Leave with a plan.</p>
+      {(view === "review" || welcomeStep !== "welcome" || prompt || result) && (
+        <div className="planner-start-new">
+          <button type="button" onClick={onStartNew}>
+            <AppIcon name="mine" /> Start a new workout
+          </button>
         </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void ask(false);
+      )}
+      <ol
+        hidden={view === "build" && welcomeStep !== "ready"}
+        className="planner-journey"
+        aria-label="Workout planning steps"
+      >
+        {["Describe", "Review", "Save & lead"].map((label, index) => (
+          <li
+            key={label}
+            aria-current={
+              (view === "build" ? 0 : saved ? 2 : 1) === index
+                ? "step"
+                : undefined
+            }
+          >
+            <span aria-hidden="true">{index + 1}</span>
+            {label}
+          </li>
+        ))}
+      </ol>
+      {view === "build" && (
+        <PlannerWelcome
+          step={welcomeStep}
+          vibe={vibe}
+          onStep={setWelcomeStep}
+          onVibe={setVibe}
+          onConcept={(idea) => {
+            setPrompt(idea);
+            setWelcomeStep("ready");
           }}
-        >
-          <div className="planner-idea">
-            <div className="entry-modes" aria-label="Choose how to build">
-              <button
-                type="button"
-                disabled={busy}
-                aria-pressed={mode === "idea"}
-                onClick={() => setMode("idea")}
-              >
-                Enter an Idea
-              </button>
-              <button
-                type="button"
-                disabled={busy}
-                aria-pressed={mode === "formal"}
-                onClick={() => setMode("formal")}
-              >
-                Formal Builder
-              </button>
-            </div>
-            {mode === "formal" && (
-              <fieldset disabled={busy} className="formal-builder">
-                <legend>Build your beatdown</legend>
-                <div className="assistant-grid">
-                  <label>
-                    Plan title
-                    <input
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      maxLength={120}
-                    />
-                  </label>
-                  <label>
-                    Q name
-                    <input
-                      value={qName}
-                      onChange={(e) => setQName(e.target.value)}
-                      maxLength={160}
-                    />
-                  </label>
-                  <label>
-                    Fitness focus
-                    <select
-                      value={focus}
-                      onChange={(e) => setFocus(e.target.value)}
-                    >
-                      {[
-                        "Full body",
-                        "Upper body",
-                        "Legs",
-                        "Core",
-                        "Cardio endurance",
-                        "Ruck strength",
-                        "HIIT",
-                      ].map((x) => (
-                        <option key={x}>{x}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    F3 style
-                    <select
-                      value={style}
-                      onChange={(e) => setStyle(e.target.value as typeof style)}
-                    >
-                      {STYLES.map((x) => (
-                        <option key={x}>{x}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    PAX count
-                    <input
-                      type="number"
-                      min={1}
-                      max={200}
-                      value={pax}
-                      onChange={(e) => setPax(Number(e.target.value))}
-                    />
-                  </label>
-                </div>
-                <p>
-                  Available gear · select only what you can bring or confirm
-                </p>
-                <div className="gear-options">
-                  {GEAR.map((g) => (
-                    <label className="checkbox" key={g}>
-                      <input
-                        type="checkbox"
-                        checked={gear.includes(g)}
-                        onChange={() => {
-                          setGear(
-                            gear.includes(g)
-                              ? gear.filter((x) => x !== g)
-                              : [...gear, g],
-                          );
-                        }}
-                      />
-                      {g}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-            )}
-            <label className="assistant-prompt">
-              {mode === "formal"
-                ? "Additional instructions (optional)"
-                : "Describe your Q"}
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                maxLength={1800}
-                rows={3}
-                disabled={busy}
-                placeholder={
-                  mode === "formal"
-                    ? "Any specific exercises, theme, or special instructions..."
-                    : GOLD_RUSH_EXAMPLE
-                }
-              />
-            </label>
-            <div className="prompt-inspiration-bar">
-              <button
-                type="button"
-                className="example-prompt"
-                disabled={busy}
-                onClick={() => setPrompt(GOLD_RUSH_EXAMPLE)}
-              >
-                Try the Gold Rush idea
-              </button>
-              <button type="button" disabled={busy} onClick={surprise}>
-                Surprise Me!
-              </button>
-            </div>
-            <div className="assistant-actions">
-              <button
-                className="create"
-                disabled={busy || (mode === "idea" && prompt.trim().length < 3)}
-                type="submit"
-              >
-                {busy
-                  ? "Working on your Q…"
-                  : result
-                    ? "Make a new draft"
-                    : "Build my workout"}
-              </button>
-              {!busy && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const request = plannerRequestSchema.safeParse({
-                      prompt: prompt.length >= 3 ? prompt : `Build ${style}`,
-                      ao,
-                      startTime,
-                      site: withLocalAO(ao, prompt, site),
-                      minutes: 45,
-                      equipment:
-                        mode === "formal"
-                          ? gear.includes("Coupon")
-                            ? "Coupon"
-                            : gear.length
-                              ? "From prompt"
-                              : "None"
-                          : equipment,
-                      running,
-                      mary,
-                      strictSchedule: true,
-                      ...(mode === "formal" ? { builder: formal } : {}),
-                    });
-                    if (!request.success) {
-                      setError("Choose a start time and check your details.");
-                      return;
-                    }
-                    const next = fallbackPlan(request.data);
-                    setResult(next);
-                    setView("review");
-                    setLastRequest(resolveRequest(request.data));
-                    onDraft?.(next.workout);
-                    setSaved(false);
-                    setError("");
-                  }}
-                >
-                  Use offline template
-                </button>
-              )}
-              {busy && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    epoch.current++;
-                    controller.current?.abort();
-                    setBusy(false);
-                    setError(
-                      "Generation stopped. Your previous draft is safe.",
-                    );
-                  }}
-                >
-                  Cancel generation
-                </button>
-              )}
-            </div>
-            <div className="planner-location">
-              <AOContextPanel
-                ao={ao}
-                prompt={prompt}
-                startTime={startTime}
-                site={site}
-                disabled={busy}
-                onTime={setStartTime}
-                onSite={setSite}
-                onAO={(value) => {
-                  setAO(value);
-                  setSite({ overrides: {}, notes: "" });
-                  const matched = findAO(value);
-                  if (matched)
-                    setStartTime(matched.sessions[0]?.time ?? "05:30");
-                }}
-              />
-            </div>
-
-            <details className="assistant-preferences">
-              <summary>
-                Session preferences <span>45-minute FE schedule</span>
-              </summary>
-              <div className="assistant-grid">
-                <p className="schedule-fixed">
-                  45-minute physical session
-                  <br />2 welcome · 8 warmup ·{" "}
-                  {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
-                  <br />
-                  Fellowship follows the hard stop.
-                </p>
-                <label>
-                  Planner equipment
-                  <select
-                    value={equipment}
-                    disabled={busy}
-                    onChange={(e) =>
-                      setEquipment(
-                        e.target.value as PlannerRequest["equipment"],
-                      )
-                    }
-                  >
-                    {["From prompt", "Coupon", "None"].map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Planner running
-                  <select
-                    value={running}
-                    disabled={busy}
-                    onChange={(e) =>
-                      setRunning(e.target.value as PlannerRequest["running"])
-                    }
-                  >
-                    {["From prompt", "None", "Light", "Moderate"].map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </label>
-                <label className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={mary}
-                    disabled={busy}
-                    onChange={(e) => setMary(e.target.checked)}
-                  />{" "}
-                  Include closing Mary
-                </label>
-              </div>
-            </details>
-            <p className="assistant-privacy">
-              Your idea, site details and current draft go to our free AI
-              providers. Other saved workouts are not sent. Offline templates
-              work without AI.
+          location={
+            <AOContextPanel
+              ao={ao}
+              prompt={prompt}
+              startTime={startTime}
+              site={site}
+              disabled={busy}
+              onTime={setStartTime}
+              onSite={setSite}
+              onAO={chooseAO}
+            />
+          }
+        />
+      )}
+      {view === "build" && welcomeStep === "weinke" && (
+        <Weinke
+          key={sessionKey}
+          storageKey={sessionKey + ":weinke"}
+          showNewAction={false}
+          onBack={() => setWelcomeStep("welcome")}
+          onSave={onSave}
+          onLead={onLead}
+        />
+      )}
+      {welcomeStep === "ready" && (
+        <div hidden={view === "review"} className="planner-build">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => setWelcomeStep("welcome")}
+          >
+            ← Choose another starting point
+          </button>
+          <div className="assistant-intro">
+            <p className="eyebrow">YOUR NEXT BEATDOWN STARTS HERE</p>
+            <h1>Let’s make it yours.</h1>
+            <p className="assistant-subhead">
+              Turn an idea into an F3 workout you can edit, save, print, and
+              lead.
+            </p>
+            <p className="planner-welcome-note">
+              No account needed. Start with what you have in mind.
             </p>
           </div>
-        </form>
-      </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void ask(false);
+            }}
+          >
+            <div className="planner-idea">
+              {mode === "formal" && (
+                <fieldset disabled={busy} className="formal-builder">
+                  <legend>Build your beatdown</legend>
+                  <div className="assistant-grid">
+                    <label>
+                      Plan title
+                      <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        maxLength={120}
+                      />
+                    </label>
+                    <label>
+                      Q name
+                      <input
+                        value={qName}
+                        onChange={(e) => setQName(e.target.value)}
+                        maxLength={160}
+                      />
+                    </label>
+                    <label>
+                      F3 style
+                      <select
+                        value={style}
+                        onChange={(e) =>
+                          setStyle(e.target.value as typeof style)
+                        }
+                      >
+                        {STYLES.map((x) => (
+                          <option key={x}>{x}</option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                  <p>
+                    Available gear · select only what you can bring or confirm
+                  </p>
+                  <div className="gear-options">
+                    {GEAR.map((g) => (
+                      <label className="checkbox" key={g}>
+                        <input
+                          type="checkbox"
+                          checked={gear.includes(g)}
+                          onChange={() => {
+                            setGear(
+                              gear.includes(g)
+                                ? gear.filter((x) => x !== g)
+                                : [...gear, g],
+                            );
+                          }}
+                        />
+                        {g}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              )}
+              {selectedConcept && (
+                <article className="chosen-concept">
+                  <p className="eyebrow">
+                    <AppIcon name="builder" /> YOUR STARTING IDEA
+                  </p>
+                  <h2>{selectedConcept.title}</h2>
+                  <p>{selectedConcept.description}</p>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => setWelcomeStep("concept")}
+                  >
+                    Choose another idea
+                  </button>
+                </article>
+              )}
+              <div className="assistant-prompt" hidden={!!selectedConcept}>
+                <label htmlFor="q-description">
+                  {mode === "formal"
+                    ? "Additional instructions (optional)"
+                    : "Describe your Q"}
+                </label>
+                <div className="prompt-input-row">
+                  <textarea
+                    id="q-description"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    maxLength={1800}
+                    rows={3}
+                    disabled={busy}
+                    placeholder={
+                      mode === "formal"
+                        ? "Any specific exercises, theme, or special instructions..."
+                        : "A partner workout with coupons, less running, and a focus on upper body…"
+                    }
+                  />
+                  <button
+                    className="surprise-button"
+                    type="button"
+                    disabled={busy}
+                    onClick={surprise}
+                    aria-label="Surprise Me!"
+                    title="Surprise Me! Roll a workout idea"
+                  >
+                    <span className="surprise-icon" aria-hidden="true">
+                      <Dices size={30} strokeWidth={1.8} />
+                    </span>
+                    <span className="surprise-label">Surprise me</span>
+                  </button>
+                </div>
+                {mode === "idea" && !prompt.trim() && (
+                  <div className="idea-starter">
+                    <span>Not sure what to write?</span>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => {
+                        setPrompt(
+                          "Gold Rush. Coupons and partners for 12 PAX. No running. A gold-mining theme.",
+                        );
+                        document.getElementById("q-description")?.focus();
+                      }}
+                    >
+                      Try an example
+                    </button>
+                  </div>
+                )}
+              </div>
+              <details
+                className="planner-location"
+                open={!selectedConcept || undefined}
+              >
+                <summary>
+                  <AppIcon name="aos" /> {ao || "AO to confirm"} ·{" "}
+                  {startTime || "Start time to confirm"} · Location & time
+                </summary>
+                <AOContextPanel
+                  ao={ao}
+                  prompt={prompt}
+                  startTime={startTime}
+                  site={site}
+                  disabled={busy}
+                  onTime={setStartTime}
+                  onSite={setSite}
+                  onAO={chooseAO}
+                />
+              </details>
+              <section
+                className="quick-preferences"
+                aria-label="Anything else?"
+              >
+                <h2>Anything else?</h2>
+                <fieldset disabled={busy}>
+                  <legend>
+                    <AppIcon name="exicon" /> Using coupons?
+                  </legend>
+                  <div className="choice-row">
+                    {(
+                      [
+                        ["Yes", "Coupon"],
+                        ["No", "None"],
+                      ] as const
+                    ).map(([label, value]) => (
+                      <button
+                        type="button"
+                        key={value}
+                        aria-pressed={sessionEquipment === value}
+                        onClick={() => {
+                          setEquipment(value);
+                          if (mode === "formal")
+                            setGear((previous) =>
+                              value === "Coupon"
+                                ? [...new Set([...previous, "Coupon"])]
+                                : previous.filter((item) => item !== "Coupon"),
+                            );
+                        }}
+                      >
+                        <AppIcon name="exicon" />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <fieldset disabled={busy}>
+                  <legend>
+                    <AppIcon name="running" /> How much running?
+                  </legend>
+                  <div className="choice-row">
+                    {(
+                      [
+                        ["Lots", "Moderate"],
+                        ["Some", "Light"],
+                        ["None", "None"],
+                      ] as const
+                    ).map(([label, value]) => (
+                      <button
+                        type="button"
+                        key={value}
+                        aria-pressed={sessionRunning === value}
+                        onClick={() => setRunning(value)}
+                      >
+                        <AppIcon name="running" />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <label>
+                  Anything we should know? (Optional)
+                  <textarea
+                    rows={2}
+                    maxLength={250}
+                    value={extraNote}
+                    disabled={busy}
+                    onChange={(e) => setExtraNote(e.target.value)}
+                    placeholder="Keep it knee-friendly, give it a ’90s theme…"
+                  />
+                </label>
+              </section>
+              <div className="assistant-actions">
+                <button
+                  className="create"
+                  disabled={
+                    busy || (mode === "idea" && prompt.trim().length < 3)
+                  }
+                  type="submit"
+                >
+                  {busy
+                    ? "Working on your Q…"
+                    : result
+                      ? "Make a new draft"
+                      : "Build my workout"}
+                </button>
+                {
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const request = plannerRequestSchema.safeParse({
+                        prompt: [
+                          prompt.length >= 3 ? prompt : `Build ${style}`,
+                          extraNote,
+                        ]
+                          .filter(Boolean)
+                          .join("\n"),
+                        ao,
+                        startTime,
+                        site: withLocalAO(
+                          ao,
+                          [prompt, extraNote].filter(Boolean).join("\n"),
+                          site,
+                        ),
+                        minutes: 45,
+                        equipment:
+                          mode === "formal"
+                            ? gear.includes("Coupon")
+                              ? "Coupon"
+                              : gear.length
+                                ? "From prompt"
+                                : "None"
+                            : sessionEquipment,
+                        running: sessionRunning,
+                        mary,
+                        strictSchedule: true,
+                        planning,
+                        ...(mode === "formal" ? { builder: formal } : {}),
+                      });
+                      if (!request.success) {
+                        setError("Choose a start time and check your details.");
+                        return;
+                      }
+                      epoch.current++;
+                      controller.current?.abort();
+                      setBusy(false);
+                      const next = fallbackPlan(request.data);
+                      setResult(next);
+                      setView("review");
+                      setLastRequest(resolveRequest(request.data));
+                      onDraft?.(next.workout);
+                      setSaved(false);
+                      setError("");
+                    }}
+                  >
+                    Use offline template
+                  </button>
+                }
+                {busy && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      epoch.current++;
+                      controller.current?.abort();
+                      setBusy(false);
+                      setError(
+                        "Generation stopped. Your previous draft is safe.",
+                      );
+                    }}
+                  >
+                    Cancel generation
+                  </button>
+                )}
+              </div>
+
+              <WorkoutDetails
+                value={planning}
+                running={running}
+                busy={busy}
+                onRunning={setRunning}
+                onChange={(next) => {
+                  setConditions(next);
+                  if (next.activity !== conditions.activity)
+                    setMary(next.activity === "Bootcamp");
+                  setFocus(next.focus);
+                  setPax(next.pax);
+                }}
+              />
+              <details className="assistant-preferences">
+                <summary>
+                  Session preferences <span>45-minute FE schedule</span>
+                </summary>
+                <div className="assistant-grid">
+                  <p className="schedule-fixed">
+                    45-minute physical session
+                    <br />
+                    {conditions.activity === "Bootcamp" ? (
+                      <>
+                        2 welcome · 8 warmup ·{" "}
+                        {mary ? "29 Thang · 6 Mary" : "35 Thang · Mary skipped"}
+                      </>
+                    ) : (
+                      <>
+                        2 welcome ·{" "}
+                        {mary
+                          ? "37 route · 6 Mary"
+                          : "43 route · warmup and Mary skipped"}
+                      </>
+                    )}
+                    <br />
+                    Fellowship follows the hard stop.
+                  </p>
+                  <label>
+                    Planner equipment
+                    <select
+                      value={equipment}
+                      disabled={busy}
+                      onChange={(e) =>
+                        setEquipment(
+                          e.target.value as PlannerRequest["equipment"],
+                        )
+                      }
+                    >
+                      {["From prompt", "Coupon", "None"].map((v) => (
+                        <option key={v}>{v}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={mary}
+                      disabled={busy}
+                      onChange={(e) => setMary(e.target.checked)}
+                    />{" "}
+                    Include closing Mary
+                  </label>
+                </div>
+              </details>
+              <details className="planner-other-ways">
+                <summary>Other ways to start</summary>
+                <p>
+                  Use the form to choose a workout style and gear, or import a
+                  plan you already have.
+                </p>
+                <div className="entry-modes" aria-label="Choose how to build">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    aria-pressed={mode === "idea"}
+                    onClick={() => chooseMode("idea")}
+                  >
+                    <AppIcon name="builder" />
+                    Enter an Idea
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    aria-pressed={mode === "formal"}
+                    onClick={() => chooseMode("formal")}
+                  >
+                    <AppIcon name="details" />
+                    Formal Builder
+                  </button>
+                </div>
+                {onImport && (
+                  <p className="import-entry">
+                    <strong>Already have a workout?</strong>
+                    <span>Bring it here to edit, save, print, and lead.</span>
+                    <button type="button" onClick={onImport}>
+                      Import a workout
+                    </button>
+                  </p>
+                )}
+              </details>
+              <p className="assistant-privacy">
+                Your idea, workout details, site details and current draft go to
+                our free AI providers. Other saved workouts are not sent.
+                Offline templates work without AI.
+              </p>
+            </div>
+          </form>
+        </div>
+      )}
       {error && (
-        <p className="assistant-error" role="alert">
-          {error}
-        </p>
+        <div className="assistant-error" role="alert">
+          <p>{error}</p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void ask(failedRefinement)}
+          >
+            Try again
+          </button>
+          {result && (
+            <button type="button" onClick={() => setView("review")}>
+              Keep working on this draft
+            </button>
+          )}
+        </div>
       )}
       {storageError && (
         <p className="assistant-error" role="alert">
@@ -646,17 +1138,51 @@ export function Planner({
           Return to current draft
         </button>
       )}
+      {view === "review" && result?.provider === "Template" && (
+        <aside className="generation-recovery" aria-label="Generation recovery">
+          <details>
+            <summary>Your original idea</summary>
+            <p className="import-directions">{lastRequest?.prompt || prompt}</p>
+          </details>
+          <p>
+            This template is ready to edit without AI. Your idea is still here
+            if you want another attempt.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Try AI again? This replaces the open template and its edits if it succeeds. Saved workouts stay in My Workouts.",
+                )
+              )
+                void ask(false, lastRequest ?? undefined);
+            }}
+          >
+            Try AI again
+          </button>
+          <button type="button" onClick={() => resultRef.current?.focus()}>
+            Use this offline template
+          </button>
+        </aside>
+      )}
       {view === "review" && result && (
         <PlannerDraft
           result={result}
           resultRef={resultRef}
           busy={busy}
           saved={saved}
-          setSaved={setSaved}
           revision={revision}
           setRevision={setRevision}
           ask={ask}
-          onSave={onSave}
+          saveError={saveError}
+          onSave={saveCurrent}
+          onChange={(next) => {
+            setSaved(false);
+            setResult(next);
+            onDraft?.(next.workout);
+          }}
           onLead={onLead}
           onEdit={onEdit}
           onPreview={onPreview}

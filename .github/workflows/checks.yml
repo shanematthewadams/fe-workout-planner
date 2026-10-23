@@ -1,7 +1,13 @@
 name: Checks
 on:
   push:
-    branches: [main]
+    branches: [main, develop, studio/ux-streamline]
+  workflow_dispatch:
+    inputs:
+      live_cloud:
+        description: Verify temporary synthetic collections against the existing Supabase store
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
 concurrency:
@@ -12,6 +18,8 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      FE_LIVE_CLOUD: ${{ (inputs.live_cloud || contains(github.event.head_commit.message, '[verify cloud]')) && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,12 +32,64 @@ jobs:
       - run: npm run lint
       - run: npm test -- --maxWorkers=1
       - run: npm run build
+        env:
+          VITE_APP_ENV: ${{ github.ref != 'refs/heads/main' && 'staging' || 'production' }}
+      - name: Build cloud test app
+        run: |
+          python - <<'PYBUILD'
+          import os, subprocess, tomllib
+          env = os.environ.copy()
+          if env.get("FE_LIVE_CLOUD") == "true":
+              config = tomllib.load(open("netlify.toml", "rb"))["build"]["environment"]
+              env.update({key: config[key] for key in ("VITE_SUPABASE_URL", "VITE_SUPABASE_PUBLISHABLE_KEY")})
+              with open(os.environ["GITHUB_ENV"], "a") as out:
+                  out.write("FE_LIVE_CLOUD_URL=" + env["VITE_SUPABASE_URL"] + "\n")
+                  out.write("FE_LIVE_CLOUD_KEY=" + env["VITE_SUPABASE_PUBLISHABLE_KEY"] + "\n")
+          subprocess.run(["npx", "vite", "build", "--outDir", "qa/cloud-app"], env=env, check=True)
+          PYBUILD
+        env:
+          VITE_APP_ENV: staging
+          VITE_SUPABASE_URL: https://staging-sync.invalid
+          VITE_SUPABASE_PUBLISHABLE_KEY: test-public-fixture
+      - name: Use Ubuntu archive for browser dependencies
+        timeout-minutes: 1
+        run: |
+          sudo python3 - <<'PYMIRROR'
+          from pathlib import Path
+          paths = [Path("/etc/apt/apt-mirrors.txt"), Path("/etc/apt/sources.list")]
+          paths += list(Path("/etc/apt/sources.list.d").glob("*.sources"))
+          paths += list(Path("/etc/apt/sources.list.d").glob("*.list"))
+          for path in paths:
+              if path.exists():
+                  original = path.read_text()
+                  updated = original.replace("http://azure.archive.ubuntu.com/ubuntu", "https://archive.ubuntu.com/ubuntu")
+                  updated = updated.replace("https://azure.archive.ubuntu.com/ubuntu", "https://archive.ubuntu.com/ubuntu")
+                  if updated != original:
+                      path.write_text(updated)
+          PYMIRROR
       - name: Install Chromium and WebKit
+        timeout-minutes: 5
         run: npx playwright install --with-deps chromium webkit
       - name: Verify desktop, tablet and mobile
         run: npm run test:browser
         env:
           CI: true
+          FE_CLOUD_TEST_DIR: qa/cloud-app
+          FE_STAGING_TEST: ${{ github.ref != 'refs/heads/main' && 'true' || 'false' }}
+      - name: Verify deployed staging commit and hosted journey
+        if: github.ref == 'refs/heads/studio/ux-streamline'
+        run: node scripts/verify-staging.mjs
+      - name: Verify deployed production commit and hosted journey
+        if: github.ref == 'refs/heads/main'
+        run: node scripts/verify-staging.mjs
+        env:
+          FE_HOSTED_TARGET: production
+      - name: Evaluate real free AI on staging
+        if: github.ref == 'refs/heads/studio/ux-streamline'
+        run: |
+          npm run eval:planner -- https://studio-ux-streamline--fe-workout-planner.netlify.app qa/pilot/live-ai.json || {
+            echo "::warning::Live AI evaluation did not pass; inspect qa/pilot/live-ai.json. Template fallback does not prove provider availability."
+          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

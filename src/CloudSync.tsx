@@ -1,259 +1,240 @@
-import { useEffect, useRef, useState } from "react";
-import type { Workout } from "./model";
-import { workoutSchema } from "./model";
+import { useState } from "react";
 import {
-  cloudKey,
-  cloudRequest,
-  mergeCloud,
-  CloudSnapshotError,
-} from "./cloud";
+  Cloud,
+  CloudCog,
+  CloudUpload,
+  CloudOff,
+  Link2,
+  Copy,
+  Download,
+  RefreshCw,
+} from "lucide-react";
+import { useAccount } from "./AccountContext";
+import { useCloudSave } from "./useCloudSave";
+import { isStaging } from "./environment";
 import { importStudio } from "./studio/import";
-const SETTINGS = "fe-sync:v1";
-type Settings = { code: string; base: Workout[] };
-function settings(): Settings | null {
-  try {
-    const s = JSON.parse(localStorage.getItem(SETTINGS) ?? "null");
-    if (s && /^[a-f0-9]{64}$/.test(s.code) && Array.isArray(s.base))
-      return {
-        code: s.code,
-        base: s.base.map((w: unknown) => workoutSchema.parse(w)),
-      };
-  } catch {
-    /* Never replace unreadable sync settings automatically. */
-  }
-  return null;
-}
+import type { Workout } from "./model";
 export function CloudSync({
   workouts,
   onMerge,
   onStudio,
+  compact = false,
+  hidden = false,
+  blocked = false,
+  onSettings,
 }: {
   workouts: Workout[];
-  onMerge: (w: Workout[]) => boolean;
-  onStudio: (w: Workout[]) => boolean;
+  onMerge: (workouts: Workout[]) => boolean;
+  onStudio: (workouts: Workout[]) => boolean;
+  compact?: boolean;
+  hidden?: boolean;
+  blocked?: boolean;
+  onSettings?: () => void;
 }) {
-  const [config, setConfig] = useState(settings),
-    [recovery, setRecovery] = useState<unknown>(null),
-    [code, setCode] = useState(""),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
-  const live = useRef(workouts);
-  live.current = workouts;
-  const sequence = useRef(0),
-    abort = useRef<AbortController | null>(null);
-  useEffect(
-    () => () => {
-      sequence.current++;
-      abort.current?.abort();
-    },
-    [],
+  const account = useAccount();
+  const owner = account?.user?.id;
+  const save = useCloudSave(
+    workouts,
+    onMerge,
+    blocked || !!account?.switching,
+    owner,
   );
-  async function sync(current = config) {
-    if (!current) return;
-    const seq = ++sequence.current;
-    abort.current?.abort();
-    const controller = new AbortController();
-    abort.current = controller;
-    const captured = JSON.stringify(workouts);
-    setBusy(true);
-    setMessage("Syncing…");
-    setRecovery(null);
-    try {
-      const remote = await cloudRequest(
-        current.code,
-        "get",
-        0,
-        [],
-        controller.signal,
-      );
-      if (seq !== sequence.current) return;
-      const merged = mergeCloud(current.base, workouts, remote.workouts);
-      if (JSON.stringify(live.current) !== captured)
-        throw Error(
-          "Plans changed while syncing. Sync again to include your latest edits.",
-        );
-      const next = await cloudRequest(
-        current.code,
-        "put",
-        remote.version,
-        merged.workouts,
-        controller.signal,
-      );
-      if (seq !== sequence.current) return;
-      if (JSON.stringify(live.current) !== captured)
-        throw Error(
-          "Plans changed while syncing. Cloud has a safe snapshot; sync again for your latest edits.",
-        );
-      if (!onMerge(next.workouts))
-        throw Error(
-          "Cloud snapshot saved, but local storage could not be updated. Export your local backup before retrying.",
-        );
-      const nextConfig = { code: current.code, base: next.workouts };
-      localStorage.setItem(SETTINGS, JSON.stringify(nextConfig));
-      setConfig(nextConfig);
-      setMessage(
-        `Synced ${next.workouts.length} plans.${merged.conflicts ? " Conflicting edits were kept as separate copies." : ""}`,
-      );
-    } catch (e) {
-      if (seq === sequence.current && e instanceof CloudSnapshotError)
-        setRecovery(e.snapshot);
-      if (seq === sequence.current)
-        setMessage(
-          e instanceof Error
-            ? e.message
-            : "Could not sync. Local plans are safe.",
-        );
-    } finally {
-      if (seq === sequence.current) setBusy(false);
-    }
-  }
-  function connect(value: string) {
-    if (!/^[a-f0-9]{64}$/.test(value)) {
-      setMessage("Enter the full 64-character sync code.");
-      return;
-    }
-    const next = { code: value, base: [] };
-    try {
-      localStorage.setItem(SETTINGS, JSON.stringify(next));
-      setConfig(next);
-      setCode("");
-      setMessage(
-        "Connected. Sync now to merge this device with your cloud plans.",
-      );
-    } catch {
-      setMessage("Browser storage is unavailable; cloud setup was not saved.");
-    }
-  }
+  const [code, setCode] = useState("");
+  const [message, setMessage] = useState("");
+  const download = (value: unknown, name: string) => {
+    const url = URL.createObjectURL(
+      new Blob(
+        [typeof value === "string" ? value : JSON.stringify(value, null, 2)],
+        { type: "application/json" },
+      ),
+    );
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
   async function importSavedStudio() {
-    setBusy(true);
+    if (isStaging()) return;
     try {
       const url = import.meta.env.VITE_SUPABASE_URL,
         key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      if (!url || !key) throw Error("Cloud connection not configured.");
-      const r = await fetch(
+      if (!url || !key) throw Error("Cloud connection is not configured.");
+      const response = await fetch(
         new URL("/rest/v1/beatdowns?select=data&limit=200", url),
         { headers: { apikey: key }, signal: AbortSignal.timeout(10000) },
       );
-      if (!r.ok) throw Error("Studio cloud plans are unavailable.");
-      const rows: unknown = await r.json();
+      if (!response.ok) throw Error("Studio cloud plans are unavailable.");
+      const rows: unknown = await response.json();
       if (!Array.isArray(rows)) throw Error("Invalid Studio records.");
       const converted = rows.map((row) => importStudio(row.data));
-      if (!converted.length) {
-        setMessage("No saved Studio cloud plans found.");
-        return;
-      }
-      if (onStudio(converted))
-        setMessage(
-          `Imported ${converted.length} Studio cloud plans as local copies. Original cloud records stay unchanged.`,
-        );
-    } catch (e) {
+      if (!converted.length) setMessage("No Studio plans found.");
+      else if (onStudio(converted))
+        setMessage(`Imported ${converted.length} personal copies.`);
+    } catch (error) {
       setMessage(
-        e instanceof Error ? e.message : "Could not import Studio plans.",
+        error instanceof Error
+          ? error.message
+          : "Could not import Studio plans.",
       );
-    } finally {
-      setBusy(false);
     }
   }
-  return (
-    <section className="cloud-sync" aria-label="Cloud sync">
-      <h2>Keep your plans with you.</h2>
-      <p>
-        Save locally for the park. Sync when connected. Use the same private
-        sync code on your phone and Mac; no signup needed. Anyone with the code
-        can access and change those cloud plans.
-      </p>
-      <div className="actions">
-        {config ? (
-          <>
-            <button disabled={busy} onClick={() => void sync()}>
-              {busy ? "Syncing…" : "Sync now"}
-            </button>
-            <button
-              disabled={busy}
-              onClick={() => {
-                const blob = new Blob([config.code + "\n"], {
-                    type: "text/plain",
-                  }),
-                  url = URL.createObjectURL(blob),
-                  a = document.createElement("a");
-                a.href = url;
-                a.download = "fe-private-sync-code.txt";
-                a.click();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-              }}
-            >
-              Download private sync code
-            </button>
-            <button
-              disabled={busy}
-              onClick={() => {
-                if (
-                  confirm(
-                    "Disconnect this device? Keep your sync code to reconnect. Local plans stay here.",
-                  )
-                ) {
-                  localStorage.removeItem(SETTINGS);
-                  setConfig(null);
-                  setMessage("Disconnected. Local plans are unchanged.");
-                }
-              }}
-            >
-              Disconnect
-            </button>
-          </>
-        ) : (
-          <button disabled={busy} onClick={() => connect(cloudKey())}>
-            Enable cloud sync
-          </button>
-        )}
-        <button disabled={busy} onClick={() => void importSavedStudio()}>
-          Import saved Studio cloud plans
+  if (hidden) return null;
+  const StatusIcon =
+    save.busy || save.status.startsWith("Saving to cloud")
+      ? CloudUpload
+      : save.config && save.status.startsWith("Saved to cloud")
+        ? CloudCog
+        : save.config
+          ? CloudOff
+          : Cloud;
+  // Keep first arrival focused on planning. The hook still runs so an existing
+  // account or guest collection can restore; recovery/error states stay visible.
+  if (
+    compact &&
+    !workouts.length &&
+    !save.config &&
+    !save.recovery &&
+    !save.settingsRecovery &&
+    !save.needsRetry &&
+    save.status === "Workouts save automatically" &&
+    !blocked
+  )
+    return null;
+  if (compact)
+    return (
+      <aside
+        className="cloud-statusbar no-print"
+        aria-label="Saving status"
+        data-cloud-saved={save.status.startsWith("Saved to cloud")}
+      >
+        <span>
+          <StatusIcon size={17} aria-hidden="true" />
+          {save.status}
+        </span>
+        <button onClick={onSettings}>
+          <Link2 size={16} aria-hidden="true" />
+          Saving details
         </button>
-      </div>
-      {recovery !== null && (
+      </aside>
+    );
+  return (
+    <section className="cloud-sync" aria-label="Saving and recovery">
+      <h2>
+        <Cloud size={26} aria-hidden="true" /> Saving & recovery
+      </h2>
+      <p>
+        Workouts save online automatically. When you’re offline, changes stay on
+        this device and upload when you’re connected again.
+      </p>
+      {!save.available && (
+        <p className="muted">
+          Cloud saving is not configured. Your device saves still work.
+        </p>
+      )}
+      <p role="status" data-cloud-saved={save.status.startsWith("Saved to cloud")}>
+        {save.status}
+      </p>
+      {save.available && save.config && save.needsRetry && (
+        <button disabled={save.busy || blocked} onClick={save.retry}>
+          <RefreshCw size={17} aria-hidden="true" /> Retry saving
+        </button>
+      )}
+      {save.recovery !== null && (
         <button
-          onClick={() => {
-            const url = URL.createObjectURL(
-              new Blob([JSON.stringify(recovery, null, 2)], {
-                type: "application/json",
-              }),
-            );
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "fe-cloud-recovery.json";
-            a.click();
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-          }}
+          onClick={() => download(save.recovery, "fe-cloud-recovery.json")}
         >
+          <Download size={17} aria-hidden="true" />
           Download cloud recovery file
         </button>
       )}
-      <p className="muted">
-        Workout backups include saved plans and favorites. AO notes have their
-        own export in the AO Directory. The current builder and timer are
-        recovered on this device.
-      </p>
-      {!config && (
-        <details>
-          <summary>Connect another device</summary>
-          <label>
-            Private sync code
-            <input
-              type="password"
-              autoComplete="off"
-              value={code}
-              onChange={(e) => setCode(e.target.value.trim())}
-            />
-          </label>
-          <button onClick={() => connect(code)}>Connect with code</button>
+      {save.settingsRecovery !== null && (
+        <button
+          onClick={() =>
+            download(save.settingsRecovery, "fe-saving-settings-recovery.json")
+          }
+        >
+          <Download size={17} aria-hidden="true" /> Download recovery settings
+        </button>
+      )}
+      {owner ? (
+        <p>
+          Sign in with the same email on another device to open your account
+          workouts. Favorites and unfinished edits stay on this browser.
+        </p>
+      ) : (
+        <details className="advanced-saving">
+          <summary>Recovery & another device</summary>
+          <p>
+            Saving needs no setup. To open the same private workouts on another
+            device, copy your recovery code there. Keep it private: anyone with
+            this code can read and change those workouts. Favorites and
+            unfinished edits stay on this device.
+          </p>
+          {save.config && (
+            <div className="actions">
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(save.config!.code);
+                    setMessage(
+                      "Recovery code copied. Keep it private; it grants access to your workouts.",
+                    );
+                  } catch {
+                    setMessage(
+                      "Clipboard unavailable. Download the recovery code instead.",
+                    );
+                  }
+                }}
+              >
+                <Copy size={17} aria-hidden="true" /> Copy recovery code
+              </button>
+              <button
+                onClick={() =>
+                  download(
+                    save.config!.code + "\n",
+                    "fe-private-recovery-code.txt",
+                  )
+                }
+              >
+                <Download size={17} aria-hidden="true" /> Download recovery code
+              </button>
+            </div>
+          )}
+          {save.available && (
+            <details>
+              <summary>Use an existing recovery code</summary>
+              <label>
+                Recovery code
+                <input
+                  type="password"
+                  autoComplete="off"
+                  value={code}
+                  onChange={(event) => setCode(event.target.value.trim())}
+                />
+              </label>
+              <button
+                disabled={save.busy || blocked}
+                onClick={() => {
+                  save.restore(code);
+                  setCode("");
+                }}
+              >
+                Restore workouts
+              </button>
+            </details>
+          )}
+          {!isStaging() && (
+            <button
+              disabled={save.busy}
+              onClick={() => void importSavedStudio()}
+            >
+              Import saved Studio cloud plans
+            </button>
+          )}
         </details>
       )}
-      <p aria-live="polite">
-        {message ||
-          (config
-            ? "Cloud connected. Sync after changes and before changing devices."
-            : "Local saves work without cloud sync.")}
-      </p>
+      {message && <p role="status">{message}</p>}
     </section>
   );
 }

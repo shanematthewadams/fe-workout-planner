@@ -1,0 +1,72 @@
+{
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit#gid=201",
+  "sheet": "AO Directory",
+  "range": "A4:C21",
+  "checkedAt": "2026-10-19T21:13:29.463Z",
+  "siteQs": {
+    "fe-ao-southstride": {
+      "names": ["Prestige Worldwide"],
+      "sourceRows": [5]
+    },
+    "fe-ao-dysentery": {
+      "names": ["Shards"],
+      "sourceRows": [6]
+    },
+    "fe-ao-you-ll-be-fine": {
+      "names": ["Topham Hatt"],
+      "sourceRows": [7]
+    },
+    "fe-ao-baywatch": {
+      "names": ["Raider"],
+      "sourceRows": [8]
+    },
+    "fe-ao-south-park": {
+      "names": ["Duffalo", "Jazz Hands"],
+      "sourceRows": [9, 10]
+    },
+    "fe-ao-sunnyside-up": {
+      "names": ["Misdemeanor", "Venus"],
+      "sourceRows": [11]
+    },
+    "fe-ao-clocktower": {
+      "names": ["Dairy Queen"],
+      "sourceRows": [12]
+    },
+    "fe-ao-yippee-ki-yay": {
+      "names": ["Counterfeit"],
+      "sourceRows": [13]
+    },
+    "fe-ao-heartland": {
+      "names": ["Morgan Freeman"],
+      "sourceRows": [14]
+    },
+    "fe-ao-airfield": {
+      "names": ["MaBell", "Lettuce"],
+      "sourceRows": [15]
+    },
+    "fe-ao-overdraft": {
+      "names": ["Rug Burn"],
+      "sourceRows": [16]
+    },
+    "fe-ao-vagabonds": {
+      "names": ["Otto"],
+      "sourceRows": [17]
+    },
+    "fe-ao-gold-rush": {
+      "names": ["Woodpecker"],
+      "sourceRows": [18]
+    },
+    "fe-ao-stagecoach": {
+      "names": ["Grape Nuts"],
+      "sourceRows": [19]
+    },
+    "fe-ao-pretty-bird": {
+      "names": ["That Guy"],
+      "sourceRows": [20]
+    },
+    "fe-ao-the-gathering": {
+      "names": ["Vana", "Black Bird"],
+      "sourceRows": [21]
+    }
+  }
+}

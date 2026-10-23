@@ -4,6 +4,7 @@ import {
   startTimeSchema,
 } from "./site-contract";
 import { z } from "zod";
+import { planningDetailsSchema } from "./planning-details";
 import { exerciseSchema, workoutSchema } from "./model";
 const short = z.string().trim().min(1).max(3000);
 export const planSchema = z
@@ -50,7 +51,7 @@ export const planSchema = z
             .max(6),
         }),
       )
-      .min(2)
+      .min(1)
       .max(3),
     requiredFeatures: z.array(featureSchema).max(11).optional(),
     notes: z.array(z.string().min(1).max(400)).max(10),
@@ -71,6 +72,7 @@ export const plannerRequestSchema = z
     strictSchedule: z.boolean().default(false),
     startTime: startTimeSchema.default("05:30"),
     site: siteInputSchema.optional(),
+    planning: planningDetailsSchema.optional(),
     builder: z
       .object({
         title: z.string().max(120).default(""),
@@ -126,6 +128,13 @@ export const GOLD_RUSH_EXAMPLE =
 
 export function resolveRequest(raw: unknown) {
   const input = plannerRequestSchema.parse(raw);
+  if (input.planning && input.planning.pax === undefined) {
+    const count = input.prompt.match(
+      /\b(\d{1,3})\s+(?:pax|guys|men|people|participants)\b/i,
+    );
+    if (count && Number(count[1]) >= 1 && Number(count[1]) <= 200)
+      input.planning.pax = Number(count[1]);
+  }
   const time = input.prompt.match(
     /\b(20|25|30|35|40|45|50|55|60)[ -]?(?:min(?:ute)?s?)\b/i,
   );

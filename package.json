@@ -13,14 +13,19 @@
     "catalog:import": "node --experimental-strip-types scripts/import-catalog.ts",
     "catalog:sync-aos": "node scripts/sync-aos.mjs",
     "catalog:export-sql": "node --experimental-strip-types scripts/export-regional-sql.ts",
-    "postbuild": "node scripts/build-offline.mjs && node scripts/probe-nation.mjs",
+    "postbuild": "node scripts/build-info.mjs && node scripts/build-offline.mjs && node scripts/probe-nation.mjs",
     "test:browser": "playwright test",
-    "sync:schema": "node scripts/export-sync-schema.mjs"
+    "eval:planner": "vite build --ssr scripts/evaluate-planner.ts --outDir qa/evaluator --emptyOutDir && node qa/evaluator/evaluate-planner.js",
+    "sync:schema": "node scripts/export-sync-schema.mjs",
+    "catalog:nation-directory": "node --experimental-strip-types scripts/collect-nation-directory.ts",
+    "catalog:sync-site-qs": "node --experimental-strip-types scripts/import-site-q-roster.ts",
+    "catalog:compare-inventory": "node --experimental-strip-types scripts/compare-ao-inventory.ts"
   },
   "dependencies": {
-    "@fontsource/barlow-condensed": "5.3.0",
-    "@fontsource/dm-sans": "5.3.0",
+    "@fontsource/big-shoulders-display": "5.3.0",
+    "@fontsource/manrope": "5.3.0",
     "@netlify/functions": "6.0.2",
+    "@supabase/supabase-js": "2.118.0",
     "lucide-react": "0.468.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",

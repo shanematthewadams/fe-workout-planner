@@ -1,0 +1,51 @@
+{
+  "format": "fe-ao-update",
+  "version": 1,
+  "aoId": "fe-ao-the-gathering",
+  "source": "Vana and Black Bird via AO inventory; partial site-Q report",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+  "checkedAt": "2026-10-18",
+  "features": {
+    "parkingLot": {
+      "state": "available",
+      "detail": "Large parking lot; lighting reported for the lot only."
+    },
+    "field": {
+      "state": "available",
+      "detail": "Grassy exercise areas reported; sizes unknown."
+    },
+    "hills": {
+      "state": "available",
+      "detail": "Monkey Humper Hill reported; slope and distance unknown."
+    },
+    "shelter": {
+      "state": "available",
+      "detail": "Covered shelter, front entrance and rear-wall patio reported; confirm permitted use."
+    }
+  },
+  "landmarks": [
+    {
+      "name": "Monkey Humper Hill",
+      "description": "Frequently used hill; geometry is unconfirmed.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm current access and permitted use."
+    },
+    {
+      "name": "Fireside coffeeteria",
+      "description": "Indoor fireside gathering in rain, snow or cold.",
+      "status": "confirmed",
+      "use": "gathering",
+      "restrictions": "Indoor workout permission is not established."
+    },
+    {
+      "name": "Covered front entrance and rear-wall patio",
+      "description": "Covered spaces reported by the Site Qs.",
+      "status": "confirmed",
+      "use": "workout",
+      "restrictions": "Confirm exercise permission and keep entrances clear."
+    }
+  ],
+  "venues": [],
+  "accessNotes": "Shared Stagecoach amenities were claimed but are not copied automatically. Indoor fireside access is for coffeeteria; other indoor access remains unconfirmed."
+}

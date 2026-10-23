@@ -1,3 +1,4 @@
+import { localApiFetch } from "./setup";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createServer, type ViteDevServer } from "vite";
 import { plannerDevApi } from "../server/planner-dev.ts";
@@ -19,7 +20,7 @@ afterEach(async () => {
   await server.close();
 });
 function request(body: unknown, headers: Record<string, string> = {}) {
-  return fetch(base + "/api/plan-workout", {
+  return localApiFetch(base + "/api/plan-workout", {
     method: "POST",
     headers: { "Content-Type": "application/json", Origin: base, ...headers },
     body: JSON.stringify(body),
@@ -55,7 +56,7 @@ describe("Studio preview uses the production planner API", () => {
     expect((await request({ ...idea, prompt: "x".repeat(50000) })).status).toBe(
       413,
     );
-    expect((await fetch(base + "/api/plan-workout")).status).toBe(405);
+    expect((await localApiFetch(base + "/api/plan-workout")).status).toBe(405);
   });
   it("accepts the Studio proxy's matching HTTPS origin", async () => {
     const response = await request(idea, {

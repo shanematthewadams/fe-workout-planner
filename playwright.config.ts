@@ -6,7 +6,9 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   timeout: 45000,
-  globalTimeout: 300000,
+  // The full four-viewport matrix includes cloud recovery, print and accessibility.
+  // Keep individual tests bounded; allow the complete suite to finish on CI.
+  globalTimeout: 480000,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: "http://127.0.0.1:4173",
@@ -49,6 +51,14 @@ export default defineConfig({
       url: "http://127.0.0.1:4173",
       reuseExistingServer: !process.env.CI,
     },
+    ...(process.env.FE_CLOUD_TEST_DIR
+      ? [
+          {
+            command: `node node_modules/vite/bin/vite.js preview --outDir ${process.env.FE_CLOUD_TEST_DIR} --host 127.0.0.1 --port 4175 --strictPort`,
+            url: "http://127.0.0.1:4175",
+          },
+        ]
+      : []),
     ...(process.env.FE_BEFORE_DIR
       ? [
           {

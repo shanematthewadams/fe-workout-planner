@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { startPlanning, openCreativeHelp } from "./planning-helpers";
+import type { Workout } from "../src/model";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   cleanup,
@@ -17,7 +19,7 @@ import { siteContext } from "../src/ao-context";
 import { workoutPhases } from "../src/session";
 import { cloudRequest, CloudSnapshotError } from "../src/cloud";
 const props = {
-  onSave: () => true,
+  onSave: (workout: Workout) => workout,
   onEdit: () => {},
   onPreview: () => {},
   onReference: () => {},
@@ -92,6 +94,7 @@ it.each([true, false])(
 );
 it("recovers all formal setup fields and an unfinished revision", () => {
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.click(screen.getByRole("button", { name: "Formal Builder" }));
   fireEvent.change(screen.getByLabelText("Plan title"), {
     target: { value: "Keep this Q" },
@@ -105,16 +108,19 @@ it("recovers all formal setup fields and an unfinished revision", () => {
   fireEvent.click(screen.getByLabelText("Coupon"));
   cleanup();
   render(<Planner {...props} />);
+  startPlanning();
   expect(screen.getByLabelText("Plan title")).toHaveValue("Keep this Q");
   expect(screen.getByLabelText("Q name")).toHaveValue("Rug Burn");
   expect(screen.getByLabelText("PAX count")).toHaveValue(17);
   expect(screen.getByLabelText("Coupon")).toBeChecked();
   fireEvent.click(screen.getByRole("button", { name: "Use offline template" }));
+  openCreativeHelp();
   fireEvent.change(screen.getByLabelText("What would you change?"), {
     target: { value: "More partner work" },
   });
   cleanup();
   render(<Planner {...props} />);
+  startPlanning();
   expect(screen.getByLabelText("What would you change?")).toHaveValue(
     "More partner work",
   );
@@ -127,6 +133,7 @@ it("retains inferred restrictions through consecutive refinements", async () => 
     .spyOn(globalThis, "fetch")
     .mockImplementation(async () => new Response(JSON.stringify(response)));
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: "Bodyweight only. No running." },
   });
@@ -136,6 +143,7 @@ it("retains inferred restrictions through consecutive refinements", async () => 
     "Make this partner based. Stairs are closed.",
     "Simplify the directions",
   ]) {
+    openCreativeHelp();
     fireEvent.change(screen.getByLabelText("What would you change?"), {
       target: { value: revision },
     });
@@ -169,11 +177,12 @@ it("retains an existing draft when a new request returns a server fallback", asy
       new Response(
         JSON.stringify({
           ...fallbackPlan(input()),
-          fallbackReason: "Free AI is busy.",
+          fallbackReason: "PRIVATE provider diagnostic",
         }),
       ),
     );
   render(<Planner {...props} />);
+  startPlanning();
   fireEvent.change(screen.getByLabelText("Describe your Q"), {
     target: { value: "Bodyweight grinder" },
   });
@@ -181,7 +190,10 @@ it("retains an existing draft when a new request returns a server fallback", asy
   await screen.findByRole("heading", { name: "Keep the good draft" });
   fireEvent.click(screen.getByRole("button", { name: "← Back to setup" }));
   fireEvent.click(screen.getByRole("button", { name: "Make a new draft" }));
-  expect(await screen.findByRole("alert")).toHaveTextContent("Free AI is busy");
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "current draft is unchanged",
+  );
+  expect(screen.getByRole("alert")).not.toHaveTextContent("PRIVATE");
   fireEvent.click(
     screen.getByRole("button", { name: "Return to current draft" }),
   );
@@ -195,17 +207,25 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   vi.spyOn(window, "confirm").mockReturnValue(true);
   const w = fallbackPlan(input()).workout;
   render(<FieldTimer workout={w} onExit={() => {}} />);
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );
   fireEvent.click(screen.getByRole("button", { name: "Next exercise" }));
   cleanup();
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByText("2 of 4")).toBeVisible();
   expect(screen.getByRole("timer")).toHaveTextContent("34:00");
   fireEvent.click(screen.getByRole("button", { name: "Reset" }));
-  fireEvent.click(screen.getByRole("button", { name: "Mute audio" }));
   fireEvent.click(
     screen.getByRole("button", { name: "Join live 5:30 AM schedule" }),
   );
@@ -213,6 +233,11 @@ it("recovers exercise position, resets it deliberately, and starts fresh the nex
   cleanup();
   vi.setSystemTime(new Date(2026, 9, 18, 5, 20));
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("45:00");
 });
 it("uses saved block timing and requires consent to use a generic schedule for unknown timing", () => {
@@ -223,19 +248,25 @@ it("uses saved block timing and requires consent to use a generic schedule for u
   expect(phases.at(-1)!.start).toBe(1800);
   expect(phases[0].end).toBe(300);
   render(<FieldTimer workout={w} onExit={() => {}} />);
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
   expect(screen.getByRole("timer")).toHaveTextContent("30:00");
   cleanup();
   w.sections[0].blocks[0].minutes = null;
   render(<FieldTimer workout={w} onExit={() => {}} />);
-  expect(
-    screen.getByRole("button", { name: "Start practice timer" }),
-  ).toBeDisabled();
+  startPlanning();
+  if (!screen.queryByRole("button", { name: "Session timer" }))
+    fireEvent.click(screen.getByText("Timer options", { exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "Session timer" }));
+  fireEvent.click(screen.getByText("Schedule & session settings"));
+  expect(screen.getByRole("button", { name: "Start timer" })).toBeDisabled();
   fireEvent.click(
     screen.getByRole("button", { name: "Use standard 45-minute timer" }),
   );
-  expect(
-    screen.getByRole("button", { name: "Start practice timer" }),
-  ).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Start timer" })).toBeEnabled();
 });
 it("keeps Mary doses consistent with timed template directions", () => {
   const mary = fallbackPlan(input()).plan.sections[2].blocks[0];

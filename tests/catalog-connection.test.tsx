@@ -13,7 +13,7 @@ import { catalog } from "../src/catalog";
 import { copyWorkout, writeState, readState } from "../src/model";
 function render(element: React.ReactElement) {
   const view = renderUI(element);
-  fireEvent.click(screen.getByRole("button", { name: "Library" }));
+  fireEvent.click(screen.getByRole("link", { name: "Library" }));
   return view;
 }
 afterEach(() => {
@@ -33,6 +33,7 @@ it("confirms a loaded published library after a validated remote response", asyn
     new Response(JSON.stringify(catalog.map((data) => ({ data })))),
   );
   render(<App />);
+  fireEvent.click(screen.getByText(/reviewed FE workouts ·/));
   expect(
     await screen.findByText(/Latest published library loaded\./),
   ).toBeVisible();
@@ -60,7 +61,7 @@ it("keeps the bundled library and private saved copy when configured upstream fa
   expect(screen.getAllByRole("button", { name: "View workout" })).toHaveLength(
     35,
   );
-  fireEvent.click(screen.getByRole("button", { name: /My workouts/i }));
+  fireEvent.click(screen.getByRole("link", { name: /My workouts/i }));
   expect(
     screen.getByRole("button", { name: "Private offline plan" }),
   ).toBeVisible();

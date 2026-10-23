@@ -18,7 +18,7 @@ export function OfflineStatus() {
       if (active && event.data?.type === "FE_OFFLINE_STATUS")
         setState(
           event.data.ready
-            ? "Ready offline · saved plans stay on this device."
+            ? "Ready offline · changes upload when you reconnect."
             : "Offline setup is incomplete. Keep this page open or download a backup.",
         );
     };

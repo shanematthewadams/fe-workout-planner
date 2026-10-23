@@ -1,4 +1,7 @@
+import venues from "../data/venues.json";
+import type { LocalAO } from "./discovery";
 import { aoProfiles } from "./discovery.ts";
+import { mentionedMovements } from "./movements";
 import { aoKey } from "./model";
 import {
   FEATURES,
@@ -18,15 +21,30 @@ export function findAO(name: string, prompt = "") {
 }
 export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
   const ao = findAO(aoName, prompt);
+  const seasonal = (ao?.local.venues?.length ?? 0) > 1;
+  const venue = ao?.local.venues?.find((value) => value.id === site?.venueId);
+  const venueId = venue?.id ?? (!seasonal ? ao?.local.venueId : undefined);
+  const sharedVenue = venueId
+    ? (venues as Record<string, LocalAO & { name: string }>)[venueId]
+    : undefined;
+  const baseline = {
+    ...sharedVenue?.features,
+    ...(seasonal ? venue?.features : ao?.local.features),
+  };
+  const baselineAmenities = {
+    ...sharedVenue?.amenities,
+    ...(!seasonal ? ao?.local.amenities : {}),
+  };
+  const localDraft = seasonal && !venue ? {} : (site?.localDraft ?? {});
   const features = Object.fromEntries(
     Object.keys(FEATURES).map((key) => [
       key,
-      ao?.local.features?.[key as Feature]?.state ?? "unknown",
+      baseline?.[key as Feature]?.state ?? "unknown",
     ]),
   ) as Record<Feature, Availability>;
   // JSON booleans are explicit facts; missing/null stays unknown. Temporary values never publish.
   const amenities = amenitiesSchema.parse({
-    ...ao?.local.amenities,
+    ...baselineAmenities,
     ...site?.amenities,
   });
   const applyAmenities = (
@@ -39,9 +57,9 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
           value === null ? "unknown" : value ? "available" : "unavailable";
     }
   };
-  applyAmenities(ao?.local.amenities);
+  applyAmenities(baselineAmenities);
   // Unpublished device edits are Q context, not a regional publication.
-  for (const [feature, value] of Object.entries(site?.localDraft ?? {}))
+  for (const [feature, value] of Object.entries(localDraft))
     if (value) features[feature as Feature] = value.state;
   applyAmenities(site?.amenities);
   const notes = site?.notes ?? "";
@@ -133,10 +151,21 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     unknown: (Object.keys(FEATURES) as Feature[]).filter(
       (f) => features[f] === "unknown",
     ),
-    details: { ...ao?.local.features, ...site?.localDraft },
-    localDraft: site?.localDraft ?? {},
-    sourceUrl: ao?.local.sourceUrl,
-    reviewedAt: ao?.local.checkedAt,
+    details: { ...baseline, ...localDraft },
+    localDraft,
+    venue: venue?.name ?? sharedVenue?.name,
+    venueId,
+    venueReview: sharedVenue?.reviewBasis,
+    flagLocation: ao?.local.flagLocation,
+    venueRequired: seasonal && !venue,
+    accessNotes: [ao?.local.accessNotes, venue?.access]
+      .filter(Boolean)
+      .join(" "),
+    landmarks: (ao?.local.landmarks ?? []).filter(
+      (value) => value.status === "confirmed" && value.use === "workout",
+    ),
+    sourceUrl: sharedVenue?.sourceUrl ?? ao?.local.sourceUrl,
+    reviewedAt: sharedVenue?.checkedAt ?? ao?.local.checkedAt,
     todayNotes: notes,
     temporaryOverrides: site?.overrides ?? {},
     qStatements: claims,
@@ -180,9 +209,14 @@ export function detectFeatures(plan: {
     runningRoute:
       /\b(?:measured|marked|known)\s+(?:running\s+)?(?:loop|route)\b|\b(?:lake|trail)\s+(?:loop|route)/i,
   };
-  return (Object.keys(patterns) as Feature[]).filter((f) =>
-    patterns[f]!.test(text),
-  );
+  return [
+    ...new Set([
+      ...(Object.keys(patterns) as Feature[]).filter((f) =>
+        patterns[f]!.test(text),
+      ),
+      ...mentionedMovements(text).flatMap((m) => m.features),
+    ]),
+  ];
 }
 export function blockedFeatures(
   plan: Parameters<typeof detectFeatures>[0] & { requiredFeatures?: Feature[] },
@@ -195,12 +229,21 @@ export function blockedFeatures(
 export function describeSite(context: ReturnType<typeof siteContext>) {
   return [
     `AO: ${context.ao || "Not specified"}`,
+    context.venue
+      ? `Active venue: ${context.venue}`
+      : context.venueRequired
+        ? "Seasonal venue is unconfirmed. No venue amenities may be assumed."
+        : "",
+    context.accessNotes ? `Access: ${context.accessNotes}` : "",
+    context.landmarks.length
+      ? `Reported workout landmarks (confirm access): ${context.landmarks.map((value) => value.name + ": " + value.description + " " + value.restrictions).join("; ")}`
+      : "",
     `Available: ${context.available.map((f) => FEATURES[f]).join(", ") || "no fixed features confirmed"}`,
     context.unavailable.length
       ? `Unavailable: ${context.unavailable.map((f) => FEATURES[f]).join(", ")}`
       : "",
     context.sourceUrl
-      ? `Website: ${context.sourceUrl} (reviewed ${context.reviewedAt})`
+      ? `Source: ${context.sourceUrl} (reviewed ${context.reviewedAt})`
       : "No regional terrain source matched.",
     Object.keys(context.qStatements).length
       ? `Q statements: ${Object.entries(context.qStatements)

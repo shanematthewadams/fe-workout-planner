@@ -1,0 +1,40 @@
+# F3 Q Builder — finishing pass
+
+Scope: automatic private cloud saving with offline fallback, source-backed AO review/venue handling, representative AI evaluation, navigation/release polish, and consistent icons. Playlist workouts are v2 ideas; existing circuit timers are preserved.
+
+## Navigation pass — October 19, 2026
+
+- Desktop uses a permanent red sidebar with a single F3QBuilder wordmark; tablet and phone use a labeled Menu disclosure. Workouts and Tools & resources have their own groups, with all seven destinations available without a More submenu.
+- Destinations are real hash links, supporting bookmarks and opening a link in another tab. A deeper red current-section block, gold edge, directional marker and `aria-current` identify the active page. Icons accompany every label.
+- Mobile navigation closes after an accepted selection, outside interaction or Escape. Escape returns focus to Menu; accepted navigation focuses the page content. Declining the existing unsaved-edit prompt keeps the menu and editor intact. Timer focus mode continues to hide navigation.
+- The navigation pass left account login for the next change. Optional email-code login is now implemented separately; see `docs/EMAIL_SIGN_IN.md` for account isolation, guest migration and external sender/redirect setup.
+
+## Delivered in code
+
+- The cloud controller stays mounted across normal navigation. Saved workouts reconcile with private cloud storage automatically after an explicit save, on reconnect and on focus. Changes are debounced; failures stop automatic retry loops and keep the device copy. Existing private connection codes and v1 workout backups remain compatible. The first saved workout creates its private collection automatically; empty visits create no collection. Offline saves keep the same local recovery identity across reloads and upload on reconnect. Existing settings are reused, and unreadable recovery settings are preserved instead of replaced.
+- Normal saving requires no connection step. Saving & recovery contains optional recovery for opening a private collection on another device. A compact status reports actual cloud acknowledgement rather than claiming cloud success after a browser save. Recovery code copy/paste and downloads, plus legacy Studio import, live in secondary disclosures. Favorites and unsaved editing sessions remain device-local; the UI says so.
+- Cloud merges use existing optimistic versions and three-way conflict handling. In-flight device edits/storage warnings block a stale merge. Editing an older open version after a real cloud change creates a conflict copy rather than replacing the newer saved record. Harmless cloud JSON field reordering is normalized before comparison and does not create a duplicate.
+- Staging and production now use the existing Supabase private workout store and RPC. Shane authorized sharing the pre-launch database on October 18, 2026. Each connection code still selects only its private collection; staging browser connection settings remain separate until the user explicitly connects with a code. Missing URL/key configuration still stops before a network request.
+- The AO inventory sheet was read on October 18, 2026. Site-Q reports from Prestige Worldwide, Dairy Queen, Morgan Freeman, Vana and Black Bird inform curated source-backed profiles. Pending inventory values are not bulk-promoted. Goose Poop Island remains reported/unverified. Nearby landmarks and gathering-only spaces are displayed but excluded from the planner's eligible workout landmarks.
+- South Park asks for its seasonal venue. Annual changeover is Site-Q determined; no date is invented. Neither seasonal venue inherits the other venue's amenities or South Stride's. Existing unscoped South Park device notes are not injected into a venue.
+- AO JSON proposals have bounded strict schemas, sources, real review dates, landmarks and venues. App review/export never publishes or silently applies them. `scripts/review-aos.ts` previews by default; a repository maintainer explicitly reviews and applies a proposal with `--apply`, then normal tested release controls govern publication. No pretend browser admin role or shared public-write endpoint was added.
+- Browser Back/Forward, saved-workout hashes, reload and rejected dirty-editor navigation are supported. Route hashes contain IDs, never connection codes. Bookmarked cloud workouts can resolve after cloud loading.
+- Lucide icons accompany text in navigation, planning details, weather, AO information, timers and saving. Decorative SVGs are hidden from assistive technology; existing control names remain stable.
+
+## Verification and remaining gates
+
+Engineering runs local tests, lint, typecheck/build, then GitHub browser QA for Chromium desktop/tablet/mobile and mobile WebKit. Browser cloud checks use a separate fixture build, intercepted fake backend and two isolated browser contexts; no real cloud plans are touched. Production publication is not authorized.
+
+The repeatable `npm run eval:planner` runner covers coupon partners with a closed track; an unverified seasonal South Park venue; individual core work in rain with a closed field; and targeted equipment/running removal. It reuses real request/response schemas and the shared plan validator, restricts the host to staging, stops at authentication/rate limits, and never counts template fallback as live AI success. Report output goes to `qa/live-ai-evaluation.json`.
+
+A real staging request on October 18 (America/Chicago) returned HTTP 401 from Netlify's team-login protection before reaching the planner. That initial run did not verify live output. After Shane opened sharing, three scenarios returned schema/constraint-validated Gemini output and one seasonal-venue request hit a Netlify 504; its targeted recheck returned an AI draft in about nine seconds. Manual review caught unsupported indoor wording and floor-heavy rain programming. The follow-up tightens standing-only rain/snow instructions across every phase and explicitly distinguishes covered garages, dry footing, indoor access and gathering-only permission. Its first live recheck used standing exercises but still produced an indoor title. Prominent indoor title/summary claims now fail validation because the current AO contract does not establish indoor workout permission; ordinary notes such as “not indoors” remain valid. Live output remains variable; a single sample is not a quality guarantee. No paid model was used.
+
+### Existing Supabase storage
+
+No additional staging schema, database branch, migration or paid resource is needed. The existing `public.fe_sync_plans` RPC already supports private collections, optimistic versions and browser-denied direct table access. The unused staging-schema proposal and its duplicate isolation-only test have been removed. Shared-store policy and conflict coverage remain in `tests/cloud-database.test.ts` and browser autosave checks.
+
+The app reads the existing `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in both environments. These are the already configured public client settings, not a service-role key. Browser QA normally uses a fake backend; the release verification can additionally use temporary synthetic collections against the real service. Test records are cleaned up without changing existing collections.
+
+### Production release
+
+Keep main and production unchanged until explicit approval. Before release: verify cloud storage against the existing Supabase service, complete live AI quality evaluation, inspect browser screenshots, and review the tested branch diff. Release via the existing PR workflow only. Do not delete or migrate browser saves silently. Preserve reviewed FE originals and free-only provider routing.

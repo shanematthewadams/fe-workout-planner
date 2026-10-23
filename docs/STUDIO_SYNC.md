@@ -1,12 +1,12 @@
 # One app in GitHub, Netlify and AI Studio
 
-The canonical repository is `shanematthewadams/fe-workout-planner`. Production is `main`, served at `https://q.f3thefe.com`; `studio/ux-streamline` is the single active development branch. AI Studio is an editor/preview of this repository, not a separate implementation. Do not create another GitHub repository or replace the application with the old Studio prototype.
+The canonical repository is `shanematthewadams/fe-workout-planner`. Production is `main`, served at `https://q.f3thefe.com`; `develop` is the canonical development branch; `studio/ux-streamline` remains the existing Netlify staging deployment mirror. AI Studio is an editor/preview of this repository, not a separate implementation. Do not create another GitHub repository or replace the application with the old Studio prototype.
 
 ## Synchronize the workspace
 
 Import this existing repository through AI Studio's **Import from GitHub** flow. As observed in this account on October 17, 2026, that dialog explicitly says **“Imported code won't stay synced with GitHub.”** Import is a snapshot, not a live link. The old prototype's GitHub panel only offers **Create new repository**; retain it as a backup and do not create another repository. Preserve Studio-only edits before refreshing a workspace. Review diffs rather than accepting the old prototype over current main.
 
-For this account, make changes against this repository, run checks, and merge a verified PR from `studio/ux-streamline` to main for release. Netlify publishes main automatically. Refresh Studio by importing current main again; export and review any Studio-only edits into `studio/ux-streamline` before doing so. Source changes will not automatically appear in both places. If Studio later exposes an existing-repository pull/push connection, verify it before adopting that workflow. Do not infer support from documentation alone. A preview can show uncommitted work ahead of production.
+For this account, make changes on `develop` against this repository, run checks, and fast-forward the existing staging mirror before any separately approved release to main. Netlify publishes main automatically. Refresh Studio by importing current main again; export and review any Studio-only edits into `develop` before doing so. Source changes will not automatically appear in both places. If Studio later exposes an existing-repository pull/push connection, verify it before adopting that workflow. Do not infer support from documentation alone. A preview can show uncommitted work ahead of production.
 
 ## Same frontend and API implementation
 

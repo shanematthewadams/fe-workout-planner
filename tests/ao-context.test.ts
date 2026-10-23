@@ -19,8 +19,9 @@ describe("AO facts and terrain enforcement", () => {
   it("keeps source facts, unknowns and custom AOs distinct", () => {
     const gold = siteContext("Gold Rush");
     expect(gold.features.track).toBe("available");
-    expect(gold.details.track?.detail).toContain("400 m");
-    expect(gold.features.stairs).toBe("unknown");
+    expect(gold.details.track?.detail).toContain("lap length");
+    expect(gold.features.stairs).toBe("available");
+    expect(gold.features.bleachers).toBe("unknown");
     expect(siteContext("Clocktower").features.stairs).toBe("available");
     expect(siteContext("My downrange AO").available).toEqual([]);
   });
@@ -34,7 +35,7 @@ describe("AO facts and terrain enforcement", () => {
     expect(siteContext("Clocktower").features.field).toBe("available");
   });
   it("catches undeclared terrain in exercise names and instructions", () => {
-    const input = request(),
+    const input = { ...request(), ao: "Unknown pilot AO" },
       plan = fallbackPlan(input).plan;
     plan.sections[1].blocks[0].exercises[0].name = "Stair repeats";
     plan.requiredFeatures = [];
@@ -49,7 +50,9 @@ describe("AO facts and terrain enforcement", () => {
   it("blocks declared features even when instructions hide their use", () => {
     const plan = fallbackPlan(request()).plan;
     plan.requiredFeatures = ["walls"];
-    expect(blockedFeatures(plan, siteContext("Gold Rush"))).toEqual(["walls"]);
+    expect(blockedFeatures(plan, siteContext("Unknown pilot AO"))).toEqual([
+      "walls",
+    ]);
   });
   it("never allows a source workout to supply unconfirmed facilities at a custom AO", () => {
     const input = { ...request(), ao: "Downrange" },
@@ -58,7 +61,7 @@ describe("AO facts and terrain enforcement", () => {
     expect(() => validatePlan(plan, input)).toThrow("site features");
   });
   it("can retry a rejected facility plan through the other free provider", async () => {
-    const input = request(),
+    const input = { ...request(), ao: "Unknown pilot AO" },
       bad = fallbackPlan(input).plan,
       good = structuredClone(bad);
     bad.requiredFeatures = ["stairs"];
@@ -188,7 +191,7 @@ describe("structured AO amenities", () => {
       hasBleachers: null,
       couponsOnSite: null,
       surface: "unknown",
-      lighting: "unknown",
+      lighting: "partially_lit",
     });
     expect(siteContext("Clocktower").amenities.hasCoveredShelter).toBe(true);
     expect(siteContext("Custom").amenities.hasTrack).toBeNull();

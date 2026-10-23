@@ -1,0 +1,184 @@
+{
+  "regionId": 48088,
+  "checkedAt": "2026-10-19T21:01:22.038Z",
+  "sourceUrl": "https://api.f3nation.com/docs",
+  "locationBasis": "default",
+  "aos": [
+    {
+      "localId": "fe-ao-baywatch",
+      "nationOrgId": 51635,
+      "nationName": "Baywatch",
+      "defaultLocation": {
+        "id": 51235,
+        "locationName": "Black Bob Park South Lot",
+        "latitude": 38.8571,
+        "longitude": -94.7537
+      }
+    },
+    {
+      "localId": "fe-ao-dysentery",
+      "nationOrgId": 43611,
+      "nationName": "Dysentery",
+      "defaultLocation": {
+        "id": 43611,
+        "locationName": "Oregon Trail Park",
+        "latitude": 38.8666,
+        "longitude": -94.8445
+      }
+    },
+    {
+      "localId": "fe-ao-you-ll-be-fine",
+      "nationOrgId": 48527,
+      "nationName": "You'll Be Fine",
+      "defaultLocation": {
+        "id": 48527,
+        "locationName": "Scooter Coffee - Pflumm and 127th",
+        "latitude": 38.8992,
+        "longitude": -94.7418
+      }
+    },
+    {
+      "localId": "fe-ao-clocktower",
+      "nationOrgId": 45411,
+      "nationName": "Clocktower",
+      "defaultLocation": {
+        "id": 45411,
+        "locationName": "Johnson County Square Park",
+        "latitude": 38.88326,
+        "longitude": -94.81976
+      }
+    },
+    {
+      "localId": "fe-ao-south-park",
+      "nationOrgId": 38856,
+      "nationName": "SouthPark",
+      "defaultLocation": {
+        "id": 38856,
+        "locationName": "Brougham Elementary School",
+        "latitude": 38.8467,
+        "longitude": -94.7729
+      }
+    },
+    {
+      "localId": "fe-ao-sunnyside-up",
+      "nationOrgId": 50432,
+      "nationName": "Sunnyside Up",
+      "defaultLocation": {
+        "id": 50483,
+        "locationName": "Sunnyside Elementary School",
+        "latitude": 38.8386,
+        "longitude": -94.7868
+      }
+    },
+    {
+      "localId": "fe-ao-airfield",
+      "nationOrgId": 32570,
+      "nationName": "Airfield",
+      "defaultLocation": {
+        "id": 32570,
+        "locationName": "Black Bob Park North Lot",
+        "latitude": 38.8602,
+        "longitude": -94.7548
+      }
+    },
+    {
+      "localId": "fe-ao-heartland",
+      "nationOrgId": 49796,
+      "nationName": "Heartland",
+      "defaultLocation": {
+        "id": 49796,
+        "locationName": "Heartland Community Church",
+        "latitude": 38.9074,
+        "longitude": -94.7719
+      }
+    },
+    {
+      "localId": "fe-ao-yippee-ki-yay",
+      "nationOrgId": 40940,
+      "nationName": "Yippee Ki-Yay",
+      "defaultLocation": {
+        "id": 40940,
+        "locationName": "Frontier Trail Middle School",
+        "latitude": 38.8705,
+        "longitude": -94.7628
+      }
+    },
+    {
+      "localId": "fe-ao-gold-rush",
+      "nationOrgId": 32627,
+      "nationName": "GoldRUSH",
+      "defaultLocation": {
+        "id": 32627,
+        "locationName": "California Trail Middle School",
+        "latitude": 38.8863,
+        "longitude": -94.7449
+      }
+    },
+    {
+      "localId": "fe-ao-overdraft",
+      "nationOrgId": 52334,
+      "nationName": "Overdraft",
+      "defaultLocation": {
+        "id": 51712,
+        "locationName": "Price Chopper - 159th and Mur-Len",
+        "latitude": 38.839635,
+        "longitude": -94.780744
+      }
+    },
+    {
+      "localId": "fe-ao-stagecoach",
+      "nationOrgId": 42247,
+      "nationName": "Stagecoach",
+      "defaultLocation": {
+        "id": 42247,
+        "locationName": "Community Center of Olathe Shelter",
+        "latitude": 38.8907,
+        "longitude": -94.7995
+      }
+    },
+    {
+      "localId": "fe-ao-vagabonds",
+      "nationOrgId": 49795,
+      "nationName": "Vagabonds",
+      "defaultLocation": {
+        "id": 49795,
+        "locationName": "Vagabonds",
+        "latitude": 38.850791,
+        "longitude": -94.790285
+      }
+    },
+    {
+      "localId": "fe-ao-pretty-bird",
+      "nationOrgId": 44938,
+      "nationName": "Pretty Bird",
+      "defaultLocation": {
+        "id": 44938,
+        "locationName": "Olathe South High School",
+        "latitude": 38.8563,
+        "longitude": -94.7904
+      }
+    },
+    {
+      "localId": "fe-ao-the-gathering",
+      "nationOrgId": 51926,
+      "nationName": "The Gathering",
+      "defaultLocation": {
+        "id": 51439,
+        "locationName": "Olathe Community Center",
+        "latitude": 38.891169,
+        "longitude": -94.797771
+      }
+    },
+    {
+      "localId": "fe-ao-southstride",
+      "nationOrgId": 49381,
+      "nationName": "SouthStride",
+      "defaultLocation": {
+        "id": 49381,
+        "locationName": "Heritage Lake Marina",
+        "latitude": 38.835764,
+        "longitude": -94.746657
+      }
+    }
+  ]
+}

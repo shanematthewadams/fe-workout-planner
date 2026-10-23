@@ -3,29 +3,66 @@
     "features": {
       "track": {
         "state": "available",
-        "detail": "Website describes a 400 m track; access and surface need a current check."
+        "detail": "School track reported; lap length and surface are not verified by this Site Q report."
       },
       "hills": {
         "state": "available",
-        "detail": "Hills described; gradients and distances are unspecified."
+        "detail": "Steep hill reported; gradient and distance not supplied."
       },
       "parkingLot": {
         "state": "available",
-        "detail": "East parking lot meeting point; other lots also described."
+        "detail": "Lighted parking lot for moseys and exercise stations; lighting elsewhere is unconfirmed."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Natural-grass football field. Size and lighting are unconfirmed."
+      },
+      "stairs": {
+        "state": "available",
+        "detail": "Concrete steps leading to track and football field; check wet or icy footing."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Picnic tables in front of and behind school; check stability and permitted use."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered front overhang for rain; not established as lightning shelter."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Brick walls for exercise stations; check clearance and permitted use."
       }
     },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-gold-rush/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "checkedAt": "2026-10-21",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Woodpecker via AO DIRECTORY source record 16 and LANDMARKS. Source read and reviewed by engineering for staging on October 21; not a current on-site inspection. Legacy inventory Yes/No flags were not promoted.",
     "amenities": {
       "couponsOnSite": null,
-      "hasCoveredShelter": null,
+      "hasCoveredShelter": true,
       "hasTrack": true,
       "hasBleachers": null,
       "hasPullUpBars": null,
       "surface": "unknown",
-      "lighting": "unknown"
-    }
+      "lighting": "partially_lit"
+    },
+    "accessNotes": "Parking lot lighting only is confirmed. Track and field lighting, coupon storage, and current school access remain unknown. Confirm access and footing.",
+    "landmarks": [
+      {
+        "name": "Front and rear picnic tables",
+        "description": "Picnic tables on both sides of school.",
+        "restrictions": "Check stability, footing and permitted use.",
+        "use": "workout",
+        "status": "confirmed"
+      },
+      {
+        "name": "Front covered overhang",
+        "description": "Covered overhang at the front of school.",
+        "restrictions": "Rain cover only; no indoor workout or lightning-shelter permission established.",
+        "use": "workout",
+        "status": "confirmed"
+      }
+    ]
   },
   "fe-ao-clocktower": {
     "features": {
@@ -46,9 +83,9 @@
         "detail": "Stairs described; count and access restrictions are unknown."
       }
     },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-clocktower/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "checkedAt": "2026-10-18",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Dairy Queen via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
     "amenities": {
       "couponsOnSite": null,
       "hasCoveredShelter": true,
@@ -57,18 +94,45 @@
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [
+      {
+        "name": "Clocktower",
+        "description": "Four corners around the clocktower reported by the Site Q.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Parking garage",
+        "description": "Site Q suggests 11s in the parking garage.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm a permitted vehicle-free area; no distances or ramp geometry established."
+      },
+      {
+        "name": "Amphitheater",
+        "description": "Amphitheater at or near the AO; exact footprint unconfirmed.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Courthouse and library",
+        "description": "Nearby destinations within running distance, not confirmed on-site amenities.",
+        "status": "confirmed",
+        "use": "nearby",
+        "restrictions": "Confirm current access and permitted use."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "Basketball court is nearby rather than on-site. No measured route to nearby destinations is confirmed."
   },
   "fe-ao-south-park": {
-    "features": {
-      "parkingLot": {
-        "state": "available",
-        "detail": "Large parking lots described at both seasonal locations. Confirm which location is in use."
-      }
-    },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-south-park/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "features": {},
+    "checkedAt": "2026-10-18",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Shane via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
     "amenities": {
       "couponsOnSite": null,
       "hasCoveredShelter": null,
@@ -77,7 +141,25 @@
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [],
+    "venues": [
+      {
+        "id": "heritage-marina",
+        "name": "Heritage Park Marina",
+        "season": "Summer; Site Q determines annual changeover.",
+        "access": "Confirm active venue and current permitted access. Use only verified amenities for this venue.",
+        "features": {}
+      },
+      {
+        "id": "brougham-elementary",
+        "name": "Brougham Elementary",
+        "season": "Fall through spring; Site Q determines annual changeover.",
+        "access": "Confirm active venue and current permitted access. Use only verified amenities for this venue.",
+        "features": {}
+      }
+    ],
+    "accessNotes": "Q confirms the active venue. Site Q decides changeover; no fixed seasonal dates. Venue amenities are shared with other AOs only at the selected venue."
   },
   "fe-ao-stagecoach": {
     "features": {
@@ -87,24 +169,342 @@
       },
       "stairs": {
         "state": "available",
-        "detail": "Stairs described; count and access restrictions are unknown."
+        "detail": "Stairs reported by Site Q; locations and counts not supplied."
       },
       "parkingLot": {
         "state": "available",
         "detail": "Large parking lot described."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered pavilion with picnic tables; not established as lightning shelter."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Picnic tables in the pavilion; check stability and permitted use."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Usable walls reported; exact location and clearance must be checked."
       }
     },
-    "checkedAt": "2026-10-16",
-    "sourceUrl": "https://f3thefe.com/schedule/ao-stagecoach/",
-    "reviewBasis": "Website description reviewed; not an on-site inspection.",
+    "checkedAt": "2026-10-21",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Grape Nuts via AO DIRECTORY source record 17 and LANDMARKS. Source read and reviewed by engineering for staging on October 21; not a current on-site inspection. Legacy inventory Yes/No flags were not promoted.",
     "amenities": {
       "couponsOnSite": null,
-      "hasCoveredShelter": null,
+      "hasCoveredShelter": true,
       "hasTrack": null,
       "hasBleachers": null,
       "hasPullUpBars": null,
       "surface": "unknown",
       "lighting": "unknown"
-    }
+    },
+    "landmarks": [
+      {
+        "name": "Goose Poop Island",
+        "description": "Large circular concrete area beside the lake where geese gather.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Shane-described; Site Q verification, current access and surface check pending."
+      },
+      {
+        "name": "Covered pavilion",
+        "description": "Pavilion with picnic tables.",
+        "restrictions": "Confirm access; not established as safe lightning shelter.",
+        "use": "workout",
+        "status": "confirmed"
+      },
+      {
+        "name": "Monkey Humper Corner",
+        "description": "Locally named corner reported by Grape Nuts.",
+        "restrictions": "Exact spot and footing unverified.",
+        "use": "workout",
+        "status": "confirmed"
+      }
+    ],
+    "venueId": "olathe-community-center",
+    "accessNotes": "Paved trail, playground and locally named Monkey Humper Corner reported. Trail distance, lighting and coupon storage remain unknown. GLOlathe lights are seasonal, not guaranteed workout lighting. Goose Poop Island geometry remains pending verification; check surface for droppings."
+  },
+  "fe-ao-heartland": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lot reported by the Site Q."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Concrete benches behind the building; dimensions and condition not established."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Long walls reported by the Site Q; confirm clearance and permission."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Grass area behind the building; size is not specified."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered garage reported. This does not establish safe lightning shelter."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Back concrete benches",
+        "description": "Concrete benches behind the building.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Long walls",
+        "description": "Long walls at the site.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Covered garage",
+        "description": "Covered garage reported by the Site Q.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Covered does not establish safe lightning shelter. Confirm current access."
+      },
+      {
+        "name": "Indoor coffeeteria",
+        "description": "Indoor gathering space reported by the Site Q.",
+        "status": "confirmed",
+        "use": "gathering",
+        "restrictions": "Workout permission is not established."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "30/30 was reported but its meaning is unconfirmed. Indoor coffeeteria is a gathering space, not confirmed indoor workout access.",
+    "reviewBasis": "Morgan Freeman via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection."
+  },
+  "fe-ao-the-gathering": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "parkingLot": {
+        "state": "available",
+        "detail": "Large parking lot; lighting reported for the lot only."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Grassy exercise areas reported; sizes unknown."
+      },
+      "hills": {
+        "state": "available",
+        "detail": "Monkey Humper Hill reported; slope and distance unknown."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered shelter, front entrance and rear-wall patio reported; confirm permitted use."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Monkey Humper Hill",
+        "description": "Frequently used hill; geometry is unconfirmed.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm current access and permitted use."
+      },
+      {
+        "name": "Fireside coffeeteria",
+        "description": "Indoor fireside gathering in rain, snow or cold.",
+        "status": "confirmed",
+        "use": "gathering",
+        "restrictions": "Indoor workout permission is not established."
+      },
+      {
+        "name": "Covered front entrance and rear-wall patio",
+        "description": "Covered spaces reported by the Site Qs.",
+        "status": "confirmed",
+        "use": "workout",
+        "restrictions": "Confirm exercise permission and keep entrances clear."
+      }
+    ],
+    "venues": [],
+    "accessNotes": "Shared Stagecoach amenities were claimed but are not copied automatically. Indoor fireside access is for coffeeteria; other indoor access remains unconfirmed.",
+    "reviewBasis": "Vana and Black Bird via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
+    "venueId": "olathe-community-center"
+  },
+  "fe-ao-southstride": {
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "checkedAt": "2026-10-18",
+    "features": {
+      "stairs": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no stairs."
+      },
+      "track": {
+        "state": "unavailable",
+        "detail": "Site-Q inventory response: no running track."
+      },
+      "pullupBars": {
+        "state": "available",
+        "detail": "Pull-up bars reported in the site-Q inventory."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Benches reported in the site-Q inventory."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Walls reported in the site-Q inventory."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered shelter reported in the site-Q inventory."
+      }
+    },
+    "landmarks": [
+      {
+        "name": "Outdoor exercise circuit",
+        "description": "Adjacent to the parking lot; suggested as possible extra credit.",
+        "status": "reported",
+        "use": "workout",
+        "restrictions": "Current availability and permitted hours need confirmation."
+      }
+    ],
+    "venues": [
+      {
+        "id": "heritage-marina",
+        "name": "Heritage Park Marina",
+        "season": "Year-round; rucking-first AO, runners welcome.",
+        "access": "Reported park opening: March\u2013October 05:00; November\u2013February 07:30. Early gate access in November is unverified; check with the Site Q.",
+        "features": {}
+      }
+    ],
+    "accessNotes": "Confirm permitted early-morning access, especially November\u2013February. Optional paddleboarding is an activity idea, not confirmed equipment or permission.",
+    "reviewBasis": "Prestige Worldwide via AO inventory; partial site-Q report. Source reviewed by engineering for staging; not a current on-site inspection.",
+    "venueId": "heritage-marina"
+  },
+  "fe-ao-dysentery": {
+    "features": {
+      "track": {
+        "state": "available",
+        "detail": "Local running loop reported as two laps per mile; confirm distance. Separate official track is across the street."
+      },
+      "field": {
+        "state": "available",
+        "detail": "Ball fields reported; check permitted access and footing."
+      },
+      "bleachers": {
+        "state": "available",
+        "detail": "Bleachers at the ball fields; used for stair activities. Does not establish a separate staircase."
+      },
+      "pullupBars": {
+        "state": "available",
+        "detail": "Pull-up bars at exercise stations; check condition and permitted access."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Shelter near the flag; not established as safe lightning shelter."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Fixed bathroom wall by ball fields; keep restroom access clear."
+      },
+      "runningRoute": {
+        "state": "available",
+        "detail": "Paved trail network and local loop reported; verify route and crossings."
+      }
+    },
+    "checkedAt": "2026-10-21",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Shards via AO DIRECTORY source record 4 and LANDMARKS. Source read and reviewed by engineering for staging on October 21; not a current on-site inspection. Legacy inventory Yes/No flags were not promoted.",
+    "accessNotes": "Poor overall lighting; only a couple parking-lot light posts. Official track north across street and trail connection toward Ernie Miller require access and crossing checks. No dock or water exercises are assumed. Coupon storage unknown.",
+    "amenities": {
+      "hasTrack": true,
+      "hasBleachers": true,
+      "hasPullUpBars": true,
+      "hasCoveredShelter": true,
+      "lighting": "partially_lit"
+    },
+    "landmarks": [
+      {
+        "name": "Official track across street",
+        "description": "Separate official track north across the road.",
+        "restrictions": "Confirm road crossing and permitted access.",
+        "use": "nearby",
+        "status": "confirmed"
+      },
+      {
+        "name": "Flag shelter",
+        "description": "Shelter near flag for coffeeteria and rain cover.",
+        "restrictions": "Not established as lightning shelter.",
+        "use": "workout",
+        "status": "confirmed"
+      },
+      {
+        "name": "Bathroom wall",
+        "description": "Fixed bathroom wall near ball fields.",
+        "restrictions": "Keep entrances clear and check surface.",
+        "use": "workout",
+        "status": "confirmed"
+      }
+    ]
+  },
+  "fe-ao-sunnyside-up": {
+    "features": {
+      "track": {
+        "state": "available",
+        "detail": "On-site track reported. Approximately 0.26 mile per lap is uncertain; verify before prescribing distances."
+      },
+      "benches": {
+        "state": "available",
+        "detail": "Plentiful benches near rear playground; check stability and access."
+      },
+      "shelter": {
+        "state": "available",
+        "detail": "Covered workout area reported for rain or ice; no dry-floor or lightning-safety guarantee."
+      },
+      "hills": {
+        "state": "available",
+        "detail": "Small west-side hill along Lindenwood; slope and distance unspecified."
+      },
+      "walls": {
+        "state": "available",
+        "detail": "Usable walls around school; avoid doors and entries."
+      }
+    },
+    "checkedAt": "2026-10-21",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1bc2SK_VebCAZQTn4r54XV4AcFKtDwr1Dqwb8UxP1Tmw/edit",
+    "reviewBasis": "Misdemeanor and Venus via AO DIRECTORY source record 9 and LANDMARKS. Source read and reviewed by engineering for staging on October 21; not a current on-site inspection. Legacy inventory Yes/No flags were not promoted.",
+    "accessNotes": "Front-of-school lighting described as great and rear lighting as decent; visibility elsewhere unconfirmed. Track distance is approximate. Arbor Landing Park equipment and Chisholm Trail Middle School field/track are off-site; do not assume on-site access. Coupon storage unknown.",
+    "amenities": {
+      "hasTrack": true,
+      "hasCoveredShelter": true,
+      "lighting": "partially_lit"
+    },
+    "landmarks": [
+      {
+        "name": "School track",
+        "description": "On-site track; Site Q estimates approximately 0.26 mile per lap.",
+        "restrictions": "Distance unverified; measure before using exact intervals.",
+        "use": "workout",
+        "status": "confirmed"
+      },
+      {
+        "name": "Arbor Landing Park",
+        "description": "Nearby park with workout equipment.",
+        "restrictions": "Off-site; confirm route and access.",
+        "use": "nearby",
+        "status": "confirmed"
+      },
+      {
+        "name": "Chisholm Trail Middle School",
+        "description": "Nearby school with field and track.",
+        "restrictions": "Off-site; confirm school access and crossings.",
+        "use": "nearby",
+        "status": "confirmed"
+      }
+    ]
   }
 }
