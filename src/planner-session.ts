@@ -73,3 +73,29 @@ export function restorePlannerSession(key = SESSION_KEY): PlannerSession {
     return empty;
   }
 }
+
+/** Clear only this account's planning workspace, never the saved collection. */
+export function clearPlannerSession(key = SESSION_KEY): boolean {
+  const keys = [key, key + ":flow", key + ":weinke"];
+  let previous: (string | null)[];
+  try {
+    previous = keys.map((item) => sessionStorage.getItem(item));
+  } catch {
+    return false;
+  }
+  try {
+    keys.forEach((item) => sessionStorage.removeItem(item));
+    return true;
+  } catch {
+    // Keep recovery copies if removal failed partway through; the UI stays open.
+    keys.forEach((item, index) => {
+      try {
+        if (previous[index] !== null)
+          sessionStorage.setItem(item, previous[index]!);
+      } catch {
+        /* In-memory notes stay available even when storage is blocked. */
+      }
+    });
+    return false;
+  }
+}

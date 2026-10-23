@@ -72,3 +72,82 @@ test("direct Weinke preserves literal notes through refresh, save, reopen and mo
     .click();
   expect(calls).toBe(0);
 });
+
+test("start a new workout clears setup, Weinke and review recovery while retaining saved workouts", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Make a Weinke", exact: true })
+    .click();
+  await page
+    .getByLabel("The Thang", { exact: true })
+    .fill("Unsaved notes to keep when cancelling");
+  page.once("dialog", (dialog) => dialog.dismiss());
+  await page
+    .getByRole("button", { name: "Start a new workout", exact: true })
+    .click();
+  await expect(page.getByLabel("The Thang", { exact: true })).toHaveValue(
+    "Unsaved notes to keep when cancelling",
+  );
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("button", { name: "Start a new workout", exact: true })
+    .click();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Make a Weinke", exact: true })
+    .click();
+  await expect(page.getByLabel("The Thang", { exact: true })).toHaveValue("");
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("button", { name: "Start a new workout", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "I have an idea", exact: true })
+    .click();
+  await page
+    .getByLabel("Describe your Q", { exact: true })
+    .fill("Old workout idea with coupons");
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await expect(
+    page.getByText(/Saved on this device · Find it in My Workouts/),
+  ).toBeVisible();
+  const original = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0],
+  );
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("button", { name: "Start a new workout", exact: true })
+    .click();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Return to current draft", exact: true }),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: `qa/screenshots/${info.project.name}-start-fresh.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "I have an idea", exact: true })
+    .click();
+  await expect(page.getByLabel("Describe your Q", { exact: true })).toHaveValue(
+    "",
+  );
+  await page
+    .getByRole("button", { name: "Use offline template", exact: true })
+    .click();
+  await expect(
+    page.getByText(/Saved on this device · Find it in My Workouts/),
+  ).toBeVisible();
+  const saved = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts,
+  );
+  expect(saved).toHaveLength(2);
+  expect(saved.find((w: { id: string }) => w.id === original.id)).toEqual(
+    original,
+  );
+  expect(saved[1].id).not.toBe(original.id);
+});

@@ -18,22 +18,17 @@ import {
   plannerResponseSchema,
   planSchema,
 } from "./planner-contract";
-import { restorePlannerSession, SESSION_KEY } from "./planner-session";
+import {
+  clearPlannerSession,
+  restorePlannerSession,
+  SESSION_KEY,
+} from "./planner-session";
 import { useAccount } from "./AccountContext";
 import { scopedDraftKey } from "./auth";
 import { PlannerDraft } from "./PlannerDraft";
 import { WorkoutDetails } from "./WorkoutDetails";
 import { planningDetailsSchema, refinePlanning } from "./planning-details";
-export function Planner({
-  onEdit,
-  onPreview,
-  onSave,
-  onReference,
-  onDraft,
-  onLead,
-  onImport,
-  savedWorkouts = [],
-}: {
+type PlannerProps = {
   savedWorkouts?: Workout[];
   onImport?: () => void;
   onDraft?: (w: Workout) => void;
@@ -42,7 +37,55 @@ export function Planner({
   onPreview: (w: Workout) => void;
   onSave: (w: Workout, base?: Workout) => Workout | false;
   onReference: (id: string) => void;
-}) {
+};
+
+export function Planner(props: PlannerProps) {
+  const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
+  const [generation, setGeneration] = useState(0);
+  const [resetError, setResetError] = useState("");
+  function startNew() {
+    if (
+      !window.confirm(
+        "Start a new workout? Saved workouts stay in My Workouts. Unsaved setup and notes will be cleared.",
+      )
+    )
+      return;
+    if (!clearPlannerSession(sessionKey)) {
+      setResetError(
+        "Couldn’t start fresh in this browser. Your open workout is still here. Keep a copy of unsaved notes and try again.",
+      );
+      return;
+    }
+    setResetError("");
+    setGeneration((value) => value + 1);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  return (
+    <>
+      {resetError && (
+        <p role="alert" className="assistant-error">
+          {resetError}
+        </p>
+      )}
+      <PlannerSession
+        key={sessionKey + ":" + generation}
+        {...props}
+        onStartNew={startNew}
+      />
+    </>
+  );
+}
+function PlannerSession({
+  onEdit,
+  onPreview,
+  onSave,
+  onReference,
+  onDraft,
+  onLead,
+  onImport,
+  savedWorkouts = [],
+  onStartNew,
+}: PlannerProps & { onStartNew: () => void }) {
   const sessionKey = scopedDraftKey(SESSION_KEY, useAccount()?.user?.id);
   const [initial] = useState(() => {
       const restored = restorePlannerSession(sessionKey);
@@ -567,6 +610,13 @@ export function Planner({
   }
   return (
     <section className="assistant no-print" aria-label="AI-assisted Q planner">
+      {(view === "review" || welcomeStep !== "welcome" || prompt || result) && (
+        <div className="planner-start-new">
+          <button type="button" onClick={onStartNew}>
+            <AppIcon name="mine" /> Start a new workout
+          </button>
+        </div>
+      )}
       <ol
         hidden={view === "build" && welcomeStep !== "ready"}
         className="planner-journey"
@@ -614,6 +664,7 @@ export function Planner({
         <Weinke
           key={sessionKey}
           storageKey={sessionKey + ":weinke"}
+          showNewAction={false}
           onBack={() => setWelcomeStep("welcome")}
           onSave={onSave}
           onLead={onLead}

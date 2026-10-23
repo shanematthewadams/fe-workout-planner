@@ -228,10 +228,42 @@ for (const [name, engine, device] of [
         path: `qa/pilot/hosted-${name}-weinke.png`,
         fullPage: true,
       });
+      await sheet
+        .getByRole("button", { name: "← Back to plan", exact: true })
+        .click();
+      const directMenu = sheet.getByRole("button", {
+        name: "Menu",
+        exact: true,
+      });
+      if (await directMenu.isVisible()) await directMenu.click();
+      await sheet.getByRole("link", { name: "Build", exact: true }).click();
+      const kept = await sheet.evaluate(
+        () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts,
+      );
+      sheet.once("dialog", (dialog) => dialog.accept());
+      await sheet
+        .getByRole("button", { name: "Start a new workout", exact: true })
+        .click();
+      await sheet.reload();
+      await expect(
+        sheet.getByRole("button", { name: "Make a Weinke", exact: true }),
+      ).toBeVisible();
+      assert.deepEqual(
+        await sheet.evaluate(
+          () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts,
+        ),
+        kept,
+      );
+      await sheet
+        .getByRole("button", { name: "Make a Weinke", exact: true })
+        .click();
+      await expect(sheet.getByLabel("The Thang", { exact: true })).toHaveValue(
+        "",
+      );
       assert.deepEqual(directErrors, []);
       console.log(
         name +
-          ": hosted direct Weinke draft recovery, save and Lead reload passed without AI.",
+          ": hosted direct Weinke recovery, save, Lead reload and start-fresh preservation passed without AI.",
       );
     } finally {
       await direct.close();

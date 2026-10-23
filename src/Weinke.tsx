@@ -77,7 +77,9 @@ export function Weinke({
   onBack,
   onSave,
   onLead,
+  showNewAction = true,
 }: {
+  showNewAction?: boolean;
   storageKey: string;
   onBack: () => void;
   onSave: (w: Workout, base?: Workout) => Workout | false;
@@ -145,7 +147,7 @@ export function Weinke({
       <button type="button" onClick={onBack}>
         ← Choose another starting point
       </button>
-      {base && (
+      {base && showNewAction && (
         <button
           type="button"
           onClick={() => {

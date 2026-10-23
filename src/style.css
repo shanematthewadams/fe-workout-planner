@@ -3849,3 +3849,9 @@ footer {
 .lead-workout .import-directions {
   white-space: pre-wrap;
 }
+
+.planner-start-new {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}

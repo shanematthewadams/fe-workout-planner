@@ -44,3 +44,9 @@ Shane approved this product flow in the conversation following the steel-blue re
 - Important: real locked-screen/background timing remains device-dependent; browser automation does not establish physical phone behavior. The established advanced editor still uses explicit Save controls, while the new working Q sheet autosaves.
 - Later: use pilot feedback to assess enjoyment and refine concept variety. “50% more enjoyable” is a product direction, not a measured result of these technical checks.
 - No production promotion occurred. Treat this as a staging candidate; production still requires Shane’s explicit approval.
+
+## Starting fresh
+
+**Start a new workout** is available directly in active setup, discovery, review and Weinke entry. Confirming returns to the three welcome choices, clears only the current account's assistant/flow/Weinke session records and remounts the planning workspace with blank state. Pending generation is aborted and its late response is ignored. Saved workouts, cloud settings, imported files, other accounts and backup formats are untouched. Cancelling keeps the open workspace. If clearing storage fails, recovery copies are restored where possible and the open workspace remains available with an error message.
+
+Choosing another starting point remains a way to browse while keeping the current workspace; **Start a new workout** is the explicit fresh-start action. The Weinke-only reset is hidden inside this unified flow so there are not two competing restart controls.

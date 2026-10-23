@@ -12,11 +12,11 @@ The October 22 candidate includes the new vibe-first flow, icon choices, an auto
 4. The working Q sheet saves automatically. **Saved on this device** confirms the browser copy; **Saved to cloud** separately confirms upload. Retry a failed save before leaving. **More editing options** opens the established advanced editor, which still has explicit Save controls. Formal Builder/import remain under **Other ways to start**.
 5. Choose **Lead this workout**, **Print workout**, or **Copy for Slack**. You can also reopen it from **My Workouts**. Lead starts with a readable sheet; **Session timer** and **Intervals** are optional.
 
-If a previous draft opens first, choose **Back to setup → Choose another starting point** to see the new welcome. Your saved workout stays in My Workouts.
+To start over from setup, review or Weinke entry, choose **Start a new workout** and confirm. You return to the three choices with a blank workspace. Saved workouts stay in My Workouts. Cancel the confirmation to keep unsaved notes.
 
 ## Already have your workout?
 
-Choose **Make a Weinke**, the third welcome option. Enter The Thang in your own words; name, warmup, Mary and COT/reminders are optional. Keep counts, rounds and counting rules in your notes. **Preview my Weinke → Save & open Weinke** puts it in My Workouts and opens the phone sheet without starting a timer. This path makes no AI calls and does not guess exercises or timing. Notes recover after refresh in the same browser session; use Save before closing the browser. **Start a new Weinke** clears only the form after confirmation and keeps saved workouts.
+Choose **Make a Weinke**, the third welcome option. Enter The Thang in your own words; name, warmup, Mary and COT/reminders are optional. Keep counts, rounds and counting rules in your notes. **Preview my Weinke → Save & open Weinke** puts it in My Workouts and opens the phone sheet without starting a timer. This path makes no AI calls and does not guess exercises or timing. Notes recover after refresh in the same browser session; use Save before closing the browser. **Start a new workout** clears the working setup after confirmation and keeps saved workouts.
 
 ## Optional account and return visit
 
