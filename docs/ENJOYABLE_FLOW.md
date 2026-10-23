@@ -1,6 +1,8 @@
 # A helpful fellow Q — October 22, 2026
 
-Latest staging release: **Start a new workout** is verified at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. See the starting-fresh verification below for current evidence. The original vibe-first and Weinke release records remain historical.
+Latest October 23 UX release: `61493fdfd06ff867f58c872a2b1875d714688277` is verified on staging. Development/staging each passed 416 tests and 128 browser checks; hosted desktop/mobile WebKit smoke passed. Lead, Undo, saved-workout actions, optional Weinke blocks and AI recovery are covered in [UX_SWEEP_2026-10-23.md](UX_SWEEP_2026-10-23.md), including the continuing CONDITIONAL provider/device limitations. Earlier release records below remain historical.
+
+Earlier staging release: **Start a new workout** is verified at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. See the starting-fresh verification below for current evidence. The original vibe-first and Weinke release records remain historical.
 
 Shane approved this product flow in the conversation following the steel-blue release. This document is the durable implementation brief, not a new application or architecture.
 

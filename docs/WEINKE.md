@@ -1,6 +1,8 @@
 # Direct Weinke authoring
 
-Latest follow-up: the unified **Start a new workout** action is deployed at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. Both CI runs passed 406 tests and 120 browser checks; hosted reset/refresh preserved saved workouts. See [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md) for current verification and provider results. The initial Weinke release evidence below remains historical.
+Latest October 23 UX release: `61493fdfd06ff867f58c872a2b1875d714688277` is verified on staging. Development/staging each passed 416 tests and 128 browser checks; hosted desktop/mobile WebKit smoke passed. Lead, Undo, saved-workout actions, optional Weinke blocks and AI recovery are covered in [UX_SWEEP_2026-10-23.md](UX_SWEEP_2026-10-23.md), including the continuing CONDITIONAL provider/device limitations. Earlier release records below remain historical.
+
+Earlier follow-up: the unified **Start a new workout** action is deployed at `e07055b88a70499b71356a77f7e052dfe60e6f4b`. Both CI runs passed 406 tests and 120 browser checks; hosted reset/refresh preserved saved workouts. See [ENJOYABLE_FLOW.md](ENJOYABLE_FLOW.md) for current verification and provider results. The initial Weinke release evidence below remains historical.
 
 Shane approved a third welcome choice, **Make a Weinke**, alongside the existing idea and inspiration paths. This is a focused addition to the existing application, not another generator.
 
