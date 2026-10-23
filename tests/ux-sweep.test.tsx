@@ -311,3 +311,15 @@ it("preserves authored set counts alongside reps and counting in Lead", () => {
     "× 3 sets",
   );
 });
+
+it("keeps Q-authored COT notes available in Lead alongside existing workout notes", () => {
+  const workout = fallbackPlan(
+    resolveRequest({ prompt: "Synthetic notes" }),
+  ).workout;
+  workout.rawNotes = "Ask the PAX: what did you learn today?";
+  workout.adaptationNotes = "Keep partners together.";
+  render(<FieldTimer workout={workout} onExit={vi.fn()} />);
+  expect(screen.getByText("COT & Q notes")).toBeInTheDocument();
+  expect(screen.getByText(workout.rawNotes)).toBeInTheDocument();
+  expect(screen.getByText(workout.adaptationNotes)).toBeInTheDocument();
+});

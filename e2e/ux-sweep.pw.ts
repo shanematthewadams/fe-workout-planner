@@ -76,14 +76,12 @@ test("structured Weinke survives refresh and leads directly from its saved card"
     .getByRole("button", { name: "← Back to plan", exact: true })
     .click();
   await navigate(page, "My Workouts");
-  const card = page
-    .locator(".workout-card")
-    .filter({
-      has: page.getByRole("heading", {
-        name: "Structured synthetic Q",
-        exact: true,
-      }),
-    });
+  const card = page.locator(".workout-card").filter({
+    has: page.getByRole("heading", {
+      name: "Structured synthetic Q",
+      exact: true,
+    }),
+  });
   await expect(card).toContainText("AO not set · Edited");
   await card.getByRole("button", { name: "Lead", exact: true }).click();
   await expect(
@@ -144,4 +142,12 @@ test("offline recovery retains the idea and Undo preserves the saved workout ide
       () => JSON.parse(localStorage.getItem("fe-planner:v1")!).workouts[0].id,
     ),
   ).toBe(original.id);
+  const closing = "Synthetic COT: look out for the six.";
+  await page.getByLabel("Your closing thought", { exact: true }).fill(closing);
+  await saveWorkout(page);
+  await page
+    .getByRole("button", { name: /^Lead (?:this )?workout$/, exact: true })
+    .click();
+  await page.getByText("COT & Q notes", { exact: true }).click();
+  await expect(page.getByText(closing, { exact: true })).toBeVisible();
 });

@@ -100,6 +100,9 @@ for (const [name, engine, device] of [
       .getByLabel("Workout name", { exact: true })
       .fill("Synthetic enjoyable-flow verification");
     await expect(page.getByText(/Saved on this device/)).toBeVisible();
+    await page
+      .getByLabel("Your closing thought", { exact: true })
+      .fill("Synthetic COT: look out for the six.");
     await expect(
       page.getByText("Saved to cloud", { exact: true }),
     ).toBeVisible();
@@ -132,6 +135,10 @@ for (const [name, engine, device] of [
       .getByRole("button", { name: "Lead workout", exact: true })
       .click();
     assert.equal(new URL(page.url()).hash, "#lead/" + saved.id);
+    await page.getByText("COT & Q notes", { exact: true }).click();
+    await expect(
+      page.getByText("Synthetic COT: look out for the six.", { exact: true }),
+    ).toBeVisible();
     if (
       !(await page
         .getByRole("button", { name: "Session timer", exact: true })
@@ -308,14 +315,12 @@ for (const [name, engine, device] of [
       await sheet
         .getByRole("link", { name: "My Workouts", exact: true })
         .click();
-      const card = sheet
-        .locator(".workout-card")
-        .filter({
-          has: sheet.getByRole("heading", {
-            name: "Synthetic hosted Weinke",
-            exact: true,
-          }),
-        });
+      const card = sheet.locator(".workout-card").filter({
+        has: sheet.getByRole("heading", {
+          name: "Synthetic hosted Weinke",
+          exact: true,
+        }),
+      });
       await expect(card).toContainText("AO not set · Edited");
       await card.getByRole("button", { name: "Lead", exact: true }).click();
       await expect(

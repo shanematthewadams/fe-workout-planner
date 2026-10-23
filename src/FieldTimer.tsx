@@ -189,6 +189,12 @@ export function FieldTimer({
               ))}
             </details>
           ))}
+          {workout.rawNotes && (
+            <details>
+              <summary>COT &amp; Q notes</summary>
+              <p className="import-directions">{workout.rawNotes}</p>
+            </details>
+          )}
           {workout.adaptationNotes && (
             <details>
               <summary>Workout notes</summary>
