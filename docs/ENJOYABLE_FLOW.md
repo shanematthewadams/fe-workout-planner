@@ -1,5 +1,7 @@
 # A helpful fellow Q — October 22, 2026
 
+Latest staging release: the direct **Make a Weinke** addition is verified at `14aa00571dd90218ea30f04efb19dac9acac2172`. See [WEINKE.md](WEINKE.md) for current release evidence and AI probe results; the earlier vibe-first release record below remains historical.
+
 Shane approved this product flow in the conversation following the steel-blue release. This document is the durable implementation brief, not a new application or architecture.
 
 ## Approved experience

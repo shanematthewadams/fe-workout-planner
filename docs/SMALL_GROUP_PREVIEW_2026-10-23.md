@@ -2,7 +2,7 @@
 
 Target preview: Friday, October 23, 2026. Staging only: https://studio-ux-streamline--fe-workout-planner.netlify.app/
 
-The October 22 candidate includes the new vibe-first flow, icon choices and an autosaved working Q sheet. Engineering verified private saving, cloud acknowledgement, hosted desktop/mobile WebKit recovery, printing and Lead. See `ENJOYABLE_FLOW.md` for the exact deployed commit and verification. The current real AI probe used labeled templates for all three creation cases, so creative generation is not guaranteed. Offline templates and manual editing remain available.
+The October 22 candidate includes the new vibe-first flow, icon choices, an autosaved working Q sheet and direct **Make a Weinke** authoring. See [WEINKE.md](WEINKE.md) for the latest verified deployment. Engineering verified private saving, cloud acknowledgement, hosted desktop/mobile WebKit recovery, printing and Lead. See `ENJOYABLE_FLOW.md` for the exact deployed commit and verification. The latest real AI probe succeeded for two creation cases and targeted refinement, but one creation case timed out. Creative generation is not guaranteed. Offline templates and manual editing remain available.
 
 ## First workout (no account required)
 
@@ -13,6 +13,10 @@ The October 22 candidate includes the new vibe-first flow, icon choices and an a
 5. Choose **Lead this workout**, **Print workout**, or **Copy for Slack**. You can also reopen it from **My Workouts**. Lead starts with a readable sheet; **Session timer** and **Intervals** are optional.
 
 If a previous draft opens first, choose **Back to setup → Choose another starting point** to see the new welcome. Your saved workout stays in My Workouts.
+
+## Already have your workout?
+
+Choose **Make a Weinke**, the third welcome option. Enter The Thang in your own words; name, warmup, Mary and COT/reminders are optional. Keep counts, rounds and counting rules in your notes. **Preview my Weinke → Save & open Weinke** puts it in My Workouts and opens the phone sheet without starting a timer. This path makes no AI calls and does not guess exercises or timing. Notes recover after refresh in the same browser session; use Save before closing the browser. **Start a new Weinke** clears only the form after confirmation and keeps saved workouts.
 
 ## Optional account and return visit
 
