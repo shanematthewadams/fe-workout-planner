@@ -5,28 +5,39 @@ import { mkdir, writeFile } from "node:fs/promises";
 await mkdir("qa/pilot", { recursive: true });
 const origin = "https://studio-ux-streamline--fe-workout-planner.netlify.app";
 const expected = process.env.GITHUB_SHA;
-// WebKit can emit a browser-level access-control pageerror for an aborted
-// cross-origin fetch even when the app handles its rejection. Return a real
-// HTTP failure with CORS for cloud fixtures; never contact the real store.
+// Keep hosted smoke isolated from real records. Use a deterministic in-memory
+// cloud fixture and wait for acknowledgement before advancing virtual time:
+// otherwise clock.runFor can fire fetch abort deadlines before WebKit finishes
+// an intercepted network request, producing an access-control pageerror.
+const cloudSnapshots = new Map();
 async function isolateServices(route) {
   const url = new URL(route.request().url());
   if (url.hostname.endsWith(".supabase.co")) {
+    const headers = {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "POST, OPTIONS",
+      "access-control-allow-headers": "apikey, content-type",
+      "content-type": "application/json",
+    };
+    if (route.request().method() === "OPTIONS")
+      return route.fulfill({ status: 204, headers });
+    if (url.pathname !== "/rest/v1/rpc/fe_sync_plans")
+      return route.fulfill({ status: 503, headers, body: "{}" });
+    const body = route.request().postDataJSON();
+    let snapshot = cloudSnapshots.get(body.sync_code) ?? {
+      version: 0,
+      workouts: [],
+    };
+    if (body.operation === "put") {
+      if (body.expected_version !== snapshot.version)
+        return route.fulfill({ status: 409, headers, body: "{}" });
+      snapshot = { version: snapshot.version + 1, workouts: body.payload };
+      cloudSnapshots.set(body.sync_code, snapshot);
+    }
     return route.fulfill({
-      status: route.request().method() === "OPTIONS" ? 204 : 503,
-      headers: {
-        "access-control-allow-origin": origin,
-        "access-control-allow-credentials": "true",
-        "access-control-allow-methods":
-          "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-        "access-control-allow-headers":
-          route.request().headers()["access-control-request-headers"] ??
-          Object.keys(route.request().headers()).join(", "),
-        "content-type": "application/json",
-      },
-      body:
-        route.request().method() === "OPTIONS"
-          ? ""
-          : JSON.stringify({ message: "Synthetic offline cloud fixture" }),
+      status: 200,
+      headers,
+      body: JSON.stringify(snapshot),
     });
   }
   return url.origin === origin && !url.pathname.startsWith("/api/")
@@ -89,6 +100,9 @@ for (const [name, engine, device] of [
       .getByLabel("Workout name", { exact: true })
       .fill("Synthetic enjoyable-flow verification");
     await expect(page.getByText(/Saved on this device/)).toBeVisible();
+    await expect(
+      page.getByText("Saved to cloud", { exact: true }),
+    ).toBeVisible();
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
     );
@@ -104,6 +118,19 @@ for (const [name, engine, device] of [
       .getByRole("button", { name: "Lead workout", exact: true })
       .click();
     assert.equal(new URL(page.url()).hash, "#lead/" + saved.id);
+    await page
+      .getByRole("button", { name: "Session timer", exact: true })
+      .click();
+    // Finish the reloaded app's synthetic sync before virtual time can abort it.
+    await page
+      .getByRole("button", { name: "← Back to plan", exact: true })
+      .click();
+    await expect(
+      page.getByText("Saved to cloud", { exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Lead workout", exact: true })
+      .click();
     await page
       .getByRole("button", { name: "Session timer", exact: true })
       .click();
