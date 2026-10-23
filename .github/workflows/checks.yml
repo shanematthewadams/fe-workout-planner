@@ -79,6 +79,11 @@ jobs:
       - name: Verify deployed staging commit and hosted journey
         if: github.ref == 'refs/heads/studio/ux-streamline'
         run: node scripts/verify-staging.mjs
+      - name: Verify deployed production commit and hosted journey
+        if: github.ref == 'refs/heads/main'
+        run: node scripts/verify-staging.mjs
+        env:
+          FE_HOSTED_TARGET: production
       - name: Evaluate real free AI on staging
         if: github.ref == 'refs/heads/studio/ux-streamline'
         run: |

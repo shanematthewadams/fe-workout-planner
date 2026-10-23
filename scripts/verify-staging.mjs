@@ -3,7 +3,14 @@ import assert from "node:assert/strict";
 import { expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 await mkdir("qa/pilot", { recursive: true });
-const origin = "https://studio-ux-streamline--fe-workout-planner.netlify.app";
+// Only the established staging and approved production hosts are eligible.
+const target = process.env.FE_HOSTED_TARGET ?? "staging";
+if (!["staging", "production"].includes(target))
+  throw Error("Unsupported hosted verification target");
+const origin =
+  target === "production"
+    ? "https://q.f3thefe.com"
+    : "https://studio-ux-streamline--fe-workout-planner.netlify.app";
 const expected = process.env.GITHUB_SHA;
 // Keep hosted smoke isolated from real records. Use a deterministic in-memory
 // cloud fixture and wait for acknowledgement before advancing virtual time:
@@ -55,7 +62,7 @@ for (let attempt = 0; attempt < 40; attempt++) {
       signal: AbortSignal.timeout(10000),
     });
     const info = await r.json();
-    if (info.commit === expected && info.environment === "staging") {
+    if (info.commit === expected && info.environment === target) {
       matched = true;
       break;
     }
@@ -64,7 +71,7 @@ for (let attempt = 0; attempt < 40; attempt++) {
   }
   await new Promise((resolve) => setTimeout(resolve, 5000));
 }
-assert.ok(matched, "Staging did not publish the tested commit");
+assert.ok(matched, `${target} did not publish the tested commit`);
 console.log("Hosted build-info matches tested commit " + expected);
 for (const [name, engine, device] of [
   ["desktop", chromium, { viewport: { width: 1440, height: 1000 } }],
@@ -374,6 +381,7 @@ const response = await fetch(origin + "/api/nation-directory", {
 const nation = await response.json().catch(() => ({ reason: "not-json" }));
 const report = {
   commit: expected,
+  environment: target,
   checkedAt: new Date().toISOString(),
   nation: {
     status: response.status,
