@@ -5,6 +5,35 @@ import { mkdir, writeFile } from "node:fs/promises";
 await mkdir("qa/pilot", { recursive: true });
 const origin = "https://studio-ux-streamline--fe-workout-planner.netlify.app";
 const expected = process.env.GITHUB_SHA;
+// WebKit can emit a browser-level access-control pageerror for an aborted
+// cross-origin fetch even when the app handles its rejection. Return a real
+// HTTP failure with CORS for cloud fixtures; never contact the real store.
+async function isolateServices(route) {
+  const url = new URL(route.request().url());
+  if (url.hostname.endsWith(".supabase.co")) {
+    return route.fulfill({
+      status: route.request().method() === "OPTIONS" ? 204 : 503,
+      headers: {
+        "access-control-allow-origin": origin,
+        "access-control-allow-credentials": "true",
+        "access-control-allow-methods":
+          "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        "access-control-allow-headers":
+          route.request().headers()["access-control-request-headers"] ??
+          Object.keys(route.request().headers()).join(", "),
+        "content-type": "application/json",
+      },
+      body:
+        route.request().method() === "OPTIONS"
+          ? ""
+          : JSON.stringify({ message: "Synthetic offline cloud fixture" }),
+    });
+  }
+  return url.origin === origin && !url.pathname.startsWith("/api/")
+    ? route.continue()
+    : route.abort();
+}
+
 if (!/^[a-f0-9]{40}$/.test(expected ?? ""))
   throw Error("Expected tested GitHub SHA is required");
 let matched = false;
@@ -40,12 +69,7 @@ for (const [name, engine, device] of [
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   // Never contact cloud/auth/provider services or mutate real records during hosted smoke.
-  await page.route("**/*", (route) => {
-    const u = new URL(route.request().url());
-    return u.origin === origin && !u.pathname.startsWith("/api/")
-      ? route.continue()
-      : route.abort();
-  });
+  await page.route("**/*", isolateServices);
   try {
     await page.goto(origin, { waitUntil: "domcontentloaded" });
     await page
@@ -136,12 +160,9 @@ for (const [name, engine, device] of [
     });
     try {
       const sheet = await direct.newPage();
-      await sheet.route("**/*", (route) => {
-        const u = new URL(route.request().url());
-        return u.origin === origin && !u.pathname.startsWith("/api/")
-          ? route.continue()
-          : route.abort();
-      });
+      const directErrors = [];
+      sheet.on("pageerror", (error) => directErrors.push(error.message));
+      await sheet.route("**/*", isolateServices);
       await sheet.goto(origin);
       await sheet
         .getByRole("button", { name: "Make a Weinke", exact: true })
@@ -180,6 +201,7 @@ for (const [name, engine, device] of [
         path: `qa/pilot/hosted-${name}-weinke.png`,
         fullPage: true,
       });
+      assert.deepEqual(directErrors, []);
       console.log(
         name +
           ": hosted direct Weinke draft recovery, save and Lead reload passed without AI.",
