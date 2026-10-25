@@ -8,7 +8,6 @@ the older develop/mirror guidance in AGENTS.md for this effort. No new branch or
 Initial remote and clean checkout: `919d6410b087e117d1b056e7b0487d5c8235fd9d`.
 Initial main: `e254c11ec266e62586208cb1282f9eeb8e7b093a`. Re-read every branch before future work.
 
-
 This sprint creates and executes an additive relational foundation locally. It does
 not activate database planning or apply any production database migration. There are
 no Supabase development branches on the connected project; no paid project was created.
@@ -60,6 +59,9 @@ and commits reproducible counts/security evidence to `verification.json`.
 
 Read the actual current Google Sheet using connector metadata and bounded reads of
 AO Directory, Amenities and Landmarks. Source snapshots are in `data/ao-intelligence/`;
+`venue-identities.json` locks reviewed physical venue IDs. New venue names fail closed
+until an explicit identity/alias reconciliation, preventing renamed venues from
+creating duplicates.
 row 4 was observed as the header, but the importer searches for the AO header instead
 of assuming its position. Source capture date is not a site verification date.
 
@@ -197,3 +199,35 @@ switching any generation source. Exicon implementation proposal:
   saved workouts, private account ownership and profile attribution remained valid.
 - Hosted release evidence will be recorded after the code push; no hosted database
   claim is implied by these local checks.
+
+## Hosted implementation release evidence
+
+Implementation commit: `61d7984be2950503bf1f65edce92cfa9136b9af9` on
+`studio/ux-streamline`; tree `879ac09a3ff74ee6a0662141dbad331102f47cfc` exactly
+matches the tested local implementation tree. The GitHub connector created the
+remote commit after shell git push lacked credentials; no force push was used.
+Local HEAD was aligned only after confirming identical trees.
+
+Hosted `/build-info.json` confirms that exact implementation commit and `staging`.
+All 16 AO endpoint requests returned HTTP 200, source=json, migrationFallback=true
+and Cache-Control=no-store. Unknown AO returned 404; POST returned 405. Root and
+compiled JS returned 200. The deployed JS `/assets/index-b9cQRmw4.js` matched a
+local build with the same public staging settings byte-for-byte (SHA-256
+`f19538d539c459af2940ffcb335c51ad0848a6be2b2f439d68b97175e6557e72`).
+Production `/build-info.json` still reported
+`e254c11ec266e62586208cb1282f9eeb8e7b093a` / production after staging release.
+
+Local browser installation was blocked by empty/truncated CDN downloads. Browser
+verification therefore runs in the existing GitHub Actions environment, using
+synthetic service fixtures; FE_LIVE_CLOUD remains false. CI run:
+https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40219343153 .
+Fresh dependency install, lint, full test suite and build passed there. See the final
+browser outcome below. No real account or saved plan was mutated by the hosted smoke.
+
+The fresh CI desktop/tablet/mobile browser matrix and the hosted desktop/mobile
+journey both passed for implementation commit `61d7984`. The final handoff commit
+also locks importer venue identities and adds a regression assertion that unfamiliar
+venue names fail closed. Those offline tooling changes were verified with the
+7 affected database/profile tests, lint, build and deterministic count/repeat-import
+readback. They do not alter the deployed frontend or server read endpoint. The final
+record/tooling commit intentionally skips an unnecessary application redeploy.

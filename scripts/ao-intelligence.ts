@@ -153,6 +153,15 @@ export function buildCatalog(snapshots?: {
       };
     }[];
   };
+  // Reviewed immutable IDs. New names require explicit alias reconciliation, not a new slug.
+  const venueIdentities = read(
+    "data/ao-intelligence/venue-identities.json",
+  ) as Record<string, string>;
+  const venueId = (name: string) => {
+    const id = venueIdentities[name];
+    if (!id) throw Error("Unreconciled venue name: " + name);
+    return id;
+  };
   const catalog: Catalog = {};
   const issues: Issue[] = [];
   const add = (table: string, row: Row) => {
@@ -242,7 +251,7 @@ export function buildCatalog(snapshots?: {
       source_id: sourceId,
     });
     if (mode !== "rotating") {
-      const vid = slug(d.Venue);
+      const vid = venueId(d.Venue);
       // Shared venue prose is AO specific in the source; retain all observations in report, not last-writer-wins.
       const existing = catalog.ao_venues?.find((v) => v.id === vid);
       if (!existing)
@@ -324,9 +333,8 @@ export function buildCatalog(snapshots?: {
   for (const column of columns)
     add("ao_amenity_types", { id: slug(column), name: column });
   for (const r of records(amenities)) {
-    const d = r.data,
-      vid = slug(d.Venue);
-    if (!catalog.ao_venues.some((v) => v.id === vid)) {
+    const d = r.data;
+    if (d.AO === "Vagabonds") {
       issues.push({
         kind: "mobile_amenities_excluded",
         key: d.AO,
@@ -334,6 +342,9 @@ export function buildCatalog(snapshots?: {
       });
       continue;
     }
+    const vid = venueId(d.Venue);
+    if (!catalog.ao_venues.some((v) => v.id === vid))
+      throw Error("Amenity venue missing directory assignment: " + d.Venue);
     for (const column of columns) {
       const restricted =
         d.Venue === "Olathe South High School" && column === "Artificial turf";

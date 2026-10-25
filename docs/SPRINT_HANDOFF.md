@@ -1,5 +1,10 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Latest database work: [AO Database Modernization Sprint 1](ao-intelligence/SPRINT_1_HANDOFF.md).
+This is an additive, locally verified foundation with a staging read endpoint; production
+schema/data and the existing planner source remain unchanged. Exicon proposal and
+reconciliation/security evidence are linked from that handoff.
+
 October 16, 2026 (UTC). Shane Adams owns product; engineering owns technical verification. This replaces the earlier access-blocked checkpoint; Git history retains it.
 
 ## Actual result and scope

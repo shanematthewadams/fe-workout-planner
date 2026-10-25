@@ -299,7 +299,7 @@ describe("AO intelligence foundation", () => {
         ?.planning_mode,
     ).not.toBe(duplicate[10]);
   });
-  it("rejects malformed inventory rather than creating guessed AOs", () => {
+  it("rejects malformed inventory rather than creating guessed AOs or venues", async () => {
     expect(() =>
       buildCatalog({
         directory: {
@@ -311,5 +311,22 @@ describe("AO intelligence foundation", () => {
         landmarks: { sourceUrl: "", capturedOn: "", values: [] },
       }),
     ).toThrow(/Unmatched AO/);
+    const directory = JSON.parse(
+      await readFile(
+        new URL(
+          "../data/ao-intelligence/sheet-ao-directory.json",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    );
+    directory.values[4][3] = "Unreconciled renamed venue";
+    expect(() =>
+      buildCatalog({
+        directory,
+        amenities: { sourceUrl: "", capturedOn: "", values: [] },
+        landmarks: { sourceUrl: "", capturedOn: "", values: [] },
+      }),
+    ).toThrow(/Unreconciled venue name/);
   });
 });
