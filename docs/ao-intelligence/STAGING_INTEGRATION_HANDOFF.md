@@ -129,3 +129,46 @@ Rollback: turn off AO_CATALOG_ENABLED and redeploy staging; JSON remains support
 Revert this adapter commit if necessary. There is no new database schema to roll back.
 Any production activation/migration/publish still requires Shane's explicit approval;
 retain Sprint 1 backup/rollback procedures for that future release.
+
+## Staging release evidence
+
+Implementation: `7d7de646e01d56b5d2ae84b760813a066da35f6f`; tree
+`9ce517babba9ed5695835c6d492f0f940351729f` matches the tested local implementation.
+Pushed with an expected-head lease; no force push or new repository/branch.
+
+Hosted build-info confirms that exact SHA and staging environment. All 16 AO GET
+requests returned HTTP 200 and source=json, as expected with the catalog switch off.
+The deployed `/assets/index-CpEWZuhw.js` matches a local build with the same public
+staging configuration byte-for-byte: SHA-256
+`9f91bb7c786abeb36585874a7971b35e0b7c3b6358883d10ce7382155810ce39`.
+Production build-info still reported `e254c11ec266e62586208cb1282f9eeb8e7b093a`.
+
+Fresh CI run https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40243991678
+passed dependency installation, lint, the full unit/integration suite, build,
+the desktop/tablet/mobile browser matrix and the hosted staging journey.
+The existing free-provider evaluation is separate evidence; none of these database
+integration checks adds AI calls for fact retrieval. Its outcome is recorded below
+when the run completes. The browser checks use synthetic service fixtures, not
+production account/plan writes.
+
+The hosted probe also compiled successfully for Node 22 and rejected a production
+URL/ref fixture before any network access. That guard test is not hosted RLS coverage.
+Final evidence-only commits skip CI/Netlify to keep this verified application release
+in place; the staging branch HEAD may therefore be newer than build-info.
+
+Final run outcome: **success**. Unit/integration: **432 passed / 56 files**.
+Browser matrix: **128 passed, 4 skipped**. Hosted journey: passed.
+The optional free-AI probe warned: coupon-partners, unknown-seasonal-venue and
+individual-core-rain each timed out and returned the explicit Template fallback;
+targeted-refinement was skipped because there was no validated AI draft to refine.
+The downloaded CI report confirms timeout reasons (approximately 15–19 seconds),
+not a successful live AI run. No new provider call was made to retry this warning.
+Keep provider timeout reliability as a separate follow-up; don't mislabel template
+recovery as provider success or expand this bounded database integration into a
+provider rewrite.
+
+Remaining release gate: **no hosted catalog migration/import, authenticated REST
+verification or catalog activation has occurred**, because isolated branch
+provisioning failed before completion. This sprint delivered tested integration
+code, a verified staging fallback release and a concrete hosted verification tool.
+The database-backed staging milestone is still pending the infrastructure gate.
