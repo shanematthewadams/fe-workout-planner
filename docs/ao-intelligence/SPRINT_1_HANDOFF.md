@@ -231,3 +231,20 @@ venue names fail closed. Those offline tooling changes were verified with the
 7 affected database/profile tests, lint, build and deterministic count/repeat-import
 readback. They do not alter the deployed frontend or server read endpoint. The final
 record/tooling commit intentionally skips an unnecessary application redeploy.
+
+## Final CI outcome and remaining issue
+
+GitHub run `40219343153` completed successfully for `61d7984`: **422 tests / 55
+files**, **128 browser tests passed and 4 skipped**, plus hosted staging journey
+success. The existing optional live AI evaluation emitted a warning: coupon-partners
+and targeted-refinement completed with AI; unknown-seasonal-venue and
+individual-core-rain returned HTTP 504. Do not describe this as a complete live AI
+pass. Planner/provider code was unchanged in this sprint. Keep those two timeout
+cases on the reliability follow-up; do not broaden this database sprint into a
+provider rewrite or consume more calls by retrying them here.
+
+Tooling/identity lock and first release handoff are committed at
+`7bc8479176489d86a97e8d4683b2e53be393dc1e`. Application deployment remains the verified
+`61d7984` implementation. Later evidence-only commits use skip markers so the final
+repository HEAD can differ from build-info without implying a stale application.
+Working tree and remote staging branch were synchronized; main/production were not changed.
