@@ -1,5 +1,7 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Current AO database status: [Approved shared database release](ao-intelligence/SHARED_DATABASE_RELEASE.md). This supersedes the isolated-database blocker in earlier handoffs.
+
 Latest AO continuation: [Staging planner integration](ao-intelligence/STAGING_INTEGRATION_HANDOFF.md). Hosted provisioning remains blocked; production is unchanged.
 
 Latest database work: [AO Database Modernization Sprint 1](ao-intelligence/SPRINT_1_HANDOFF.md).

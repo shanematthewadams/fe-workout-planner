@@ -242,7 +242,20 @@ it("API template recovery reuses the same database read and refuses client-suppl
   );
   expect(malicious.status).toBe(400);
 });
-it("hard-disables production deploys and accidental production database targeting", () => {
+it("keeps production app disabled while allowing the explicitly approved shared database on staging", () => {
+  const defaults = catalogEnvironment("branch-deploy", () => undefined);
+  expect(defaults.enabled).toBe("true");
+  expect(defaults.url).toBe("https://kitqovhdwzkhpxlepvfn.supabase.co");
+  expect(defaults.publishableKey).toMatch(/^sb_publishable_/);
+  expect(catalogEnvironment("dev", () => undefined).enabled).toBe("false");
+  expect(catalogEnvironment("deploy-preview", () => undefined).enabled).toBe(
+    "false",
+  );
+  expect(
+    catalogEnvironment("branch-deploy", (n) =>
+      n === "AO_CATALOG_ENABLED" ? "false" : undefined,
+    ).enabled,
+  ).toBe("false");
   const settings: Record<string, string> = {
     AO_CATALOG_ENABLED: "true",
     AO_CATALOG_URL: env.url,
@@ -251,9 +264,9 @@ it("hard-disables production deploys and accidental production database targetin
   expect(catalogEnvironment("production", (n) => settings[n]).enabled).toBe(
     "false",
   );
-  settings.AO_CATALOG_URL = "https://kitqovhdwzkhpxlepvfn.supabase.co/path";
+  settings.AO_CATALOG_URL = "https://kitqovhdwzkhpxlepvfn.supabase.co";
   expect(catalogEnvironment("branch-deploy", (n) => settings[n]).enabled).toBe(
-    "false",
+    "true",
   );
   settings.AO_CATALOG_URL = env.url;
   expect(catalogEnvironment("branch-deploy", (n) => settings[n]).enabled).toBe(

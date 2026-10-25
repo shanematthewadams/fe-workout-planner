@@ -1,0 +1,150 @@
+{
+  "ref": "kitqovhdwzkhpxlepvfn",
+  "results": [
+    {
+      "role": "anon",
+      "table": "ao_sources",
+      "readCount": 2,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_regions",
+      "readCount": 1,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_sites",
+      "readCount": 16,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_venues",
+      "readCount": 13,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_venue_assignments",
+      "readCount": 16,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_official_locations",
+      "readCount": 15,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_nation_defaults",
+      "readCount": 15,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_amenity_types",
+      "readCount": 31,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_venue_amenities",
+      "readCount": 403,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_landmarks",
+      "readCount": 59,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "role": "anon",
+      "table": "ao_landmark_links",
+      "readCount": 59,
+      "mutations": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    }
+  ],
+  "authenticated": "pending synthetic isolated-user token",
+  "nestedRelations": "verified",
+  "planningChecks": "verified",
+  "authorization": "Shane explicitly approved using the existing production Supabase database.",
+  "database_role_verification": {
+    "role": "authenticated",
+    "aos_read": 16,
+    "venues_read": 13,
+    "landmarks_read": 59,
+    "catalog_write_grants": false,
+    "backup_access": false
+  },
+  "existing_app_data_unchanged": {
+    "public.workouts": 36,
+    "public.beatdowns": 0,
+    "public.fe_profiles": 1,
+    "fe_private.fe_plan_vault": 19,
+    "fe_private.fe_account_vault": 0
+  },
+  "snapshot": {
+    "schema": "fe_ao_preflight_backup",
+    "captured_at": "2026-10-25T23:38:47.290083Z",
+    "independent_disaster_recovery_backup": false
+  },
+  "migrations": [
+    {
+      "version": "20261025233847",
+      "name": "snapshot_before_ao_catalog"
+    },
+    {
+      "version": "20261025233852",
+      "name": "ao_intelligence_foundation"
+    }
+  ],
+  "repeat_import_conflicts": []
+}

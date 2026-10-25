@@ -318,25 +318,27 @@ export async function resolvePlannerSite(
     data ? catalogBaseline(data, input.site?.venueId) : undefined,
   );
 }
-/** Hard production guard shared by both deployed endpoints; no credential is returned to clients. */
+/** Public connection defaults for the approved shared catalog, scoped to branch deploys only.
+ * Runtime overrides remain available; production app activation requires a separate release. */
+export const BRANCH_CATALOG = {
+  enabled: "true",
+  url: "https://kitqovhdwzkhpxlepvfn.supabase.co",
+  publishableKey: "sb_publishable_0JeYeQVmWejiGgAyYXDo9g_F-6r3IDU",
+} as const;
 export function catalogEnvironment(
   deployContext: string | undefined,
   get: (name: string) => string | undefined,
 ): CatalogEnvironment {
-  const url = get("AO_CATALOG_URL");
-  const production = "https://kitqovhdwzkhpxlepvfn.supabase.co";
-  let isProductionDatabase = false;
-  try {
-    isProductionDatabase = !!url && new URL(url).origin === production;
-  } catch {
-    /* reader fails closed */
-  }
+  const branch = deployContext === "branch-deploy";
   return {
     enabled:
-      deployContext !== "production" && !isProductionDatabase
-        ? get("AO_CATALOG_ENABLED")
+      branch || deployContext === "dev"
+        ? (get("AO_CATALOG_ENABLED") ??
+          (branch ? BRANCH_CATALOG.enabled : "false"))
         : "false",
-    url,
-    publishableKey: get("AO_CATALOG_PUBLISHABLE_KEY"),
+    url: get("AO_CATALOG_URL") ?? (branch ? BRANCH_CATALOG.url : undefined),
+    publishableKey:
+      get("AO_CATALOG_PUBLISHABLE_KEY") ??
+      (branch ? BRANCH_CATALOG.publishableKey : undefined),
   };
 }

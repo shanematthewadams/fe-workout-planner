@@ -1,5 +1,7 @@
 # AO planning integration — October 25, 2026
 
+Superseded environment decision: Shane approved the existing production database. See [shared database release](SHARED_DATABASE_RELEASE.md) for the applied migrations and current state.
+
 Integration branch: `studio/ux-streamline`, continuing the explicit sprint instruction.
 Verified clean remote base before implementation:
 `f6e539322092df57ed2e51a6dfa2a8f93bd78cd3`.

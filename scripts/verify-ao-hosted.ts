@@ -1,4 +1,4 @@
-/** Read/RLS probe for an explicitly isolated AO catalog. Never targets production.
+/** Read/RLS probe for an explicitly selected AO catalog. Shared production targeting requires an operator opt-in.
  * Public/optional synthetic-user credentials come from env and are never logged. */
 import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
 import { createAOReader, catalogBaseline } from "../server/ao-intelligence.ts";
@@ -6,15 +6,16 @@ const url = process.env.AO_CATALOG_URL;
 const ref = process.env.AO_CATALOG_REF;
 const key = process.env.AO_CATALOG_PUBLISHABLE_KEY;
 if (!url || !ref || !key?.startsWith("sb_publishable_"))
-  throw Error("Set the isolated AO_CATALOG_REF, URL and publishable key.");
+  throw Error("Set AO_CATALOG_REF, URL and publishable key.");
 const target = new URL(url);
 if (
-  ref === "kitqovhdwzkhpxlepvfn" ||
-  target.hostname === "kitqovhdwzkhpxlepvfn.supabase.co" ||
+  ((ref === "kitqovhdwzkhpxlepvfn" ||
+    target.hostname === "kitqovhdwzkhpxlepvfn.supabase.co") &&
+    process.env.AO_CATALOG_ALLOW_SHARED !== "true") ||
   target.protocol !== "https:" ||
   target.hostname !== ref + ".supabase.co"
 )
-  throw Error("Refusing production or mismatched target.");
+  throw Error("Refusing unapproved shared database or mismatched target.");
 const expected = JSON.parse(
   readFileSync("docs/ao-intelligence/verification.json", "utf8"),
 ) as { counts: Record<string, number> };
