@@ -24,6 +24,7 @@ async function database() {
 async function relationalRead(db: PGlite, id: string) {
   const { rows } = await db.query<{ data: unknown }>(
     `select to_jsonb(s)||jsonb_build_object(
+ 'ao_sources',(select to_jsonb(src) from ao_sources src where src.id=s.source_id),
  'ao_venue_assignments',coalesce((select jsonb_agg(to_jsonb(a)||jsonb_build_object('ao_venues',to_jsonb(v)||jsonb_build_object('ao_venue_amenities',coalesce((select jsonb_agg(f) from ao_venue_amenities f where f.venue_id=v.id),'[]')))) from ao_venue_assignments a join ao_venues v on v.id=a.venue_id where a.ao_id=s.id),'[]'),
  'ao_landmark_links',coalesce((select jsonb_agg(to_jsonb(l)||jsonb_build_object('ao_landmarks',to_jsonb(m))) from ao_landmark_links l join ao_landmarks m on m.id=l.landmark_id where l.ao_id=s.id),'[]')) as data from ao_sites s where s.id=$1`,
     [id],

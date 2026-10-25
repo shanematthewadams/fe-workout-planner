@@ -19,23 +19,49 @@ export function findAO(name: string, prompt = "") {
     name ? aoKey(a.name) === needle : needle.includes(aoKey(a.name)),
   );
 }
-export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
+/** Trusted regional baseline, supplied by server code after catalog validation, never request JSON. */
+export type SiteBaseline = {
+  features: LocalAO["features"];
+  amenities: LocalAO["amenities"];
+  venue?: string;
+  venueId?: string;
+  venueRequired: boolean;
+  flagLocation?: string;
+  accessNotes: string;
+  landmarks: NonNullable<LocalAO["landmarks"]>;
+  sourceUrl?: string;
+  capturedAt?: string;
+  conventions?: { activity: "bootcamp" | "run" | "ruck"; planningMode: string };
+};
+export function siteContext(
+  aoName: string,
+  prompt = "",
+  site?: SiteInput,
+  catalog?: SiteBaseline,
+) {
   const ao = findAO(aoName, prompt);
   const seasonal = (ao?.local.venues?.length ?? 0) > 1;
+  const venueRequired = catalog
+    ? catalog.venueRequired
+    : seasonal && !ao?.local.venues?.some((v) => v.id === site?.venueId);
   const venue = ao?.local.venues?.find((value) => value.id === site?.venueId);
   const venueId = venue?.id ?? (!seasonal ? ao?.local.venueId : undefined);
   const sharedVenue = venueId
     ? (venues as Record<string, LocalAO & { name: string }>)[venueId]
     : undefined;
-  const baseline = {
-    ...sharedVenue?.features,
-    ...(seasonal ? venue?.features : ao?.local.features),
-  };
-  const baselineAmenities = {
-    ...sharedVenue?.amenities,
-    ...(!seasonal ? ao?.local.amenities : {}),
-  };
-  const localDraft = seasonal && !venue ? {} : (site?.localDraft ?? {});
+  const baseline = catalog
+    ? catalog.features
+    : {
+        ...sharedVenue?.features,
+        ...(seasonal ? venue?.features : ao?.local.features),
+      };
+  const baselineAmenities = catalog
+    ? catalog.amenities
+    : {
+        ...sharedVenue?.amenities,
+        ...(!seasonal ? ao?.local.amenities : {}),
+      };
+  const localDraft = venueRequired ? {} : (site?.localDraft ?? {});
   const features = Object.fromEntries(
     Object.keys(FEATURES).map((key) => [
       key,
@@ -153,19 +179,29 @@ export function siteContext(aoName: string, prompt = "", site?: SiteInput) {
     ),
     details: { ...baseline, ...localDraft },
     localDraft,
-    venue: venue?.name ?? sharedVenue?.name,
-    venueId,
-    venueReview: sharedVenue?.reviewBasis,
-    flagLocation: ao?.local.flagLocation,
-    venueRequired: seasonal && !venue,
-    accessNotes: [ao?.local.accessNotes, venue?.access]
-      .filter(Boolean)
-      .join(" "),
-    landmarks: (ao?.local.landmarks ?? []).filter(
-      (value) => value.status === "confirmed" && value.use === "workout",
-    ),
-    sourceUrl: sharedVenue?.sourceUrl ?? ao?.local.sourceUrl,
-    reviewedAt: sharedVenue?.checkedAt ?? ao?.local.checkedAt,
+    dataSource: catalog ? ("database" as const) : ("json" as const),
+    conventions: catalog?.conventions,
+    venue: catalog ? catalog.venue : (venue?.name ?? sharedVenue?.name),
+    venueId: catalog ? catalog.venueId : venueId,
+    venueReview: catalog
+      ? "Reported catalog facts; confirm current access."
+      : sharedVenue?.reviewBasis,
+    flagLocation: catalog ? catalog.flagLocation : ao?.local.flagLocation,
+    venueRequired,
+    accessNotes: catalog
+      ? catalog.accessNotes
+      : [ao?.local.accessNotes, venue?.access].filter(Boolean).join(" "),
+    landmarks: catalog
+      ? catalog.landmarks
+      : (ao?.local.landmarks ?? []).filter(
+          (value) => value.status === "confirmed" && value.use === "workout",
+        ),
+    sourceUrl: catalog
+      ? catalog.sourceUrl
+      : (sharedVenue?.sourceUrl ?? ao?.local.sourceUrl),
+    reviewedAt: catalog
+      ? catalog.capturedAt
+      : (sharedVenue?.checkedAt ?? ao?.local.checkedAt),
     todayNotes: notes,
     temporaryOverrides: site?.overrides ?? {},
     qStatements: claims,
@@ -234,6 +270,7 @@ export function describeSite(context: ReturnType<typeof siteContext>) {
       : context.venueRequired
         ? "Seasonal venue is unconfirmed. No venue amenities may be assumed."
         : "",
+    context.flagLocation ? `Meeting point: ${context.flagLocation}` : "",
     context.accessNotes ? `Access: ${context.accessNotes}` : "",
     context.landmarks.length
       ? `Reported workout landmarks (confirm access): ${context.landmarks.map((value) => value.name + ": " + value.description + " " + value.restrictions).join("; ")}`

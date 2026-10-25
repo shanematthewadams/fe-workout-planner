@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import { readFileSync } from "node:fs";
+import { catalogEnvironment } from "./server/ao-intelligence.ts";
 import { plannerDevApi } from "./server/planner-dev.ts";
 
 export default defineConfig(({ mode, command }) => {
@@ -24,6 +25,7 @@ export default defineConfig(({ mode, command }) => {
     define,
     plugins: [
       plannerDevApi({
+        catalog: catalogEnvironment("dev", (name) => env[name]),
         GEMINI_API_KEY: env.GEMINI_API_KEY,
         OPENROUTER_API_KEY: env.OPENROUTER_API_KEY,
       }),

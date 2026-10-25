@@ -24,7 +24,10 @@ export const GEAR = [
   "Cones",
   "Dumbbells / kettlebells",
 ] as const;
-export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
+export function fallbackPlan(
+  raw: PlannerRequest,
+  preparedSite?: ReturnType<typeof siteContext>,
+): PlannerResponse {
   const input = resolveRequest(raw),
     builder = input.builder;
   const details = planningContext(input.planning, builder);
@@ -370,7 +373,7 @@ export function fallbackPlan(raw: PlannerRequest): PlannerResponse {
       startTime: input.startTime,
       requiredFeatures: [],
       siteSummary: describeSite(
-        siteContext(input.ao, input.prompt, input.site),
+        preparedSite ?? siteContext(input.ao, input.prompt, input.site),
       ),
     },
     sections: plan.sections.map((s, si) => ({

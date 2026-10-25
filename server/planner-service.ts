@@ -4,6 +4,10 @@ import {
   detectFeatures,
   describeSite,
 } from "../src/ao-context.ts";
+import {
+  resolvePlannerSite,
+  type CatalogEnvironment,
+} from "./ao-intelligence.ts";
 import { ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import {
@@ -19,6 +23,7 @@ import {
 } from "../src/plan-constraints.ts";
 import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
 export type AIEnvironment = {
+  catalog?: CatalogEnvironment;
   OPENROUTER_API_KEY?: string;
   GEMINI_API_KEY?: string;
   GEMINI_FREE_TIER_CONFIRMED?: string;
@@ -33,7 +38,11 @@ export class PlannerError extends Error {
 }
 export { resolveRequest } from "../src/planner-contract.ts";
 
-export function validatePlan(value: unknown, input: PlannerRequest) {
+export function validatePlan(
+  value: unknown,
+  input: PlannerRequest,
+  preparedSite?: ReturnType<typeof siteContext>,
+) {
   const p = planSchema.parse(value),
     kinds = p.sections.map((s) => s.kind);
   // Current AO facts confirm outdoor features, not indoor workout permission.
@@ -127,7 +136,7 @@ export function validatePlan(value: unknown, input: PlannerRequest) {
     // Terrain safety applies to every caller, including non-strict API requests.
     const blocked = blockedFeatures(
       p,
-      siteContext(input.ao, input.prompt, input.site),
+      preparedSite ?? siteContext(input.ao, input.prompt, input.site),
     );
     if (blocked.length)
       throw new PlannerError(
@@ -151,9 +160,13 @@ export async function generatePlan(
   env: AIEnvironment,
   fetcher: typeof fetch = fetch,
   signal?: AbortSignal,
+  preparedSite?: ReturnType<typeof siteContext>,
 ) {
   const input = resolveRequest(raw),
-    context = contextFor(input);
+    context = contextFor(
+      input,
+      preparedSite ?? (await resolvePlannerSite(input, env.catalog)),
+    );
   let system =
     F3_BRIEF +
     "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions in EVERY section: when Rain or Snow / ice is selected, use only controlled standing exercises, including standing core work for Mary. Do not prescribe floor exercises or jumps merely because shelter is available. Never turn a covered garage into claimed indoor access. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
@@ -280,7 +293,7 @@ export async function generatePlan(
           422,
           "The AI draft was too long. Try a simpler request.",
         );
-      result = validatePlan(parseJSON(text), input);
+      result = validatePlan(parseJSON(text), input, context.site);
       break;
     } catch (error) {
       if (deadline.aborted)

@@ -1,5 +1,7 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Latest AO continuation: [Staging planner integration](ao-intelligence/STAGING_INTEGRATION_HANDOFF.md). Hosted provisioning remains blocked; production is unchanged.
+
 Latest database work: [AO Database Modernization Sprint 1](ao-intelligence/SPRINT_1_HANDOFF.md).
 This is an additive, locally verified foundation with a staging read endpoint; production
 schema/data and the existing planner source remain unchanged. Exicon proposal and

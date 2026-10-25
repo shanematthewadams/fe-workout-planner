@@ -2,11 +2,13 @@ import { fallbackPlan } from "../src/fallback.ts";
 import { plannerRequestSchema } from "../src/planner-contract.ts";
 import { ZodError } from "zod";
 import { generatePlan, PlannerError } from "./planner-service.ts";
+import { resolvePlannerSite, readAO } from "./ao-intelligence.ts";
 export const MAX_PLANNER_BODY_BYTES = 48000;
 export async function handlePlanner(
   req: Request,
   env: Parameters<typeof generatePlan>[1],
   fetcher: typeof fetch = fetch,
+  readCatalog = readAO,
 ) {
   const headers = {
     "Cache-Control": "no-store",
@@ -44,13 +46,14 @@ export async function handlePlanner(
     const input = plannerRequestSchema.parse(
       JSON.parse(new TextDecoder().decode(bytes)),
     );
+    const site = await resolvePlannerSite(input, env.catalog, readCatalog);
     let result;
     try {
-      result = await generatePlan(input, env, fetcher, req.signal);
+      result = await generatePlan(input, env, fetcher, req.signal, site);
     } catch (error) {
       if (!input.strictSchedule || input.current || req.signal.aborted)
         throw error;
-      result = fallbackPlan(input);
+      result = fallbackPlan(input, site);
       result.fallbackReason =
         error instanceof PlannerError
           ? error.message.slice(0, 500)
@@ -72,7 +75,9 @@ export async function handlePlanner(
           model: result.model,
         }),
       );
-    return send(result);
+    return new Response(JSON.stringify(result), {
+      headers: { ...headers, "X-F3-AO-Source": site.dataSource },
+    });
   } catch (error) {
     if (error instanceof PlannerError)
       return send({ error: error.message }, error.status);
