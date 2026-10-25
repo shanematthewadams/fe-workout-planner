@@ -1,0 +1,229 @@
+{
+  "environment": "Isolated PGlite PostgreSQL; actual SQL execution and relational readback. Not hosted Supabase/PostgREST.",
+  "counts": {
+    "ao_sources": 2,
+    "ao_regions": 1,
+    "ao_sites": 16,
+    "ao_venues": 13,
+    "ao_venue_assignments": 16,
+    "ao_official_locations": 15,
+    "ao_nation_defaults": 15,
+    "ao_amenity_types": 31,
+    "ao_venue_amenities": 403,
+    "ao_landmarks": 59,
+    "ao_landmark_links": 59
+  },
+  "availability": [
+    {
+      "availability": "present",
+      "verification": "reported",
+      "count": 67
+    },
+    {
+      "availability": "restricted",
+      "verification": "reported",
+      "count": 1
+    },
+    {
+      "availability": "unknown",
+      "verification": "unverified",
+      "count": 335
+    }
+  ],
+  "repeatConflicts": [],
+  "sourceIssues": {
+    "shared_venue_observations": 2,
+    "rotating_pin_excluded": 1,
+    "unverified_default": 160,
+    "mobile_amenities_excluded": 1
+  },
+  "policies": [
+    {
+      "tablename": "ao_amenity_types",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_amenity_types",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_landmark_links",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_landmark_links",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_landmarks",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_landmarks",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_nation_defaults",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_nation_defaults",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_official_locations",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_official_locations",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_regions",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_regions",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_sites",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_sites",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_sources",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_sources",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_venue_amenities",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_venue_amenities",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_venue_assignments",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_venue_assignments",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "tablename": "ao_venues",
+      "policyname": "catalog_operator",
+      "cmd": "ALL",
+      "roles": [
+        "service_role"
+      ]
+    },
+    {
+      "tablename": "ao_venues",
+      "policyname": "catalog_read",
+      "cmd": "SELECT",
+      "roles": [
+        "anon",
+        "authenticated"
+      ]
+    }
+  ]
+}

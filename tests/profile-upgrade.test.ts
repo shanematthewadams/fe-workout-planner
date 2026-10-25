@@ -6,7 +6,7 @@ import { attributeWorkout } from "../src/attribution";
 it("applies the atomic profile upgrade to existing guest/account stores without changing saved plans", async () => {
   const db = new PGlite();
   try {
-    await db.exec(`create role anon; create role authenticated; create schema auth; create schema extensions;
+    await db.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create schema extensions;
    create table auth.users(id uuid primary key);
    create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
    grant usage on schema auth to authenticated,anon;
@@ -40,6 +40,15 @@ it("applies the atomic profile upgrade to existing guest/account stores without 
     await db.exec(
       await readFile(
         new URL("../docs/profile-release.sql", import.meta.url),
+        "utf8",
+      ),
+    );
+    await db.exec(
+      await readFile(
+        new URL(
+          "../supabase/migrations/20261025175228_ao_intelligence_foundation.sql",
+          import.meta.url,
+        ),
         "utf8",
       ),
     );

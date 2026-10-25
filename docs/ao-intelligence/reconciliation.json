@@ -1,0 +1,822 @@
+[
+  {
+    "kind": "shared_venue_observations",
+    "key": "heritage-park-marina",
+    "detail": "South Park: differing notes retained on its venue assignment; venue-level summary needs reconciliation."
+  },
+  {
+    "kind": "rotating_pin_excluded",
+    "key": "fe-ao-vagabonds",
+    "detail": "Nation default retained in source snapshot only; never a permanent Vagabonds venue."
+  },
+  {
+    "kind": "shared_venue_observations",
+    "key": "olathe-community-center-stagecoach-park",
+    "detail": "The Gathering: differing notes retained on its venue assignment; venue-level summary needs reconciliation."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Stairs / stadium steps",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Running track",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Basketball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Pull-up bars",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Playground equipment",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Bleachers",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Picnic tables",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Benches",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Workout walls",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Covered shelter",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Parking garage",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Restrooms",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Grass field",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Stride:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Stairs / stadium steps",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Running track",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Basketball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Parking lot",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Grass field",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Dysentery:Measured loop",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Stairs / stadium steps",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Running track",
+    "detail": "Yes retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Basketball court",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Tennis court",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Pickleball court",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Pull-up bars",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Playground equipment",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Bleachers",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Coupons on-site",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Restrooms",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Grass field",
+    "detail": "Yes retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Artificial turf",
+    "detail": "No retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "You'll Be Fine:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Track proximity provided by Rug Burn; route and exact track location not verified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Stairs / stadium steps",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Running track",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Tennis court",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Pickleball court",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Coupons on-site",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Restrooms",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Artificial turf",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Baywatch:Flat open space",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Stairs / stadium steps",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Running track",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Basketball court",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Tennis court",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Pickleball court",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Pull-up bars",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Playground equipment",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Bleachers",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Picnic tables",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Benches",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Workout walls",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Covered shelter",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Parking garage",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Coupons on-site",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Restrooms",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Grass field",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Artificial turf",
+    "detail": "No retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Inherited from South Stride at the same venue; original unverified baseline flags remain unverified. Venue shared; Q type differs."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Bleachers",
+    "detail": "No retained as unknown. Reported by Rug Burn, frequent attendee; across-street facilities are nearby, not on-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Grass field",
+    "detail": "Yes retained as unknown. Reported by Rug Burn, frequent attendee; across-street facilities are nearby, not on-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Artificial turf",
+    "detail": "No retained as unknown. Reported by Rug Burn, frequent attendee; across-street facilities are nearby, not on-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "South Park:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Reported by Rug Burn, frequent attendee; across-street facilities are nearby, not on-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Stairs / stadium steps",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Bleachers",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Restrooms",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Grass field",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Sunnyside Up:Measured loop",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Running track",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Basketball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Pull-up bars",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Playground equipment",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Restrooms",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Parking lot",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Clocktower:Paved trail / sidewalk",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Stairs / stadium steps",
+    "detail": "Yes retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Basketball court",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Tennis court",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Pickleball court",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Pull-up bars",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Playground equipment",
+    "detail": "Yes retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Coupons on-site",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Restrooms",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Yippee Ki Yay:Artificial turf",
+    "detail": "No retained as unknown. Local attendee report; no measured routes or lighting details established. Nearby playground and Lowe's hill recorded separately."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Stairs / stadium steps",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Running track",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Basketball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Pull-up bars",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Playground equipment",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Restrooms",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Heartland:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Stairs / stadium steps",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Running track",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Tennis court",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Pickleball court",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Coupons on-site",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Restrooms",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Artificial turf",
+    "detail": "No retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Airfield:Flat open space",
+    "detail": "Yes retained as unknown. Shared venue information from Airfield Site Q response and Rug Burn; only court lighting established. AO flag points are different."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Stairs / stadium steps",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Running track",
+    "detail": "Yes retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Basketball court",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Tennis court",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Pickleball court",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Pull-up bars",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Playground equipment",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Coupons on-site",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Restrooms",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Grass field",
+    "detail": "Yes retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Overdraft:Artificial turf",
+    "detail": "No retained as unknown. Nearby track reported by Site Q Rug Burn."
+  },
+  {
+    "kind": "mobile_amenities_excluded",
+    "key": "Vagabonds",
+    "detail": "No fixed venue; legacy flags not imported."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Basketball court",
+    "detail": "Yes retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Tennis court",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Pickleball court",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Pull-up bars",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Playground equipment",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Coupons on-site",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Restrooms",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Gold Rush:Artificial turf",
+    "detail": "No retained as unknown. Verified features reported by Site Q Woodpecker; remaining legacy Yes/No fields retain prior provenance."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Running track",
+    "detail": "Yes retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Basketball court",
+    "detail": "No retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Tennis court",
+    "detail": "No retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Pickleball court",
+    "detail": "No retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Benches",
+    "detail": "Yes retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Coupons on-site",
+    "detail": "No retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Restrooms",
+    "detail": "Yes retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Stagecoach:Artificial turf",
+    "detail": "No retained as unknown. Site Q Grape Nuts confirmed listed features; remaining baseline flags not individually reverified."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Basketball court",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Pickleball court",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Pull-up bars",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Playground equipment",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Coupons on-site",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "Pretty Bird:Restrooms",
+    "detail": "No retained as unknown. Rug Burn, former Site Q. Turf access frequently restricted; distant shelter and trail are off-site."
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Running track",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Basketball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Tennis court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Pickleball court",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Pull-up bars",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Coupons on-site",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Restrooms",
+    "detail": "Yes retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  },
+  {
+    "kind": "unverified_default",
+    "key": "The Gathering:Artificial turf",
+    "detail": "No retained as unknown. Pre-existing No/Yes may reflect unverified baseline values"
+  }
+]

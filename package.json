@@ -19,7 +19,9 @@
     "sync:schema": "node scripts/export-sync-schema.mjs",
     "catalog:nation-directory": "node --experimental-strip-types scripts/collect-nation-directory.ts",
     "catalog:sync-site-qs": "node --experimental-strip-types scripts/import-site-q-roster.ts",
-    "catalog:compare-inventory": "node --experimental-strip-types scripts/compare-ao-inventory.ts"
+    "catalog:compare-inventory": "node --experimental-strip-types scripts/compare-ao-inventory.ts",
+    "catalog:ao-prepare": "node --experimental-strip-types scripts/ao-intelligence.ts",
+    "catalog:ao-verify": "node --experimental-strip-types scripts/verify-ao-intelligence.mts"
   },
   "dependencies": {
     "@fontsource/big-shoulders-display": "5.3.0",
