@@ -3,7 +3,12 @@ import { findAO } from "../src/ao-context.ts";
 import { fallbackPlan } from "../src/fallback.ts";
 import { plannerRequestSchema } from "../src/planner-contract.ts";
 import { ZodError } from "zod";
-import { generatePlan, PlannerError } from "./planner-service.ts";
+import {
+  generatePlan,
+  enforceMovementGuide,
+  resolveRequest,
+  PlannerError,
+} from "./planner-service.ts";
 import { resolvePlannerSite, readAO } from "./ao-intelligence.ts";
 export const MAX_PLANNER_BODY_BYTES = 48000;
 export async function handlePlanner(
@@ -64,6 +69,10 @@ export async function handlePlanner(
       if (!input.strictSchedule || input.current || req.signal.aborted)
         throw error;
       result = fallbackPlan(input, site);
+      // Provider failure cannot bypass stronger published exercise requirements.
+      // Preserve the previous draft rather than return an incompatible template.
+      if (guide.source === "database")
+        enforceMovementGuide(result.plan, resolveRequest(input), site, guide);
       result.fallbackReason =
         error instanceof PlannerError
           ? error.message.slice(0, 500)

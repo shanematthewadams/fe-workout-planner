@@ -45,10 +45,11 @@ if (process.argv.includes("--ai")) {
     source: r.headers.get("x-f3-exicon-source"),
     provider: result.provider ?? null,
     model: result.model ?? null,
+    fallbackReason: result.fallbackReason ?? result.error ?? null,
     success:
       r.ok &&
       r.headers.get("x-f3-exicon-source") === "database" &&
-      result.provider !== "Template" &&
+      ["Gemini", "OpenRouter"].includes(result.provider) &&
       !!result.plan,
   };
   if (!report.providerCheck.success) process.exitCode = 2;

@@ -43,6 +43,39 @@ export class PlannerError extends Error {
 }
 export { resolveRequest } from "../src/planner-contract.ts";
 
+export function enforceMovementGuide(
+  plan: Plan,
+  input: PlannerRequest,
+  site: ReturnType<typeof siteContext>,
+  guide?: MovementGuide,
+) {
+  const conflicts = movementConflicts(plan, input, guide?.movements);
+  if (
+    guide &&
+    mentionsRestrictedNames(plan, [
+      ...guide.blockedNames,
+      ...guide.ambiguousAliases,
+    ])
+  )
+    throw new PlannerError(
+      422,
+      "The draft uses an ambiguous exercise name or an unsupported facility requirement. Confirm the exercise before leading.",
+    );
+  if (conflicts.length) throw new PlannerError(422, conflicts.join(" "));
+  const blocked = guide
+    ? requiredMovementFeatures(plan, guide.movements).filter(
+        (f) => site.features[f] !== "available",
+      )
+    : [];
+  if (blocked.length)
+    throw new PlannerError(
+      422,
+      "The draft needs unconfirmed or unavailable site features: " +
+        blocked.join(", ") +
+        ". Your previous draft is safe.",
+    );
+}
+
 export function validatePlan(
   value: unknown,
   input: PlannerRequest,
@@ -129,19 +162,12 @@ export function validatePlan(
       422,
       "The AI added equipment to a no-equipment plan. Try again.",
     );
-  const conflicts = movementConflicts(p, input, guide?.movements);
-  if (
-    guide &&
-    mentionsRestrictedNames(p, [
-      ...guide.blockedNames,
-      ...guide.ambiguousAliases,
-    ])
-  )
-    throw new PlannerError(
-      422,
-      "The draft uses an ambiguous exercise name or an unsupported facility requirement. Confirm the exercise before leading.",
-    );
-  if (conflicts.length) throw new PlannerError(422, conflicts.join(" "));
+  enforceMovementGuide(
+    p,
+    input,
+    preparedSite ?? siteContext(input.ao, input.prompt, input.site),
+    guide,
+  );
   if (
     (input.equipment === "Coupon" ||
       (input.equipment === "From prompt" &&
@@ -153,16 +179,7 @@ export function validatePlan(
     // Terrain safety applies to every caller, including non-strict API requests.
     const site =
       preparedSite ?? siteContext(input.ao, input.prompt, input.site);
-    const blocked = [
-      ...new Set([
-        ...blockedFeatures(p, site),
-        ...(guide
-          ? requiredMovementFeatures(p, guide.movements).filter(
-              (f) => site.features[f] !== "available",
-            )
-          : []),
-      ]),
-    ];
+    const blocked = blockedFeatures(p, site);
     if (blocked.length)
       throw new PlannerError(
         422,

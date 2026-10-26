@@ -325,17 +325,15 @@ it("passes the same guide through the real handler and provider context without 
     "Verified app-written database squat fixture.";
   const request = input(),
     good = fallbackPlan(request).plan;
-  const provider = vi
-    .fn<typeof fetch>()
-    .mockImplementation(
-      async () =>
-        new Response(
-          JSON.stringify({
-            model: "fixture:free",
-            choices: [{ message: { content: JSON.stringify(good) } }],
-          }),
-        ),
-    );
+  const provider = vi.fn<typeof fetch>().mockImplementation(
+    async () =>
+      new Response(
+        JSON.stringify({
+          model: "fixture:free",
+          choices: [{ message: { content: JSON.stringify(good) } }],
+        }),
+      ),
+  );
   const read = vi.fn(async () => catalog);
   const result = await handlePlanner(
     new Request("https://app.invalid/api/plan-workout", {
@@ -367,4 +365,72 @@ it("passes the same guide through the real handler and provider context without 
     adaptExicon(catalog),
   );
   expect(direct.provider).toBe("OpenRouter");
+});
+
+it("validates server templates against the same published guide when a provider fails", async () => {
+  const request = input();
+  const req = () =>
+    new Request("https://app.invalid/api/plan-workout", {
+      method: "POST",
+      headers: {
+        Origin: "https://app.invalid",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+  const failed = vi
+    .fn<typeof fetch>()
+    .mockRejectedValue(Error("Synthetic provider outage"));
+  const normal = buildAppExicon();
+  const safe = await handlePlanner(
+    req(),
+    { exicon: env, OPENROUTER_API_KEY: "fixture" },
+    failed,
+    async () => null,
+    async () => normal,
+  );
+  expect(safe.status).toBe(200);
+  expect((await safe.json()).provider).toBe("Template");
+  const restricted = buildAppExicon();
+  restricted.ex_exercise_facilities.push({
+    exercise_id: "squat",
+    amenity_id: "workout-walls",
+    required: true,
+  });
+  const rejected = await handlePlanner(
+    req(),
+    { exicon: env, OPENROUTER_API_KEY: "fixture" },
+    failed,
+    async () => null,
+    async () => restricted,
+  );
+  expect(rejected.status).toBe(422);
+  const data = await rejected.json();
+  expect(data.error).toMatch(/features/);
+  expect(data.workout).toBeUndefined();
+  const runOnly = buildAppExicon();
+  runOnly.ex_exercises.find((e) => e.id === "squat")!.running = true;
+  const raw = () =>
+    new Request("https://app.invalid/api/plan-workout", {
+      method: "POST",
+      headers: {
+        Origin: "https://app.invalid",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...request,
+        prompt: "Squats, no running and no coupons.",
+        running: "From prompt",
+        equipment: "From prompt",
+      }),
+    });
+  const implicit = await handlePlanner(
+    raw(),
+    { exicon: env, OPENROUTER_API_KEY: "fixture" },
+    failed,
+    async () => null,
+    async () => runOnly,
+  );
+  expect(implicit.status).toBe(422);
+  expect((await implicit.json()).error).toMatch(/running/);
 });

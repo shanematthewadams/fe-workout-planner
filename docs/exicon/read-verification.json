@@ -1,0 +1,68 @@
+{
+  "implementationCommit": "cf66c8271f683d21f34b1e15973470a1c9df0af5",
+  "operatorRead": {
+    "checkedAt": "2026-10-26T14:56:16.827Z",
+    "calls": 1,
+    "operatorTimeoutMs": 15000,
+    "source": "database",
+    "publishedExercises": 8,
+    "publishedAliases": 15,
+    "mergedMovements": 50,
+    "blockedIds": [],
+    "ambiguousAliases": []
+  },
+  "stagingAttempts": [
+    {
+      "checkedAt": "2026-10-26T15:05:56.333Z",
+      "source": "database",
+      "databaseIds": [
+        "bent-over-row",
+        "mountain-climber",
+        "plank",
+        "pull-up",
+        "squat",
+        "thruster",
+        "wall-sit",
+        "ww3"
+      ],
+      "movementCount": 50,
+      "providerCheck": {
+        "status": 200,
+        "source": "database",
+        "provider": "Template",
+        "model": "offline-v1",
+        "success": false
+      }
+    },
+    {
+      "checkedAt": "2026-10-26T15:08:57.092Z",
+      "source": "database",
+      "databaseIds": [
+        "bent-over-row",
+        "mountain-climber",
+        "plank",
+        "pull-up",
+        "squat",
+        "thruster",
+        "wall-sit",
+        "ww3"
+      ],
+      "movementCount": 50,
+      "providerCheck": {
+        "status": 200,
+        "source": "database",
+        "provider": "Template",
+        "model": "offline-v1",
+        "success": false
+      }
+    }
+  ],
+  "firstAttemptLogEvidence": {
+    "provider": "openrouter",
+    "issue": "invalid_json_or_response",
+    "fallbackReasonCode": 422
+  },
+  "officialDescriptionsImported": 0,
+  "officialIdsIndexed": 977,
+  "sourcePermission": "unresolved"
+}

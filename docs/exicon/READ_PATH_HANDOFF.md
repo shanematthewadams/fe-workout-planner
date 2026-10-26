@@ -51,3 +51,21 @@ Production application promotion/main merge still requires Shane's explicit appr
 The next content milestone is to establish Codex reuse terms with recorded evidence, then implement a reviewed, permission-gated mapping from official IDs to canonical exercises/formats and actual variations. Preserve IDs and local overrides; sanitize source HTML; never infer counting, equipment or facilities from tags alone; and never merge records merely because names match. The 977-entry fingerprint index is intake evidence, not 977 imported or licensed exercises. No official descriptions should be published until that milestone's permission and mapping gates pass.
 
 Final deployed commit, CI results and bounded provider evidence are recorded after release verification below.
+
+
+## Deployed identity and current provider evidence
+
+Staging implementation commit `cf66c8271f683d21f34b1e15973470a1c9df0af5`, tree `d1204ad3cf0120d64d00ae28c5831df059e5ad0a`. Hosted `build-info.json` reports that exact commit and staging. Hosted `/assets/index-CT1S8c4Z.js` matches the configured local staging artifact byte-for-byte; SHA-256 `46ab9034de358f77ad32eee093345091903e7aa4b658d25c93806725b02b9a76`.
+
+Actual deployed `/api/exicon?region=the-fe` reads pass using the application's two-second internal budget: `source=database`, eight database IDs, fifty merged movements, no blocked IDs. Both bounded creative checks also returned `X-F3-Exicon-Source: database`, proving the real generation handler loaded database context; **both returned labeled Template/offline-v1 outcomes and therefore do not prove live AI generation**. There was one initial request and one bounded diagnostic retry, with no automated retry loop. Neither check saved a workout or wrote account/cloud data.
+
+Netlify request logs for the first attempt show `FE_PLANNER_INVALID` on OpenRouter with `invalid_json_or_response`, followed by a template outcome with reason 422. This is evidence of an invalid provider JSON/response, not a new database-facility validation rejection. Request-detail duration was about twenty seconds. The precise upstream cause and the second attempt's fallback reason were not captured; do not infer successful Gemini/OpenRouter availability from either template. Further provider calls were stopped. The operator probe now records `fallbackReason` and accepts only explicit Gemini/OpenRouter outcomes as AI evidence. Existing intermittent live-provider reliability remains a release limitation, separate from the verified cached read path.
+
+[CI run 40345588990](https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40345588990) verifies the implementation commit. This initial run passes 468 tests / 61 files, lint/build, 132 browser tests (four existing optional historical comparisons skipped), hosted desktop/mobile save/Lead journeys and the live Exicon read step. Its `browser-qa` artifact is `12661627800`. The broader live-provider suite is intentionally skipped; the manual template outcomes above are recorded separately.
+
+
+## Follow-up: server-template constraint guard
+
+The same published movement checks now apply when the server returns a deterministic template after provider failure. `enforceMovementGuide` is shared with AI output validation and uses normalized request preferences, including no-running/no-gear directions supplied through prompt text. It checks equipment/running metadata, unsupported or ambiguous names and live facility requirements without imposing AI-only output-format rules on the existing template generator. If a template contradicts known database rules, the server returns a safe 422 error with no replacement workout; the previous draft remains untouched. The JSON-only legacy fallback retains its existing behavior, and the frontend offline template remains bundled as documented above.
+
+The targeted follow-up suite passes fifteen tests, including ordinary template compatibility and a synthetic provider outage where a new wall requirement or prompt-derived no-running preference must reject the template. The full local suite passes **469 tests / 61 files**, with lint, build and type checks. No additional live provider request was made for this guard. Fresh deployment/CI evidence for the follow-up is required and recorded below when complete.
