@@ -1,5 +1,7 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Latest database continuation: [Exicon foundation](exicon/HANDOFF.md). Additive schema and the small app-written seed are installed in the approved shared database; the movement selector remains unchanged.
+
 Latest AO UI continuation (October 26): [Live AO interface handoff](ao-intelligence/LIVE_AO_UI_HANDOFF.md). The planner and AO directory consume the shared live catalog on staging, with saved JSON fallback. See that handoff for release verification.
 
 Current database release: [Approved shared database release](ao-intelligence/SHARED_DATABASE_RELEASE.md). Shane approved use of the existing production Supabase project; its additive catalog schema and FE inventory are installed. This supersedes the earlier isolated-database blocker.

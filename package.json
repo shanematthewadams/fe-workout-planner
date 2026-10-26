@@ -22,7 +22,9 @@
     "catalog:compare-inventory": "node --experimental-strip-types scripts/compare-ao-inventory.ts",
     "catalog:ao-prepare": "node --experimental-strip-types scripts/ao-intelligence.ts",
     "catalog:ao-verify": "node --experimental-strip-types scripts/verify-ao-intelligence.mts",
-    "catalog:ao-hosted": "vite build --ssr scripts/verify-ao-hosted.ts --target node22 --outDir qa/ao-hosted-build --emptyOutDir && node qa/ao-hosted-build/verify-ao-hosted.js"
+    "catalog:ao-hosted": "vite build --ssr scripts/verify-ao-hosted.ts --target node22 --outDir qa/ao-hosted-build --emptyOutDir && node qa/ao-hosted-build/verify-ao-hosted.js",
+    "catalog:exicon-prepare": "vite build --ssr scripts/prepare-exicon.ts --target node22 --outDir qa/exicon-build --emptyOutDir && node qa/exicon-build/prepare-exicon.js",
+    "catalog:exicon-hosted": "vite build --ssr scripts/verify-exicon-hosted.ts --target node22 --outDir qa/exicon-hosted-build --emptyOutDir && node qa/exicon-hosted-build/verify-exicon-hosted.js"
   },
   "dependencies": {
     "@fontsource/big-shoulders-display": "5.3.0",

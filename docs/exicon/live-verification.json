@@ -1,0 +1,130 @@
+{
+  "target": "kitqovhdwzkhpxlepvfn.supabase.co",
+  "checkedAt": "2026-10-26T10:48:42.803Z",
+  "roles": [
+    "anon"
+  ],
+  "results": [
+    {
+      "table": "ex_source_licenses",
+      "rows": 2,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_exercises",
+      "rows": 8,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_variations",
+      "rows": 0,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_aliases",
+      "rows": 15,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_counting_conventions",
+      "rows": 8,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_equipment_types",
+      "rows": 2,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_exercise_equipment",
+      "rows": 3,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_exercise_facilities",
+      "rows": 2,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_variation_equipment",
+      "rows": 0,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_variation_facilities",
+      "rows": 0,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_formats",
+      "rows": 2,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    },
+    {
+      "table": "ex_format_parameters",
+      "rows": 12,
+      "contentMatches": true,
+      "denied": {
+        "POST": 401,
+        "PATCH": 401,
+        "DELETE": 401
+      }
+    }
+  ],
+  "authenticatedHttp": "not exercised; SQL role verified separately"
+}

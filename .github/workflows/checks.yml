@@ -4,6 +4,10 @@ on:
     branches: [main, develop, studio/ux-streamline]
   workflow_dispatch:
     inputs:
+      live_ai:
+        description: Explicitly evaluate live free AI providers on staging
+        type: boolean
+        default: false
       live_cloud:
         description: Verify temporary synthetic collections against the existing Supabase store
         type: boolean
@@ -80,7 +84,7 @@ jobs:
         if: github.ref == 'refs/heads/studio/ux-streamline'
         run: node scripts/verify-staging.mjs
       - name: Evaluate real free AI on staging
-        if: github.ref == 'refs/heads/studio/ux-streamline'
+        if: github.ref == 'refs/heads/studio/ux-streamline' && (inputs.live_ai || contains(github.event.head_commit.message, '[verify ai]'))
         run: |
           npm run eval:planner -- https://studio-ux-streamline--fe-workout-planner.netlify.app qa/pilot/live-ai.json || {
             echo "::warning::Live AI evaluation did not pass; inspect qa/pilot/live-ai.json. Template fallback does not prove provider availability."

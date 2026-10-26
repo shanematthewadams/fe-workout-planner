@@ -1,0 +1,278 @@
+{
+  "included": [
+    {
+      "id": "squat",
+      "name": "Squat",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "mountain-climber",
+      "name": "Mountain Climber",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "bent-over-row",
+      "name": "Bent-over Row",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "ww3",
+      "name": "WW3",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "thruster",
+      "name": "Thruster",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "wall-sit",
+      "name": "Wall Sit",
+      "decision": "app-written description; existing ID preserved"
+    },
+    {
+      "id": "pull-up",
+      "name": "Pull-up",
+      "decision": "app-written description; existing ID preserved"
+    }
+  ],
+  "withheld": [
+    {
+      "id": "side-straddle-hop-ssh",
+      "name": "Side Straddle Hop (SSH)",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "imperial-walker",
+      "name": "Imperial Walker",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "hillbilly",
+      "name": "Hillbilly",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "daisy-picker",
+      "name": "Daisy Picker",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "michael-phelps",
+      "name": "Michael Phelps",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "good-morning",
+      "name": "Good Morning",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "windmill",
+      "name": "Windmill",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "merkin",
+      "name": "Merkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "carolina-dry-dock-cdd",
+      "name": "Carolina Dry Dock (CDD)",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "diamond-merkin",
+      "name": "Diamond Merkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "ranger-merkin",
+      "name": "Ranger Merkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "werkin",
+      "name": "Werkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "peter-parker",
+      "name": "Peter Parker",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "dips",
+      "name": "Dips",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "derkin",
+      "name": "Derkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "erkin",
+      "name": "Erkin",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "bobby-hurley",
+      "name": "Bobby Hurley",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "monkey-humper",
+      "name": "Monkey Humper",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "al-gore",
+      "name": "Al Gore",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "copperhead-squat",
+      "name": "Copperhead Squat",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "smurf-jack",
+      "name": "Smurf Jack",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "lunges",
+      "name": "Lunges",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "american-hammer",
+      "name": "American Hammer",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "flutter-kick",
+      "name": "Flutter Kick",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "rosalita",
+      "name": "Rosalita",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "lbc-little-baby-crunch",
+      "name": "LBC (Little Baby Crunch)",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "freddie-mercury",
+      "name": "Freddie Mercury",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "hello-dolly",
+      "name": "Hello Dolly",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "big-boy-sit-up",
+      "name": "Big Boy Sit-up",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "dying-cockroach",
+      "name": "Dying Cockroach",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "plank-o-rama",
+      "name": "Plank-o-Rama",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "burpee",
+      "name": "Burpee",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "bear-crawl",
+      "name": "Bear Crawl",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "crawl-bear",
+      "name": "Crawl Bear",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "crab-walk",
+      "name": "Crab Walk",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "suicide-sprints",
+      "name": "Suicide Sprints",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "blockee",
+      "name": "Blockee",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "curls-for-the-girls",
+      "name": "Curls for the Girls",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "overhead-press-ohp",
+      "name": "Overhead Press (OHP)",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "kettlebell-swing-cindy-swing",
+      "name": "Kettlebell Swing (Cindy Swing)",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "chest-press-with-cindy",
+      "name": "Chest Press with Cindy",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    },
+    {
+      "id": "farmer-carry",
+      "name": "Farmer Carry",
+      "reason": "Bundled reference text; source permission not established for database redistribution"
+    }
+  ],
+  "counts": {
+    "ao_sources": 2,
+    "ex_source_licenses": 2,
+    "ex_exercises": 8,
+    "ex_variations": 0,
+    "ex_aliases": 15,
+    "ex_counting_conventions": 8,
+    "ex_equipment_types": 2,
+    "ex_exercise_equipment": 3,
+    "ex_exercise_facilities": 2,
+    "ex_variation_equipment": 0,
+    "ex_variation_facilities": 0,
+    "ex_formats": 2,
+    "ex_format_parameters": 12
+  },
+  "limits": [
+    "No official Exicon fetched/imported",
+    "No application selector switch",
+    "No AI or database calls",
+    "Unknown counting requires confirmation",
+    "Formats are vocabulary, not an execution engine"
+  ]
+}
