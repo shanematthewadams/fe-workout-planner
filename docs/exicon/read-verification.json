@@ -64,5 +64,17 @@
   },
   "officialDescriptionsImported": 0,
   "officialIdsIndexed": 977,
-  "sourcePermission": "unresolved"
+  "sourcePermission": "unresolved",
+  "guardImplementationCommit": "9d11ba42211b6dbc0be172f876707847d7905494",
+  "guardCI": "https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40349116946",
+  "finalChecks": {
+    "tests": 469,
+    "testFiles": 61,
+    "browserPassed": 132,
+    "browserSkipped": 4,
+    "hostedDesktopAndWebKit": "passed",
+    "liveExiconRead": "database",
+    "providerHealth": "unverified; two earlier Template outcomes",
+    "artifactId": 12662963710
+  }
 }
