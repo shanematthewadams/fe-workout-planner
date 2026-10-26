@@ -151,3 +151,45 @@ export/independent backup first and explicitly review its removal; do not auto-d
 The next database sprint can follow the Exicon proposal after the shared staging
 read path is verified. Provider timeouts remain a separate reliability follow-up;
 no provider policy or credential change is part of this database release.
+
+## Verified deployed release
+
+Application commit: `403e6142dc904a2299928e1f06c7c311cf3186f4` on studio/ux-streamline.
+Tree: `f9b5f13ef5def84e7137a26a984984b0da7ce284`, identical to the tested local tree.
+Hosted build-info confirms that exact commit and staging environment.
+All **16 hosted AO reads returned source=database**, not JSON fallback.
+Hosted checks passed for Airfield/Baywatch venue identity and separate meeting points;
+South Park's unselected state and explicit Heritage choice using the legacy UI ID;
+Vagabonds' rotating/no-venue state; Pretty Bird's restricted turf and off-site garage.
+
+`/assets/index-CpEWZuhw.js` matches the local staging build byte-for-byte, SHA-256
+`9f91bb7c786abeb36585874a7971b35e0b7c3b6358883d10ce7382155810ce39`.
+Production app build-info remains `e254c11ec266e62586208cb1282f9eeb8e7b093a`.
+
+A live POST to the staging planner returned HTTP 200 with
+`X-F3-AO-Source=database`. Gemini generated a personal schema-version-1 workout in
+approximately 8.9 seconds, with Baywatch's Southwest parking-lot meeting point in
+the returned workout summary and exactly 43 physical minutes plus the reserved
+2-minute welcome. It was an AI result, not template recovery. This API-only probe
+created no account, saved-plan vault or published workout record.
+An earlier direct probe received a non-JSON HTML response; GET/invalid POST route
+checks then returned the expected JSON 405/400, and the subsequent live AI probe
+passed. Do not turn that one successful probe into a claim of universal provider reliability.
+
+Fresh CI: https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40246436766 .
+Dependency install, lint, build, **433 tests / 57 files**, **128 browser tests passed
+with 4 skipped**, and hosted staging journey all passed.
+The optional free-AI evaluation warned: coupon-partners and unknown-seasonal-venue
+completed with AI; individual-core-rain used template recovery; targeted-refinement
+returned HTTP 504. Keep that reliability follow-up separate from this catalog release.
+
+The existing-data checksum verification was repeated after the staged planner tests:
+all five source tables still matched their preflight snapshots exactly, with the
+same counts. Backup access stayed denied to anon, authenticated and service_role.
+Evidence-only follow-up commits skip CI/Netlify; deployed application commit remains
+403e614 while branch HEAD may be newer.
+
+This resolves the hosted provisioning blocker for the chosen shared-database approach.
+The next bounded work can implement Exicon's licensed/approved exercise catalog and
+regional vocabulary foundation, or update the remaining bundled AO information panel.
+No further Supabase branch provisioning is required for this architecture.

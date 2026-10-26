@@ -146,5 +146,28 @@
       "name": "ao_intelligence_foundation"
     }
   ],
-  "repeat_import_conflicts": []
+  "repeat_import_conflicts": [],
+  "deployment": {
+    "commit": "403e6142dc904a2299928e1f06c7c311cf3186f4",
+    "tree": "f9b5f13ef5def84e7137a26a984984b0da7ce284",
+    "hosted_database_aos": 16,
+    "existing_data_unchanged_after_planner_probe": true,
+    "production_app_commit": "e254c11ec266e62586208cb1282f9eeb8e7b093a"
+  },
+  "tests": {
+    "unit_integration_passed": 433,
+    "files": 57,
+    "browser_passed": 128,
+    "browser_skipped": 4,
+    "hosted_journey": "passed"
+  },
+  "live_planner": {
+    "source": "database",
+    "provider": "Gemini",
+    "http_status": 200,
+    "meeting_point_summary": "verified",
+    "physical_minutes": 43,
+    "reserved_welcome_minutes": 2,
+    "cloud_save_performed": false
+  }
 }
