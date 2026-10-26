@@ -2,6 +2,10 @@ import { test, expect } from "@playwright/test";
 import { startPlanning, saveWorkout } from "./navigation";
 import { catalogAO } from "../tests/fixtures/ao-catalog";
 import AxeBuilder from "@axe-core/playwright";
+// WebKit service workers can bypass page routing even for uncached API requests.
+// This scenario tests a deterministic catalog fixture; the existing offline-cache
+// journey separately exercises the real worker, and hosted smoke reads the real API.
+test.use({ serviceWorkers: "block" });
 test("live AO facts, venue choice and closures survive an AI-free save/reopen/lead journey", async ({
   page,
 }, info) => {

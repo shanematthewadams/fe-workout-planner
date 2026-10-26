@@ -57,7 +57,4 @@ established. Do not treat bundled third-party descriptions as automatically lice
 Add ambiguity/counting/variation/security tests before replacing the movement selector.
 No bulk official Exicon import until redistribution permission is verified and recorded.
 
-Before that milestone, finish hosted AO read validation in an authorized isolated
-Supabase project if one is supplied. Keep generation on the tested JSON path until
-facility equivalence, closure precedence, temporary Q overrides and route defaults
-have passed the same constraint tests with database context.
+AO prerequisite update (October 26): Shane approved the existing shared Supabase project, and the additive AO catalog is installed. Staging server generation and the live AO interface now use the shared adapter with JSON fallback. See `SHARED_DATABASE_RELEASE.md` and `LIVE_AO_UI_HANDOFF.md` for hosted evidence, closure/override tests and remaining limits. Production application promotion is still a separate approval. No isolated project is required for the next milestone; test additive Exicon migrations locally before applying any separately authorized database changes.
