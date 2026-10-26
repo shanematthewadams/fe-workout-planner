@@ -75,7 +75,7 @@ No production application deployment or main merge is authorized by this work. T
 
 Implement a bounded, cached, validated staging read adapter that turns the published Exicon subset into the existing `Movement` contract while retaining all fifty current movements as fallback. Add parity tests for equipment/facility filtering, regional alias ambiguity, counting confirmation, explicit variation requirements and outage behavior before activating it. Establish source permissions for the 42 withheld records separately; do not bulk import them. No extra AI call should retrieve known exercise facts.
 
-Final local/CI/deployed release evidence follows after verification.
+Final local/CI/deployed release evidence is recorded below.
 
 
 ## Local verification and AI-call boundary
@@ -83,3 +83,23 @@ Final local/CI/deployed release evidence follows after verification.
 Final local lint, build and TypeScript checks pass, including strict compilation of the operator scripts. All **454 tests in 59 files pass**, with eleven targeted Exicon tests. All fifty existing movement objects match the original parity hash above. Final hosted REST verification matches all fields in all twelve tables after source reconciliation; all 36 anonymous mutation probes are denied. The checked-in [live-verification.json](live-verification.json) contains only public catalog counts/results, never credentials or user data. [exicon_access.sql](../../supabase/verification/exicon_access.sql) repeats the authenticated SQL role/grant check. Anonymous/authenticated roles cannot execute the publication trigger function; operator execution is allowed.
 
 Live provider CI evaluation is now **opt-in**, using workflow dispatch `live_ai=true` on staging or a `[verify ai]` commit marker. Database-only and documentation changes no longer spend provider requests on every push. Unit/provider fixtures, the four-browser suite and the AI-free hosted staging journey still run normally. Request a real provider evaluation for changes to provider routing, generation or prompts; skipping it is not evidence of provider health. No provider logic, credentials or free-only policy changed.
+
+
+## Staging release identity
+
+Implementation commit `d65cb4b1e3513ec608ebead30ef668aac2a2bc95`, tree `139ae97ccc783d3a3350dc4bd88bba938c8c540e`. Hosted staging `build-info.json` reports this exact commit and `staging`. Hosted `/assets/index-DIrvt0O-.js` matches the configured local staging build byte-for-byte; SHA-256 `8cef5e4b79a805e2ba83ce52d92786568ab4e3f56d5a4d1211bf0c96b56ea381`.
+
+The exact format source version is [exicon-catalog.ts at the implementation commit](https://github.com/shanematthewadams/fe-workout-planner/blob/d65cb4b1e3513ec608ebead30ef668aac2a2bc95/scripts/exicon-catalog.ts). The prior staging application at `c08d09121c7bd514744140e49aaf9b1544d6cd64` can be redeployed independently of the new additive tables. Keep the Exicon data during an app-only rollback; the existing planner does not depend on these tables yet.
+
+[Checks run 40310517702](https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40310517702) passed lint, all 454 tests and build. The browser/hosted results below complete the release verification.
+
+
+## Final release evidence and stopping point
+
+The completed Checks run above passes **454 tests / 59 files**, lint, build, and **132 browser tests** across desktop, tablet, Chromium mobile and Safari mobile in 6.2 minutes. Four pre-existing optional historical-before comparisons are skipped. The live-provider step is skipped as intended; this milestone spent no provider requests through CI. This is not a new provider-health claim.
+
+Hosted desktop Chromium and mobile WebKit verify the exact deployed commit, live AO read, saved identity, edit/undo, print/reopen/Lead, My Workouts, COT and 43:45 timer recovery, with no page errors or horizontal overflow. Hosted structured Weinke recovery and start-fresh preservation also pass without AI. Cloud/auth/provider writes in these journeys remain intercepted synthetic fixtures; real user records were not used for testing. The `browser-qa` artifact is `12645311084` on the linked run, retained by GitHub for fourteen days; durable test totals and operational context remain in this repository after artifact expiry.
+
+Completed: additive live schema, repeatable guarded imports, the app-owned seed and source reconciliation, deterministic resolver, SQL/REST security verification, existing movement/workout/profile compatibility, verified staging deployment, rollback procedure and durable next milestone. Pending: cached staging Exicon reader/adapter and explicit integration with generation, permission decisions for the 42 withheld descriptions, and authenticated HTTP transport coverage if a dedicated synthetic account/session is later supplied. No need to borrow a real user's token or create an account for this milestone. Production application release remains a separate approval; the production app/main was not changed.
+
+The final evidence commit edits documentation only and skips another identical deploy/check run. Next engineering work should start at the read-adapter milestone above and inspect the latest remote branch before editing.

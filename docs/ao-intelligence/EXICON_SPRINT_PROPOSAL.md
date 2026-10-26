@@ -1,6 +1,6 @@
 # Exicon: implementation-ready next sprint proposal
 
-Status: proposed, no migration applied and no official Exicon import authorized by this document.
+Status: historical proposal. The bounded foundation is now implemented in the approved shared database; see [Exicon implementation handoff](../exicon/HANDOFF.md) for the actual schema, source decisions, verification and next milestone. No official Exicon import is authorized by this proposal. The table below records the original design, not a second migration to apply.
 
 Current implementation is `src/movements.ts`: stable local IDs, aliases, counting prose,
 equipment, facility requirements, running flags and alternatives built over
