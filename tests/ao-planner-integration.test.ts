@@ -5,6 +5,7 @@ import {
   resolvePlannerSite,
   createAOReader,
   catalogEnvironment,
+  handleAOIntelligence,
 } from "../server/ao-intelligence";
 import { siteContext } from "../src/ao-context";
 import {
@@ -272,4 +273,31 @@ it("keeps production app disabled while allowing the explicitly approved shared 
   expect(catalogEnvironment("branch-deploy", (n) => settings[n]).enabled).toBe(
     "true",
   );
+});
+
+it("serves a versioned public browser catalog without deployment credentials", async () => {
+  const response = await handleAOIntelligence(
+    new Request(
+      "https://staging.test/api/ao-intelligence?ao=fe-ao-baywatch&view=catalog",
+    ),
+    env,
+    reader,
+  );
+  const data = await response.json();
+  expect(data.version).toBe(1);
+  expect(data.source).toBe("database");
+  expect(data.catalog.id).toBe("fe-ao-baywatch");
+  expect(JSON.stringify(data)).not.toContain("sb_publishable_");
+  const fallback = await handleAOIntelligence(
+    new Request(
+      "https://staging.test/api/ao-intelligence?ao=fe-ao-baywatch&view=catalog",
+    ),
+    {},
+    async () => null,
+  );
+  expect(await fallback.json()).toEqual({
+    version: 1,
+    source: "json",
+    catalog: null,
+  });
 });

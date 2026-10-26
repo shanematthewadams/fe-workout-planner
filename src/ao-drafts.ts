@@ -1,3 +1,4 @@
+import { canonicalVenueId, type AOIntelligence } from "./ao-catalog";
 import { findAO, siteContext } from "./ao-context";
 import {
   localFeaturesSchema,
@@ -25,19 +26,32 @@ export function withLocalAO(
   ao: string,
   prompt: string,
   site: SiteInput,
+  catalog?: AOIntelligence | null,
 ): SiteInput {
   const profile = findAO(ao, prompt);
   // Resolve afresh: changing AO must never carry another site's draft forward.
   const today = { ...site };
   delete today.localDraft;
-  const seasonal = (profile?.local.venues?.length ?? 0) > 1;
-  const venue = profile?.local.venues?.find(
-    (value) => value.id === site.venueId,
-  );
-  const draftKey =
-    profile &&
-    (seasonal ? (venue ? `${profile.id}:${venue.id}` : undefined) : profile.id);
-  const draft = draftKey && readTerrainDrafts()[draftKey];
+  const seasonal = catalog
+    ? catalog.location_mode !== "fixed"
+    : (profile?.local.venues?.length ?? 0) > 1;
+  const venueId = canonicalVenueId(site.venueId);
+  const venueKnown = catalog
+    ? catalog.location_mode === "site_q_selected" &&
+      catalog.ao_venue_assignments.some((v) => v.venue_id === venueId)
+    : profile?.local.venues?.some((v) => canonicalVenueId(v.id) === venueId);
+  const drafts = readTerrainDrafts();
+  const keys = profile
+    ? seasonal
+      ? venueKnown
+        ? [
+            `${profile.id}:${venueId}`,
+            `${profile.id}:${venueId === "heritage-park-marina" ? "heritage-marina" : venueId}`,
+          ]
+        : []
+      : [profile.id]
+    : [];
+  const draft = keys.map((key) => drafts[key]).find(Boolean);
   return { ...today, ...(draft ? { localDraft: draft } : {}) };
 }
 

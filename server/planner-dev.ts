@@ -1,3 +1,4 @@
+import { handleAOIntelligence } from "./ao-intelligence.ts";
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { handlePlanner, MAX_PLANNER_BODY_BYTES } from "./planner-handler.ts";
@@ -21,17 +22,23 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     res.end(JSON.stringify({ error: message }));
   };
   async function serve(req: IncomingMessage, res: ServerResponse) {
+    const catalogRead = req.url?.split("?")[0] === "/api/ao-intelligence";
     const now = Date.now(),
       ip = req.socket.remoteAddress ?? "preview";
     for (const [key, value] of callers)
       if (value.reset <= now) callers.delete(key);
     const caller = callers.get(ip) ?? { count: 0, reset: now + 60000 };
-    if (caller.count >= 5 || (!callers.has(ip) && callers.size >= 1000)) {
+    if (
+      !catalogRead &&
+      (caller.count >= 5 || (!callers.has(ip) && callers.size >= 1000))
+    ) {
       error(res, 429, "Free AI has reached its current limit. Try later.");
       return;
     }
-    caller.count++;
-    callers.set(ip, caller);
+    if (!catalogRead) {
+      caller.count++;
+      callers.set(ip, caller);
+    }
     // Studio terminates HTTPS at its reverse proxy. Preserve that external origin.
     const first = (v: string | string[] | undefined) =>
       (Array.isArray(v) ? v[0] : v)?.split(",")[0].trim();
@@ -72,7 +79,10 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
         ? { body: Buffer.concat(chunks) }
         : {}),
     });
-    const response = await handlePlanner(request, settings);
+    const response =
+      url.pathname === "/api/ao-intelligence"
+        ? await handleAOIntelligence(request, settings.catalog ?? {})
+        : await handlePlanner(request, settings);
     res.writeHead(response.status, Object.fromEntries(response.headers));
     res.end(Buffer.from(await response.arrayBuffer()));
   }
@@ -81,7 +91,11 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     apply: "serve",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url?.split("?")[0] !== "/api/plan-workout") {
+        if (
+          !["/api/plan-workout", "/api/ao-intelligence"].includes(
+            req.url?.split("?")[0] ?? "",
+          )
+        ) {
           next();
           return;
         }

@@ -1,13 +1,10 @@
 # The FE Workout Planner · Sprint 2 handoff
 
-Current AO database status: [Approved shared database release](ao-intelligence/SHARED_DATABASE_RELEASE.md). This supersedes the isolated-database blocker in earlier handoffs.
+Latest AO UI continuation (October 26): [Live AO interface handoff](ao-intelligence/LIVE_AO_UI_HANDOFF.md). The planner and AO directory consume the shared live catalog on staging, with saved JSON fallback. See that handoff for release verification.
 
-Latest AO continuation: [Staging planner integration](ao-intelligence/STAGING_INTEGRATION_HANDOFF.md). Hosted provisioning remains blocked; production is unchanged.
+Current database release: [Approved shared database release](ao-intelligence/SHARED_DATABASE_RELEASE.md). Shane approved use of the existing production Supabase project; its additive catalog schema and FE inventory are installed. This supersedes the earlier isolated-database blocker.
 
-Latest database work: [AO Database Modernization Sprint 1](ao-intelligence/SPRINT_1_HANDOFF.md).
-This is an additive, locally verified foundation with a staging read endpoint; production
-schema/data and the existing planner source remain unchanged. Exicon proposal and
-reconciliation/security evidence are linked from that handoff.
+Historical foundation and next Exicon proposal: [AO Database Modernization Sprint 1](ao-intelligence/SPRINT_1_HANDOFF.md). Earlier staging/provisioning blockers describe historical checkpoints; current evidence is in the release handoffs above. Production application promotion still requires explicit approval.
 
 October 16, 2026 (UTC). Shane Adams owns product; engineering owns technical verification. This replaces the earlier access-blocked checkpoint; Git history retains it.
 

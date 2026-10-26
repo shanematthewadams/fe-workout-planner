@@ -16,6 +16,11 @@ import type { Workout } from "../src/model";
 import { generatePlan } from "../server/planner-service";
 import { GOLD_RUSH_EXAMPLE } from "../src/planner-contract";
 import { planFixture } from "./fixtures/plan";
+// These tests isolate provider round-trips; AO HTTP/loading behavior has its own suite.
+vi.mock("../src/use-ao-catalog", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../src/use-ao-catalog")>()),
+  useAOCatalog: () => ({ catalog: null, status: "fallback", known: false }),
+}));
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();

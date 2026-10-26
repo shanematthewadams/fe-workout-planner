@@ -3855,3 +3855,14 @@ footer {
   justify-content: flex-end;
   margin-bottom: 1rem;
 }
+
+.ao-catalog-details { margin: .75rem 0; }
+.ao-catalog-details summary { cursor: pointer; font-weight: 700; }
+.ao-catalog-details dl > div { margin: .75rem 0; }
+.ao-catalog-details dt { font-weight: 700; }
+.ao-catalog-details dd { margin: .25rem 0; overflow-wrap: anywhere; }
+.ao-landmarks { padding-left: 1.25rem; }
+.ao-landmarks li { margin: .9rem 0; }
+.ao-landmarks p { margin: .3rem 0; }
+.ao-meeting-point { overflow-wrap: anywhere; }
+.ao-source-status { font-size: .85rem; }

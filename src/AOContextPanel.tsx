@@ -1,3 +1,6 @@
+import { useAOCatalog } from "./use-ao-catalog";
+import { catalogBaseline } from "./ao-catalog";
+import { AOCatalogDetails } from "./AOCatalogDetails";
 import { AppIcon } from "./AppIcon";
 import { withLocalAO } from "./ao-drafts";
 import { aoProfiles } from "./discovery";
@@ -30,12 +33,40 @@ export function AOContextPanel({
   onSite: (v: SiteInput) => void;
   disabled: boolean;
 }) {
+  const live = useAOCatalog(ao, prompt);
+  const baseline = live.catalog
+    ? catalogBaseline(live.catalog, site.venueId)
+    : undefined;
+  const venues = live.catalog
+    ? live.catalog.location_mode === "site_q_selected"
+      ? live.catalog.ao_venue_assignments.map((v) => ({
+          id: v.venue_id,
+          name: v.ao_venues.name,
+          season: v.season_label,
+        }))
+      : []
+    : (findAO(ao, prompt)?.local.venues ?? []);
+  const selectedVenue =
+    site.venueId === "heritage-marina" && live.catalog
+      ? "heritage-park-marina"
+      : site.venueId;
   const baseContext = siteContext(
     ao,
     "",
-    withLocalAO(ao, "", { overrides: {}, notes: "", venueId: site.venueId }),
+    withLocalAO(
+      ao,
+      "",
+      { overrides: {}, notes: "", venueId: site.venueId },
+      live.catalog,
+    ),
+    baseline,
   );
-  const context = siteContext(ao, prompt, withLocalAO(ao, prompt, site)),
+  const context = siteContext(
+      ao,
+      prompt,
+      withLocalAO(ao, prompt, site, live.catalog),
+      baseline,
+    ),
     profile = findAO(ao, prompt);
   return (
     <section className="ao-context" aria-label="Where and when">
@@ -74,7 +105,7 @@ export function AOContextPanel({
           />
         </label>
       </div>
-      {!!profile?.local.venues?.length && (
+      {!!venues.length && (
         <label className="venue-picker">
           <span className="icon-label">
             <AppIcon name="aos" />
@@ -83,7 +114,7 @@ export function AOContextPanel({
           <select
             aria-label="Workout venue"
             disabled={disabled}
-            value={site.venueId ?? ""}
+            value={selectedVenue ?? ""}
             onChange={(event) =>
               onSite({
                 ...site,
@@ -95,13 +126,31 @@ export function AOContextPanel({
             }
           >
             <option value="">Confirm location with the Site Q</option>
-            {profile.local.venues.map((venue) => (
+            {venues.map((venue) => (
               <option key={venue.id} value={venue.id}>
                 {venue.name} · {venue.season}
               </option>
             ))}
           </select>
         </label>
+      )}
+      {live.known && (
+        <p className="muted ao-source-status" aria-live="polite">
+          {live.status === "loading"
+            ? "Loading regional AO details…"
+            : live.status === "fallback"
+              ? "Using saved AO details. Confirm current conditions with the Site Q."
+              : "Regional AO details · confirm current access"}
+        </p>
+      )}
+      {(context.venue ||
+        context.flagLocation ||
+        live.catalog?.location_mode === "rotating") && (
+        <p className="ao-meeting-point">
+          {context.venue && <strong>{context.venue} · </strong>}
+          {context.flagLocation ||
+            "Confirm this event’s meeting point and route."}
+        </p>
       )}
       {context.accessNotes && (
         <details className="ao-access-note">
@@ -112,7 +161,10 @@ export function AOContextPanel({
           <p>{context.accessNotes}</p>
         </details>
       )}
-      <p className="ao-quick-summary" data-available={context.available.length > 0}>
+      <p
+        className="ao-quick-summary"
+        data-available={context.available.length > 0}
+      >
         {profile ? `${profile.name} · ` : ao ? "Custom AO · " : ""}
         {context.available.length
           ? `Available for this Q: ${context.available.map((f) => FEATURES[f]).join(", ")}.`
@@ -122,6 +174,9 @@ export function AOContextPanel({
         <p className="ao-quick-summary">
           Includes unpublished AO notes from this device.
         </p>
+      )}
+      {live.catalog && (
+        <AOCatalogDetails catalog={live.catalog} venueId={site.venueId} />
       )}
       <details className="today-details">
         <summary>
@@ -187,9 +242,9 @@ export function AOContextPanel({
               >
                 <option value="">
                   Regional:{" "}
-                  {profile?.local.amenities?.couponsOnSite == null
+                  {baseContext.amenities.couponsOnSite == null
                     ? "unknown"
-                    : profile.local.amenities.couponsOnSite
+                    : baseContext.amenities.couponsOnSite
                       ? "yes"
                       : "no"}
                 </option>
@@ -227,7 +282,7 @@ export function AOContextPanel({
                     Regional:{" "}
                     {
                       options[
-                        (profile?.local.amenities?.[key] ??
+                        (baseContext.amenities[key] ??
                           "unknown") as keyof typeof options
                       ]
                     }
@@ -252,7 +307,7 @@ export function AOContextPanel({
             />
           </label>
         </fieldset>
-        {profile?.local.sourceUrl && (
+        {!live.catalog && profile?.local.sourceUrl && (
           <p className="muted">
             <a href={profile.local.sourceUrl} target="_blank" rel="noreferrer">
               AO description ↗

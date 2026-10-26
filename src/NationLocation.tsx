@@ -2,10 +2,19 @@ import directory from "../data/ao-nation.json";
 export function NationLocation({
   aoId,
   seasonal = false,
+  rotating = false,
 }: {
   aoId: string;
   seasonal?: boolean;
+  rotating?: boolean;
 }) {
+  if (rotating)
+    return (
+      <p className="ao-map-reference">
+        Meeting points rotate. Confirm this event’s location and route with the
+        Q.
+      </p>
+    );
   const reference = directory.aos.find((ao) => ao.localId === aoId);
   if (!reference) return null;
   const location = reference.defaultLocation;

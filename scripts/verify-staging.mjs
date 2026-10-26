@@ -40,7 +40,10 @@ async function isolateServices(route) {
       body: JSON.stringify(snapshot),
     });
   }
-  return url.origin === origin && !url.pathname.startsWith("/api/")
+  return url.origin === origin &&
+    (!url.pathname.startsWith("/api/") ||
+      (url.pathname === "/api/ao-intelligence" &&
+        route.request().method() === "GET"))
     ? route.continue()
     : route.abort();
 }
@@ -79,7 +82,7 @@ for (const [name, engine, device] of [
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  // Never contact cloud/auth/provider services or mutate real records during hosted smoke.
+  // Read the public AO catalog; intercept cloud/auth/provider writes so no real records are mutated.
   await page.route("**/*", isolateServices);
   try {
     await page.goto(origin, { waitUntil: "domcontentloaded" });
@@ -92,6 +95,12 @@ for (const [name, engine, device] of [
     await page.getByRole("button", { name: /The Buddy System/ }).click();
     await page.getByRole("button", { name: "Yes", exact: true }).click();
     await page.getByRole("button", { name: "None", exact: true }).click();
+    await expect(page.locator(".ao-context .ao-source-status")).toContainText(
+      "Regional AO details",
+    );
+    await expect(page.locator(".ao-context .ao-meeting-point")).toContainText(
+      "By basketball goals",
+    );
     await page
       .getByRole("button", { name: "Use offline template", exact: true })
       .click();
@@ -108,6 +117,10 @@ for (const [name, engine, device] of [
     ).toBeVisible();
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem("fe-planner:v1")).workouts[0],
+    );
+    assert.ok(
+      saved.schedule.siteSummary.includes("By basketball goals"),
+      "Live AO meeting point survives autosave",
     );
     const firstExercise = saved.sections[0].blocks[0].exercises[0];
     await page

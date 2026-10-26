@@ -1,3 +1,9 @@
+import {
+  useAOCatalog,
+  cachedSiteContext,
+  withLiveAO as withLocalAO,
+  retainLiveQContext as retainQContext,
+} from "./use-ao-catalog";
 import { Weinke } from "./Weinke";
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
@@ -8,7 +14,6 @@ import { Dices } from "lucide-react";
 import { STYLES, GEAR, fallbackPlan } from "./fallback";
 import type { PlannerRequest } from "./planner-contract";
 import { findAO } from "./ao-context";
-import { withLocalAO, retainQContext } from "./ao-drafts";
 import { AOContextPanel } from "./AOContextPanel";
 import type { SiteInput } from "./site-contract";
 import { workoutSchema, type Workout } from "./model";
@@ -254,6 +259,7 @@ function PlannerSession({
     ),
     [qName, setQName] = useState(initial.builder.qName),
     [title, setTitle] = useState(initial.builder.title);
+  useAOCatalog(ao, prompt);
   const ideaText = [prompt, extraNote].filter(Boolean).join("\n");
   const quickPreferences = resolveRequest({
     prompt:
@@ -589,7 +595,14 @@ function PlannerSession({
         !result &&
         !abort.signal.aborted
       ) {
-        const next = fallbackPlan(request.data);
+        const next = fallbackPlan(
+          request.data,
+          cachedSiteContext(
+            request.data.ao,
+            request.data.prompt,
+            request.data.site,
+          ),
+        );
         next.fallbackReason = failure.replace(
           "Your previous draft is safe.",
           "Your idea is still here.",
@@ -973,7 +986,14 @@ function PlannerSession({
                       epoch.current++;
                       controller.current?.abort();
                       setBusy(false);
-                      const next = fallbackPlan(request.data);
+                      const next = fallbackPlan(
+                        request.data,
+                        cachedSiteContext(
+                          request.data.ao,
+                          request.data.prompt,
+                          request.data.site,
+                        ),
+                      );
                       setResult(next);
                       setView("review");
                       setLastRequest(resolveRequest(request.data));
