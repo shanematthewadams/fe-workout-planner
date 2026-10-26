@@ -71,9 +71,9 @@ The migration is transactional. Before any future destructive rollback, export a
 
 No production application deployment or main merge is authorized by this work. The new catalog is publicly read-only database infrastructure; the application selector and planner remain unchanged. An app rollback can redeploy the prior staging application independently of these additive tables. Do not run a database rollback just to reverse a frontend deploy. The prior live AI HTTP 504 remains a separately recorded provider-reliability issue; a template is never proof of provider success.
 
-## Exact next milestone
+## Historical next milestone (now implemented)
 
-Implement a bounded, cached, validated staging read adapter that turns the published Exicon subset into the existing `Movement` contract while retaining all fifty current movements as fallback. Add parity tests for equipment/facility filtering, regional alias ambiguity, counting confirmation, explicit variation requirements and outage behavior before activating it. Establish source permissions for the 42 withheld records separately; do not bulk import them. No extra AI call should retrieve known exercise facts.
+The [read-path continuation](READ_PATH_HANDOFF.md) now implements the following original milestone. Implement a bounded, cached, validated staging read adapter that turns the published Exicon subset into the existing `Movement` contract while retaining all fifty current movements as fallback. Add parity tests for equipment/facility filtering, regional alias ambiguity, counting confirmation, explicit variation requirements and outage behavior before activating it. Establish source permissions for the 42 withheld records separately; do not bulk import them. No extra AI call should retrieve known exercise facts.
 
 Final local/CI/deployed release evidence is recorded below.
 

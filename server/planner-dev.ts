@@ -1,3 +1,4 @@
+import { handleExicon } from "./exicon-intelligence.ts";
 import { handleAOIntelligence } from "./ao-intelligence.ts";
 import type { Plugin } from "vite";
 import type { IncomingMessage, ServerResponse } from "node:http";
@@ -22,7 +23,9 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     res.end(JSON.stringify({ error: message }));
   };
   async function serve(req: IncomingMessage, res: ServerResponse) {
-    const catalogRead = req.url?.split("?")[0] === "/api/ao-intelligence";
+    const catalogRead = ["/api/ao-intelligence", "/api/exicon"].includes(
+      req.url?.split("?")[0] ?? "",
+    );
     const now = Date.now(),
       ip = req.socket.remoteAddress ?? "preview";
     for (const [key, value] of callers)
@@ -82,7 +85,9 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     const response =
       url.pathname === "/api/ao-intelligence"
         ? await handleAOIntelligence(request, settings.catalog ?? {})
-        : await handlePlanner(request, settings);
+        : url.pathname === "/api/exicon"
+          ? await handleExicon(request, settings.exicon ?? {})
+          : await handlePlanner(request, settings);
     res.writeHead(response.status, Object.fromEntries(response.headers));
     res.end(Buffer.from(await response.arrayBuffer()));
   }
@@ -92,9 +97,11 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (
-          !["/api/plan-workout", "/api/ao-intelligence"].includes(
-            req.url?.split("?")[0] ?? "",
-          )
+          ![
+            "/api/plan-workout",
+            "/api/ao-intelligence",
+            "/api/exicon",
+          ].includes(req.url?.split("?")[0] ?? "")
         ) {
           next();
           return;

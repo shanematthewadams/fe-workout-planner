@@ -177,13 +177,24 @@ export function searchMovements(query: string) {
 
 // Word boundaries and simple plural handling: BOR is not found inside "boring".
 // This supplements direction checks; an unrecognized name is NOT declared safe.
-const patterns = movements.map((movement) => ({
-  movement,
-  aliases: [
-    ...new Set([movement.name, ...movement.aliases].map(normalize)),
-  ].map((phrase) => new RegExp(`(?:^| )(${phrase}s?)(?= |$)`, "g")),
-}));
-export function mentionedMovements(text: string) {
+const patternCache = new WeakMap<
+  Movement[],
+  ReturnType<typeof buildPatterns>
+>();
+function buildPatterns(vocabulary: Movement[]) {
+  return vocabulary.map((movement) => ({
+    movement,
+    aliases: [...new Set([movement.name, ...movement.aliases].map(normalize))]
+      .filter(Boolean)
+      .map((phrase) => new RegExp(`(?:^| )(${phrase}s?)(?= |$)`, "g")),
+  }));
+}
+export function mentionedMovements(text: string, vocabulary = movements) {
+  let patterns = patternCache.get(vocabulary);
+  if (!patterns) {
+    patterns = buildPatterns(vocabulary);
+    patternCache.set(vocabulary, patterns);
+  }
   const normalized = normalize(text).replace(
     /\b(?:running|run)(?: the)? (?:clock|time|timer|total|count)\b/g,
     "clock",

@@ -1,5 +1,5 @@
 import type { Plan, PlannerRequest } from "./planner-contract";
-import { mentionedMovements } from "./movements";
+import { mentionedMovements, movements, type Movement } from "./movements";
 
 // Inspect executable directions, not summaries or disclaimer notes. Metadata
 // alone cannot establish that an exercise respects the Q's restrictions.
@@ -28,9 +28,13 @@ function directions(plan: Plan) {
         ),
     );
 }
-export function movementConflicts(plan: Plan, request: PlannerRequest) {
+export function movementConflicts(
+  plan: Plan,
+  request: PlannerRequest,
+  vocabulary = movements,
+) {
   const text = directions(plan);
-  const known = text.flatMap(mentionedMovements);
+  const known = text.flatMap((t) => mentionedMovements(t, vocabulary));
   return [
     ...(request.running === "None" &&
     (text.some((t) => travel.test(t)) || known.some((m) => m.running))
@@ -97,4 +101,32 @@ export function refinementConflicts(plan: Plan, request: PlannerRequest) {
     : [
         "The AI made unrequested changes outside the selected exercise. Your previous draft is safe. Try the change again or use Edit the details.",
       ];
+}
+
+export function requiredMovementFeatures(plan: Plan, vocabulary: Movement[]) {
+  return [
+    ...new Set(
+      directions(plan)
+        .flatMap((t) => mentionedMovements(t, vocabulary))
+        .flatMap((m) => m.features),
+    ),
+  ];
+}
+
+export function mentionsRestrictedNames(plan: Plan, names: string[]) {
+  const vocabulary: Movement[] = names.map((name) => ({
+    id: name,
+    name,
+    aliases: [],
+    category: "",
+    instructions: "",
+    counting: "",
+    equipment: [],
+    features: [],
+    running: false,
+    alternative: "",
+  }));
+  return directions(plan).some(
+    (text) => mentionedMovements(text, vocabulary).length > 0,
+  );
 }

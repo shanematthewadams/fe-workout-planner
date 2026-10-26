@@ -1,0 +1,4893 @@
+{
+  "version": 1,
+  "source": "https://codex.f3nation.com/api/exicon",
+  "permission": "unresolved",
+  "checkedAt": "2026-10-26T14:42:00.515Z",
+  "entries": [
+    {
+      "id": "exicon-1753308716998-1st-&-10",
+      "fingerprint": "0ebd9151d1f12bd2766dd4659ae905f01278f882117fd180deec9930f2f70580",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308717385-21s",
+      "fingerprint": "d2fbfdbc4b5c347d7b183969b7164707798eaecc7f5373a7ff05aef850b8495d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308717600-4x4s",
+      "fingerprint": "469493cc424e0df3f4e77396ea3c7e39f910400aec76055f89600cf17da30bc3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308717815-7-of-diamonds",
+      "fingerprint": "07074e38658a317ee5e29f20556da2e1b6d47560ddccdeb7b8bb30e9b089b58f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308718400-abs-are-all-you-need",
+      "fingerprint": "574ac844c24ab3b752b8b15c1ca94d4bfcd133a77b400cbc4e003774bb1def5f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308718698-absolution",
+      "fingerprint": "664dc3bf42c049305246840cda0aaf74288e4fc513769f5f385e43bbb564a802",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308719130-abyss-merkin",
+      "fingerprint": "f63743e0d1e9710294dc8e3e25ddc8c3749546a2a98c847b322a9de879ed8146",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308719342-agassis",
+      "fingerprint": "2fcd5999b94f3f4f976a611f6ae404100b853dd59396477266d0b3cc44212193",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308719774-aiken-legs",
+      "fingerprint": "90bc5d24fd0048a5c3ab37887362eb71921517073751e4fed8ae3d1b8f24e1bb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308719985-air-drama",
+      "fingerprint": "eaca0b53393af70367c11e78900b3637330088078b8f839d7ed5e6cfb20ea35e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308720212-air-squared",
+      "fingerprint": "70630fb6445ddfacdeaae66f39753fcc57c3c37a73cc183b49e747f021f727bc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308720423-al-gore",
+      "fingerprint": "ff962b0910903f3f4887cd9083f37e7e08399b43c3ec7ad803d6957f54b5f132",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308720636-alabama-ass-kickers",
+      "fingerprint": "d36e753f688e53397b705360f814968feefbbe1977f9e9e3228bf76b476dfd72",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308720848-alarm",
+      "fingerprint": "073e23774925a65b116139b325da203291710c6350fc2784768d844e757f872f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308721376-albatross-wings",
+      "fingerprint": "0c7dde0d2eddd2cab1c6ed4677aaaa1ef6d867069ee5497e780ff524a606a3ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308721587-all-about-the-benjamins",
+      "fingerprint": "b025e73f1af65b5a339aaf58a14877f4987127abdb6c9babf4f7e81b396c8eb7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308721798-alligator-merkin",
+      "fingerprint": "700ec2d8e40490f6ac5070c060f0c8dcca5208f5d268cb3af453044db153cb94",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308722011-alphabet-(or-abcs)",
+      "fingerprint": "2fea82d29c126aab0be2d464ff10bb99d4899ea99cd9e99a59ce47b5fe8825cf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308722224-alternating-shoulder-taps",
+      "fingerprint": "193009ce258e85822e005ed02f3f869d937935c18e576d5b7902df9c908e5c1b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308722434-alternating-side-squats",
+      "fingerprint": "30d6c8ef16a590ad87f1a7b500b293fd258704a08373fe9b6f4cc8dce6a811e7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308722724-american-hammer",
+      "fingerprint": "aeb08aa5601525d70cc47f709d432df481716b480bfc814671b996230afc49d8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308723235-angle-grinder",
+      "fingerprint": "3b8b43e8fb04cbe9f8581a35bd3ff6d860c03ccb696d54877b419308813f9bb3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308723447-animal-style-squats",
+      "fingerprint": "ae9d5ba6c8b286a51efd0075a3af731ea663ddb84364aad7350ff2cc5ac057de",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308723745-apollo-creed-burpee",
+      "fingerprint": "c4478cf3da267853b6ed8d35dafab40f2b18331aea02b608dfbc3a8bf35bcec2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308723952-apolo-anton-oh-no!",
+      "fingerprint": "346fa5e156e08a9c4aa840382ea3e61b986f0282a7253afcd4cdd627d32a3859",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308724368-apple-turnover",
+      "fingerprint": "c3b7622f945741f2e3754dfeaea55cf354f8925201bea9827618ab752c0aa4ac",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308724909-ascending-curb-crawl",
+      "fingerprint": "e3d6d92463e6c748e2418fd7f93aa8eeccf6248312b7547ab93440fc0884e93f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308725124-ascending-testicles",
+      "fingerprint": "b53aad59fc03442c56fac961989903841b2226b21088f4a766d10ecf8078d6f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308725342-atms",
+      "fingerprint": "c94f0e698718b4f8e1fa1178044a8f0439b21a6f5c7bfdcbe6160504652d8f21",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308725561-aussie-burpees",
+      "fingerprint": "2740ef9226c0d5dba5a5a17d0512c538cecec414507caaddc3eaaf5bc1a8f245",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308725770-austin-ass-kickers",
+      "fingerprint": "a8c9d8a71dee3d7bc424063f194a0c837433b2fb614bdacbbf4ebce1c8847201",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308725977-australian-mountain-climber",
+      "fingerprint": "24c05f1dfff5e8c74820d4db852ff356be3653afa2cda39230d108473f8e87c5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308726233-australian-snow-angels",
+      "fingerprint": "998466e547b5c7bec0c1a40b557a4108582b24cfec5854fc10444e5bfa868a3e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308726649-b.o.m.b.s.",
+      "fingerprint": "fab50f234a7d29cbe5c275fdc58c0ecf84de459b86b61c6ce6f0502ae8350326",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308726859-baba-o'riley",
+      "fingerprint": "aad51cfc327c8ae28117931ce7da5ed444b50f7a7e25c19060e468e0d897e938",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308727074-back-plank-(aka-knalp)",
+      "fingerprint": "32f12a0599f29e55fab978b2c026f8f2aa065999925c688249fa051857cb7afa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308727391-ballerinas---toe-squats",
+      "fingerprint": "f72197cdaa8033613a32add125061c2fbc07c5d65e3fd4447de22fe555ae0401",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308727605-balls-to-the-wall",
+      "fingerprint": "ab44fb3acac60659924258a4e769f8cc56026a77de86e51f6e6ae7699118ebb9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308727817-baryshnikov-squats",
+      "fingerprint": "a611f03e552e830f7ca4c95466b5e1d4e53fca9ba13907c723f3fa5f41dde347",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308728029-bat-wings-(aka-the-martina-special)",
+      "fingerprint": "b7d54d1a921b6476a225c8c5358d5358b7ce93240fcdb35c2d6bfb8055d6ec45",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308728240-bataan-death-crawl",
+      "fingerprint": "9a8774d924710067566be325c1d037373df5e90e3bc1dd3103b845871b83813b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308728533-bataan-death-march",
+      "fingerprint": "66ea1ea37831e92864500de7ec8465f6f827221652191f7a245cba73a24297b2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308728746-bay-city-scissors",
+      "fingerprint": "2d668e70356797d9abbeef8c41a87a3249c198116be57424079f4112b39a8a7f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308728961-beach-bunnies",
+      "fingerprint": "235e5dbcf5c9793cd39773dd243fd09d6b7236d23d6dc9cc854dcc9790edb9e0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308729266-bear-brawl",
+      "fingerprint": "82d6c59679b6ec1b0f9bcee53484eaba8afbee0a6c517e2202a667958af795ba",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308729477-bear-crawl-1-2-3",
+      "fingerprint": "a949da5d7e83782c0935190d0334d5228a2e849ba099a95e6d11d071a84c9dc3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308729692-bear-crawl-360",
+      "fingerprint": "76df986bb4cffd8d3cff325d2b140b1bbc7c47dd35585ade6aa8e61e0feb0074",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308729900-bear-crawl-burpees",
+      "fingerprint": "f1848795eec716d5c1d7e55c33b7ef8c5eea791c5d746e27efd5ebaa2a633453",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308730112-bear-crawl-inch-worm",
+      "fingerprint": "78d9aaabc2e82e2d9e11f2a7aa2db97340e926d160ecf9d2cf4388f445c27c22",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308730326-bear-crawl-merkin",
+      "fingerprint": "1e722a8bd9405e9f08618370ddd6dd53aa97bf592fc5c4c7efd6da3d170a4ab7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308730534-bear-crawl-ring-of-fire",
+      "fingerprint": "a4369bef028081ca2cc01507da6d6e5ee7ad10155c4ede016ae5ee71bb70fcd7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308730749-bear-crawl-snake",
+      "fingerprint": "365701d046da55a9703d0891612401c2bda5d7ae064f36d5c2d27c9aa4662bdb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308731262-bearmuda-triangle",
+      "fingerprint": "a4a060e8629ae1f6c316075aa2093d98ec63e7ec32e8838efafec314756db26c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308731477-bearpees",
+      "fingerprint": "7a02cad14432cd2e863f62c89f94fad7d0ba9658a7e67627827ffb25dba71e0b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308731689-bears-&-blocks",
+      "fingerprint": "874b56c0d2ee139d856267351559c569c66d5f28820ff5f3e3c918909c11bdfb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308731896-bearway-to-heaven",
+      "fingerprint": "d839934d9f113ecdd09b4841719f671ae72e56d8cdc36231bcfb4b822061d875",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308732111-beep-test/highlander",
+      "fingerprint": "549bc592076cfa26a1201d2023420a356d35ec471f5e8fc72f97d68063eab60c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308732375-belching",
+      "fingerprint": "f3e4840f557f039db9801fc410a763c223cab8540261d17adb1ea0a0dfc00d80",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308732792-bent-jacob",
+      "fingerprint": "e8a03c1a6e394b76a0fb452278fe4f0de4d12e101e27f20983f1d30143e55310",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308732999-berkins",
+      "fingerprint": "d9eb94332db6362fb1282c0b07a031eaad77efe5260ad3769b6838fbe60e2c42",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308733208-bernie-sanders",
+      "fingerprint": "61a208190502fa570073273fa82bd8fb5388f048cdac5d190e222c7e0b821585",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308733417-big-bang",
+      "fingerprint": "238fbec13fb5acbb5b778a66b0aec292cf426bb68665407c1235e012713afc30",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308733626-big-boy-sit-up-ups-(aka,-bissyous)",
+      "fingerprint": "a2189414e2622877b6ecf7688edc7d495de66dbfdce9ca52865081b242638674",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308733838-big-o",
+      "fingerprint": "01c316fbeed8b01e35faf5954040df1dc513cf2dc3be05c240ea49ecf8695da1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308734056-bill-murray",
+      "fingerprint": "2215679b3f0bd44ec45e318bf652b326ee4f53e30eb1f262658cdc38b6e9589a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308734481-billy-madison",
+      "fingerprint": "ff1323b0c1534ff22f6e1deb36d0aca23317bf476bd65238e7f807f4f7f36799",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308734698-billy-run",
+      "fingerprint": "3b73ad30cd5c703173683a80eb5a269fdecd4007d9e141867aa8785451d7e620",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308734917-bizarro",
+      "fingerprint": "fd2a863bb856c4ea0b1ff12aaf8a5734d4cb8348802a66aec12b7c34676dae16",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308735125-black-jack",
+      "fingerprint": "358a7709aa6b2058dc3c5637ad03f82e87c34f163006689b8d147897ef472ef4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308735345-black-snake",
+      "fingerprint": "84ac1e3c933d8acd9a667bce94fd3cdf07d89dc30c222e5c6410e2274d6639fa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308735557-blades-of-steel",
+      "fingerprint": "2d45a0f539a8069eec53fed599f3ab35ac17c92c7f3b8bf1e745c85645ed07d8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308735770-blart",
+      "fingerprint": "2ef82f1898598d380717a4ecc05cc80bddf6756d19340fb78d98929caeb81ff6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308736064-blimps",
+      "fingerprint": "694547de19bbd4c606e2379428d642e399ab4a202ef9676ccb71aa4806327ae0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308736275-block-a-dock",
+      "fingerprint": "db9c620307b1bdb39159cd3dc288ae0a3efab416ae29a25d40007e38cf5da639",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308736493-block-burners",
+      "fingerprint": "6753694e7769c81f8d59e305ee609aceb8f3c9903fbe6c423feeabe7a6be119e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308736700-block-webbs",
+      "fingerprint": "153aa73fe3e479ad4d0c23bee3120e8c19a106cde2910e62d28aad2a9c27ab53",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308736904-blockee",
+      "fingerprint": "c753ac722066511c68e49bfebadf851500ad0cbcad28e0fee94991bf4e8952a0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308737348-blocktanamo",
+      "fingerprint": "52528fabbde02bd0d89a78cb69be9a0f66957e3c7b51ddf7614e44882f6544f5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308737643-blue-falcon",
+      "fingerprint": "94cbad139b8833b72214e7dde7f5fffe164a8bd1e34bb09b2d5f6a50cb74a17d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308737866-boat-/-canoe",
+      "fingerprint": "a64f8252e4145d8825416454903c61637bb922e35cbb00b6bb61967f7b0f3f7f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308738078-bobby-hurley",
+      "fingerprint": "02443312366808bb43be5e99c7c3155b7719b206ad8d70496d1fb2c870c35673",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308738287-bodies-hit-the-floor",
+      "fingerprint": "a316901d8607affa116a76616bca7ddf92fbe3927e5702ae97bc667c929d6a67",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308738590-body-bag-builders",
+      "fingerprint": "2cb9d151f975b81ad6ff746a3f4e4018b6abd5b89d3e6ac0c7cafc70687373c9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308738797-body-builders",
+      "fingerprint": "ad8a36a62ca828984daffe6984b95e1c48ac13e9debf814ba0af9d13acc02e93",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308739012-bohemian-rhapsody",
+      "fingerprint": "5f1d3b981186bcde1127f6eab74188b68337db4a1ce03ddb5d697b3edf7d3cf2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308739311-bojangles-biscuit",
+      "fingerprint": "1fffa7718ff330d315b308886d10e98e50e15d3cef3c10ef1ff55b72a8fd6f25",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308739518-bolt-45s",
+      "fingerprint": "59ff7adab3dcf7b0486e1c88a36c57bf8831af5843ac5fe508103f64757d64dc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308739815-bone-the-fish",
+      "fingerprint": "4fcc57722f8e4aacd6cdaa3f8637540f87d750182cefb011860e495834f966b2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308740025-bonnie-blairs",
+      "fingerprint": "895e4d1d0a0cca20fcd434e138c56221f9c54ece3acc84e78347f5d455005982",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308740241-boo-boo-bear-crawl",
+      "fingerprint": "55e67e0628e59ec7d6aa20ed1e2c8b17a66e6d559c20b52d05e5d5d3f7b4ecc9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308740453-booyah!-merkin",
+      "fingerprint": "5fd7984bff3c0020abdeeb2da262d1ad3b35a02979e882d33983ad238757bc37",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308740750-bopo",
+      "fingerprint": "85e325885623eaa2cdb20871d7f3808babc25c56233490dbffb5d1cc4f7ec15f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308741046-bottom-feeders",
+      "fingerprint": "ba9783db8941ea5ae54f091e65bccd0db17eb8b6c12596bc7df9a082aad9594d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308741344-boxcutter",
+      "fingerprint": "7a09dcc338eb49a26804ec03142574929fd7c58ed395e7f26e4a20a8325eeaf8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308741634-breakdancer-merkin",
+      "fingerprint": "7b92700c34596f27e0016dfcfe7494dd5d183964943a0146094baae916e05539",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308741931-brick-by-brick-shuttlerun-(bbbs)",
+      "fingerprint": "3457ef5fb41c7bc0bacd8b3b9d9caccdfb7447eaaa6df0517e89cdb485894753",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308742224-brickbarrow",
+      "fingerprint": "50414e472177c02920a62163d07d7d8723962efc328b6d7484e60db21aca2b06",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308742735-bridge-of-hate",
+      "fingerprint": "4fcd59e74cb9530f33ca563a966299bf08ac95008ba753ee3e02aa9c08ae80f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308743034-bridge-over-the-nest",
+      "fingerprint": "e96daf8cd0f099a7a78e43c4bb1ec019bb541e7298fa734703599adf89149eda",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308743330-broad-jump-burpee",
+      "fingerprint": "422464ca61f819f803e2756d6787ac9fd21f2fcb4568f279d0d28b70e1fe4764",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308743625-broken-bicycle",
+      "fingerprint": "981ecdaa30d9106240d7b30d374a89c10ef1c5cfb029c5c130a93839743f88d5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308743923-broken-wheelbarrow",
+      "fingerprint": "874e69dbe1f3dabda699bd8123e4e06ca0d5edaa4bc75eca67a0bdcb7caedd17",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308744219-bropee",
+      "fingerprint": "35ed4c5e79675737808108abd5410fe4dc0c8f648fb7a1773681fef2171d3ad3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308744520-bruce-lee",
+      "fingerprint": "fc54a2bbad3011a29112db0b22e7d1b9f746b559200620ab76c6661b3819b199",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308744826-bucket-brigade",
+      "fingerprint": "2693a611c397196422721b145922a6eedfc0aeb1fddee991a9542b358eb6bdea",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308745120-bucket-brigade-lunge",
+      "fingerprint": "727ef7ef48be634a1f651d0b328e67002b91fb3c024828a38643f5f9bf3fb018",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308745411-bulgarian-split-squat",
+      "fingerprint": "3cf2a87cc49c8fbe74bb760af8a20ebb0bb0ec512f2b8f7d7a29f0dbca9f24ac",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308745715-burp-&-groin",
+      "fingerprint": "fec438e63bd0be5b673188b078a080a4496e21e69996e258c2c472e5aaa51a03",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308746019-burp-&-merk",
+      "fingerprint": "856366e66c6545e977845f4418c190db7d64877718872682eb15fd09b668419b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308746365-burp-back-mountain",
+      "fingerprint": "36e805f2458f30bd460740a10a68344e9543a7809994234c6799f1694bf17b0e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308746663-burp-ups",
+      "fingerprint": "35b210259e4958345d6900ff58fa0a0c97e9f9d27e0f9eafa02e5183f93952be",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308746961-burpee",
+      "fingerprint": "c11abe3280cbd1eb1b31730e13b9145e61b6e0b904d94e7766315d942eba30cb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308747262-burpee-dans",
+      "fingerprint": "50e12eec5a09769d8ed8c0f47e4a025bdde827ed40db04ce9f254b3e632615d7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308747562-burpee-mile",
+      "fingerprint": "b35cbd437e2109c6803c5c678f038f3a24f79324e9bfd20ab0d9d18ed1c37b05",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308747858-burpo",
+      "fingerprint": "fbc0ef1fde4aacc012fa9641de8cb74fc9b0dd4488d913654dbf1720d3c68f42",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308748156-butkus",
+      "fingerprint": "b0e796257d7c2b09921db3a83f9fde5e1d1226dd473906fb8af2e316c60237b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308748454-c2c",
+      "fingerprint": "f64641f1b4734631e875d8bfb6cc122b008366f0c025196062a896b92949d7b5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308748965-capri-lap",
+      "fingerprint": "8c09c7ca825302e8f75ae6a7fc713ade49f8739f1498b07b12e11547b85ae3d4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308749264-captain-morgan",
+      "fingerprint": "8f1ce7ecf98b5356085b0b169885cb3e0b2bd44bdd6daa02dfb7d433faf392e5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308749559-captain-therkin",
+      "fingerprint": "240c5355281f05c358b398cc761c99a393f3743472a4912687917773df1dda45",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308749854-captain-thor",
+      "fingerprint": "b5d2861f08f362eaa41546c16056b982bcea2c94a6497d0ddc338690d2bb2da7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308750145-carioca",
+      "fingerprint": "968fd931ded12d5a56f483a1f2e5ddc337c40f3e21cc21346f7806722f126589",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308750448-carolina-dry-docks",
+      "fingerprint": "678ca65489c7162852af74ec5b9dd56c5c6511e41e4ec1d1c760a96985d06bcf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308750744-catalina-wine-mixer",
+      "fingerprint": "76482f7e3bbded51718ce33f0bf201344982189412f5238016da63ba933701a6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308751046-catch-me-if-you-can",
+      "fingerprint": "76fa6f4f4e74f3e8c669a15cb3ce96297cae0612be01e58d431c36df5e9098fe",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308751343-catch-us-if-you-can",
+      "fingerprint": "7eccae844a7efd318b8020a6364d2853957cb905e52e589a1001d8fe29626a6b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308751637-caterpillar",
+      "fingerprint": "59f976d0ed6a20df58713b328fe9710e3cc42e88af13f5cf738effedf070b8b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308751935-charles-bronson",
+      "fingerprint": "e0b01ec9be9546e93e88be4be59415a458789c41cf4e5b4a9078fa06d099cb49",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308752270-cheerleader",
+      "fingerprint": "106250002d78eb9ac38bb67af29a83e2750949e687cdebbe5a77aabb31278f9b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308752566-cheerleader-merkin",
+      "fingerprint": "492dadb350790d54a4ee969d95d8cb96bd4b5ade9551a2ab651f37c4dc59d088",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308752861-cherkin",
+      "fingerprint": "fa9a9ae1e77d84ff90e3ecbbe82ff5bbeeabe28d9ef06a5b445d22271b4dfa3e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308753153-chicken-peckers",
+      "fingerprint": "a84ccdd69c68e31d4f7fe91597ca825e7c33d9998a199134efe26a711d8aad36",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308753444-chilcutt-peter-parkers",
+      "fingerprint": "0416cd8b3123fd40f2331f5f5f5602d5fd687bb8009742f7c7177b03c5a324e5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308753739-chilcutts",
+      "fingerprint": "0ba279cfb6495241f57519f9b26544e26c0ba3849bc1d89caf53dbc6691eeb76",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308754034-chilly-broad-jumps",
+      "fingerprint": "a64775d0b2e1c795adaa52cb315757042625f0461fab880d0f1603cae5b693a3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308754380-chilly-jacks",
+      "fingerprint": "122da3335eceec0baac68ccaf8b91ac4a33d9145c3ca1cedf993a2b0f4b43c22",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308754676-chinook-squats",
+      "fingerprint": "a2d7831de9b39c1f22d8d489c259bf11e64ef73825771a9eea3e15792acf2b66",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308754971-chuck-norris-merkins",
+      "fingerprint": "774921cda02ae23ba603e15f237a859f41de943654f42d6e925551cc3f4b339c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308755256-chumbaburpee",
+      "fingerprint": "450e1edd6292c8552fdc2190826f919f1691f2c787bde129727d9c5a993e82c8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308755568-ciabatta",
+      "fingerprint": "70037a78b5a951e6270dc8c73188bcfa57bd928e2342b99decf16d8f67d1a1bf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308755778-cindy",
+      "fingerprint": "1c43135a0c36845fb14475ada533526fcfa932422d5f5465294a707de282f8e4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308755991-cindy-crawford",
+      "fingerprint": "7cf3e1b829a0dd12210b0443c677d9b1c7f54ae8f131b9435f3150874d20ed5b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308756284-circle-burp",
+      "fingerprint": "75e45ceedefb24c82d907874bc3b47e075ff0b89d8dba9b258fe83eb29e7bede",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308756710-clerkin",
+      "fingerprint": "6c819a436ed411e72f19a30b58cc700926686aaeeb08e71156174ed70131ac8b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308756927-cliff-hanger-arm-ups",
+      "fingerprint": "a98e211bd70b7f40d419e4c183b6166db5e3345a5d11eb0f0bd83542e265249c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308757135-cliff-hanger-merkins",
+      "fingerprint": "7132101ee3204cdd22f9f810481ecb845189569d8539cd637fb015cee3c3d5cb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308757343-climate-change",
+      "fingerprint": "916aa529bc4dd2582b57c328ae34632e6bccab6b9e824c0cd74a270d57410840",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308757552-clock-merkins",
+      "fingerprint": "3ce8f31a1d72c45e9146ab1f95ba80993c0fb9fc76202fe9596d6867f95ac8b8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308757769-clock-pendelum",
+      "fingerprint": "14b8fa27dbf1b661a35b29d65c92c6807ec043dc52accdd7dcd1917b8f548ab0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308757985-clowney",
+      "fingerprint": "fc0a25a7f2bc1fa71975a65d132134604207c247017b869e88e27a7a3afc0013",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308758203-clurpee",
+      "fingerprint": "d861300d25af3ba0c2a48336be25a2c4d9a3038dfdb38bae61264b9dbfde075b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308758412-coach",
+      "fingerprint": "ae58ba0baa800de2af1993818dd01932f670a7a5906f4fec4c0d66d11b47e6c2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308758625-cocaine-bear-crawl",
+      "fingerprint": "474ab00bc541870b1f843ed28ca7cd2aa7b32ff1b546a52641b6cd2eb34f5b04",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308758917-cockroach-resurrection",
+      "fingerprint": "9e4d921e948fd599971b65ba8a664f5199ffba6bf152f7a6251a00b53510e015",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308759135-colonel-trautman",
+      "fingerprint": "098a53bc1ec96480b9efaf4ac8948c16f9e30e80a8672d9435fca72508e8ac83",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308759339-colt-45",
+      "fingerprint": "9bee54a585ce68bad5982e5337cde4856504057a2296466afbde81a11cf4b43f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308759541-contra-burpees",
+      "fingerprint": "e6e484f036f9e98c819ea025789f6e2ec6ab89cb88cf5f00e17a43eb086d94fb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308759748-control-freak-merkins",
+      "fingerprint": "9e956bb9f11a533bd6774ce03b016a0f8a279efc6fc0361f4b4bdecd9c96ae04",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308759947-conveyor-belt",
+      "fingerprint": "855fc994300bff374d5d6dd6ed263897b6ab90b3e7fd4eaad0d20119db483067",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308760159-cooler-/-super-duper-cooler",
+      "fingerprint": "b449a80f3c2afbe2fb03e17ae24b9514d2ba632dee4c350f19f699c1e375d7c3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308760373-copperhead-lunge",
+      "fingerprint": "2efab7406d073092e940c3477934975e39cb6acf5a95e2102f14818c448c846f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308760582-copperhead-merkins",
+      "fingerprint": "bf5f4c02d0c8ab08cbb88e1d109748da04523f288a1a0f62c7228da129860ed0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308760793-copperhead-squat",
+      "fingerprint": "f5aad3226d400b86eae404317beced10865c48781d1e957cc2b5b102932c5148",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308761003-cotton-eyed-joe",
+      "fingerprint": "ad5405b8d9b4d5a512c464aebd020e9ba1bb66fe9b58447eb2d6a73d4d541f33",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308761298-coyote-uglys",
+      "fingerprint": "ad0ad17579c0e71fd85bb0d3c619b56efb5f8d9879336b38bb72424ec471ad19",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308761510-cprs",
+      "fingerprint": "7ea0bb2f7aa0d0dd9c771317fb939cd393c21e29529c69bf4495a65615362722",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308761725-crab-cakes",
+      "fingerprint": "b400ae257546ebe38a67280d373eba22807d303986564a82309ed5dcf3c4b161",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308761927-crab-humper",
+      "fingerprint": "0810e5bfd149030ee757cce8d12f8523df44c9271621f12abd635b5e36333c5e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308762146-crab-jacks",
+      "fingerprint": "f51e1babac84420a141181e8f37bc440e0e12bd15ed6d977dbfd3864ea25a6a1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308762361-crab-vs.-bear-soccer",
+      "fingerprint": "9998964bbe705590ad6ee1fa119dc7ca766870a5c4ee4f9e1275b0440f8db044",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308762570-crab-walk",
+      "fingerprint": "9009ea1eea3c555d721a666cab42fc36bd4ce10a0e28d316cb1135569d2d05c6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308762790-cracker-jacks",
+      "fingerprint": "c83f6f61d2adc6a8d4b7bda6e2fe7998f48151afcdb676ceca3c58809a51a15d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308763078-crawl-bear",
+      "fingerprint": "67fa49ae80360a807f94a72e2d3645fb2f7ab19a8441234e64632fc028e03e2f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308763290-crawl-bear-360",
+      "fingerprint": "a8b9d72dd9859314ff8d1eb103aeda0ea17ec52091caeb33954c8ff1168244a7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308763506-creapees",
+      "fingerprint": "652570d81dd41d103070a346fe813bc2d8676202f95c620618ebb847b012a6b3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308763797-creature-merkins",
+      "fingerprint": "7551ba14d742dea00b2d757d8d5a61de8691b10909da9bb5ba68219489a0425c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308764010-crowd-pleaser",
+      "fingerprint": "b3927a6f7cbe4aaf5c6f153256ba81710ac80ce4127a621ea169c74b457e18b7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308764223-crucible-merkin",
+      "fingerprint": "b3b5fba9b010e33df2d6c7bd4f92d78b99421abdfd7165ecba477c46898c9221",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308764440-crunchy-frog",
+      "fingerprint": "c47be604f1f0e417772543a1bf79d4ab25e65f293807608078e4e74e2da41ce6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308764654-cumberland-county-viaduct-(ccv)",
+      "fingerprint": "fa873a7d6463164404dd6e5c9004b01b3163438b8398f26dd195e65ced894823",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308764863-cupid-shuffle",
+      "fingerprint": "bc81bb9c3e2a677919f46b87f8d4d3371409a5190b98352df02e6918321b8b56",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308765158-curb-alpert",
+      "fingerprint": "2bf712cb8a5818f06ce97ccc0408b3d58da6fe67191db7b504d0452d2202914a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308765601-cut-a-flip",
+      "fingerprint": "5392f35735cbc7f18f75620fbde087c2ca0021976a564cc5575e55895a5e9a2d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308765822-daft-punk",
+      "fingerprint": "98bf6eaaaf4a6583c14f56e723e8915b8bdbdd62b74d9ed443a0a77d8c767cc9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308766043-dan-taylor",
+      "fingerprint": "8bd61980fd92d023beb69159f0250b01ee680e690c674c9f87bf9174831e8a11",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308766256-dancing-bear-pyramid",
+      "fingerprint": "67e539bb0f3dbe773f95ca42521cfb3955fb835fb7cf89c40abb45861aa93a63",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308766458-dancing-bears",
+      "fingerprint": "5e16518235b079498fa6496e7cfd51db1851a70ac71cbf51cddeb36279ee5e11",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308766660-dancing-chilcutt",
+      "fingerprint": "da74107537313eb950b6867c00b01be8c3b3e455ecb962db337924b94176b8ec",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308766875-danger-zone",
+      "fingerprint": "acd13b1017f61c1212f4985b38a4041df451cb4dc74786a8393c9a8354f6885d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308767170-daniel-son",
+      "fingerprint": "31cca93e914d493e508a0505c85290bc55e6ef6441794be033e09a4283d13146",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308767439-dark-webbs",
+      "fingerprint": "1fc4f07bea984f3bbbd6cae8fdd66072a910b5fcae67c600eaae039febc541af",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308767647-davinci-cartwheel",
+      "fingerprint": "4dc68c2d54a26ec117d253ff40232b506e7c1a5fab24f47ba4e6f3b250c0ba04",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308767849-death-star",
+      "fingerprint": "8e494820a396ba53ec153f741a8f4200627b1f4075971f8f557ae05b72346e4d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308768056-deck-of-death",
+      "fingerprint": "ac6dd784a5dcd7e73137a847cef72ceefa268ea77ae4d408481d578e463c0a19",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308768271-deconstructed-burpees",
+      "fingerprint": "7149bff7241fdc54c68acee2b67b4fb1d4ff2da0f8ac67d446b83af6527358ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308768484-deep-sea-diver",
+      "fingerprint": "8bafe9ae47afed8030cbf40f35c611294a4c36a8e8803dc8c12e021c16ff5c98",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308768691-del-brown",
+      "fingerprint": "5d7dba09027bfa4c1e9f268a8f8dee0400901a33bdd39b35a96318077b130bce",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308768907-derkin",
+      "fingerprint": "7250ab0dcb2dc045dab767080e1597814e3b10f7df9d365852e3ee3dd2ff41f1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308769117-derkin-n'diayes",
+      "fingerprint": "5d10407ecbd7c0a4ed48ed5cf69818f59083270980e9d16f58d32a31a86248af",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308769331-derricks",
+      "fingerprint": "030716fa9af3d07128986b755b5cff09f357b03477249346e45b79cf663c7a48",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308769620-devin-hester",
+      "fingerprint": "471075a9423cea96342444b3d7191e9f1e8dd41ba127d80fe0f5d9a6c10a19d7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308769832-diamond-david-lee-roth-burpee",
+      "fingerprint": "737375c71f4f04cc5ea4952d05ab2214e3b860454cf61c7fdc30cfd312bdb24e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308770042-diego",
+      "fingerprint": "9f3da22f7d31e09a5c75e21abdc4d63ef157c717061b67f40f4045982c468a03",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308770253-dips",
+      "fingerprint": "875152d3b88812ec59598da325d5094d79aecc1e1ccfecc4736f025c0b34ef77",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308770463-dirty-harry",
+      "fingerprint": "d67220ac10caa4b5a71b8b312bdb6a54043a62dff12d1a53554874c9e026c8a5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308770669-dirty-hookup",
+      "fingerprint": "c5fca9858d4c5bb03b58e8141e6b85dddb4bb5aa09f4a8a1ba3fd42c248c9b27",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308770877-dirty-man-maker",
+      "fingerprint": "7c5b2fe86a3f59a5cecb5f8916d3ffe795c34accae4a51caf4ccf63f6e6d8ab6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308771087-dirtymacdeuce",
+      "fingerprint": "6ae19a35ea8659d4311d5a94b448cf12f89ec38d51b46a33123442793fe284e8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308771318-dive-bombers",
+      "fingerprint": "d4f81e21d0ffd16ec679e34e99b1ceac02f966b25c0bf913bab842ad972a94b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308771522-dmc",
+      "fingerprint": "461aa1f7be23200faa88517c500bab03234a534a2dd3bb4624eab6f7b345db6a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308771734-do-ah-diddy",
+      "fingerprint": "7db38fa885ca07595e661f0239da6b1f1167c91488bae4c87b193e7e09c6c0bd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308771947-doc-ock's-octogon-of-pain",
+      "fingerprint": "e96710ca27d573e31d596286d5aafb22a01b8f68ebc8f4c0e1adf0188e1bb415",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308772157-dodo-bird",
+      "fingerprint": "4f5a5fc9a7a0c17d057d0e42972ed6abd435018674081de7cb8af325b089725c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308772369-dog",
+      "fingerprint": "aff87afa39d0f578e8d31f89d9eeb6014cb80a7a8ddfdca333138a28cdf93e75",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308772575-doggie-paddle",
+      "fingerprint": "7b1660abe884341ec9d06cd1e317e4c6acc2d5affc9566d2d9699413215c296a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308772790-dolly",
+      "fingerprint": "cc800149c720995b00e4bc75fe686757f5661b94475183544cc24890497259da",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308773008-dominoes",
+      "fingerprint": "c6ed05618eaf91584f1a82111a6054ac96c010628e22b38c9d866693995da715",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308773441-donkey-kick-offs",
+      "fingerprint": "0ca7cd835c074541ea62818b294ec647170aa8863ca57295d9e3cbc2cc704f80",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308773653-donkey-kicks",
+      "fingerprint": "dcd863122a4afe79cb58b261ce0676186379fb1c4db7bbb146b6f278724b6146",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308773864-dora-1-2-3",
+      "fingerprint": "95c3ce38483173216e62c90700b766b0b4933d1576084ba94cdf7d59ba8e108e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308774069-doracides",
+      "fingerprint": "d0c15e18107a63f1a8b75c479c7eb1608370d2e5304b4f8c0ad1bc7beff77b01",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308774282-double-merkin-burpee",
+      "fingerprint": "12aef31ffa6edb64bcff64c5214cf173b77c142bc1d61e696a4e09b87319f84f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308774497-double-shot-of-jackies",
+      "fingerprint": "ecdf8ae43a92e574e4939d874bd4f8b45615e8a696bcf6b7f525737537c7158b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308774711-doubleapplesauce",
+      "fingerprint": "b62d1582d7fdd78685894cf9a089eacaec80a7a21930717f3dc9e78ffd4a5c3e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308774919-dr.-w",
+      "fingerprint": "3edbf7f78b947c497c36cca7367771893fb86d755d7dd46360dfc2fd02a2e6f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308775133-dragon-walk",
+      "fingerprint": "73d6905194d22ace3cf41f53d3a730786cb746242a02c932201f4b258c9dbeb7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308775337-dragon-wing",
+      "fingerprint": "1f097c0e18c122a1a0a969a376e79f07ebce451ee6923346c4802a6b07082fce",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308775576-drill-instructors",
+      "fingerprint": "ab4ce32f06890795f31c07b4e8c83895e233525e08cab4903711a443917fb139",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308775790-dry-dock-crabs",
+      "fingerprint": "5bba4c78927eeb7b3e2f27adb5a76444b2057a6a6179ca51ef3e9bc3f8f74b38",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308776003-dubya",
+      "fingerprint": "578ef9d7706e844eb700737c98313d35e236027bb0ff62f73c210f104afad89a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308776212-duck-and-weave",
+      "fingerprint": "e0c31dc9dcf10ccd1911a1ed572440e45d9f1908ec01295167f854a300fc7670",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308776419-duck-jousting",
+      "fingerprint": "6dea71bcb3969578cc0aa6a9e5787916ae3dfa7e642fdfdbdacf5c5d3f6c5360",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308776635-duck-walk",
+      "fingerprint": "e76da267b1dd5a224ae82fb1dfb71b78e0522c9f681ef1f6b3d4b7f0219f24bd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308776843-dumbees",
+      "fingerprint": "5bbf50c61fd496e9c232155cb50a8b6956dec8d0d098cc275212d3e32f70dee0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308777050-dutch-skate",
+      "fingerprint": "adb3dd8fd9337816efa7a2a82a7ac98f476f2902ea4e659887f056b4320bcf75",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308777272-dwight-howard",
+      "fingerprint": "12788bd7df2c0bead9deb8853207a4b9d03047da4a7a0c4f5a7dbda9b029e169",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308777579-dying-cockroach",
+      "fingerprint": "52c4afc7d6e4e479a71ef5ac893dd8620a1950e7ba02f617792b34f0eaf1d700",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308777877-e2k",
+      "fingerprint": "4119f5c5616c59b53ebda8ae26c20a9a6d530c04d9d85ab8723dad0f6977eb85",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308778461-earl-fonda",
+      "fingerprint": "4438e6665e28bcbd1357ba2f5401aa3396161025ebf639acc7b31fdb11653f5d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308778751-el-capitan",
+      "fingerprint": "656eb3440aebafd78b2cede3688d6968aa94e4ee8bcd4e10585c3f8c0a55a6a5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308778965-elevens",
+      "fingerprint": "d58fb2566591e2bcb7b2ae18a921a13b7de2ad4e1c74ff86f2cd9dc5bbb94469",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308779180-elf-on-the-shelf",
+      "fingerprint": "08846903dce6526b3ceb7787a9719d457b1a3bdbdba31831cc8558f22c5da26a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308779387-elizabeth-warren",
+      "fingerprint": "533af4d35595a11e061352d5f73c384f9270c06fe294e5df1c4cf19e58b61839",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308779674-elvis-meets-forrest",
+      "fingerprint": "723656772cf4af87c23d410772e50f3ff84e1c1a5f393536750e44e45fa8b73a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308779891-empty-wheelbarrow",
+      "fingerprint": "40de693e3c821b13fb19d4d384a2880c3bd295ec7bea41a6fd973cc67876f0b0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308780107-energizer-bunnies",
+      "fingerprint": "cae79def83ab1ee0b2e5b2f2836cac6ad86c4e0e01e0307f6da82133e8976876",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308780396-escalator",
+      "fingerprint": "9dccd5f2a4734630ee147e34fd93d6e30262fe20ddd028d18a9973ffce789a26",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308780611-everest",
+      "fingerprint": "cb051642125f5eee4887e76340ed503419ac06c343dd738191c0b86f7b19ed01",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308780817-f3-baseball",
+      "fingerprint": "b721f03f9b5cd4ca9cd10d38573fc607b2b6052396dcd688435967b3af84f542",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308781047-failure-to-launch",
+      "fingerprint": "5359c1dde9a6bdf37d03e2da7c31a35b0bf2591ed33ddd330ffa2db3735092ac",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308781265-fairy-jack",
+      "fingerprint": "a2a32d8f2c8421983ca821f6165c6f8af0fcec8cba06cb8e79aa92ea966ce93e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308781476-febreze",
+      "fingerprint": "0141fb3ec2c8cdd9a5bd73347aa1664c8742bff4289947865141f2881fc3405e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308781690-ferkin-(aka-fia-merkin)",
+      "fingerprint": "77219e1851235e5886c301bf0eb3ebd6720ec29137386223bb96d9128d4a90cc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308781901-fiddler-crab",
+      "fingerprint": "afd92c30b100a51b2c11f1026f53fbff09958164876725d76e87b371458a3eff",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308782113-field-of-dreams",
+      "fingerprint": "3047d78cf2b03ab666aad57752a0b8ed6152a713cdcb5d988bf1a9612cc90e5e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308782375-finger-tip-merkin",
+      "fingerprint": "973c123806d452e5d2a9643a454fd49f5d837bab3f40d4b0cddcb9edf276fbcc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308782587-finkle-swings",
+      "fingerprint": "27648102d748eb10f35775e54d39e651731bfc3301b3cbfdbcea15fb09245e94",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308782799-fire-drill",
+      "fingerprint": "6073996ace4f11d45d27fd181e594bb4f5a9f0e51399deaf3c2536f2b69f865b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308783006-flamingo-merkins",
+      "fingerprint": "95c87f81238d3894601898fbb80be914ba5e1783ded5cad5b38657f52c25e888",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308783301-flat-tire",
+      "fingerprint": "7344ccffbef583ea8ebe823ea7ebebec0612740733d34d751e23a9c287bd957a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308783510-flip-flops",
+      "fingerprint": "f638bca1d2e6c979950ecb73ab043b6134b7660e1d75dd07fa708d45c72dca94",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308783712-flora-1-2-3",
+      "fingerprint": "796febe94a47f7c189fa20245a2711f4eef357d1f5be93da8881ec50f2e05af7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308783924-floyd-mayweather---plank-punch",
+      "fingerprint": "43276a88de2c5c3c1d81a5fbab7a17c8cfefc4c327eb6f6fbffe354c988e6d75",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308784137-floyd-plank",
+      "fingerprint": "a6346337e5de3b06b67a2a3f70ee8114b84c9f8a259efdde0f611a3c650720be",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308784354-flutter-kicks",
+      "fingerprint": "d2b8acc64726a636c5534c334690476f5968422ac0b4553be1634cd205b9bd15",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308784563-flying-nun",
+      "fingerprint": "b86842d7475905f31a4d78f0036f60cfd7d60bbd01e34e4177a34a1e2b924aec",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308784767-flying-squirrel",
+      "fingerprint": "e1a179f5eee4b28990e312fd510bdb8ae2b0d352a09bf7044e5d7b80190439d3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308784982-flying-sun-gods-sobriety-style-(aka-nancy-kerrigans)",
+      "fingerprint": "cf766c59842514c6f6b961e2bf68830448b11fccf3bae238db4f2eca1509174a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308785195-forest-to-the-sea",
+      "fingerprint": "01807352ff7801928ac7511110e0731a913946cdfeecc0cc6dcb97cb61cef7c6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308785415-four-corners-escalator",
+      "fingerprint": "a43018b8be1058ab966f2f35748a2cdb3d6098a1421b5c1886013563ecdc86dd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308785627-foxhole",
+      "fingerprint": "1edb77855ccc10caca4f9b7d401e65e5e033b1c8f455cc1379343b26cfb2b732",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308786125-frankensteins",
+      "fingerprint": "24a0455608eaf9090840dcc5ee6aae2b08e3fce761a47ee7da443c0bfc8c61e0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308786332-freddie-mercury",
+      "fingerprint": "117d2c1f73068399e6d85d36072d9cde767f20587be90d53f151633d214dfd69",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308786622-frog-squats",
+      "fingerprint": "97798476165a6f0378840767c5705a772a43f31c3e2710b2928930bc710795f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308786913-gargoyle",
+      "fingerprint": "9a2d55b331423e842c48631084262a1d10a64a8176a39ae8a6971ce2b4d71a7c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308787207-gas-pump",
+      "fingerprint": "dfbdf9337b4d967c37c93135b70296ca9853b8590535f3f6484b864503305b67",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308787416-get-low",
+      "fingerprint": "a4a5b114657137c3635031a5bd489657206f589d7ceb9dd2205b1bae18184694",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308787622-get-low-or-buried-face",
+      "fingerprint": "47f02a1879cd0d62c761c4df6f96bf7e8ea44b27c189bd4d5e879087760ef7a3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308787834-get-lucky-or-not-so-much",
+      "fingerprint": "ceedfbdc49097d44075a6fb80929da2edac4f0fc772b2a716fbf1ae7b9e665da",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308788040-glen-campbells",
+      "fingerprint": "e507a703ce5308e1ab8baba5e1d90571697e2839b564c6ffec3fa5c4c1ea3bf6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308788260-global-warming",
+      "fingerprint": "2643aa1f312c722804875ed7acbe0ff509f4ceb78478b443a84cc14b79c3d05f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308788488-good-morning-abby",
+      "fingerprint": "c8f40a7e79c4ec3bdf680d68716ba31240de493c471a537f0c9a5d9ddfc65cb7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308788714-good-morning-burpees",
+      "fingerprint": "347fbf8838306e9bfc1ef977c4fe8c77a66d9a0d3b3f1be1dd1d7676cbd1b01d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308788936-google-bun-shaper",
+      "fingerprint": "43a59dbcdd939cc532e6387372e519a70cb7123d35c1a691d1ec9d72148cfce5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308789144-gorilla-complex",
+      "fingerprint": "afe2de9cfccb823fe33f661d46340cb10f587544e10de89c6feb8347e0bffc10",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308789351-gorilla-humpers",
+      "fingerprint": "623a8c774ab0550d1f21cd739e0d3163e99467b343703a2f2e0a44ab0ba6e965",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308789563-grady-corn",
+      "fingerprint": "44b0f13276c9edbdf6096f6c4c88e4db858a3971b77dee294bb75d329b092f58",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308789777-grave-diggers",
+      "fingerprint": "647ee918f7ebddd3d170702a28e0836d150c0bd8162a58944264bc4880cd4918",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308790062-green-sally-up",
+      "fingerprint": "33866aeb3035419053f7466c40ac59cea8601d85aeb1c460d37d0a744e935a69",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308790360-greg-louganis-merkin",
+      "fingerprint": "97b586da42641349e791b56fe090d1039ce079c2b7049f9257676f6cebcc95cf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308790567-greta-1-2-3",
+      "fingerprint": "2ca690a3110a46aebcf537c3fbe2c82f5bba4395791ad247ed17acd60483cc53",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308790780-griff",
+      "fingerprint": "8be7e9b58db1a56b7d429d4c212ab7294447d79c3254ebfbbabe7788521072a4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308790987-grip,-rip,-and-roll-(grrs)",
+      "fingerprint": "75e3c6f77308edf802ecb8f3633b1a184eba3a0fabafa0897b9d8a836fb6baa9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308791284-grizzcalator",
+      "fingerprint": "d1a95f955e6cc282d29d5d052bc4e4a6e1a24664a6fb8b7f7917f35663075ef2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308791497-grocery-carry",
+      "fingerprint": "d7ec1940363a902fb16e45522584bfa994a931a86d6fc379f3739e23c08692cd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308791782-groiners",
+      "fingerprint": "43d2e3940972c80b0b8aa9013e56d89d83d460b0c5ab37b35183486da4578112",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308791992-ground-pounder",
+      "fingerprint": "9a5949f9143c969968823948bc3c69ba3ae86701e366fdb964d747566f5da1c7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308792198-growing-pains",
+      "fingerprint": "66bf8b12b50d61ee65036aac6e4dbda20cc708b621dddd20ef44a4391546f913",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308792406-guantanamo",
+      "fingerprint": "816c4bf8e59ca40b8488d261452dcc8014d5dfc6f6e8cad8428fc750b52a4ed8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308792620-gunners",
+      "fingerprint": "80222f1ed5eeb910ec5a1872047992a2d981c021325b99e695ba73bc5e2d4bf0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308792838-gut-busters",
+      "fingerprint": "e31ea9463e6246ad68b29df35823c8a91aae44382a0bd781eaaf2605b9cc6d00",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308793139-gwerkin",
+      "fingerprint": "268f5a87315f5a8087b507ea3e643cd497f510f5c3dad5d9be9f45ea4269a38f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308793351-hail-mary",
+      "fingerprint": "bc0c877feb508b7a4c4acf7951460face6b4f42bcbb871a9efc0d44be1f54636",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308793561-hair-burners",
+      "fingerprint": "a91780e2376dcd1546426b3f823acc323e438f93a6f5e3b59a6483443feb4989",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308793769-hairband-mile",
+      "fingerprint": "057f16f02ddfcda244ffb79c4b1745cc91c3438ac4b428cc44bee58323982460",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308793978-hairy-rockettes",
+      "fingerprint": "756dcd41b95e0041063b7f4a4fe5bf40df6a90f222c2b270bdc5bfc65db58472",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308794393-hand-release-prisoner-cell-merkin-burpees-aka-hrpcmbs",
+      "fingerprint": "58cec0042cd9ebe65cf4dac87b4e85f2551dd967bf7cef2e9f0da01b4dcc1f0d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308794610-hands-of-time",
+      "fingerprint": "239bc835f0317e351478d3942710dd28a3efd506e24a757fee5f66a8f528824c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308794825-hanging-toe-touch",
+      "fingerprint": "6471982b4f377f5e010d744dac36c0d91cfd9f7db577f299f9fd2f0a65774496",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308795032-happy-jacks",
+      "fingerprint": "1765036b02c1806c72bc15f00e93d4dc8afc755502c912e155d06dd302f0c401",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308795277-harley-quinn's",
+      "fingerprint": "b89ef334bc6851c0687c36a9920ce753b2f808888647435006ee1f9afbc4cc03",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308795492-hash-pipe",
+      "fingerprint": "42214e4818b7b8e076975806bf37c53ac22b5293dffa0f7270f9f8a73b42d839",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308795702-hatching-butterfly",
+      "fingerprint": "7c42c9dba0489ddc7486e067083105fe91cdd19b1f22b67ee4f2c5c07605e73a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308795908-head,-shoulders,-knees-&-toes",
+      "fingerprint": "6b07151d8e127e195229f87a600c1502bd4b1ad3cdb8bacd31b5a8704a19ca04",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308796118-heartbreak-1,-2,-3s",
+      "fingerprint": "882b991337676f0fec95b02e58b1ab8b1717710d5426b0a21dc3dc9ee48f3ad2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308796337-heavy-freddies",
+      "fingerprint": "56d5673d633ba01f46e47ebf08d03e8c41276bcd2164e2be88023ba6b7706f09",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308796638-heels-to-heaven",
+      "fingerprint": "8a2df57165d436e8797b0a103ad1ac43ddca11584050445644c0afba2b7e7569",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308796948-hernia",
+      "fingerprint": "2c101d9827255b3e99da55be855ec5a58528c440d5ccb3946f063de313219ce5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308797595-hillbilly-squats",
+      "fingerprint": "0f84c0882f698d36e21a122b7e58676ff8d3b1fb34753565fc751972e4b3b20a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308797811-hindenburg-blimps",
+      "fingerprint": "494aee02a35f316a050d95ac03b066e1904894a4a1f5096bff4dc08d7cdee14c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308798018-hip-slapper",
+      "fingerprint": "aaf6ad1c353cb6addd04364a5a9041bc710e243e05d9a27f380d787b91b5b541",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308798282-homer-to-marge-to-mr.-burns-(also-submitted-as-homer-to-marge-merry-relay)",
+      "fingerprint": "3b00260eceef932dcf86f4c84ced99bc4b59c6ea1b123c15ef76a5b125c8dcb8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308798490-hot-potato",
+      "fingerprint": "56aa5442836d66c11d2f1da815cd0ba79a95c8cbb9eed7d9833c67b75ada1cdf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308798701-howling-monkeys",
+      "fingerprint": "aa181aeaf165f3d2d437dc378fb6caafcbc7a03d9dea56a9069348c1a7419fce",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308798912-hrbs",
+      "fingerprint": "e1f082de4a903606d00715ae37f04df21419eaebfc7a417dfced5269db29dbee",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308799125-hundreds",
+      "fingerprint": "e0866541bc2973deb87cceb307781baad3ae83a4973a73683ca11112b88af2b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308799332-hurpees",
+      "fingerprint": "7cebbbb316c603391c92a5419369aa0e4f1e98a649a43828dc83a4e6769b1f43",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308799546-hurricane-hoedown",
+      "fingerprint": "33adae8690a8d8a56f29b658b4485bdf07033d1b2614ff1341bde7fad4773a0f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308799756-hydraulic-humper",
+      "fingerprint": "ca6663ef25a76545c61d38c92ef6cd7d6932960344d60d7c0ed18faa9f1ec3f7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308799971-hydraulic-squat",
+      "fingerprint": "1d6d23c6a788fa13d66b2391dae7fece29a53702a602ce0251b668794c28a870",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308800169-imperial-blocker",
+      "fingerprint": "c8cbb03a44a66b22a6fd304d2b1f29d6ad82e90717b01eceea3135b643b19d74",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308800461-imperial-squat-walker",
+      "fingerprint": "a92fd494f16d981a78991c37de1a7f39696276764e1100f69bdec4ad377ba710",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308800671-imperial-stormkickers",
+      "fingerprint": "5bcddd55d5c26d4272696f15b196964b46d47a15d51d19a20e2c2082c4ed80eb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308800877-imperial-walker",
+      "fingerprint": "7575ac3b28977427c3389a414494a418ff44624a4375c207536e419beb0431ee",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308801094-in-the-plank-tonight",
+      "fingerprint": "32166fd1bb169ee22eee589ef89d44a5eb9afe391b31725b8cbb9c3ecce7d4b1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308801321-inch-worm-n'diayes",
+      "fingerprint": "3ce188023af464aafaa953f4dfedf79e54954485ab0d6a22e8910cf306925f28",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308801527-inchworm-blockees",
+      "fingerprint": "0ea9672e716aa76c5b51c31420838cd6317ea143632e6d91d1d0bb4775d51695",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308801828-indian-bear-crawl",
+      "fingerprint": "d0aeed66880d0b428fdcd0047d873cb3d7201ea86ba34f1f9130516e5940c2fa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308802039-indian-crab-walk",
+      "fingerprint": "7a2c48ecaff23c187e3be1ecff7ef3d4d092d8c152838d2c41dc36eab222154b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308802303-indian-run-11s",
+      "fingerprint": "44804e7ab409de0ad1426cfe845655900cdbb5628fff45aa0c2a61565970ccd8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308802514-individual-medley",
+      "fingerprint": "7ee910aeb36ee0ebbb3ad7ac8b3e62e3385a0acf2ad7e36192ee63895b31a97e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308802725-intentional-thinker",
+      "fingerprint": "3831ae76f2436725ee11ea3eb04663e3f4437e3847cadcbf23f0659ec5177f9a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308802933-iron-hulk",
+      "fingerprint": "2de1cad33e6448c4841fc59454fa58742f4155e31944514379abda7f85f9f3e0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308803364-iron-squat",
+      "fingerprint": "5bcce56230cbad34a19297241a8ee5cb83ac4cf6aba5319a2be058d4598a0002",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308803574-island-hoppers",
+      "fingerprint": "3a1b0ddd1e828c0323936ad7922581e64c4fcef07b42a8dd5190c0cbb75cd8cd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308803784-j-los",
+      "fingerprint": "10e96ee2663ff5fd46109fbd8107b099b64a48b30b1c443e36185430a575614f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308803995-jack-jack-webbs",
+      "fingerprint": "28c11f51a2c3ad0264d8da30be573381edd0f28c6f8738dde82bfefc181152c6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308804202-jack-knives",
+      "fingerprint": "589aa2009f193d5408786636a6cba13a8c28e24e66aecc4cd89e045984bedf44",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308804418-jack-moses",
+      "fingerprint": "d588cf85c20076ea24eaa3b836a43f6835bc7aacae9ee05006eb78f104bf2968",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308804632-jackass-burpee-webb",
+      "fingerprint": "1a02d079b5539b6f310458441c37dc23bae2f0409e6cb4ada0c5bf0ee3315bf6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308804921-jackass-merkin",
+      "fingerprint": "9e77cc4b69a5c37ee1a038feae723f9ca1ec5f01794b539e2831ea8bd6e4792b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308805132-jacked-up",
+      "fingerprint": "8fab1c142b6cf8951aa49f4dddc45e2b90907945f5428a3df0d4b025ea6da82d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308805408-jackees",
+      "fingerprint": "292498b834cee76e0ff230a214ae6d487705b3bf2efac4f460d186cf573e8d85",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308805617-jackhammer",
+      "fingerprint": "0c6e6dd912176a423ac04804ab1f6f83f95a0dd69ce43dd39837db2ab0bb5f22",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308805832-jacob's-ladder",
+      "fingerprint": "9036214f7e9de6010c307197433538a49b31c17e44622de474d8c6bddae557e1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308806047-james-bonds",
+      "fingerprint": "217cbbe69baffe7fee8d44731d34617c62493a19d5be58afe4352db025712196",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308806283-jim-braddock",
+      "fingerprint": "967733aeec02015fe3095a4a6a86c514005211d51960c918d4123a18d026bff1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308806571-jingle-balls",
+      "fingerprint": "a2673420820ded747b673aa2adaf7395e9ee4ee3cf33feaab3de91590898605f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308806779-joe-derk",
+      "fingerprint": "0ced542d46d4680258277129373c5250261a2c4b4adb7dafbeeac75edef6224a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308806991-joe-hendricks",
+      "fingerprint": "df6e0695de58770e15afb1613febcecd055f915c01956b19e0a407de24035646",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308807202-joe-louis",
+      "fingerprint": "9d63e0abdf2678f7dd23922c613c1d3936aebad583ddd8f52cc4ac7906ac8de1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308807410-johnny-cash",
+      "fingerprint": "10cc895f0111cd4fdc1e5474e7adfce2c67043c340207d71d55dbc174faf91fe",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308807617-johnny-drama",
+      "fingerprint": "9b36577411fa93f3f15e6154f5120249b96d1d5cfc02292e5ccdface92701f89",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308807828-johnny-roscoes",
+      "fingerprint": "ef6ff01010a0995f218350c10af06dcca01fa327e89e207f3128369884d9c95a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308808040-juggernaut",
+      "fingerprint": "970d342d7f839287b51390a425c81dfbdb7d1d67b5c13ef7f0ebaeea9c5307fb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308808248-jump-squat-holds",
+      "fingerprint": "a93ffc3895a6927374208ed8b99529543f6441cdeac948416ab9d15db3baa1bc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308808463-jump-ups",
+      "fingerprint": "c15792a1bbc9bccf6049945f45bf89404497a70d291a0b61d7a9c5e5e34c680b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308808679-jumping-jack-burpee-flash",
+      "fingerprint": "a5e50e9a63e99783be7813bd82dfbc197a46185c069123eaf467d4d2e33406d9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308808892-jumping-jack-burpee-flash-pull-ups",
+      "fingerprint": "9fb7775aaf55d82c843215017c7f86a695a5cf99667fe9e14fb1e00423a78a43",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308809117-jumping-spider",
+      "fingerprint": "9bbd8577f26868d04d30c35d7e625e71291759e605ddcbce573d0c16b135d543",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308809346-killer-bees",
+      "fingerprint": "7649378b02d9eb12a6c60d05c94d573b1541735e846286d2561c7bdbd3f1c2dc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308809558-killer-roos",
+      "fingerprint": "b1922c14213ff3fb15c0e9c534f5a575cc118dcb0e714df41987ebf74727cbda",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308809855-king-arthur",
+      "fingerprint": "a8f431f0f7962280844652a9a17160d8b727b3cefd1da6a5b5ca8f7b362316e8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308810071-king-of-hearts",
+      "fingerprint": "4014afdbe0c2f4fa63eb00bbc389b97da100626ba13470671b4091b3e6f7742a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308810501-knockout-of-death",
+      "fingerprint": "a497322eee1b9e2f31539925f7036cf4f6df6d2afc3d5ee2a304809d98b94362",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308810796-kraken-burpee",
+      "fingerprint": "e855157ba80845c52abac0b429ddd93fe64293cf964ad0089463870646310672",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308811011-kurpee",
+      "fingerprint": "a4abbe2e6e84b230799a2eac6a336635e76ba734bbe115b678115b894b133ec8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308811222-la-la-leggy",
+      "fingerprint": "bc69f82a12352cbf1eaffa26da6c04ad0a4629838d92b9ae326e64f2b1b32053",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308811420-ladder-jacks",
+      "fingerprint": "a2f69c12510db59ccbc6992bb15f87bb706f584b4ae66be00413aeeeeb707521",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308811626-laney-lu-plank-and-merk",
+      "fingerprint": "51b080b0032f5df8c99ace547ef2ae304b40a89c9c221966269215022b6d8d30",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308811839-lazy-doras",
+      "fingerprint": "07ade6845cb91226007d8700e29891281d44431d77a20ffc101a32d20b579024",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308812053-lbcs",
+      "fingerprint": "4b2f4cc36fa441fa08c327bed1cb0ce935227d8b3f24fddc3af5006e1bf9eef8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308812260-lbfcs",
+      "fingerprint": "5327a351dede59d08b2e794d44c650b817ce3d6e1606c0817c12355f89f52d4c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308812468-leeroy-jenkins",
+      "fingerprint": "15f37aff5f06abb1d24b161a270985a9e5e928a833e742a2391035757b62f793",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308812762-leg-wrecker",
+      "fingerprint": "4a7f6c805c333299197ce87023ad379336868d2e5e19c7ae16e4005e89a67fb4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308813185-lindsays-aka-forties",
+      "fingerprint": "b5297f371e5077f53159a41015eefdfa0bac5a016b4c9d9ef7e87c7bb98cd131",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308813394-little-merkin-boy",
+      "fingerprint": "2a9217fdabae58d6ef02eb8e3401d75e795986f1548ff804130b574b3d4054a0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308813608-little-mermaid",
+      "fingerprint": "5a22d6fd789ca28b1cb422c7e7cf926523071bfa8dcab8e930901fddfacea01c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308813818-ll-cool-j",
+      "fingerprint": "9c15eb3ea967fec9cca484c54cc6759040211b46d665c3ad0c596367bb8475e3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308814032-london-bridge",
+      "fingerprint": "228151278868d237ec03ca438b39380d7ea77007b614877a779b6beb4e3539aa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308814236-lounge-act",
+      "fingerprint": "550eccc44f3576a6846232c70e2b766c86935095c7ceb41c64aa8512fa3ffeb4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308814525-low-country-crab",
+      "fingerprint": "6a791a8f8f07a016172c245ce3f5bec0c10ef8b8258b2c3c8d566ebba72f1cdf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308814737-low-country-crap-boil",
+      "fingerprint": "ea853683115b185abeb82d8cc0b056123d15ed9225bfa25c608c10ce7735c541",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308814948-lt.-danger",
+      "fingerprint": "4a0a075d62c9ff2510073e48b961eb52c059b27f6130a1bc8ffbf13592d5388d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308815154-lt.-dans",
+      "fingerprint": "5d202cbe29519904c196f0e446fc8a162a5f8bd0b620c7dd5d7612e1b4379f85",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308815372-lt.-get-ups",
+      "fingerprint": "630d3683c64d46b08b65604c2cc9776623d95626069e15fdeb3b6885de6d2316",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308815597-luge",
+      "fingerprint": "da616510b00fc6a852a8fc213b77ea4cf43c3b6369d5e667cc2ecae14f71f853",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308815815-lunge-worm",
+      "fingerprint": "f1f6e12236cf01e3472d822c86ee3e099d4a4e9784c9fd114a51b53bb58aa15b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308816098-m.e.r.c.y.-high-fives",
+      "fingerprint": "3eb0c7e0dae3334f32e3e2545490b9c2a2fb1ea483fd038c097d810699ed2cf4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308816308-makhtar-n'diayes",
+      "fingerprint": "4a720db140214eb3495b1acd0bf031c83802e74d635731ff124da1d6fd6a7b8d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308816509-manatee",
+      "fingerprint": "4d48de10824962054330d73446de40027300830225085c50e0a56baab410a03e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308816720-manmaker",
+      "fingerprint": "63b2458195c053f0d99191f4bbd897581df3b2d1e76ffc37e243271d9e4db7af",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308816925-manmaker-merkin",
+      "fingerprint": "7059bc2558a25a1263ca7c04f94c208b74dc453cd37000b9ffe8918e267c46d4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308817136-mario",
+      "fingerprint": "f776acdae906168331a584a7ceeb6a55ba7d0cb3bb3872d18ffd5f78278fdadf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308817386-marionettes",
+      "fingerprint": "309b23612f39251afdafe53fa1497252466df7267fa4897ee234dfe40447a63a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308817591-matt-biondi",
+      "fingerprint": "2e67981aa006d6cfa4958cb07b42b2ba3abbd3698d459d3f833c2d5250416f71",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308817801-mcduck",
+      "fingerprint": "a2d46209ae5842b54bc7fef7eb6d63f0d8a012db4048294ce30caaf2421cbce9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308818077-mega-man",
+      "fingerprint": "2d1bab7880fafded4df2b74be8f871c570e9f9d437f6dde3c4d27c58b6fd895d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308818288-men-makers",
+      "fingerprint": "fdd3fe3745f0565a0ae0ba9aa552b7ba669ce3fa903925b11fa017fb90c96f04",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308818495-merkin-jack",
+      "fingerprint": "439588ac35c0b17d5c29211b89360720f32aadf5f02153567c15dd56d3e0e810",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308818765-merkin-jax",
+      "fingerprint": "8005892d127cee8a29f12c42ab0a80bf6cdaff130af157e4c8b529c36893100a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308819065-merkin-ladder",
+      "fingerprint": "0f8bc5be8ba9b91d6624c6a844b92bdd489e56c0fdb9ad467db1d4cd75217609",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308819283-merkin-mania",
+      "fingerprint": "197989351078f54e81903a57825841d6edaecfb8b668f35c86d41082a8a69ace",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308819493-merkin-mile",
+      "fingerprint": "bc54945f9d69e1a76ce2324d611cf2e175fa45638b8ea4e45821a2ed13eab9b2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308819707-merkin-mountain",
+      "fingerprint": "db3d35198cb2e9582563177664ed15cb2fa2b52ddb986c5c86be0576f039cda5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308820003-merkin-roll",
+      "fingerprint": "ccba39b3def134dab383dc1a2141c3b970063dd3a07af12b9be39c03114c29d2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308820218-merkin-wipes",
+      "fingerprint": "d2fdbcd773a02e2609e4a6129fbcf06424c6cc5f182962f38e125ef82fbe821d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308820427-mexican-(jumping-bean)-squats",
+      "fingerprint": "2f4b3a59b6273652c6d4084186ac5eccca61bf1d3a49dbf2eb86369e68acb2b1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308820634-mexican-jumping-(bean)-pull-ups",
+      "fingerprint": "3221e609b5032d06a94d78c7266d2ee37e8d7054d774de5b52e3b04c607285ee",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308820845-mï¿½nage",
+      "fingerprint": "e303736b353f57b0836144cfcd76cf332c97cc07f6e2bf9f42aee6b1164ac3d9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308821046-michelin-man-bolt",
+      "fingerprint": "65a928d38be7bf8194def68161afa776eb6b3931d3ea6ed3a4a01f6cce3a6352",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308821263-mickey-mouse-merkin",
+      "fingerprint": "b0feeb30c701ab98bfc67a1fa6bf73e88ce01c3f0b1e2f945fb2f7d4868a5d47",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308821477-mike-tyson",
+      "fingerprint": "5d79ad5989ceb18fd8a9abaa62f5d572b20cbd209633fa8a067dd0fc226b2c25",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308821694-mile-of-50s",
+      "fingerprint": "4c26fac9437440d53999c8fbe0b2d06511a380be71c6ae3b0af05123a3824ff5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308821900-millenial",
+      "fingerprint": "be3a11f9457983f1a5482a15078a76e86d3c81c94355230f5446ff0de6f4204f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308822108-mini-chesto",
+      "fingerprint": "a5494d292d96e20447e3e4490b626b7c9495f2735fa05f433e14b0f747471112",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308822318-mini-hair-burners",
+      "fingerprint": "cedfdefb7bf641de67c8a7d1ac62bea31cfd182c126082c2078b6f901cd88536",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308822522-monkey-crunches",
+      "fingerprint": "bd6243fd6ac8cbfcf19c991662103b5bc0070fb29630a27a47300e13a99482c9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308822732-monkey-drill",
+      "fingerprint": "09aefe5a628a9f4895962a3597881d83b6ad38dbf818be08c3778d7c54ee2992",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308822945-monkey-humpers",
+      "fingerprint": "e3a9302fafd9d661d20225d3720a142f84eb5f3f54f914f306ef21a778869e18",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308823160-monkey-humping-goblet-squat",
+      "fingerprint": "1fbbe3821680803c024da01f906f262b20efe956185cccb518d7802f03984c2c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308823376-monkey-jumpers",
+      "fingerprint": "2d61aab04d1ed5fdd8a4e787c7442f042c377afd0455540706d80e0b80478900",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308823587-monkey-rolls",
+      "fingerprint": "dd985afc479a830bce560520ef3b58c9739eea03ac362be2956af31d8373cbd2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308823798-monkey-squats:-step-1",
+      "fingerprint": "e3a9288a05f4ebc5eeb23e1246b97226bfcef8281a9370a0783dbfe851f1d480",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308824005-moon-gods",
+      "fingerprint": "8ef9eae4cc3090633cfb5e3c10d041edc0ea2a08ef9892f15a9fcc37dd3a250d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308824217-morning-call",
+      "fingerprint": "9e4b2e1958a6a8ba0d670e2421f4d090f82a5f9d1596b9b4805366fed721c378",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308824432-morning-wood",
+      "fingerprint": "02995359fadbe5975e4fa753e1e68077db7467a568463690c0cda19846015215",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308824640-moroccan-nightclub",
+      "fingerprint": "9277bdb96c90692a06fc51015cc348977e2fc07104256f6c91106daca76af963",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308825060-motor-city-shuffle",
+      "fingerprint": "8d4ce919e6d290d01449678f274193bd10570b4ec23f3ec6dffeb1e8b4eff5fd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308825273-mountain-climber-merkin",
+      "fingerprint": "8b8f1f90af51f7e0e54beddda855d2238e96ccb0d6fae38416999ecb2e341d05",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308825481-mountain-climbers",
+      "fingerprint": "08455392be65c5c4088ad476865ebfb856e5e96a1bed4489498eba6ae67e829e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308825687-mountain-goats",
+      "fingerprint": "f50bd0cdb71d9771bfb4c99a44e293b0729ba55553dc6250fda12f9d943cb672",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308825896-mountain-merkins",
+      "fingerprint": "9c45da1e663a949fc0ef9beebca31f05d0cc0ee74b5ae41b3adcd4657bb6c982",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308826332-mucho-chesto",
+      "fingerprint": "a5f678aa125d6cdb79afb7ca5652f7b4f9d78f782af6da18d7af7199846140ad",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308826541-mucho-leg-o",
+      "fingerprint": "e688fd7cfb0d7fe08f35a51100fef6e6f96ad0e785660ec4ee820bd82d13c2c7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308826822-multi-merkin-(m&m)",
+      "fingerprint": "ce4c4c84a4dc6247a4bf3b34d1bba6831c425035db650c6138f0d223edbaae5e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308827104-murder-bunny",
+      "fingerprint": "f09ce3c1caf67ef025dceeadc6254b62ae2d7129ab73fe37369bf5d425338b97",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308827400-murder-hornet",
+      "fingerprint": "9bced5b04384fe6e2139289c21947aa136c20d4c69563bc77c179f7b0d6d841c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308827698-musical-dora",
+      "fingerprint": "30d15b745747665d22e8733958738d5a1fa1a71b5cae1d1c77ada5ce3beabf41",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308827908-nadal",
+      "fingerprint": "8c284600bd8802d8fcf9e22610a4fe8cde2142761f97b819bb5257cd923c7896",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308828113-navy-seal-burpee",
+      "fingerprint": "3ff168962ac7981e6c1a8a5bffabdcdfb3077f07bd245f4e470f78ac349e62e7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308828411-necro-bunny",
+      "fingerprint": "c9ce84b110e66ebbd0b021af7fb5e59161a8e78f1019517ec39ed1a85f710192",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308828706-nemos",
+      "fingerprint": "f5de582b327fd943e5835741ac2374135ce930ed294864672798317022cb51c3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308828921-never-cross-dolly",
+      "fingerprint": "fe0a4c4f4a69858f4d98dda650f8fc9d820f39c0d85c3203dede88fa5bc0d625",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308829144-newton's-cradle",
+      "fingerprint": "08e19657df0b9a20c8f15fa096b537075425e9f6d182f48b7d80ad9352eef8b1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308829365-nicole",
+      "fingerprint": "9d9ba796fffec9a65616a3822b19189bc9afb18be2460d8c1bae8b12501bc999",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308829575-ninnie-knockers",
+      "fingerprint": "69e78fcd55ce122b94fc62b93f1e7eeba4c04aaeb2e01ae3431c11602081b6a2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308829800-nipple-scraper-merkin",
+      "fingerprint": "3cf2bdfb6659f42b9a2145d3c47c39fbaadad8e8a66859ebad6ded4763d5e217",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308830008-no-surrender",
+      "fingerprint": "d7f543cb257237266776e0068b404e3c9fdb139cee88ce54eb996ef49686933f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308830226-no-surrender-indian-plank",
+      "fingerprint": "4ef84b297d6c1cdd9cc989ee823d15039b56aab2dff8b4c7ccd47996b1896f2c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308830443-nolan-richardson",
+      "fingerprint": "113bf0bc99db37bc9e593927664f6526814857fd49e2d2374394a17c388c016e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308830658-nolan-ryan",
+      "fingerprint": "5868a4676351a4ae780768bd45bf0cbe95b47205e711c57b022bbb15eb615425",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308830868-non-alternating-shoulder-taps",
+      "fingerprint": "81baa584701dae8dd0497541ceb93fa73f6bee6539202df43fc2511276462249",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308831083-noodling-for-catfish",
+      "fingerprint": "4dcc76412c832f6258b2966b8903e3fb0e9211bf37a05daefd09c3de0510e360",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308831292-noonan",
+      "fingerprint": "300adac7c3a60abe6ea5689d5e47a9057f9b8b9612ab9caa7e96e26fa95401a0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308831503-not-so-lazy-boys",
+      "fingerprint": "99c84cabaccb5f86995803e7c73d1c4664e498dbfcdf625ed397de536b85f7c0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308831720-nutcracker",
+      "fingerprint": "907e91f014204400d81e730989b6fc634a57673743f2ab02df380a3054fee2fd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308832012-o.p.p.",
+      "fingerprint": "f27c1c7724b3ab00444ea8acdcea348259aab8ace2b315a55c0071ab0e383189",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308832221-obama",
+      "fingerprint": "bf01b4fbc7995181a0a90dff77c8543f9ac38a8e87a4834c4a0812d0c3b4ecc7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308832442-old-flame-drill-(ofd)",
+      "fingerprint": "a712355541aa895e0adb7cf8b4c2a91c8de4b75bb593513f047cbf76eca92ef6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308832657-old-town-pain-train",
+      "fingerprint": "f106137195d2cd7c359bab9889f352c584fcb7a3e5e605e2a7662c82b0a5c0ab",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308832863-ollie-norths",
+      "fingerprint": "41c3d54b7dd215680366824373eec451b1ffc8f81aa035902226865c48f32bef",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308833070-one-calls",
+      "fingerprint": "b228a7d28f2d319654eff7b158b71554091c9d56b93dd992a150eee49afaef2e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308833316-one-armed-pickle-pounder-with-coupon",
+      "fingerprint": "470dd4f5da6a6741ad59b1fb1a778bc12ca59d196600a5fc9773175f93c3b697",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308833522-one-legged-burpee",
+      "fingerprint": "f5beed901fa921628b67448c4020435905130fb2ef7d5d702ecf23ba3ef73c40",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308833740-outlaw",
+      "fingerprint": "18d8d86723484b560449e0f9b9335f8b9202f224ac7e614e53615bbcd4f7000e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308833946-painkillers",
+      "fingerprint": "31dc3cc9506039ea9263e2c6d6c167be9f82803b28123b24bfa0a747e6d334cd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308834242-pamela-anderson",
+      "fingerprint": "4bc938f04d81c393de16e3e53dbbba7e89eb7eaa5084b03a24031c45b10df6b8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308834444-pansey",
+      "fingerprint": "38ba04a365eb940004d5ba5c09204fcf27658a95df3808042446767310418a6b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308834658-parking-space-tracer",
+      "fingerprint": "ac865b3f099570c84754af52b478658b0d2f37a60bc0b354b52b82611c102ebe",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308834867-partner-carry",
+      "fingerprint": "62968c6adcbd55ef5f951d51eed34b03d6c480e800d79d445866a98feb6e739a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308835077-partner-derkin",
+      "fingerprint": "c14f176478c5781430b2e1a1b4d24d796cee6bbb322e2c2a6cc76cc7cf0ebb61",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308835284-partner-plank-curls",
+      "fingerprint": "e6e197c489b13ae87b0a31a9f2dd7104ea7c11eccd35894ec7dc9639417a4116",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308835496-partner-shrug",
+      "fingerprint": "4c0bdd05add10a6acadf82902494385ebef5dda3dd03a9ac771c56f3d3de1f69",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308835711-pattycake-merkin",
+      "fingerprint": "a246bcd24c1084e8bb4e803cbe6d4478ea5ff13d759ca3f9b2204c97b3bc900e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308835921-paula-abdul",
+      "fingerprint": "36bea428c75e68208b81f3973755932119b602b52e0057b07568451cf85d273e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308836135-peeping-lipstick",
+      "fingerprint": "37d1c74319e344e03b44db76e4215231a76662ae8d934b010c27427f13e0554c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308836343-people's-air-presses",
+      "fingerprint": "c0561c5e6f464d09d30262535c560e2a477bee30d1125b327feb0993c99f4c17",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308836551-people's-chair",
+      "fingerprint": "cea6821e696af58f4a198824c7a3110ff7ca2e2ce5521a03f80b2e405267c9f5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308836761-people's-chair-modification",
+      "fingerprint": "e468dc88018c878970966f331ddac8ce6c56249644de4aafe50a7fd37e33d3d9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308837185-peter-parker-(and-parker-peter)",
+      "fingerprint": "6e6fa411dfbe0a428a8ede479e44f314cfcaa70af25fa0cc64ddccbb5a36e0bf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308837415-peter-parker-peter",
+      "fingerprint": "ce1f9039858588fc7a3d5c30b9eeabe6fff202eb2cccba3f4c5f2e51507d04fa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308837632-pickle-grinders",
+      "fingerprint": "9a54651c1f157379155f00e9815bd7e28f34419b52a230fd5ca0ad2eb430c4ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308837860-pickle-pounder",
+      "fingerprint": "699d1dc4914b3cdd85a85d4067e7a3ccf07980b1e75ae92813fad24e7b44fc1d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308838076-pinocchio",
+      "fingerprint": "d0e27fabf54f7ae90df03ab396ce3ba7f878a0c9b53f5ce1e0ca34b92914fd82",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308838284-pinochle",
+      "fingerprint": "818975820cab9715cc3359c9784edefc13837373e4c327cb9568faae8c6370f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308838498-pistol-squats",
+      "fingerprint": "bd7edfb4dbb6183d210e66ea9bd940f77a7da40398ca253c7438afd50fbfc3ba",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308838700-piston",
+      "fingerprint": "92b9b1e70fc659b8ca6774613778345fe38069d1c19f493a37dfc5be2f57d747",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308838910-plank-compass",
+      "fingerprint": "a8b9c4d7703b75726aeebb74518ed1d60567ccea0cf25463c4141a9559875aaa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308839119-plank-destroyer",
+      "fingerprint": "fd037fb9163f6694752635424fe4797f2b5691e71a3b4478e2e0b69346817639",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308839321-plank-dips",
+      "fingerprint": "26b986ff0dc5d3ef582d5ae40ab4e64b0aa3de2305cf408b8cb6ec34b142d826",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308839533-plank-fonda",
+      "fingerprint": "72c0560714985a6ba6c609fa57d734ec64d50f153f061bab3ed83dd11511c3f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308839741-plank-hurdles",
+      "fingerprint": "1dc2481244183068369fe42a440550edf038b3b6c11b30ae7d651d1686514183",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308839947-plank-jacks",
+      "fingerprint": "03096ee4da36a17cc1515870657bf1ea5ee9c5299ac3839a50a2580039b10f2c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308840160-plankorama",
+      "fingerprint": "3c89f9e3b9b809579f81dce3c9589f20bacd1c92f71d244a20011cdde5fbdfde",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308840370-plankorama-mama",
+      "fingerprint": "9b630d7ef0a5f5f37a4d8435c2ba9ac88c37ccf625d92950f1e2313afb5216ea",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308840581-play-it-cool",
+      "fingerprint": "00d20406cb2ee9db20a7b2919cbd1e76ffe65afd9474ce4c6f4190186e8d3657",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308840787-poker-chips",
+      "fingerprint": "03638d1a83be49457b8d5bad67609540652ba419ccecd3dcbb73c78dcbb7248d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308840998-pole-dancing",
+      "fingerprint": "93e9acd713215effc63ddeb7042f1e3b8703f47943d411aadb1436dfd41a706f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308841207-pop-up-merkining-aka-jiminy-cricket.",
+      "fingerprint": "0795fc465c6ab5c83981669bbd17bb7dd8a385036d0ba6d99135bc071330ce69",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308841413-popeye-punches",
+      "fingerprint": "be32f2e35771c5f0a7ec8d90391dff4b733197ba17b906287d1d84bd7319cb80",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308841697-post-hole-diggers",
+      "fingerprint": "e86b2f56815d7c26b8bc37ab639612406ba69d66463cb0fb50595339f2ea30ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308841914-power-merkin",
+      "fingerprint": "90e528c0d9e0c5289f317737936f5d0fa326693f2605f4f0b55ec79efe85627c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308842132-prayer-squat",
+      "fingerprint": "cc694a088de2d179abe087c7ee84bd4ee527b67b666bfed408edf72d3841c5af",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308842345-pretzel-crunch",
+      "fingerprint": "485cd7977c175ac024bdd87b14a6c523d0234fcabbc784131cba5cbd436de913",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308842561-pretzel-stick",
+      "fingerprint": "088caa77a4dce0f07b9425e1d229a095597877c552f0f68bbbf1524b969afa2f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308842776-primate-humper-o-rama",
+      "fingerprint": "6a382c879b232753b21f82e89da181648558260a2aeefd0b3607713b55adbdf8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308843063-prime-time-merkin",
+      "fingerprint": "fdb711ab12aba989909eaa7c6db9973c36cdd4ada5c90fc281fac14f73a00cf3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308843291-princess-tea-party",
+      "fingerprint": "4b0c4e255ce561c284f1aa4c2a3c7524a259a3f9a5a3f44ef409cfe88d5b9c92",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308843502-prisindian-run-aka-prisoner-indian-run",
+      "fingerprint": "dcc9164ebd5f4a53c4c4b86762a13c559de01ab7ee422a31e04454c0b9738fe2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308843709-prisoner-cell-merkin-burpees-aka-pcmbs.",
+      "fingerprint": "f41ad85d8e836babda32177b248f67b8e3643069216fab2087a0babbec9e7ae5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308843920-prisoner's-squat",
+      "fingerprint": "24f082d88e0098c97152bf8d4d86b57d21aa82939a06396fbff18ff96562edf4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308844130-protractor",
+      "fingerprint": "b54f4fba22cfdd08255c313089e6b0b7da8275af99dbf606f917d99c814998ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308844341-proud-mary",
+      "fingerprint": "7cb59c3152c8e8cced914222dbb0e9f94be8e57b7ccf8be58b50bb199c60d654",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308844638-pseudo-planche-merkins",
+      "fingerprint": "e71d774fa852c4c8c69e0fee8f6f2158c5bfcb0cb3c12f90194f14338cbd1275",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308844845-pull-up-squats",
+      "fingerprint": "4be8429913aaa6ce8efab969369b189df9923b50eb35d8dd41742c48fc55a33a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308845042-pullerama",
+      "fingerprint": "310580c906dc116489d1703059cb8c4a1e1aea828c7bb54b22dd71a368074431",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308845265-pump-jack",
+      "fingerprint": "2807d78b69f5005ad18a88601f3157e9fdfdd3574a0e022060d149bfa2e7a6ef",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308845479-punch-up-merkin",
+      "fingerprint": "d7693ef0e0cb0a53e86236317d4a83488a705c7845172cc23f925f5d05da7a51",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308845704-pure-burn",
+      "fingerprint": "735290540c3916ccfe70c6f0d70d0bc2037cca64bde63df9dd238fe848c6ebd9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308845912-pusherama",
+      "fingerprint": "cecf2da14a610081bdd0c6fd6ff93afb4de1d4c9b91f23834700df21f3445855",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308846138-quadraphilia",
+      "fingerprint": "8c4d6cba85e59437352a52d9a63838c5dc5185d46ea2d3409734baf23e275fce",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308846358-quarter-pounder",
+      "fingerprint": "ae20a9ee89af9d827e9aebc5a639366d33bfd510c22e92540ae904422baa6de7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308846567-racoon-crawl",
+      "fingerprint": "4660495605bcef477b57f4d973fb86284af2c1711b0ed5bbd690d0bb70f0898c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308846773-railroad-tracks",
+      "fingerprint": "aca9b090a0d035eac359f2f769ad99b1d189ff6363cceeb41f11e89d5ccfd52e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308846980-railroaders",
+      "fingerprint": "06107421a3d8ca1c18708403df297fadf51658d47dd62e217f33fd1c952ab765",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308847186-rampage",
+      "fingerprint": "83c3a1c9b0f8a93bbfbbe3a23deb957e734aaf2ac993c56a7b481c82d1323ab9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308847398-randorama",
+      "fingerprint": "23e943b98436caeceda43b9000e8e8865a04201c4cb88ae36a17d769147336a1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308847613-randys",
+      "fingerprint": "e2af2afd9fcbe725a02d6acf239597de7116dbf45ba1ad32d2fad844ca47f7da",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308847826-ranger-merkins",
+      "fingerprint": "ae2e39c67f120b9544cde9b28430a2dc4990e2f41f78032750ec93c5586bc661",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308848038-rapid-fire-rock-set",
+      "fingerprint": "d3dcffe5624f338a532a59e96f77f8de2d5eb5e88b85f4438b6d0a5336a1e6e2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308848247-red-bull-smurf-jack",
+      "fingerprint": "4ff506b7600355429f65aabe081fab328797e5d95ed9b953d7ebba5e9940d621",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308848456-redrum",
+      "fingerprint": "5ff802f403eb238a596cf5e9038fa364495df0266f6557e65fc1ed3b5cbaeb49",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308848741-redrum-bunnies",
+      "fingerprint": "c4e0839ea2b2e860e72fd4a92e2df638b0b15664e68cda088228c2d124551682",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308849246-reverse-crunch",
+      "fingerprint": "d4a387758ff8ed635e4758b7e90b7f38c08221477357678aff514a3fdc2e4b9e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308849463-reverse-indian-run-aka-indian-giver",
+      "fingerprint": "f34f43677260d8c82acbd174d7359adc31554b0e07110d970488f4a290de9ca8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308849677-robert-plants",
+      "fingerprint": "0e406e4a13cffaf759c63a159d1307a7a76fbd7e5755144ccb98332d8e15a9c3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308849888-rochamburpees",
+      "fingerprint": "5beadb34d9239247738ce14a711870117c6dbaa6ae5eef0126869b752f227bf4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308850105-rock-a-bye-baby",
+      "fingerprint": "bd787373988fbc2ec7c7973fb6f4af183e41a0be5930287b7fb35d1bbb65ddc2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308850318-rock-ee",
+      "fingerprint": "cdf6e918afcdf69290afbae7e227f31b9946f4f50249fe020ff5c69db550315c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308850537-rockette-dips",
+      "fingerprint": "59733159906d7f063b70f87c085a9d6d4e09ad9f203870717ca3b2130eb04b51",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308850749-rockette-hillbillies",
+      "fingerprint": "951230eb29fe6ccb89f1b5119c58687384076b37fa1f38a160bedb4066a35fdd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308850954-rocks-up---rocks-up",
+      "fingerprint": "dfd163e834990de3e02a00aad2a9f38d87d234f34d6023c5f22e02f1472bba6f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308851161-rocky-balboa",
+      "fingerprint": "15be7955f253db655b002911128c7f102289cab58e2913d151ca00d448fa529f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308851369-rosalita",
+      "fingerprint": "df30e634f4dd2481719bfa8eb914a39461e9f88aca31eefabe2facc2c93c724a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308851580-rosalita-wip",
+      "fingerprint": "8df8cc10e6356970af49f1f81e56d9772a918757caa44f3bd5240902064b9aab",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308851792-route-66",
+      "fingerprint": "b690a883d6366e2760e66117a7ecea0c2fd85133269d7ed52c351a77556eaecf",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308852213-roxanne",
+      "fingerprint": "2aa451170d03e1a2dec3161d8290647815398054668c97fff723c23d78d39714",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308852503-runny-joggy",
+      "fingerprint": "cef4cfc0e4ad3214154e4eb0d2251bcdfa0e4f3cf7545cef87028f3e5833688c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308852711-russian-dips",
+      "fingerprint": "932126dbe82d0697e24b85ffcdb4a9842b105877ff5b20b1c4fec21327368e41",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308853454-san-antonio-shuffle",
+      "fingerprint": "6d5ab1cdd15b2f1dcf4c4b3b1f6777d09fcbf70b6fac58962c5c1966babed943",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308853661-sandstorm",
+      "fingerprint": "45e2e7b039a43831d455620d739fa488c2d9538a0554a3583ab34389e83da2ac",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308853869-santa's-ladder",
+      "fingerprint": "0a24ef42c3b1dcd3cfeebe185bc0ce60f46ff91ad3348be7e993436c1496d049",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308854079-scissor-lifts",
+      "fingerprint": "3e92328f7355e2d259e0e4414e7e6da6cd89799a14899ec47017a1405a5aacc6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308854292-scorpion-dry-dock",
+      "fingerprint": "cf9e834d143d1c7469cd964d65e54cfa86de8e2bb1f7cda13002c45f7cdb86fb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308854588-scout-run",
+      "fingerprint": "1a6723d0343fb2a664a29a26270732ae4e55a244353d11c44343650d7e721f9c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308854796-seal-crawl",
+      "fingerprint": "0aba5555a21824a4c6d47f43ca9bbf109b8aa3d20d960cb2850e77b4305911ef",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308855001-seal-jacks",
+      "fingerprint": "56e9d1bbceac092584a378a6ec6d34c2344d6a1f8446c46985a783eb63a8f3a0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308855467-shehateme",
+      "fingerprint": "10868b6fac6d88c3cf72a8f3b2b5d6a1ee7a4fa007c37c91ffc834797ba503a1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308855678-shoots-and-ladders",
+      "fingerprint": "098c6c05d6f2569b24e292ffc13d57697810a92f893f747db2011ac4391ba41b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308855879-shortcake-special",
+      "fingerprint": "bf97a8c6a1ab1a0fe66a2d62b42bbf5c936d2d8725ba69e8ad8a7cdbe2609ba0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308856088-shortie-squats",
+      "fingerprint": "788cfe9728f1d08a21cea9f7c5965da4389962942d45e0130e5ccc2f140486f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308856300-shoulder-blaster-special",
+      "fingerprint": "707483f6ab99986c87b1a11d5da26ce6750442977bf41d46fb7b6b67178adeaa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308856596-side-straddle-hop-burpees",
+      "fingerprint": "5a948ce09ef7a3d8de9530e13d2fb4e4e56205981ae38884120d33eae1255d02",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308856803-side-straddle-hop-jumps",
+      "fingerprint": "ba82ff13dee9c848aa9dbface903494bdbe4bba3b44f575c5c1faeec6ba5de0e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308857223-side-straddle-squats",
+      "fingerprint": "bc17486fdff3fcadf95727fddaa9d8aca70ba54c6b34ecc95e215528c932dcea",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308857452-singlet-merkin",
+      "fingerprint": "13f82240c3b0c660921a1d75791e8f4ead7f16dd90ced36c706c47821ee29162",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308857669-six-minutes-of-mary-aka-6mom",
+      "fingerprint": "c7cb423543f8d28d3236d0ff135d52035243ce0e32b14849bb54a2e7d5e53afb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308857895-six-minutes-of-uncle",
+      "fingerprint": "4a9b573c0e3f146a9f735f3fe5e1dc461a1d988d2b6f222f6f01ef6afe038a2b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308858116-six-pack",
+      "fingerprint": "1db5837363a7ea19dc72a192681fad54aa58585a329ed5dea11ca5e126811c7d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308858343-sixty-second-arm-circles-aka-ssacs",
+      "fingerprint": "4c2272e3a2393be8693cc334f1e6cd685c13434b9fa52f1f408c08a773d5b69d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308858550-sketch,-the",
+      "fingerprint": "862858142de6a6cab2bce4795bcda987e04d9ef084479b6dbf2a8d688b2e42a4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308858758-slaughter-starter",
+      "fingerprint": "132723bd68854eac9473f574925c072cf713baf1d6d6abc285aaf17dc8559ad9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308858969-sleep-walkers-123",
+      "fingerprint": "ca773a28bb4648fc7ccad755d5dc4637a812df94063e31c9dd56cd5276379849",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308859182-sleeping-bunny",
+      "fingerprint": "cdddf6d0916d15dad15a28938089c87e3652522596bff8c44437c92d8c6082ef",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308859472-sleeping-hillbillies",
+      "fingerprint": "db22feebf519649878ffd1bfb41a4f97eb1c7e249dfabac3d0d0f550ce1ef8c3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308859678-slinky",
+      "fingerprint": "46b47aa8f109c8010d4ec43ae0b3c82f8a3519468aeeba3e320296eb4d7496c8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308859889-slugger",
+      "fingerprint": "bddc2e5df9646e5dccda2f922fdee62e584acb1f5c17742d9a4d4aab7f945e71",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308860101-smurf-jacks",
+      "fingerprint": "eca1d8fb299935d39d1c90f7c303091f3b223499682156ebb636909d6e1f881a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308860443-snapshot",
+      "fingerprint": "fe9ff8a3b7ea5346abb9520944015bccb3da720ed267ffa38b8395b71222302f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308860658-sneaky-gorilla",
+      "fingerprint": "5bb5905f98e879ae42e6071f50201df5673347b7f26a264aa23c65a7d1c19a08",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308860868-snowflake-plank",
+      "fingerprint": "29b15d3f0f0ce8452e3fa277087dc08efc5eedd208182ddf8cc465c8de822284",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308861080-snowman-shuffle",
+      "fingerprint": "5b8651d5d872c6dc2ba29163bb05ea55a9481d84cd96eb67571fbccabc2fec30",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308861294-snuffy",
+      "fingerprint": "c25e494eb457f1a624d8079e2cf8ed93b2b535fad1231f4ce3a23381141a7bd1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308861505-solo-tesh",
+      "fingerprint": "8322f0dfaf19004b8976e4f7ceedfefd40311d9d5b7d0fd987139c83542a6e8b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308861710-spartan",
+      "fingerprint": "c9f71760795dffc7c506ac37759590b39f8b4a01ade257b2ce28230e836a264a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308861923-speed-humpers",
+      "fingerprint": "c7888fa184f8f004f4b6f3c6fc5ff305a737d286774bbfc763de17f433c36c1d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308862219-sphinx-merkin",
+      "fingerprint": "b6720020be9d294d0021048f7f1999f45b6380ed182c5425f7103e7c4a750141",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308862425-spiced-rum-squat",
+      "fingerprint": "b9553b826e49787a11156e71697045ef75d77826d9d8ac441a3ddd68386ee6c3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308862716-spiderman-crawl",
+      "fingerprint": "946caf4b66b780826997d60046474df97957fbe96fd35ba706349abbc6dd3ea1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308862925-spiderman-merkin",
+      "fingerprint": "8095b1cd704f1f6c8877c8b1b2caefbd73388ed245e7ad6390109d4d7b070af2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308863145-sprinkler",
+      "fingerprint": "76cc932db4b059ffa49311bff34fd367f954711b90b7cb0c56c3778a5681450c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308863359-squat-potato",
+      "fingerprint": "8bc8e455d3572b40d34f81be0f00278ca75fde95d5f8b603378307816a4ff70d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308863579-squat-thrust",
+      "fingerprint": "c97bc0bb9967f1d81802d26c30355eda3c6c1c2885aa63a058bc40155a139a44",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308863785-squat-walking-rockette",
+      "fingerprint": "58759bef3c95b830e1af6c151b8818b2ad7769aa8132a77fbdac42ce480abec2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308863993-squerkin",
+      "fingerprint": "bc172237f7cce5a3fac6be21995afa5cd7b661bb30840d5c6267e1d4a9c4e4d8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308864215-squirrel-splat",
+      "fingerprint": "1d722f3bdff6e7bec0fce063d29d6db933e8debc284ff72ab53e259f4874a3c2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308864504-stagger-merkins",
+      "fingerprint": "93e3bcb4784ca52220f6abd48a2f2eff00bc430d86a4d44cb406a240d5c818ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308864713-stairbarrows",
+      "fingerprint": "88da7c22b233354dc79ac52f8ab2c9572c3bb8a8fe9825e933ea47957066837c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308864928-stairway-to-seven",
+      "fingerprint": "cbcd176b1b34f554cc6bc4bc5ff32b719bc4941751afdc684b4d820997b95a45",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308865137-star-jack-burpee",
+      "fingerprint": "d4d8546d1b4f968ff147c56845a1861f2d7354865b2b1b276806adaad280cf54",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308865485-starfish-crunch",
+      "fingerprint": "7c79b704713406c27b59c2b97ecee1d56aec429a7f3d23124e18b345d4c8d3ab",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308865697-steel-blades",
+      "fingerprint": "4a51d05dae4ec150297e500b1f39a5bee9160b69fc7a6a13e8ce22cdaaf55f41",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308865913-step-into-the-circle",
+      "fingerprint": "561a5b3afdb9259b39997aab9e227c7ce48bb475cdeb8aedfe47c6266e8c71d2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308866135-step-ups",
+      "fingerprint": "a0b866c35e9d3d68160d1f3ff0865c2450ea3127f278e29f204c9021a6e86e75",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308866355-steve-earle",
+      "fingerprint": "8d2ed68c8f9ed3d31477d7960b568a9f4a752ce415de58b82f7da86a02e38afa",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308866575-stink-b.o.m.b.s.",
+      "fingerprint": "6ddabf08d8a7b523952eb1337c811f45c76af928c36f4dbc7d89d742b51d8cf7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308866813-stirkin",
+      "fingerprint": "dc96609ccde9c12d1a9e9e0435b26477864785bab5d9541b3c34ae0cb7f99f2f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308867032-stump-huggers",
+      "fingerprint": "5245a24353308d2fff441a499db99d8e6c329c0bfc3a16ac0de27bdd080c36d3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308867243-sugar-bear-crawls",
+      "fingerprint": "1a447e480040e4ddb45f3e99f2497cbfa3a00da065e0688d7e3248b646d6c0bb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308867460-sugar-cookie",
+      "fingerprint": "5f38346a2136d98fedcdd5435288cf8666200756f77deb30d44532c0e0d85c24",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308867674-suicide-ladder",
+      "fingerprint": "2b25b2787414ef20495a7642b9742b010ba8a2f5b8f0c2c1129bb7822cd9e744",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308867891-suicide-squats",
+      "fingerprint": "ab9ac7b3387f63bcb5a497046de9f880848992fa1b9ca47da76a1d6e1cec2a78",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308868101-suicides",
+      "fingerprint": "d8156e789977b4569bd77939da8e929297c6de02fdac01abf4b93a3c7cce0e93",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308868314-sumo-squat",
+      "fingerprint": "9877e0229741b1bd6691b82aab7aea8935fdcd3bc11b42c4967fdf9fa3d4da8d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308868526-super-21",
+      "fingerprint": "05f1dfd6009411c50a34add5ab33b68d033fd6f1424dcaff9ca26faef0096a0f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308868744-superman",
+      "fingerprint": "d11559c2cdeb0ebf08d88341144470edde15df6864ff2c12a3e78d993eed2ccd",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308868965-superman-merkin",
+      "fingerprint": "65da8f1ed9f0fc178285054958024ced292c4b1d2b9f7c549db7f74f2193c0f2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308869184-superman-yellow-sun-(and-red-sun)",
+      "fingerprint": "383cd46dbac25422408288a83322b324dbab518c76b737adb6d830b3cae4f4a2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308869400-supines",
+      "fingerprint": "62e74f66cba51b5426455d50876330f7d6f5eeb3d5f5b8a163955b1b7898081e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308869700-surfees",
+      "fingerprint": "dd9b3ca2adeec5b3a38a591cb2de14342855c9f68c5d3526ba6090fae62b6ae7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308869995-surfer-merkin",
+      "fingerprint": "912666a0ba6f67ce3e45c9b6ef357e47a6fd02555a7a6a25ce9ed8603bb246ca",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308870288-surftanamo",
+      "fingerprint": "a89a05a1e0c40069df5a7b82178d27dad77a8896bd8cba773a875292049cb7f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308870592-suzanne-somers",
+      "fingerprint": "62b5537326bdb379d0b630ce357f81a6961e2be9124223ceed3462973bcc0bc1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308870892-sweat-angels",
+      "fingerprint": "d4307e8edb630acf1f997b433b319169b2cb968d5870d7e6813bebbe009ccb36",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308871194-swerkins",
+      "fingerprint": "ad9df6fb1940bb9a92fa2abd993eb726d6fac6487bb56577879ea0c82e6b14e5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308871494-swingset-orangutans",
+      "fingerprint": "d43843760874bbefa857e6920d2d38752255d1f17d057dc713f1bc6ac7968aab",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308871793-swirley",
+      "fingerprint": "2aa7b35609b464d3e34b7602e7ce21eb979e2ff88d47409cccba10fb9ea3dda1",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308872099-t-bomb",
+      "fingerprint": "583e5feec98ec900f054a54b1a270a1291439de15df55310acf96df0dc30b94a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308872316-tammy-wynette",
+      "fingerprint": "7e23ab3ff1db4a09215c4b1019fa3e672ae8cb248d5f21ca02bbd3603bbcd945",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308872612-tempo-merkin",
+      "fingerprint": "67c970ce8c2948553e4faa5add43a23c5703bb81a44a9d60a4d4a90ad181aad8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308872913-tennessee-iditarod",
+      "fingerprint": "fea7dc6e8880cbf1918780efa5e7387a69f912d75ef6503d5949e1005483e56e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308873538-the-bruce-and-the-cait",
+      "fingerprint": "8a461704f4fb65de42164fa90ae74a194ecdb418f8ba4ac4e564766ed4da3f9a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308873832-the-butkus",
+      "fingerprint": "d102496cb8ced0b1de4415046c8a6c50cdf3311792d84b8b37f4429c3b14f765",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308874471-the-cooper",
+      "fingerprint": "cd76f5a612cc306c8d9d103eb9056c4b6d69fb5ea9dda3e3aeb77cf84ce04f4c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308874776-the-cycle",
+      "fingerprint": "0ecbad26b56224459463d64f4e863b72af333163ab0bdbbd47414594a9ae90f7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308875071-the-dab",
+      "fingerprint": "6ca4c70feb3b110bec2fb56da3388c49000beb1d6c84014fcac9d6892f1ab212",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308875378-the-dirty-dog",
+      "fingerprint": "b5db852999ad21d0d54c84317ba36ee256d5cf4a3a9229001e908863747b3bb9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308875680-the-donatello",
+      "fingerprint": "aade5235f3beffd12ef10106937cebcecdcfbd27ab7611273f5f47cb348c048d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308875961-the-elwood",
+      "fingerprint": "8725536a2e6374e4971fe03c5aae93b30c2991ee6630b035455e5772ff29fbf3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308876305-the-grateful-dead-(aka-dancing-bear)",
+      "fingerprint": "5af2f681e1417a982c90464723e2cf0b3f8c179924806d66d042db277b7ae135",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308876595-the-gross",
+      "fingerprint": "688c8eb1be0622d74d1eb39e685d7fb719dabab237a6d19ac8469f01dfad30b6",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308876888-the-hightower",
+      "fingerprint": "f2044d4730577a814bceddf0b8700e294b97822211aff3c149df3788433a70c2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308877180-the-hodor",
+      "fingerprint": "d59e480dabe0921f4eb2c32bedde7c110a1223d2ba1991e132c9f77778139af9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308877475-the-jeffrey-leonard",
+      "fingerprint": "623ad640a8975f6af186c3083799b11d21c997d5f4bca80f4eb76dece46374f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308878081-the-lion-king",
+      "fingerprint": "795bd2be11047cf9ccfb75b2c07e930c6cdc36164b85819ee19d55d7c00c5159",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308878386-the-sheldon-cooper",
+      "fingerprint": "a4bebac452164cc7b282396252988620c9bc31af73543d00c964ef07165e0aa4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308878689-the-swimmer",
+      "fingerprint": "78909bc1afc42b2730b89e60f719ca864ffd03aa461d08c6a2df4ef822e45684",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308878977-the-w.a.s.h.",
+      "fingerprint": "f12f9b76fae1306f904d305ea4b19e3ce3b3519e6e666bd09efd5493ec356bb0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308879301-the-wolverine",
+      "fingerprint": "693fbcf6e77aaf43f2f64c01707eff6ef30fbc0045cd4943b9cee5b56172c523",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308879599-theresa",
+      "fingerprint": "06ab90d84cd67512e4bd37938686a6c9eba0ac672de0fb603958a45cfda2c8f4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308879897-thigh-master",
+      "fingerprint": "b795f42e6523b1d49f70c9a136d11ba264575983a93be0f864ab5f69e9e31763",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308880192-three-amigos",
+      "fingerprint": "aa0e50b93a27b921be97e9b35d118d2334faa15d7ff2eb528629d0c5934ca816",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308880483-thunderstruck",
+      "fingerprint": "6b851b1382386f5caf41ce8bf6b54c110f1c99c73f9a493e6cbbec99fad34581",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308881095-tony-hawk-burpee",
+      "fingerprint": "eb59a509a75f784ea0eff6ff7a712b380ce5f9c1524b7fa5fcfacc50be266cfc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308881391-tooth-fairy",
+      "fingerprint": "7497277fbc72624b66bd9c5d1e352e97be1d313e9c2c34c708d5a91e2a90be28",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308881675-top-gun",
+      "fingerprint": "8ba502a856ff1272809cd78b33c82c98d838c106b04e3ca6e018dc8af3618452",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308881969-tortoise-and-the-hare-b.o.m.b.s.",
+      "fingerprint": "495d955dfd80e9cc87e043e28b0356850c8216c08631bf95f5d094f159cf5a92",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308882281-tour-de-humpers",
+      "fingerprint": "fc07c3a162e328a7cd7290712375000f85b356e5da839cc7fa92fdd4e92c42ce",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308882586-travolta-merkins",
+      "fingerprint": "96dc18f7ba536a7cc792054dfbab4ea97e67e2903aa02b801eabd4cd17c9d355",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308882877-travoltas",
+      "fingerprint": "b016a5ba8a6fd01848c0a32919098f9a9be4bd37630108b26ce8b6cbc0debf60",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308883179-triple-check",
+      "fingerprint": "4a8130f2bbe01f9e5a30097f9b7d1f5933afa09f970800ae5b54f6be7e46d5d4",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308883468-triple-nickel",
+      "fingerprint": "23bde68504703db082a8546eda18b52847435b1170b7af4aa48f27f834dfc840",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308883757-triple-pump-squat-jumps",
+      "fingerprint": "b69bb279c083ce261bb8f4ddaabc48bb535b4436b41008cdb405e2560d0c9883",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308884043-tunnel-of-love",
+      "fingerprint": "aacb22e4c6b87594809abff78554e4f52b88e0afaeefc89e4029d987d40fbd29",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308884339-turk-n-burp",
+      "fingerprint": "8813beb91fdb774d2291f1820ea4b60d71f9c4360616a32e34cda851bbc1bbc3",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308884628-turkish-get-up",
+      "fingerprint": "a975e086f569b563996416dc1119596aa87f1a398a3dfcfa15057d489963cda9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308885249-twerkin",
+      "fingerprint": "7b35ff163aaf280895ebf265fd88f5bc9a0dca0311f2d082511b1b1e37ad1344",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308885545-twin-tower-of-trust",
+      "fingerprint": "a57a7add6c5380b5d7ffda5182a9ce2a9cbba9f6f68d6777bbb611591c30ed40",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308885837-twinkle-toes",
+      "fingerprint": "8d84c6e16791b816fde427a44c02bc9f469927170bb8718005c7524f6217f33a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308886123-uhaul",
+      "fingerprint": "fdb93b64926e1788dd2f7d045f5553ed6e93e8be42c38f56e5de977c48dc1d2f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308886466-ultimate-football",
+      "fingerprint": "34a53726f49b8cd685618970aedefdc7d0bd3f15cca18e0e546861c81be428bb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308886757-ultimate-frisburpee",
+      "fingerprint": "57341b5bdd5f696763b415a7242084be575d9bfd7d7768f87a2d60a469ee3333",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308887050-underdog",
+      "fingerprint": "e2e9ed18828a9e3a49aad3365af8473172aa6c2519079a289e7428a3633c505f",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308887351-up-downs",
+      "fingerprint": "7dc7f5dd614b013671b1367d3758153044ebc1b1216bbe9a769791e8e87d0a0e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308887662-up-straddle-hop",
+      "fingerprint": "5c8239cb29d5df009cdaa52c7634fccc41c82fd49c7f86223175982279c70636",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308887956-upper-decker",
+      "fingerprint": "2fc83568016238432412d3ff6cd310c9743ca9670324e368c75b2cf0347fc6db",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308888266-upright-row",
+      "fingerprint": "37c7c61f3e42dbbf46e26914e51c159317f1457dec24e0cb7f8d8398a29be332",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308888562-uptown-50",
+      "fingerprint": "67d4dd821226d0819a3a3e995b5e38eba1df4d8a2788a956755d0c52cc3a179a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308888854-v-up-roll-up",
+      "fingerprint": "e9f19cfd8a2b19581fccd00290d5cb3083d1260f219103cf640fb696e98fd817",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308889142-vacuum-cleaners",
+      "fingerprint": "9884fc4c0d3729ea6cb7ef2094470b3db78008c497f90f102976c86103f87f9e",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308889482-van-goghda",
+      "fingerprint": "375c0d153ca74e373c8b010c188af0ed939cf0f3577912f0e4cc2697f44cb47a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308889776-vertigos",
+      "fingerprint": "1f3fe2e2b34920d478c7a38583e631eae0710c91d62a7c3b0e0714a6931876fc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308890076-vicious-circle",
+      "fingerprint": "d93441d831311621e766ee231cb1cb3e73880086d111c73aea1f94cf23e36db2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308890385-walk-like-an-egyptian",
+      "fingerprint": "8e6ad4c07cae15e4c77ba3af089de02a91c3d6932ad5ed4716748f9d479d2e10",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308890694-walkerstrong",
+      "fingerprint": "279ad4972e22d91841166d2fc20f511b7aef8269e43ef8d0f2c747ef3c9b4c3c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308890985-wall-conveyor",
+      "fingerprint": "be8fdfcbec25f412d55091510fc5fe51d782d7a28ab360e3a0142534a6b5850c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308891270-wall-worms",
+      "fingerprint": "0c159dabf1333134f68f5a6830564ac04952257d860ee7183645f6d1ecf8db4b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308891556-walls-of-jericho",
+      "fingerprint": "6b73558eb00bf4baf1d0f8eb800bdd9f1f0444d92989cd24361626e5b683b4b0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308891837-walmart-burpee",
+      "fingerprint": "cb93d7acfd0abcd7cc85a10fb5f0627f65538f26d67650e1f85e770d7345c8f5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308892119-war-hammer",
+      "fingerprint": "2ac88ec5f4e910fe1ba987a2abdbf4eb3816944ba3210b2c98e6b5fae47d9311",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308892720-wave-of-merkins",
+      "fingerprint": "ee897b33362edfd5b0b51aedbdf07b73b07be8891c27ea66ff26478851fb181c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308893327-webbicide",
+      "fingerprint": "85bdf2945da651217e468914417cfa6d349d5d20edec1be38fa07bc62e000945",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308893941-weezy-jefferson",
+      "fingerprint": "b62f7fa3771b65c5b1a4d060ba008ce788613edb020d3f27c428ce151b5055f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308894234-welcome-party",
+      "fingerprint": "373bce63842c0c6f107dfdfc7c352b234e44c849fabf1917d56acf1a5d5eac71",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308894533-welsh-dragons",
+      "fingerprint": "851a6f78620ab83e201d487d8795472d391fef44e931d7286b5deb0aa5e07707",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308894819-werewolf",
+      "fingerprint": "23934d0ba259639307300a974eb0a7f1d85964de895ecc8126ccfdeefabd2162",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308895102-whamo-lunge-walks",
+      "fingerprint": "ed8cac095d47b825f0a32c06c709324ab4566e8133c068e1b13f3c75be7f2944",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308895436-wheel-of-animal-walk",
+      "fingerprint": "98613100760b81f0e62f85365ec26bfc59653a13572929f47b1ddcdb3dca119c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308895739-wheel-of-merkin",
+      "fingerprint": "941f3502d688a6ce8113fd6fb1b64e017b5806666dc54e1ff08831570108da63",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308896055-when-animals-attack",
+      "fingerprint": "c6dc712d83a30f2537fddc90ac753243ad1fb21e8ef3c97265f51db6dae44c86",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308896644-wilt-chamberlains",
+      "fingerprint": "2855854a54a51531e5e783d3ed8132515d0a0f55c5bcbfa0200702ce99de4096",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308897253-windshield-wipers",
+      "fingerprint": "d4fb1617f875da92a7c0987d64f1fe211ce9037ac98780ce85e75e598e28bba7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308897536-wing-nut",
+      "fingerprint": "613ed76b550a800df4658e08725b1c52edba0761e60b17bf5a5189ec611ec28b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308898126-wmd-crawl",
+      "fingerprint": "10e60c59da4af3724cd20a86a14980df5dfe6bb28a0104cf6e8dddd8eb0b76fc",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308898465-wojo-squats",
+      "fingerprint": "cf720fce4c4f8e440f3353f785daf190f92050ff674e4b4bc2459d766cb41574",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308898762-wood-chopper",
+      "fingerprint": "20dc0e713182165943ffb231d8920bd4c6bf4979262bca990b4d9f0d2b6b52f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308899054-wooly-worm-aka-inch-worm.",
+      "fingerprint": "3fe8f149794f60939239712e8f563a5438b66c3e70ba630e59f04081acb1a85a",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308899338-world-war-i-sit-up",
+      "fingerprint": "23e327b19e2491230226f84f8b992f34abb4582c9921379a0f83e55b73989804",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308899617-world-war-i-snow-angel",
+      "fingerprint": "f61ad07c3b681b3fe0991b3c2d4a893bb000afca0a3db772b03b7c66daa4cc94",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308899903-world-war-ii-sit-up",
+      "fingerprint": "2339a592b739f7ecfa26914da61964b59d27bdf16738fbb9c1f30e3c4da9b3ec",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308900202-worst-merkin-ever",
+      "fingerprint": "d2a15c29724d50006b0da3e488dc70e447ba3b7dc3da1ab2ceb687cc291438f5",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308900492-worst-worst-merkin-ever",
+      "fingerprint": "761427a40bfc85e09c0cee6698037068ebbce014430a37a256c9849d842b1d8b",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308900792-wounded-bear-crawl",
+      "fingerprint": "1d4dd2d077aa53639d3b5649638701d15eafaa294ab69c83b78c73e66602a77c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308901085-x-cross-sit-up",
+      "fingerprint": "2250297d794c925dee12d046e08a728a4bae26d17300631db8045eb648ded226",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308901378-x-factor",
+      "fingerprint": "6b79a45e12f75b0118bf821c56a04254c9207335a6892565e8169cfdc8133dc0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308901963-xys",
+      "fingerprint": "5473caae321afad2f977086ac4914eb4963a5bc2f33aa28dc078c52d01fdad3d",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308902249-yoke-walk",
+      "fingerprint": "f8ddf9c7d141accac8942cbb27e7afa4930a81c08b75e9b477bde785be965ba9",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308902540-yul-brynner",
+      "fingerprint": "34faa4593ea052817065c051801c6616a8914d9fe7b5d2c71d026fa384d1599c",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308903127-yves-poll",
+      "fingerprint": "c73a1fca2dce663857ceae62831d7d262b3464539282bd770bf303d5d4bb5728",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308904329-zombie-crunch",
+      "fingerprint": "7a971030264cefaa73d839bc0e29543218c80b50fdf16ab54cee932ac79cb3e2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753308904626-zombie-walk",
+      "fingerprint": "30e75cdafbb9e463b8b2454fd12aee1e0dcec5ddfcaefed4d177ccebecb515cb",
+      "present": true
+    },
+    {
+      "id": "exicon-1753399744608-bear-hold",
+      "fingerprint": "39fca8435a225e08ef8a4717b4d64a495c8de186f164177da431f4a89b9056e0",
+      "present": true
+    },
+    {
+      "id": "exicon-1753469577220-zombie-crawl",
+      "fingerprint": "5976cc4d29ceaff3d023982ac6c68c69d1dbc1b2353100538e3dbc007bc613d2",
+      "present": true
+    },
+    {
+      "id": "exicon-1753469581400-zig-zag-hops",
+      "fingerprint": "46844864e0b27ff1a0ad25513deafbb733230c79ac570c83d799316301e782c7",
+      "present": true
+    },
+    {
+      "id": "exicon-1753469585618-zebra-butt-kicks",
+      "fingerprint": "04a5fdef745af1fb6a8ff8a459b49d023fc90786ebbbd94018adf8a05d7aad90",
+      "present": true
+    },
+    {
+      "id": "exicon-1754529609144-merkin",
+      "fingerprint": "ce6dc8252d2e15aa8e68ae74c1685c78385d9b62dff0249f3e3853ebe503f6d7",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988689089-friday-night-lights",
+      "fingerprint": "ed5381e3608ee96f16f4bee338ec9097bc02c542e5f7a9ade3cff17d89681419",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988690608-7220",
+      "fingerprint": "cbee44a10bbdf263209fa6b9ac178848fb6e87cda393ddaddee356d2c0acd5cb",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988693284-squat-jacks",
+      "fingerprint": "119b72f003df77dafbf9bb6377a1c0966bad359a61c8537de3beb8ef04f0eabc",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988696706-tyfbaf-(thank-you-for-being-a-friend)",
+      "fingerprint": "470a251411ee62ba0e739d42271dc60229822179f58d5ecaacd691a085ea6f63",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988698844-murder-burpees",
+      "fingerprint": "dea8ef6d7b1b2dcce0accb3763ee90fe2ddd4fbcc15c994ca377bf22ecaf8a9c",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988702177-murder-blockee",
+      "fingerprint": "10dedba4c9109e6352419af6260194f89cd0068b154c20b5ce35765dda1b93b2",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988709959-the-man-from-laramie",
+      "fingerprint": "f148f5eaf3d7334afbdc7376dc91622cc944fad9dc5d3d7a85c10cfb9a6bc072",
+      "present": true
+    },
+    {
+      "id": "exicon-1757988712616-another-level-legs",
+      "fingerprint": "35ef2d4ea2fbced385ef69624fb50343798517c102b8d99d694b61b964f18353",
+      "present": true
+    },
+    {
+      "id": "exicon-1758554824740-hand-release-mike-tysons",
+      "fingerprint": "2b88878315b40eedb80c2ad6d25411928a66e57bb616e5ae60db74511096ee4c",
+      "present": true
+    },
+    {
+      "id": "exicon-1758554832601-commando-jacks",
+      "fingerprint": "41a377b7ed5f9e4b15f5d8437b4e2cea9fd3a312ce11ca03368dc74acaee339f",
+      "present": true
+    },
+    {
+      "id": "exicon-1758554834120-5-minute-miracle",
+      "fingerprint": "a5de49870e09b08424f3129999037c89bd60a4304737ac1c1c3762b16c763763",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331638121-code-red",
+      "fingerprint": "2b10f3c689b11c1e911c78f9729f9f1a343c6b87ab362fd81b0ca615703bd637",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331641585-sandbag-is-friend",
+      "fingerprint": "1f14cf57e27bad2aa624170ec8fbd014c2d13c3238fe8c62202e350369d85586",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331643986-thrusters",
+      "fingerprint": "193a7eb00c52be9ad4bcb6844a032bfa3ca20bf98c26939920a4d9ca3e0d4bec",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331649815-cosey",
+      "fingerprint": "0b11a86f0ecca9810404deba1fa9840b3b1ff2d5df55324f52a00443d42a6d21",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331651995-walk-the-dog",
+      "fingerprint": "62746953e1d3e4d1dcb30637195c2df2923d95b449ace2d9d01c62639161d4d9",
+      "present": true
+    },
+    {
+      "id": "exicon-1761331653932-back-widow",
+      "fingerprint": "88412e9e3133d399b89284533223cb66d2f7f8f4e75f51beb5796a05a6991637",
+      "present": true
+    },
+    {
+      "id": "exicon-1761835934186-mike-tyson-taps",
+      "fingerprint": "4069eb55e8819b063155f5dc5d5f4a12e89b39fcfa38823291fe606c75d8c682",
+      "present": true
+    },
+    {
+      "id": "exicon-1761835936852-the-king-louie",
+      "fingerprint": "c279cb526147445a9f293add988d7031c8f90c0e22591c2c3646ae2d405cf3d2",
+      "present": true
+    },
+    {
+      "id": "exicon-1761835938598-dora-2100",
+      "fingerprint": "042644523f5399bc146541978be68d6bfc878c790b1d64b591d9dd53031ebf68",
+      "present": true
+    },
+    {
+      "id": "exicon-1761835940343-golden-arches",
+      "fingerprint": "814489ca1459dadecc484fc82203bb48e46b6fd6cd5a95047841b5ad16b61e34",
+      "present": true
+    },
+    {
+      "id": "exicon-1761835942518-amish-wobble",
+      "fingerprint": "654be76291a1dd84ed01f1f64fc84f553a3ebb7b6c36addf2b287a64cfa168ee",
+      "present": true
+    },
+    {
+      "id": "exicon-1761944036514-frankenstein-squat",
+      "fingerprint": "2ed59f0148854f7337b37d27665653e6e05c4c5b7dec06b2ebc0cc8ec52778b1",
+      "present": true
+    },
+    {
+      "id": "exicon-1761944070751-acey-doucey",
+      "fingerprint": "da306df9cca4ebca46f45dba8c4827a0cf891616be65487449cb0f4b220096b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1761944073708-jungle-boy-squat",
+      "fingerprint": "661facd728b61aa8448fedd103ab54693a9b10ef25895a3a4e758bdc3cedf0f4",
+      "present": true
+    },
+    {
+      "id": "exicon-1761944077204-miracle-mile",
+      "fingerprint": "3d075dbf4467013a0a24727762c376b30ac27c88b34840242c46461505bb2707",
+      "present": true
+    },
+    {
+      "id": "exicon-1761944081241-20%-bert-variation",
+      "fingerprint": "54a57df4acbd5a33e83d69c2d7d9d737e17f7b420c15e3f15e83f3f29add9b2a",
+      "present": true
+    },
+    {
+      "id": "exicon-1762193474974-spartan-hammer",
+      "fingerprint": "da8287d25cd0bf860f65ac186a802be1156f16681e1f7f69b20edb813d8b3dd3",
+      "present": true
+    },
+    {
+      "id": "exicon-1762193478175-world-war-iii-sit-ups",
+      "fingerprint": "b5441a108ee79dc196f90d3884c0e223d3c61b35dcb03a9b0e5a3a386baffe9e",
+      "present": true
+    },
+    {
+      "id": "exicon-1762826030071-airport-security",
+      "fingerprint": "2208db10b656ec2ecca200b76114ba399c2977ac353c758bef214de853419dd5",
+      "present": true
+    },
+    {
+      "id": "exicon-1762826033870-dreadbow",
+      "fingerprint": "6ba8ff30d86c918cdc53d4aa97e2a90e0f6df32143ae909eeb47f2f7e8b27387",
+      "present": true
+    },
+    {
+      "id": "exicon-1762826035614-pick-your-poison",
+      "fingerprint": "9b14fa9961587cae2c8b736c8e185bcb6d68e80e045952dde4ef05c870f8f2b9",
+      "present": true
+    },
+    {
+      "id": "exicon-1763062748419-the-peter-hegseth-mile",
+      "fingerprint": "86868d83dacfa485a9820165427bf702a8c3c2ff040d9f4fdb388e7cdb8b2a56",
+      "present": true
+    },
+    {
+      "id": "exicon-1763085179584-the-maggie",
+      "fingerprint": "c92de94bfc0be3851d0d40662ada466a6692de54c7fc6a8d9490a7764f2041dd",
+      "present": true
+    },
+    {
+      "id": "exicon-1763413467600-bear-crawl",
+      "fingerprint": "b46466716a098b5936c42fa3b807385b69f132cd6b87e7fc0519c713921b9403",
+      "present": true
+    },
+    {
+      "id": "exicon-1763413639977-block-over-burpees",
+      "fingerprint": "7d6f5956dbac8198e30c3cbf480ddfd3d244eab43726d7d7d91bcd675429d060",
+      "present": true
+    },
+    {
+      "id": "exicon-1763414796534-coupon",
+      "fingerprint": "1c4024f403909a4e9c60b6ba27d016b78985b241ef696e44887540e2068b8bb5",
+      "present": true
+    },
+    {
+      "id": "exicon-1763415020203-coupon-kettle-bell-swing",
+      "fingerprint": "6da92a0c1e4f962617e27f3588ca3e7a749fbdf98f453e15f7d27d3283eed00b",
+      "present": true
+    },
+    {
+      "id": "exicon-1763415357030-coupon-military-press",
+      "fingerprint": "5e5f87d5d23d8f620d0ab6be8624994cf1571598b50cbf0a2ce538dc3c63db6e",
+      "present": true
+    },
+    {
+      "id": "exicon-1763416080427-coupon-salt-shaker",
+      "fingerprint": "89f341af8c3dd823debb54e3bebaa1d4599001fb9b6eb98e0d41d6324682de41",
+      "present": true
+    },
+    {
+      "id": "exicon-1763416523175-single-arm-row",
+      "fingerprint": "49e25b9adb2706e0023e210e0e75bdf5cdd17eeca5f369ada51ef0b0c711a289",
+      "present": true
+    },
+    {
+      "id": "exicon-1763417788156-diamond-merkin",
+      "fingerprint": "7d1fd3c6ecffb7fa343306e1ce9ffba8f3c2436ad8a8387f17fc5eecb6036e96",
+      "present": true
+    },
+    {
+      "id": "exicon-1763418445882-gunji-squat",
+      "fingerprint": "be9d7f8ee970e150ddb2fcf5f1c8b6394e6ba379c2ca5a4d0287bbde39baedcf",
+      "present": true
+    },
+    {
+      "id": "exicon-1763418741273-hustle-mosey",
+      "fingerprint": "cac0561325c59dd9330d72bd3349c945f143b95cb964c89d36ea1baa4e3bff94",
+      "present": true
+    },
+    {
+      "id": "exicon-1763418979176-jump-squat",
+      "fingerprint": "54208d0866cfc5068d296136a2416867bf93f6469d0d75c53e0a088bc9d20452",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419105689-kobe",
+      "fingerprint": "451746de6d92b7a00eaf0797d896df754fe023220f01dee7f998798106ce216f",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419274186-lemur-jump",
+      "fingerprint": "759c49a1c83adc70b7ca1d3fbcc1abf299f1a3583acc9d2aa5a485dfd2e46fb0",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419485350-manmaker-burpee",
+      "fingerprint": "38491f9ca5f1b5eabcb291713f965c52a707ed1faa984bc6885fbe00306f3a75",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419725283-no-cheat-merkin",
+      "fingerprint": "7d9bbcc088e96dbd46bee16fb0637c0d770d9dbefffc8366a6dfaf3b6be776ac",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419816899-orangutans",
+      "fingerprint": "6bcc75f47ecf945055f19f034a7aef839b6f6b1c8337879d1a18ae008f51186b",
+      "present": true
+    },
+    {
+      "id": "exicon-1763419930257-partner-coupon-swing",
+      "fingerprint": "1f1de849493fe15d5418814c9cbff422702d0f2180e7acc58f05c0665a6a0e80",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420122221-ruck-hammer",
+      "fingerprint": "b65c92875111f8b29479af57af316d766be5d248ecd091010bd707ffe3e45736",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420219572-rucking-bricks",
+      "fingerprint": "3bd15ed50d87054a6ee8a59a3c143da809169808bf1d1aca9718e1d90cfe2f0e",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420393994-side-straddle-hop",
+      "fingerprint": "eed4ec297bd09dfebde3fedd697ce56d63609621f062641cda7211c4704fa8c2",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420596325-solstice-burpee",
+      "fingerprint": "1acb5df94d14a2240da913c6958a39a90c13fcde5c37431e31d4b7c467f43989",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420695555-squat-rocket",
+      "fingerprint": "922550a54a6cf2f32a4dac4d7fcce6d2416a46ba11d1c240aa9fbe8c257fc750",
+      "present": true
+    },
+    {
+      "id": "exicon-1763420997843-mountain-man-pooper",
+      "fingerprint": "b50053ac55342be87e5d6dc786f69821142a732c25c21fe2952678631c84bd19",
+      "present": true
+    },
+    {
+      "id": "exicon-1763422145594-mjolnir",
+      "fingerprint": "bbb7b8fce4c8f7c7951e6f32a8f652be11cf734c13f3ca3b0ad0e23d9665de56",
+      "present": true
+    },
+    {
+      "id": "exicon-1763422317244-snapper-burpee",
+      "fingerprint": "2507da92468ae8a95760708105318021f45da33cdded5756531ac1534e6ac4fc",
+      "present": true
+    },
+    {
+      "id": "exicon-1763422430384-v-up",
+      "fingerprint": "f72f31c7c9132173e4c6afa437c8d635f872d7e67bcaeb2f00173a9fa84c4018",
+      "present": true
+    },
+    {
+      "id": "exicon-1763422858446-tippin-coupons-workout",
+      "fingerprint": "092281c7ec1d176d9584dc7acbd00c387ae521d47b7fc1aaa00006b7a4c9649f",
+      "present": true
+    },
+    {
+      "id": "exicon-1763423442655-tower-of-power",
+      "fingerprint": "4a142de6ad503131b27ba75f855a43043e68118f4af5c90b7e7d967bb403cfb0",
+      "present": true
+    },
+    {
+      "id": "exicon-1763423604681-traveling-side-straddle-hop",
+      "fingerprint": "ffeb4e1fa2655ed548d2174609a04cecc07d7fa663de1be584cc8421ee4333f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1763423791903-two-coupon-dip",
+      "fingerprint": "675774419ec434b86733a0ccf2bbd98d9eab16122430cc51412013827171d3f4",
+      "present": true
+    },
+    {
+      "id": "exicon-1763423901404-werkin",
+      "fingerprint": "5bc31de5ec5fcc6fdcc47642725c70cc754103f2eb58a0582e6b5d0a670a973d",
+      "present": true
+    },
+    {
+      "id": "exicon-1763503673168-1984",
+      "fingerprint": "9cc40a85779965316a6750d1d6d4d8007993eb7b0bc8afc10ce1988ac6fd16e2",
+      "present": true
+    },
+    {
+      "id": "exicon-1763531399622-apolo-ohno",
+      "fingerprint": "ed52abb4d71d1b9a5af6d54844d33b7d45c7daa20819a0d72157e7313eee2240",
+      "present": true
+    },
+    {
+      "id": "exicon-1764201582716-balls-to-the-wall-crawl",
+      "fingerprint": "9536ba0a518fd2196ec25da6c9d6ebc574081bc47962daef0c8ff9108649de6b",
+      "present": true
+    },
+    {
+      "id": "exicon-1765402877039-new-test",
+      "fingerprint": "d3dbe92718fca36263b811615d494c12a23bdad7066992a6a3cfc337f8a03ab5",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591924204-heel-toe-rocks-",
+      "fingerprint": "2ff7503792cae4747a83ca498175c17f2a5984a057111f756d2705f4c15abee4",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591933707-single-leg-pickle-pusher-",
+      "fingerprint": "3eb75e39fd4a6d6bf8f5936fb19ab032fa324ee6059645731fe208e35ca0b612",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591966051-romanian-deadlift-",
+      "fingerprint": "bf2aa1aad479925869d52eba9815b99412834295b7263192c44b2a1005b306f8",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591976877-the-oddjob",
+      "fingerprint": "5b29f71aeba64dd8abbaf5e238a949bf68e2d135926d795788ba68265d0956ec",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591979071-dayton-flyers-",
+      "fingerprint": "980bcdccdfb3475bd5f71a2835a4af33089f188533793ae6d852a24eee1d4cc2",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591984944-ihop",
+      "fingerprint": "da86db1e124f131694acee97d2c424b880f07ca2b20f79448cdf90282a06be2b",
+      "present": true
+    },
+    {
+      "id": "exicon-1765591987731-rowboat",
+      "fingerprint": "ca634a7615293f9e88c0aeeaeb849f17d81985f653a11c1d0540902443d0f853",
+      "present": true
+    },
+    {
+      "id": "exicon-1765594752360-lbcc's",
+      "fingerprint": "2d8c5c1b5be6eaae3611aeb9f018bde58ee177583a59b6576f3fa6db5f1ffffa",
+      "present": true
+    },
+    {
+      "id": "exicon-1765684483892-pain-maker",
+      "fingerprint": "6f5b9cd648d392404edec4e3f55d398477695a81dbae7d9ca8d35d248932c7de",
+      "present": true
+    },
+    {
+      "id": "exicon-1766112967643-cactus-jump-squat-",
+      "fingerprint": "953a50e092552f01809bbb01d85c4816b4ba493e85301177f82b7d5b3870e084",
+      "present": true
+    },
+    {
+      "id": "exicon-1766556821907-aura-farmer",
+      "fingerprint": "b1724d7eca22054206ffed9309f3fc75cf5c91522b33b4217dcbecd950fce8ab",
+      "present": true
+    },
+    {
+      "id": "exicon-1766556994186-we're-not-worthy",
+      "fingerprint": "6393ac55b4506a2ff0c56d3092adf68dd92746efa9bc384099e8cefa5ea9abdd",
+      "present": true
+    },
+    {
+      "id": "exicon-1766598831110-sit-up-&-scuttle-",
+      "fingerprint": "57f05871c869e8766ef9d833c2d6a7cf0f9cd357a744ac728a21c0b6e2bf914b",
+      "present": true
+    },
+    {
+      "id": "exicon-1766599005628-bear-with-me",
+      "fingerprint": "2f8c8d5f264e30742a069eb52f09b29a05b8f4828797ada2e1a6eac1548243f9",
+      "present": true
+    },
+    {
+      "id": "exicon-1766599086947-coupon-crucible-",
+      "fingerprint": "dee51129987633680fc0d0af52d13730561cf0397c8285908e84c3d0f6d6988e",
+      "present": true
+    },
+    {
+      "id": "exicon-1767423306326-pickle-pointers",
+      "fingerprint": "9123cce5ff9fda0200a688c0a628ef739d524392b1b8d973e60fb49cc72ccee0",
+      "present": true
+    },
+    {
+      "id": "exicon-1767887914624-mabata",
+      "fingerprint": "40465d73121b22d39d2b989dbf493d56a4845cf6f3eea6aa1070c31e4f7c07d9",
+      "present": true
+    },
+    {
+      "id": "exicon-1767926487344-pike-pleaser",
+      "fingerprint": "7c362ec665dc23994e071e8698e4056a363b88cb7280f8c13d91e1cc89c088d3",
+      "present": true
+    },
+    {
+      "id": "exicon-1768157625523-tamaba",
+      "fingerprint": "dffa2199d707976e19157667476f890b6519e3e2ad98d2649dc9b310af566b5e",
+      "present": true
+    },
+    {
+      "id": "exicon-1768452248038-catapillar-walk-",
+      "fingerprint": "dd4a6849551b8c854b6f982e308912f40aeb1d6f315ae1639fa9d71b409a1ad3",
+      "present": true
+    },
+    {
+      "id": "exicon-1768452367726-lazy-susan",
+      "fingerprint": "7a42ea30476237d1bc7d2cfbfbf03f7cba2e222cdc1c7b95f791cd0b45444d1d",
+      "present": true
+    },
+    {
+      "id": "exicon-1768453357591-hillbillies",
+      "fingerprint": "9f369533880a1bec72f7d7cd90f651d390c13ef0080da0d0223ac7fcb0bd18dc",
+      "present": true
+    },
+    {
+      "id": "exicon-1768454154800-windmill",
+      "fingerprint": "c7838eacbdbc439cb68e58cb9b743e4042a86880507189c940209f3335cffa72",
+      "present": true
+    },
+    {
+      "id": "exicon-1768807610738-minnesota-burpee",
+      "fingerprint": "3c5cb08622e4392d6d626540911aedf5ba9070b785944f55cd6d7a9151326e3a",
+      "present": true
+    },
+    {
+      "id": "exicon-1768808267409-zombie-merkins",
+      "fingerprint": "ad16940a4d37d1e31a16d645c30aff319709c6ce2cfc10235bdc2c52b6a0c098",
+      "present": true
+    },
+    {
+      "id": "exicon-1768876906782-the-incredible-murder-bunny",
+      "fingerprint": "d641e4df7915be4bcdb426fddd871519b2a4c07947745dc6e2f88e392f0aa3d7",
+      "present": true
+    },
+    {
+      "id": "exicon-1769068174744-“the-doogie”",
+      "fingerprint": "bc83ba8787da442e0d9509701642b20d416e29e120be863292d5e355b0f4bae0",
+      "present": true
+    },
+    {
+      "id": "exicon-1769070301892-butterfly-sit-up",
+      "fingerprint": "36ac9fbd77185e6b69048ef2df6abb09ff6887e62ddfe2509fbb9feb1e899f1c",
+      "present": true
+    },
+    {
+      "id": "exicon-1769380083822-sinatras",
+      "fingerprint": "b729c4566eeff47b4010e2aa2ed1d5ee8b031388d4520e5d0a1e4938978a9509",
+      "present": true
+    },
+    {
+      "id": "exicon-1769380120775-the-wifey",
+      "fingerprint": "3bb2d191f63dddee95ac8e597738924debb37a762ac282dd47d0161e1f10e457",
+      "present": true
+    },
+    {
+      "id": "exicon-1769380296822-1775",
+      "fingerprint": "107ff6da3fd58deb3c026c3a50d9ccc49a84c14cfd50e0e72cb458f3c6a1a304",
+      "present": true
+    },
+    {
+      "id": "exicon-1769444040217-alpine-mountain-climbers",
+      "fingerprint": "92db22eff0815405277bb444e30dadba19cae02029edafa26dcb70caade2bf7f",
+      "present": true
+    },
+    {
+      "id": "exicon-1769716918913-noho-row",
+      "fingerprint": "ce1c4daeb12b3726f8ba963b9faa309111bf3e7633fa8a4e595cdc3b2a7fee47",
+      "present": true
+    },
+    {
+      "id": "exicon-1769891692131-up-dog",
+      "fingerprint": "2406ee8081a0c43d07164dda5291b2f5c843c75eeb131cdb50af9f70aee87301",
+      "present": true
+    },
+    {
+      "id": "exicon-1769892162773-dropzone",
+      "fingerprint": "f833c06545362dd293902fd6940a643a51707ff6f3414ae35d0777bfb2d0bbe5",
+      "present": true
+    },
+    {
+      "id": "exicon-1770138001212-burpee-sandwich",
+      "fingerprint": "194e141262404a67dc727101d29da576801ba04e487882914ce8aa83a48c96bc",
+      "present": true
+    },
+    {
+      "id": "exicon-1770254619011-mary-in-the-middle",
+      "fingerprint": "d038e1d00b1974f693ffbb39cb7874f5f481393f54eb2e7248c461a775c2e376",
+      "present": true
+    },
+    {
+      "id": "exicon-1770402593155-elaine",
+      "fingerprint": "14d863c2e89ef55085170399558891809c08bf2cdca4c7281bc60cc85165fe8f",
+      "present": true
+    },
+    {
+      "id": "exicon-1770404624649-sauron's-ladder",
+      "fingerprint": "a2c18d03ea85769f3155fa4da0a4a1c4d5f251c0eb1824a6c464f29e3d9612ce",
+      "present": true
+    },
+    {
+      "id": "exicon-1770692231556-froggies",
+      "fingerprint": "9881df5860c076734c06b0a8ffc68c41f6dd2c8977cd714839d56d9c6b637009",
+      "present": true
+    },
+    {
+      "id": "exicon-1770692543383-cross-climbers",
+      "fingerprint": "b94dc9089b8946a411e7f6da9855142dee49462a45d4dcab50a40e281694f2b6",
+      "present": true
+    },
+    {
+      "id": "exicon-1770693135509-hillbilly-climbers",
+      "fingerprint": "89dc415689da32d5923032a03748e1e2544d065a96935871abaee896c000ab53",
+      "present": true
+    },
+    {
+      "id": "exicon-1771429733924-jabber-walker-squat",
+      "fingerprint": "a2a5677818dbb3f02706869a34f8951edf4cff2aaa55b20e3aa2f64a7cc11f4e",
+      "present": true
+    },
+    {
+      "id": "exicon-1771429754408-big-boy-knock-out",
+      "fingerprint": "db0219b3651ee49449478e2c9f3b5bf1e135fbf5f3758921f2b95d96aedf1854",
+      "present": true
+    },
+    {
+      "id": "exicon-1771456301010-wake-up!-(chop-suey!)",
+      "fingerprint": "cc350a5bf0f94c408824eda191c03b337d8d11572c4acdab8cb2716bf2150271",
+      "present": true
+    },
+    {
+      "id": "exicon-1771456444795-born-to-lunge",
+      "fingerprint": "6ce09d84e8fb1d1f4ba471be72b03363c451b45631567a0161a2159162c4699a",
+      "present": true
+    },
+    {
+      "id": "exicon-1771456556820-bohemian-whap-sody",
+      "fingerprint": "14bcd70e4ff11f8413bd354961dae3753bd6fa34e73f97a4ba86fe6d44674d91",
+      "present": true
+    },
+    {
+      "id": "exicon-1771457287625-pickle-push-it",
+      "fingerprint": "d2e3fc6bf1cc5d0e150908056c6b35e23900fcbceaa1523576a5b9c74cb1504f",
+      "present": true
+    },
+    {
+      "id": "exicon-1771457323727-still-c.a.l.v.e.s.",
+      "fingerprint": "804dbd1ef58646e0cf5de9b319eea256d59f2e244b0ccc1f00a1c73e72f92f81",
+      "present": true
+    },
+    {
+      "id": "exicon-1771457346530-x-gon'-give-it-to-ya",
+      "fingerprint": "5782d85b2e1513f3cdae3df954526242f0b0a75efcf928fbbe1190e6dcf15eab",
+      "present": true
+    },
+    {
+      "id": "exicon-1771457383515-till-i-collapse",
+      "fingerprint": "2c4e55d2920672189ee33172b5d78eebae33cd7bd3335476264e8944af6bf550",
+      "present": true
+    },
+    {
+      "id": "exicon-1771457464751-6\"-in-the-air-tonight",
+      "fingerprint": "167300848a9421f85887ddf83d3d86cfd041156367b45811643777516fb55619",
+      "present": true
+    },
+    {
+      "id": "exicon-1771517845978-run-dmc",
+      "fingerprint": "a882772370ccae902f15b9fc33df494661185323a57b140452c42b17a50a5b15",
+      "present": true
+    },
+    {
+      "id": "exicon-1771602262463-alarm-clock",
+      "fingerprint": "47d7c1d5e34046b6e4c6bdd8e750137ebdf97b6e6ead1232de71abc9fa5371e4",
+      "present": true
+    },
+    {
+      "id": "exicon-1771602325381-juicer",
+      "fingerprint": "b3e6adec6fb62dc6393d97d0db8933b70dfe4f114fe447f710bb938607057017",
+      "present": true
+    },
+    {
+      "id": "exicon-1771602401733-squeezer",
+      "fingerprint": "491958251f2030cfa003d49975c2776e7cba3a09cd6b47227806d493926f48f6",
+      "present": true
+    },
+    {
+      "id": "exicon-1771744589552-the-dumbledore",
+      "fingerprint": "8c0e4f5e7b1baa9563666d2ad9650b11a7592b84fcb74b63200a59296fa01eba",
+      "present": true
+    },
+    {
+      "id": "exicon-1771744675385-mcfly-run",
+      "fingerprint": "0670baf017ac2f1fb20adfb7d730ebbbd06f1335017146396d28307eff3118e6",
+      "present": true
+    },
+    {
+      "id": "exicon-1771950093619-tonya-harding",
+      "fingerprint": "aaeedb2ea49033ba4a8d2926dba4064e9f4b17eeac7f966c989110f71b561179",
+      "present": true
+    },
+    {
+      "id": "exicon-1772134644732-beat-the-clock",
+      "fingerprint": "b9e788f7662974a2b130c7781478d19bacd25197a38dcd51c4f109f1f8d67ebc",
+      "present": true
+    },
+    {
+      "id": "exicon-1772134685075-merkin-pyramid",
+      "fingerprint": "4382b3ce6f9cea81aa389f1264ab46ad67a711436e00e687d1d4aafcc989f530",
+      "present": true
+    },
+    {
+      "id": "exicon-1772134789829-fireworks",
+      "fingerprint": "a913eb41ee367537a7a2191f5443b1c214dbee5bbc78a84608488be7f7b966ce",
+      "present": true
+    },
+    {
+      "id": "exicon-1772136555060-imperial-blockee",
+      "fingerprint": "9633354421f6ef016a9a0590605678bc48c58c1e72975640ea0b8fcbeaf7e1ae",
+      "present": true
+    },
+    {
+      "id": "exicon-1772136646509-sumo-deadlift-high-pull-(sdhp)",
+      "fingerprint": "71c2c1b35f8ff79bf1b7cb4a7455c97d02ee21fd6c53de98b2ae85341ce7f982",
+      "present": true
+    },
+    {
+      "id": "exicon-1772136774962-lochness-\"latte\"-merkins",
+      "fingerprint": "c53cc056d5e1ea1f32f53172e258ea9f236d328dbcf3f4c54480e3673b528b08",
+      "present": true
+    },
+    {
+      "id": "exicon-1772136918532-thruster-mountain",
+      "fingerprint": "1a703b2fb759b7a6633c3a74623b07818a858c0e3fc4d181a53f55bdb748422c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772137296332-hang-clean",
+      "fingerprint": "1edad49a3f78ee9f2a0997d603af9a307ab066c60eccbdc8b645c0b37e7bd43c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772137429088-towel-circuit-(multiple-resistance-exercises)",
+      "fingerprint": "43b030ac59ad0f9499969550371b735226fd9bec3c0c259ade5e5dbbf082673c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772137576622-hanging-overhead-press-(h.o.p.)",
+      "fingerprint": "b5df8d2a2ca61610ff9ca9ec41b67df01a84b203f488b37dfc388d17e5aa3daf",
+      "present": true
+    },
+    {
+      "id": "exicon-1772137780535-squirrel",
+      "fingerprint": "27190f07304bb72a05ef6b3cdeb275facd723738c7ea1d63119ba897b33886e9",
+      "present": true
+    },
+    {
+      "id": "exicon-1772272607614-yrpee",
+      "fingerprint": "f7e547caa53c9be442eec1de01d0c06049ada8db363c9d7995167e22f05e50cc",
+      "present": true
+    },
+    {
+      "id": "exicon-1772312699027-xs-and-os",
+      "fingerprint": "06cfb757258063e975492386ca1982c8c983a40ee0450b49897f2fd3ae78438a",
+      "present": true
+    },
+    {
+      "id": "exicon-1772321217278-2022-gobbler-challenge",
+      "fingerprint": "d145d471daa637dc53bb5d0dfbf643adbf145a8fe84eb79698b9be65965c7778",
+      "present": true
+    },
+    {
+      "id": "exicon-1772321317443-the-2023-gobbler-challenge",
+      "fingerprint": "b85725be1cef89945040aeeb915973fe0d3a2244590b6ba3da32cefc71fe1111",
+      "present": true
+    },
+    {
+      "id": "exicon-1772321426631-the-2024-gobbler-challenge",
+      "fingerprint": "93bc0d75818ad688d0d90f01e3b4f53ad1462c47fbaec432e1772585e9043f2c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772321580295-the-2025-gobbler-challenge---“ladder-of-pain”-amrap",
+      "fingerprint": "9369d57198a063515641587d215c10e150a1f3abf263bb4f969304ef9e729e8a",
+      "present": true
+    },
+    {
+      "id": "exicon-1772322846190-the-2021-gobbler-challenge",
+      "fingerprint": "ea3cfd6b18b7bc40694f5aa680b3068497d78c69c9eeffae91539843c315d13d",
+      "present": true
+    },
+    {
+      "id": "exicon-1772322933565-the-2020-gobbler-challenge",
+      "fingerprint": "261c6d18a39d2f0112b0fa94f474dfc3c7651700e0676519c025bc70ec91838c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772345040202-around-the-world",
+      "fingerprint": "3e1b54a95d7f061f5c4a97fb068efbf9466ff1a8aac9123b3b1f056cf55de224",
+      "present": true
+    },
+    {
+      "id": "exicon-1772420033594-parker-peter",
+      "fingerprint": "4edf31c96d160c3769896520d0d2903f455f9d9148cf1d65861b740558cf323a",
+      "present": true
+    },
+    {
+      "id": "exicon-1772427720019-sit-up",
+      "fingerprint": "862428f5b1128986b61b69d5a4645548152a7638242c47e88d9aa152836fa05c",
+      "present": true
+    },
+    {
+      "id": "exicon-1772510391327-good-morning-squat",
+      "fingerprint": "bf3c20e1016f2caf5d53b32d1f3d92716bbd07cd90bb86f8b0574bb4d5c10604",
+      "present": true
+    },
+    {
+      "id": "exicon-1772599296354-dmx",
+      "fingerprint": "b9aa2d643828c84fef542be47eaba403e17f2ff27783105fb2698ad50f393d7f",
+      "present": true
+    },
+    {
+      "id": "exicon-1772599399751-sideways-shoulder-stands",
+      "fingerprint": "7c939d8b439079abc355e18e9927fb406b5cc2030aec28ecaef9df87230e771e",
+      "present": true
+    },
+    {
+      "id": "exicon-1772904543301-concrete-canoe",
+      "fingerprint": "b4eca2bd16543452e8423cc32b6d212daffd81ec4c4e69810f0f4b3e09b085f5",
+      "present": true
+    },
+    {
+      "id": "exicon-1773158139031-fornicola’s",
+      "fingerprint": "3c11f93757a1c4397fcd1a3dd365281ea41d66a9ffbcab267124e9aa7d6beb6f",
+      "present": true
+    },
+    {
+      "id": "exicon-1773305939967-toxic-run",
+      "fingerprint": "d9657ce096dce79ee59138c3f075ad54f89dd82932865e355ce621d8c777f814",
+      "present": true
+    },
+    {
+      "id": "exicon-1773467293565-blocko-motor-city-shuffle-(bmcs)",
+      "fingerprint": "049580c9b604f172178d2e7dfc13206db1cfd3b000b3cde0e6f436643eb94745",
+      "present": true
+    },
+    {
+      "id": "exicon-1773717886734-the-killer-gnat",
+      "fingerprint": "5d3dbe50de761a770472d2ee5cf5619694d51a9aa56b25dd89d3b3f56982ea9a",
+      "present": true
+    },
+    {
+      "id": "exicon-1773800086552-rocking-chairs",
+      "fingerprint": "c3843ee4d7c7a6d4f6735af579af867edf9de9ee09afc08a405bd19727b669b4",
+      "present": true
+    },
+    {
+      "id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+      "fingerprint": "0aad5b9244f7fb600684976de4e1d8d1b06ce7cd2cce8915057b382db2fad625",
+      "present": true
+    },
+    {
+      "id": "exicon-1774903101143-russies",
+      "fingerprint": "5dc8376ff0f01266b7b2ed1b6e02baf65c44412dc3c70d73905edc7e7d716732",
+      "present": true
+    },
+    {
+      "id": "exicon-1774903288130-spam",
+      "fingerprint": "7c585cdb0dfa10c1700059db96b8c9116e9ce4ae556fa1197707b051ce700597",
+      "present": true
+    },
+    {
+      "id": "exicon-1775011298392-runaway",
+      "fingerprint": "3c884c26964324257f0a413e94ec7faa326ddc6ad1269fe1a01c71c7d88c3bfb",
+      "present": true
+    },
+    {
+      "id": "exicon-1775352393518-muffin-man",
+      "fingerprint": "4df7d45df60e44f67c0d1c410f544ca2adb1585821b75cf409472648e8bea845",
+      "present": true
+    },
+    {
+      "id": "exicon-1775452529132-special-merkins",
+      "fingerprint": "c09b30a4397d766a9fe45c2e2659541ba68c2336810015d9f7803a6b635e5234",
+      "present": true
+    },
+    {
+      "id": "exicon-1776003578289-darekong-merkins-",
+      "fingerprint": "970b9691a7f91f3634ecad841d92090a8984f491c7732f276c7b8a39530ce40a",
+      "present": true
+    },
+    {
+      "id": "exicon-1776302374110-uncle-mary",
+      "fingerprint": "bebc85b64ccf32993044058051514b6c0ce41e99f199ad4f599cd5ac36af947c",
+      "present": true
+    },
+    {
+      "id": "exicon-1776742880487-0-50-500",
+      "fingerprint": "2cdf2fc437607db73f1bd22dfaecfd0a3b1892eaa338b6fbae5ca2a40c0b6a79",
+      "present": true
+    },
+    {
+      "id": "exicon-1776999752819-lazy-clogger",
+      "fingerprint": "4db88d6bd28f3e2775a13a0b360a8c0aef0427f0f5865569348bb309d6371904",
+      "present": true
+    },
+    {
+      "id": "exicon-1777562531643-buzz-saw",
+      "fingerprint": "e749503233f33602096d4388c4abe75bdaf1d5ed221fa19e2ac979c2d6479756",
+      "present": true
+    },
+    {
+      "id": "exicon-1777562588041-doc-wings",
+      "fingerprint": "85f0388adc77fd1f525cf700dea2d141d3e3a602aadcf1828ba26f709ab8846f",
+      "present": true
+    },
+    {
+      "id": "exicon-1777562658739-c.h.i.p.s.-and-dips",
+      "fingerprint": "d5d38cccf804ca983ad608204de2dd76f0839e7de6652182fd6b5e10320595be",
+      "present": true
+    },
+    {
+      "id": "exicon-1777562912103-lfg-warmup",
+      "fingerprint": "cf725a3f47a2bb8c882cf108d6cbb66488ddfa641502e9220b8b88418584d105",
+      "present": true
+    },
+    {
+      "id": "exicon-1777602467675-absolutions-for-my-way",
+      "fingerprint": "099b10e0128edb3f0ebc14a64ef43a08da21862587edcef02a729f88c3b43b3c",
+      "present": true
+    },
+    {
+      "id": "exicon-1777908600251-tie-fighters",
+      "fingerprint": "cd10b004016cbf258d0bfd8237fe202185cd4dea335176742d266b6ff9ff1bf5",
+      "present": true
+    },
+    {
+      "id": "exicon-1777908924302-scissor-me-janets",
+      "fingerprint": "0e9e3dc7c6b39f21cedfd4eac0b379166cd199f4347b663c49045ad60b7c2674",
+      "present": true
+    },
+    {
+      "id": "exicon-1778223893081-rocket-squats",
+      "fingerprint": "f01f8de578db6c15f68a5674c0a39d0d1bed689c070daed04e4633862fea263a",
+      "present": true
+    },
+    {
+      "id": "exicon-1778224322274-rocket-merkins",
+      "fingerprint": "f771367b54f1d0c5f5274b88f5b72af663f7cbc1dfeb223af8ffc527b24bac55",
+      "present": true
+    },
+    {
+      "id": "exicon-1778271678561-mayhem-merkin",
+      "fingerprint": "cb946baa8ad229aeaa4b59cc9028a3eeb4be245eb1f8f8010eaf673b76ce0570",
+      "present": true
+    },
+    {
+      "id": "exicon-1778272073804-over-the-mountain-merkin",
+      "fingerprint": "38820d831deb20f5a886b48954c1f5b21a02bee1aaa512af9135a527709572e3",
+      "present": true
+    },
+    {
+      "id": "exicon-1778514938729-sheriff-woody",
+      "fingerprint": "2001d05a04628fcbfa4e945655372fb08cb5ba72b7436ff83e0194ff94503296",
+      "present": true
+    },
+    {
+      "id": "exicon-1778548829672-wembys",
+      "fingerprint": "7cfbb41d72a9dda8d5c810ddc5922ba3323478d96851c6520ddbbba33a67f129",
+      "present": true
+    },
+    {
+      "id": "exicon-1779143253592-gridiron-gambit",
+      "fingerprint": "9a9dbfc5b9c5f3afd8875d7e7e49ab3ed1c075455a1bf68f15e94ae14bcb6367",
+      "present": true
+    },
+    {
+      "id": "exicon-1779487923759-mountain-merkin",
+      "fingerprint": "05ef2bee556295d6d2d2dd0874d563be091c2dd13c2c5473ad0f7b2719a9d5c9",
+      "present": true
+    },
+    {
+      "id": "exicon-1779488003052-preposturous",
+      "fingerprint": "e9918d4b3824c76ab35f9601780eeb82400481bb23855883aebc12496689a938",
+      "present": true
+    },
+    {
+      "id": "exicon-1779638507211-bubbles-(the-union)-wod",
+      "fingerprint": "3e496bf2e849677154fc4b5609331296d7de0ca461ca454bc075ae7050017486",
+      "present": true
+    },
+    {
+      "id": "exicon-1780327100523-death-rabbit",
+      "fingerprint": "32687434699cdfaa2aa2e1ee2f046bfd7b6d14bb17576c983b21f5ed8624d1b7",
+      "present": true
+    },
+    {
+      "id": "exicon-1780327160066-the-abdivator",
+      "fingerprint": "0692555770b712bc5f134e2aecf572151e830a9e2a299c0cccdc62b27c542a0c",
+      "present": true
+    },
+    {
+      "id": "exicon-1780327206812-mighty-jungle",
+      "fingerprint": "34effb1397620d9eb2c80c4232a775b434303b9a8a98e97fed6b63543442c1bc",
+      "present": true
+    },
+    {
+      "id": "exicon-1780505851591-australian-shoulder-taps",
+      "fingerprint": "a8b2fc6d04c3ce1f71921b18e39a97740851d69f318d3d5db7984a56fc9cfee8",
+      "present": true
+    },
+    {
+      "id": "exicon-1780505937953-back-strokes",
+      "fingerprint": "00b826ba977b9da98a7074da38d625fa6cfc5ef36c368aee0c7c124963f9df82",
+      "present": true
+    },
+    {
+      "id": "exicon-1780509608611-squat-wall-taps",
+      "fingerprint": "ca699aecfeb1ec813cdb0c5e170641547a6ffe51971683dda2f7b23fb6f1f198",
+      "present": true
+    },
+    {
+      "id": "exicon-1780515637850-carolina-knee-dips",
+      "fingerprint": "a0eefae1819457d2a24a26e5910a3d76919dedc82caa30ca584a4d99abc8ecb9",
+      "present": true
+    },
+    {
+      "id": "exicon-1780546243558-blitzkrieg-boppin’",
+      "fingerprint": "ef8bc690e680d3dcc4ca179ebbae13ca41cfefaf46d5d62e7dabaf95482a12cc",
+      "present": true
+    },
+    {
+      "id": "exicon-1780976009790-motivators",
+      "fingerprint": "38e9ee5edb39dffd1ce52fa7654f89b63c30cb0c49dee24155b5a0d6d357c427",
+      "present": true
+    },
+    {
+      "id": "exicon-1781102333456-back-scratchers",
+      "fingerprint": "5c0d863ccbb3684d805774bb242345e14179b02dda5ef5249e8898748bb4562f",
+      "present": true
+    },
+    {
+      "id": "exicon-1781102420043-too-legit-to-quit",
+      "fingerprint": "489cc86f6316c46e3f631025a30d744b968dc754728e94c490441dfc46fceab7",
+      "present": true
+    },
+    {
+      "id": "exicon-1781102636213-sliders",
+      "fingerprint": "ac7d76a71267559359a692e1bd8c26ece7283472afc6ce1c18be20b519dc5b78",
+      "present": true
+    },
+    {
+      "id": "exicon-1781103700491-inchworm-merkins",
+      "fingerprint": "a1d646e6f1451932368d3f44f109e1e9613895afe4c14af1f3105a2ece19b8b4",
+      "present": true
+    },
+    {
+      "id": "exicon-1781150934809-mike-tyson-burpee",
+      "fingerprint": "d37ffb566c600788755c4df9eda4172bb30a1aea3502b51905a3e74f6ee35010",
+      "present": true
+    },
+    {
+      "id": "exicon-1781904572451-tunnel-of-balls",
+      "fingerprint": "969fa64857810424dfb785b0b2133a221ef3dfd74231b9063410842134d1c554",
+      "present": true
+    },
+    {
+      "id": "exicon-1782537292267-taint-tappers",
+      "fingerprint": "fa4d5a4233731ce70063e589049a42122ba6476b21486a6bc700eb3159cb29f2",
+      "present": true
+    },
+    {
+      "id": "exicon-1782537502793-cactus-jumps-",
+      "fingerprint": "16071d641b7e7861a44a9ff721874a0f1fbec31f29f59adffe0bd0b28966948b",
+      "present": true
+    },
+    {
+      "id": "exicon-1783109243350-bcgs",
+      "fingerprint": "167520983201e80fa18adf69f67a82f61f4a20ca23ac26fe1f06e735464af852",
+      "present": true
+    },
+    {
+      "id": "exicon-1783109302651-electric-chair",
+      "fingerprint": "25a60e9aca9d47c80302b5ab55e556a836e625e7c4a3509b9210acb916a99983",
+      "present": true
+    },
+    {
+      "id": "exicon-1783129468968-moseyvators",
+      "fingerprint": "9e61adc3e87e076163da3e29a21481b0765385905ee1c7a65e58b511704eaf17",
+      "present": true
+    },
+    {
+      "id": "exicon-1783228474576-dirty-diaper-carry",
+      "fingerprint": "2fb01f856d7e2abd0d9f3823185b50aeb573b58d5efd48aa6dc99ca331f51fe1",
+      "present": true
+    },
+    {
+      "id": "exicon-1783229879455-burpeevators",
+      "fingerprint": "019af49869d244048ed9aa8116cbd719e2333c20d60c2623a1944b89bab6fb28",
+      "present": true
+    },
+    {
+      "id": "exicon-1783473980467-bobby-shmurda",
+      "fingerprint": "5acb7ed78924c7ff25b6e1104aaa3c35a08e2064669a2a16727d14540ca9a198",
+      "present": true
+    },
+    {
+      "id": "exicon-1783744562630-side-straddle-burpkin",
+      "fingerprint": "948730bcea6e9ceedd775d62470ab98f1a1366ab92b5a8158cde140b35a03615",
+      "present": true
+    },
+    {
+      "id": "exicon-1783967779823-bloxanne",
+      "fingerprint": "1adbc01684a32ca687ec6758b7579750fced0489f7aa8682e06ad46962f21463",
+      "present": true
+    },
+    {
+      "id": "exicon-1783967828447-richard-petty",
+      "fingerprint": "c5a75d4cac76fab54aea89b882f5793e5cae7cbbb90ef0c04338b1c898af71e6",
+      "present": true
+    },
+    {
+      "id": "exicon-1783968131912-the-bonnie-tyler",
+      "fingerprint": "847a1d5d766e569e0a6225d1060d46aad8e7a3657ba6df21acf58e36d3488a4f",
+      "present": true
+    },
+    {
+      "id": "exicon-1783968183216-explosive-burpee",
+      "fingerprint": "be967352d63b81dfba8af8ccc7d7eb2a5478cfdeec207be5726bf98bc48f8e64",
+      "present": true
+    },
+    {
+      "id": "exicon-1783968252131-everything-bagel",
+      "fingerprint": "27b687f46a00363edfdf64d8f772840adcca66bd7b296a053b9296ebbedd60a0",
+      "present": true
+    },
+    {
+      "id": "exicon-1783968751381-bricklayers",
+      "fingerprint": "9bedaecf7723c2a40a04dff6b2139528193e6255aca67e74c4f4365e5aa9d64b",
+      "present": true
+    },
+    {
+      "id": "exicon-1783968834748-lieutenant-dan's-magic-legs",
+      "fingerprint": "d532d60d04be9697fbb703e340222ee88e3cced2b4dde6592dd8d6bb445cfc61",
+      "present": true
+    },
+    {
+      "id": "exicon-1784166497995-5-alive",
+      "fingerprint": "916ad5eb0e8cf5649e32fb50e6df94fdf30c4bfd199e2750229a5fb533c7d5f1",
+      "present": true
+    },
+    {
+      "id": "exicon-1785127250350-dolly-parton",
+      "fingerprint": "ada74b04edbc08c76bb3b87f391319d5c65fda88d35bd9d80349ff4e6a39674a",
+      "present": true
+    },
+    {
+      "id": "exicon-1785127491024-de-motivators",
+      "fingerprint": "d5221fc8c8b0c58c3cc34993c5d430e53399c593df34c65bb78bc0f57c04a33f",
+      "present": true
+    },
+    {
+      "id": "exicon-1785127946762-bg-lizard",
+      "fingerprint": "e10166db7119fde2c11cc19fc042a5590b918e1b7c0d6a1bd83eed610f4ab407",
+      "present": true
+    },
+    {
+      "id": "exicon-1785561190025-paula-crabdul",
+      "fingerprint": "c9d14ae01b142f45053b1c7090156e2ef37a1cf84c1bb8a4d355a720025d0f53",
+      "present": true
+    },
+    {
+      "id": "exicon-1785563984520-dying-birds",
+      "fingerprint": "f242af68d5053eb31001047140fda2205d1e881523f72b22a05ea201de10b728",
+      "present": true
+    },
+    {
+      "id": "exicon-1785902703922-bus-driver",
+      "fingerprint": "6e4930ecb50269e2e413209c0bc875d105d62f10efada0269c1bf5024c5b0909",
+      "present": true
+    },
+    {
+      "id": "exicon-1786257351417-burnouts",
+      "fingerprint": "c29e2e199d1e5500e449cd64eea02df18a670731d44e74df176b59e79598caa6",
+      "present": true
+    },
+    {
+      "id": "exicon-1786257490630-the-jack-squat",
+      "fingerprint": "b825ccb9df924bebb04d3bdbbc527600733f17edc7b5cffa50eb4609336a161b",
+      "present": true
+    },
+    {
+      "id": "exicon-1786258660519-half-burpee",
+      "fingerprint": "fc34512982431e021f9a5ee173b25f31273cdbc6465487deceee5b1e30c9b348",
+      "present": true
+    },
+    {
+      "id": "exicon-1786259230929-richard-simmons",
+      "fingerprint": "a2a8f3c9c7abffa208d0b9d158bd92928f9243f713c356ccfa492844bcaa65e4",
+      "present": true
+    },
+    {
+      "id": "exicon-1786260042084-richard-simmons",
+      "fingerprint": "2c1106d6268693faea63b9000f715a1e7e2bb1b85768c78c9dee30137afd10a3",
+      "present": true
+    },
+    {
+      "id": "exicon-1788061413300-triad-burpee",
+      "fingerprint": "66fa2048f4a8bf4f512199a3cada3e041745c86f5ec71d19fa9a1f1641ac8fcd",
+      "present": true
+    },
+    {
+      "id": "exicon-1788061682078-long-elevens-",
+      "fingerprint": "5034103e3dc60b3fc1d85a8936d8709dcaf9b94a82a765cebc6ec76020edc7f4",
+      "present": true
+    },
+    {
+      "id": "exicon-1788061765528-tappy-gilmore",
+      "fingerprint": "9b2d82500f20265ceb38b8f53c2a03ab488ad97fa3744dc7c96b1753026a73af",
+      "present": true
+    },
+    {
+      "id": "exicon-1788061918220-kristi-yamaguchi-(burpee)",
+      "fingerprint": "d27775fc75656fac4497eb25178647636c6591a0897b298223bd5ba74bd2d004",
+      "present": true
+    },
+    {
+      "id": "exicon-1788062203576-shots-fired!-moment-of-zen",
+      "fingerprint": "81056d5464707818dd005db26bf9186fb963d8a70bb78922a7cc86509f48a141",
+      "present": true
+    },
+    {
+      "id": "exicon-1788062253066-4-square-death-dance",
+      "fingerprint": "fa6cd1afc84136df22ae8eb7f02bdee7734e94d4155ce96a003c0c2b0a185d0a",
+      "present": true
+    },
+    {
+      "id": "exicon-1788062360591-popeye-carry",
+      "fingerprint": "c275a3d66a73b70e70b858334263307fdebdc8ed1a49b40089bb64c39b7a45d2",
+      "present": true
+    },
+    {
+      "id": "exicon-1788062860829-elephant-walk",
+      "fingerprint": "a87292544ba6e5e32a316e89002b3d87bfeaa4aabb47d227911b78af28a769d4",
+      "present": true
+    },
+    {
+      "id": "exicon-1788062911428-walk-and-chew-gum",
+      "fingerprint": "8eaf563918d83e9865158e1b680dfe0cd46bfda20549220319c72d17d3c0898b",
+      "present": true
+    },
+    {
+      "id": "exicon-1789540115094-earl-greys",
+      "fingerprint": "01f5d4b6f71457d99ec99ee57294183f9357b520a39f9abd5238b5c8e551c949",
+      "present": true
+    },
+    {
+      "id": "exicon-1789842103944-scrum-pointers",
+      "fingerprint": "9f17824d861cda0a51dda63c10191a3d5b57af1465f72e0bc52a5c5cbd3e3903",
+      "present": true
+    }
+  ]
+}

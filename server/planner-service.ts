@@ -1,3 +1,5 @@
+import { movementGuide, type MovementGuide } from "./exicon-intelligence.ts";
+import { findAO } from "../src/ao-context.ts";
 import {
   siteContext,
   blockedFeatures,
@@ -19,11 +21,14 @@ import {
 import { workoutSchema } from "../src/model.ts";
 import {
   movementConflicts,
+  requiredMovementFeatures,
+  mentionsRestrictedNames,
   refinementConflicts,
 } from "../src/plan-constraints.ts";
 import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
 export type AIEnvironment = {
   catalog?: CatalogEnvironment;
+  exicon?: CatalogEnvironment;
   OPENROUTER_API_KEY?: string;
   GEMINI_API_KEY?: string;
   GEMINI_FREE_TIER_CONFIRMED?: string;
@@ -42,6 +47,7 @@ export function validatePlan(
   value: unknown,
   input: PlannerRequest,
   preparedSite?: ReturnType<typeof siteContext>,
+  guide?: MovementGuide,
 ) {
   const p = planSchema.parse(value),
     kinds = p.sections.map((s) => s.kind);
@@ -123,7 +129,18 @@ export function validatePlan(
       422,
       "The AI added equipment to a no-equipment plan. Try again.",
     );
-  const conflicts = movementConflicts(p, input);
+  const conflicts = movementConflicts(p, input, guide?.movements);
+  if (
+    guide &&
+    mentionsRestrictedNames(p, [
+      ...guide.blockedNames,
+      ...guide.ambiguousAliases,
+    ])
+  )
+    throw new PlannerError(
+      422,
+      "The draft uses an ambiguous exercise name or an unsupported facility requirement. Confirm the exercise before leading.",
+    );
   if (conflicts.length) throw new PlannerError(422, conflicts.join(" "));
   if (
     (input.equipment === "Coupon" ||
@@ -134,10 +151,18 @@ export function validatePlan(
     throw new PlannerError(422, "The AI left out your coupons. Try again.");
   {
     // Terrain safety applies to every caller, including non-strict API requests.
-    const blocked = blockedFeatures(
-      p,
-      preparedSite ?? siteContext(input.ao, input.prompt, input.site),
-    );
+    const site =
+      preparedSite ?? siteContext(input.ao, input.prompt, input.site);
+    const blocked = [
+      ...new Set([
+        ...blockedFeatures(p, site),
+        ...(guide
+          ? requiredMovementFeatures(p, guide.movements).filter(
+              (f) => site.features[f] !== "available",
+            )
+          : []),
+      ]),
+    ];
     if (blocked.length)
       throw new PlannerError(
         422,
@@ -161,12 +186,18 @@ export async function generatePlan(
   fetcher: typeof fetch = fetch,
   signal?: AbortSignal,
   preparedSite?: ReturnType<typeof siteContext>,
+  preparedGuide?: MovementGuide,
 ) {
-  const input = resolveRequest(raw),
-    context = contextFor(
-      input,
-      preparedSite ?? (await resolvePlannerSite(input, env.catalog)),
-    );
+  const input = resolveRequest(raw);
+  const [site, guide] = await Promise.all([
+    preparedSite ?? resolvePlannerSite(input, env.catalog),
+    preparedGuide ??
+      movementGuide(
+        env.exicon,
+        findAO(input.ao, input.prompt) ? "the-fe" : undefined,
+      ),
+  ]);
+  const context = contextFor(input, site, guide);
   let system =
     F3_BRIEF +
     "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions in EVERY section: when Rain or Snow / ice is selected, use only controlled standing exercises, including standing core work for Mary. Do not prescribe floor exercises or jumps merely because shelter is available. Never turn a covered garage into claimed indoor access. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
@@ -293,7 +324,7 @@ export async function generatePlan(
           422,
           "The AI draft was too long. Try a simpler request.",
         );
-      result = validatePlan(parseJSON(text), input, context.site);
+      result = validatePlan(parseJSON(text), input, context.site, guide);
       break;
     } catch (error) {
       if (deadline.aborted)

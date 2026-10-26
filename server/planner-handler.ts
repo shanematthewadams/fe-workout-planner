@@ -1,3 +1,5 @@
+import { movementGuide, readExicon } from "./exicon-intelligence.ts";
+import { findAO } from "../src/ao-context.ts";
 import { fallbackPlan } from "../src/fallback.ts";
 import { plannerRequestSchema } from "../src/planner-contract.ts";
 import { ZodError } from "zod";
@@ -9,6 +11,7 @@ export async function handlePlanner(
   env: Parameters<typeof generatePlan>[1],
   fetcher: typeof fetch = fetch,
   readCatalog = readAO,
+  readExercises = readExicon,
 ) {
   const headers = {
     "Cache-Control": "no-store",
@@ -46,10 +49,17 @@ export async function handlePlanner(
     const input = plannerRequestSchema.parse(
       JSON.parse(new TextDecoder().decode(bytes)),
     );
-    const site = await resolvePlannerSite(input, env.catalog, readCatalog);
+    const [site, guide] = await Promise.all([
+      resolvePlannerSite(input, env.catalog, readCatalog),
+      movementGuide(
+        env.exicon,
+        findAO(input.ao, input.prompt) ? "the-fe" : undefined,
+        readExercises,
+      ),
+    ]);
     let result;
     try {
-      result = await generatePlan(input, env, fetcher, req.signal, site);
+      result = await generatePlan(input, env, fetcher, req.signal, site, guide);
     } catch (error) {
       if (!input.strictSchedule || input.current || req.signal.aborted)
         throw error;
@@ -76,7 +86,11 @@ export async function handlePlanner(
         }),
       );
     return new Response(JSON.stringify(result), {
-      headers: { ...headers, "X-F3-AO-Source": site.dataSource },
+      headers: {
+        ...headers,
+        "X-F3-AO-Source": site.dataSource,
+        "X-F3-Exicon-Source": guide.source,
+      },
     });
   } catch (error) {
     if (error instanceof PlannerError)

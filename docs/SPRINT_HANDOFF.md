@@ -1,5 +1,7 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Latest Exicon integration: [Cached staging read path and Codex intake](exicon/READ_PATH_HANDOFF.md). Published app-written exercises now feed staging generation through the existing safety checks. Codex descriptions remain unpublished pending reuse terms.
+
 Latest database continuation: [Exicon foundation](exicon/HANDOFF.md). Additive schema and the small app-written seed are installed in the approved shared database; the movement selector remains unchanged.
 
 Latest AO UI continuation (October 26): [Live AO interface handoff](ao-intelligence/LIVE_AO_UI_HANDOFF.md). The planner and AO directory consume the shared live catalog on staging, with saved JSON fallback. See that handoff for release verification.

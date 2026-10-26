@@ -18,6 +18,7 @@ REFINEMENT: edit the provided current plan according to the new request, preserv
 export function contextFor(
   input: PlannerRequest,
   preparedSite?: ReturnType<typeof siteContext>,
+  guide?: import("./exicon-intelligence.ts").MovementGuide,
 ) {
   const requested = aoKey(input.ao || input.prompt);
   const ao = aoProfiles.find((a) =>
@@ -25,7 +26,8 @@ export function contextFor(
   );
   const words = input.prompt.toLowerCase().match(/[a-z]{4,}/g) ?? [];
   const site = preparedSite ?? siteContext(input.ao, input.prompt, input.site);
-  const eligible = movements.filter(
+  const vocabulary = guide?.movements ?? movements;
+  const eligible = vocabulary.filter(
     (movement) =>
       (input.equipment !== "None" || !movement.equipment.length) &&
       (input.running !== "None" || !movement.running) &&
@@ -40,6 +42,7 @@ export function contextFor(
         s.blocks.flatMap((b) => b.exercises.map((e) => e.name)),
       ) ?? []),
     ].join(". "),
+    vocabulary,
   );
   const selected: Movement[] = eligible.filter((movement) =>
     requestedMovements.includes(movement),
@@ -116,8 +119,10 @@ export function contextFor(
     aoWarning: ao
       ? "Unlisted local attributes remain UNKNOWN. Schedule is a dated snapshot; Q checks current conditions."
       : "No verified AO matched. Do not infer location or terrain.",
+    exerciseGuideSource: guide?.source ?? "json",
+    ambiguousExerciseAliases: guide?.ambiguousAliases ?? [],
     exerciseGuideWarning:
-      "App planning conventions, not verified regional variations. Confirm names and demonstrate counting. Alternatives are suggestions for a different movement, never automatic replacements or medical advice. Only use fixed features confirmed available in site.features. No running does not mean no jumping; offer a step-based option when requested.",
+      "Use published database conventions where supplied; other records are app planning conventions. Ambiguous exercise aliases require Q confirmation; do not guess a movement or counting method. These are not verified regional variations. Confirm names and demonstrate counting. Alternatives are suggestions for a different movement, never automatic replacements or medical advice. Only use fixed features confirmed available in site.features. No running does not mean no jumping; offer a step-based option when requested.",
     exercises: selected
       .slice(0, 24)
       .map(

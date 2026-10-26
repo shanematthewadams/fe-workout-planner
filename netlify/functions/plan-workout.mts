@@ -1,3 +1,4 @@
+import { exiconEnvironment } from "../../server/exicon-intelligence.ts";
 import type { Config, Context } from "@netlify/functions";
 import { catalogEnvironment } from "../../server/ao-intelligence.ts";
 import { handlePlanner } from "../../server/planner-handler.ts";
@@ -6,6 +7,9 @@ export { handlePlanner } from "../../server/planner-handler.ts";
 declare const Netlify: { env: { get(name: string): string | undefined } };
 export default async (req: Request, context: Context) => {
   return handlePlanner(req, {
+    exicon: exiconEnvironment(context.deploy.context, (name) =>
+      Netlify.env.get(name),
+    ),
     catalog: catalogEnvironment(context.deploy.context, (name) =>
       Netlify.env.get(name),
     ),

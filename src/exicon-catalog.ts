@@ -77,9 +77,9 @@ export const exiconCatalogSchema = z
       z
         .object({
           id,
-          kind: z.literal("review"),
+          kind: z.enum(["nation", "local_inventory", "review"]),
           url: z.string().url(),
-          captured_at: z.string().datetime(),
+          captured_at: z.string().datetime({ offset: true }),
           description: content,
         })
         .strict(),
@@ -90,7 +90,7 @@ export const exiconCatalogSchema = z
           source_id: id,
           license_name: content,
           permission_url: z.string().url().startsWith("https://"),
-          reviewed_at: z.string().datetime().nullable(),
+          reviewed_at: z.string().datetime({ offset: true }).nullable(),
           redistribution_allowed: z.boolean(),
         })
         .strict()
@@ -181,24 +181,27 @@ export function resolveExercise(
   );
   const needle = normalizeExerciseName(query);
   if (!needle) return { status: "missing" as const, candidates: [] };
-  const matches = catalog.ex_aliases.filter(
-    (a) =>
-      published(a) &&
-      normalizeExerciseName(a.alias) === needle &&
-      (!a.region_id || a.region_id === regionId) &&
-      (!a.variation_id ||
-        variations.some(
-          (v) =>
-            v.id === a.variation_id &&
-            v.exercise_id === a.exercise_id &&
-            (!v.region_id || v.region_id === a.region_id),
-        )),
-  );
+  const explicit = exercises.find((e) => e.id === query);
+  const matches = explicit
+    ? []
+    : catalog.ex_aliases.filter(
+        (a) =>
+          published(a) &&
+          normalizeExerciseName(a.alias) === needle &&
+          (!a.region_id || a.region_id === regionId) &&
+          (!a.variation_id ||
+            variations.some(
+              (v) =>
+                v.id === a.variation_id &&
+                v.exercise_id === a.exercise_id &&
+                (!v.region_id || v.region_id === a.region_id),
+            )),
+      );
   const regional = matches.filter(
     (a) => a.region_id === regionId && !!regionId,
   );
   const candidates: Candidate[] = [];
-  for (const e of exercises) {
+  for (const e of explicit ? [explicit] : exercises) {
     if (
       !regional.length &&
       (e.id === query || normalizeExerciseName(e.name) === needle)
@@ -215,7 +218,7 @@ export function resolveExercise(
             : null,
         });
     }
-    if (!regional.length)
+    if (!regional.length && !explicit)
       for (const v of variations)
         if (
           v.exercise_id === e.id &&

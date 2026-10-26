@@ -1,3 +1,4 @@
+import { exiconEnvironment } from "./server/exicon-intelligence.ts";
 import { defineConfig, loadEnv } from "vite";
 import { readFileSync } from "node:fs";
 import { catalogEnvironment } from "./server/ao-intelligence.ts";
@@ -25,6 +26,7 @@ export default defineConfig(({ mode, command }) => {
     define,
     plugins: [
       plannerDevApi({
+        exicon: exiconEnvironment("dev", (name) => env[name]),
         catalog: catalogEnvironment("dev", (name) => env[name]),
         GEMINI_API_KEY: env.GEMINI_API_KEY,
         OPENROUTER_API_KEY: env.OPENROUTER_API_KEY,

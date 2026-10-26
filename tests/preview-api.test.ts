@@ -67,6 +67,19 @@ describe("Studio preview uses the production planner API", () => {
     expect(response.status).toBe(200);
     expect((await response.json()).provider).toBe("Template");
   });
+  it("serves the shared Exicon fallback route without using planner rate-limit slots", async () => {
+    for (let i = 0; i < 7; i++) {
+      const r = await localApiFetch(base + "/api/exicon?region=the-fe");
+      expect(r.status).toBe(200);
+      const data = await r.json();
+      expect(data.source).toBe("json");
+      expect(data.movements).toHaveLength(50);
+    }
+    expect((await request(idea)).status).toBe(200);
+    expect(
+      (await localApiFetch(base + "/api/exicon", { method: "POST" })).status,
+    ).toBe(405);
+  });
   it("limits preview requests too", async () => {
     for (let i = 0; i < 5; i++) expect((await request(idea)).status).toBe(200);
     expect((await request(idea)).status).toBe(429);
