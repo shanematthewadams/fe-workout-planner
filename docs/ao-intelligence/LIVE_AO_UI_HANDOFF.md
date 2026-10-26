@@ -36,3 +36,24 @@ All **16/16** hosted `view=catalog` reads returned HTTP 200, version 1, `source=
 
 
 Initial CI run `40249397381` passed 443 unit/integration tests and 131 browser cases, with four intentional historical-comparison skips. The new Safari fixture journey failed because its API request bypassed the page route after service-worker activation and received preview HTML instead of the fixture. Its trace shows HTTP 200 `text/html`, not a rejected database fact. The catalog schema correctly rejected that response and displayed saved fallback. The fixture scenario now blocks service workers explicitly; existing dedicated offline-cache tests continue exercising the real worker, and hosted verification reads the actual API with worker isolation. Fresh verification follows below.
+
+
+Visual inspection of the desktop (1440px) and Chromium mobile (390px) screenshots confirms the optional facility detail layout, readable restriction labels, distinct nearby destinations, and wrapping within the viewport. The new scenario's overflow and accessibility assertions passed on those viewports and tablet in the initial run. Screenshots are retained in the CI `browser-qa` artifact as `qa/screenshots/*-live-ao.png`.
+
+For a source rollback of this continuation, revert `c08d09121c7bd514744140e49aaf9b1544d6cd64` then `f26313b467be470a46ef564c6c5b64002651e5fb` in reverse order, resolving documentation-only changes deliberately. Redeploying the prior application commit is also supported. Do not reset a shared branch or remove later independent work.
+
+
+## Final verification · corrected release
+
+Corrected release commit: `c08d09121c7bd514744140e49aaf9b1544d6cd64`, tree `114a45f1c331500fe169c7fe6e04deca2dc3c77f`. Hosted build-info reports this exact commit and staging; the compiled application asset remains byte-identical to the local verified artifact above. Only browser-test isolation and documentation changed after the first application commit.
+
+Fresh [GitHub Checks run 40250170782](https://github.com/shanematthewadams/fe-workout-planner/actions/runs/40250170782) passes lint, all 443 tests, build, the complete four-project browser matrix, and the deployed staging commit/hosted journey step. The actual hosted journey reads the live catalog and verifies Gold Rush's meeting point in autosave on desktop Chromium and mobile WebKit, then reopen/print/Lead, edits/undo, COT, and cloud recovery against an intercepted synthetic fixture. It does not mutate real cloud/account records or call a provider for AO facts.
+
+No migration/import/database writes were performed by this UI continuation. Historical shared-database counts, RLS/backup evidence and limitations remain in `SHARED_DATABASE_RELEASE.md`. No production application deployment or main merge occurred. The Exicon milestone and approval boundary above remain unchanged.
+
+
+Final browser totals: **132 passed, 4 skipped** in 5.0 minutes; the four skips are the existing optional historical-before comparison, not AO/security failures. The corrected AO journey passes all four viewports. Final Safari mobile screenshot was inspected as well; labels and nearby/restricted distinctions wrap within the viewport. Hosted desktop/mobile smoke reports no page errors or horizontal overflow, preserved saved identity and correct 43:45 timer recovery.
+
+The optional live-provider evaluation is **not fully green**: three genuine Gemini `gemini-3.5-flash-lite` responses passed the coupon-partners, unknown-seasonal-venue and targeted-refinement cases; individual-core-rain returned HTTP 504. The workflow deliberately reports this as a warning, so its green conclusion must not be presented as four successful provider cases. No paid providers were used. This existing intermittent upstream timeout remains a provider reliability limitation; verified AO reads and the AI-free hosted save/Lead path do not depend on it. Detailed outcomes are retained in the run's `browser-qa` artifact (`qa/pilot/live-ai.json`, artifact `12620540484`).
+
+Sprint stopping point: live AO details and generation share the conservative adapter on staging, all sixteen public catalogs were verified, existing app compatibility and browser journeys pass, and the repository contains the Exicon proposal and operational handoff. Production application activation remains pending separate approval. The final evidence commit changes documentation only and intentionally skips another identical build/deploy.
