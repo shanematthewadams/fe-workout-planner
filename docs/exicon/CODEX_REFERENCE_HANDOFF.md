@@ -62,7 +62,7 @@ The staged reference tab loads on demand, coalesces browser requests, caches for
 
 ## Verification and compatibility
 
-- Local full suite initially **474 tests / 63 files** passed; one subsequent preview-route test adds explicit no-AI quota/GET parity. Final total and CI evidence are below.
+- Final local full suite: **475 tests / 63 files**, lint, TypeScript and build pass. The extra preview-route test covers no-AI quota/GET parity. Fresh CI evidence is below.
 - Targeted tests exercise sanitizer injection/entity/structure handling, duplicate/tag/source conflicts, unresolved mentions, wrong decision basis, source protection/older snapshots/removals/drop guard, revoked source behavior, duplicate-name identity, both SQL roles, every write privilege, invoker RPC, rollback compatibility, server and browser coalescing/failure/cache behavior, search/attribution, and source HTML rendered as inert text.
 - `catalog:codex-local` verifies every description, alias, tag link, mention and fingerprint against the **actual complete 977-entry capture** under both anon/authenticated Postgres roles, repeat no-op and full rollback.
 - `AO_CATALOG_ALLOW_SHARED=true npm run catalog:codex-hosted` verifies every real public database record and relationship against that capture, all official IDs against the durable baseline, search and **18 real anonymous REST write denials** (POST/PATCH/DELETE × six tables). An initial empty PATCH probe returned a no-op rather than exercising permissions; the corrected verifier sends a non-empty synthetic field update and requires 401/403 plus SQLSTATE 42501. No synthetic row was created.
@@ -80,4 +80,17 @@ Before any production app release, verify the current main/branch identities, fr
 
 ## Deployment evidence
 
-Pending fresh staging push/CI/hosted verification. This section is updated after the tested implementation is deployed; do not treat the earlier sprint's 132 browser checks as verification of this change.
+Application commit **`3dd3d9c6ec8ab4519a59f1bd723ddaf3b36a4a50`**, tree **`9af1fedb70656e2ebcc9d109ae8ceaec9b230039`**. Netlify ready branch deploy `6aeb5c28ba71affd6cd13550`; real hosted build-info reports that exact staging commit. The configured local build and hosted `/assets/index-DXsg8o1z.js` match byte-for-byte: SHA-256 `feb6bcf2bc5d95b129b13236512759df8fa3c6bcd3dcc2f8afe2142bd5fbc03d`.
+
+`npm run catalog:codex-hosted -- --staging` passes with the deployed app's two-second internal budget: source=database, 977 entries, 131 aliases, 26 tags and exact official-ID baseline parity. Actual hosted Chrome UI independently loaded 977 entries, found Merkin through the “push up” alias, displayed its official plain-text description and exact source link, combined Chest tag + alias filtering (29 results), and retained bundled WW3 after switching back. No app console error was observed; the browser extension emitted unrelated metadata errors. No account/draft/cloud save or AI call was performed in this manual reference check.
+
+[Fresh CI run 41866855763](https://github.com/shanematthewadams/fe-workout-planner/actions/runs/41866855763), job `126703138072`, was queued for a hosted runner at the time of the first hosted verification. Browser matrix and hosted save/Lead journey status are recorded below after it completes; do not count the prior sprint's 132 checks as evidence for this change.
+
+
+## Final verified stopping point
+
+CI run **41866855763**, job **126703138072**, completed successfully against the exact implementation commit above. Results: **475 tests / 63 files**, lint/build, **136 browser checks passed / four existing optional comparisons skipped**, six minutes eighteen seconds for the four-viewport browser matrix. The new Nation reference/search/attribution/outage test passed on desktop, tablet, mobile Chromium and mobile WebKit. Real hosted desktop and mobile WebKit checks passed saved identity, bookmark reload, My Workouts, print/Lead, 43:45 timer recovery, structured Weinke recovery/counts, direct-card Lead and start-fresh preservation, with no page errors or overflow. Both live Exicon readers passed: eight canonical exercises/fifty merged movements and the separate 977-entry Nation corpus. Live provider evaluation was intentionally skipped; zero creative AI requests were added.
+
+The final commit changes only engineering instructions and documentation/evidence and skips CI/Netlify. Staging stays on the tested implementation commit. Main/production app remains at the verified preflight SHA; this sprint does not authorize its release. The five unresolved source mentions and authenticated HTTP-session coverage remain explicit limits. Initial import and real content/security checks are verified; live repeated import remains unverified because the connector's confirmation expired, while complete-capture local repeat and rollback pass.
+
+Completed: owner-decision provenance, normalized official source import, safe repeat tooling, actual database record parity, RLS/write-denial verification, staged cached reference API/browser with attribution and fallback, fresh full regression/hosted QA, and durable next milestone/rollback instructions. Stop here rather than expanding into automatic movement classification or provider remediation.

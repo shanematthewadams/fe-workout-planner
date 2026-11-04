@@ -97,5 +97,59 @@
     "aiCalls": 0
   },
   "remoteMigration": "20261104153712",
-  "productionApplicationDeployed": false
+  "productionApplicationDeployed": false,
+  "staging": {
+    "mode": "staging",
+    "count": 977,
+    "aliases": 131,
+    "tags": 26,
+    "allIdsMatchBaseline": true,
+    "fullSourceParity": false,
+    "deniedWrites": 0,
+    "aiCalls": 0
+  },
+  "application": {
+    "commit": "3dd3d9c6ec8ab4519a59f1bd723ddaf3b36a4a50",
+    "tree": "9af1fedb70656e2ebcc9d109ae8ceaec9b230039",
+    "deployId": "6aeb5c28ba71affd6cd13550",
+    "asset": "/assets/index-DXsg8o1z.js",
+    "assetSha256": "feb6bcf2bc5d95b129b13236512759df8fa3c6bcd3dcc2f8afe2142bd5fbc03d",
+    "hostedAssetMatchesLocal": true
+  },
+  "compatibility": {
+    "workouts": 36,
+    "beatdowns": 0,
+    "profiles": 1,
+    "guestPlanVault": 27,
+    "accountVault": 0,
+    "canonicalExercises": 8,
+    "allBeforeAfterChecksumsMatch": true
+  },
+  "hostedBrowser": {
+    "officialAliasSearch": true,
+    "tagAndAliasFilter": true,
+    "descriptionAndExactSourceLink": true,
+    "bundledWW3GuideRetained": true,
+    "applicationErrorsObserved": false,
+    "extensionMetadataErrorsObserved": true
+  },
+  "liveRepeat": {
+    "verified": false,
+    "reason": "Supabase connector confirmation expired; full source capture repeated locally with zero mutations"
+  },
+  "ci": {
+    "runId": 41866855763,
+    "jobId": 126703138072,
+    "conclusion": "success",
+    "unitTests": 475,
+    "testFiles": 63,
+    "browserPassed": 136,
+    "browserSkipped": 4,
+    "hostedDesktopAndMobileWebKit": "passed",
+    "hostedSaveLeadRecovery": "passed",
+    "liveReaders": "passed",
+    "liveAI": "not requested",
+    "artifactId": 13343097459,
+    "artifactExpiresAt": "2026-11-18T16:34:24Z"
+  }
 }
