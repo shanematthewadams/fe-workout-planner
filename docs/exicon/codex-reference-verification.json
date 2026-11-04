@@ -1,0 +1,101 @@
+{
+  "source": {
+    "count": 977,
+    "aliases": 131,
+    "tags": 26,
+    "tagLinks": 2172,
+    "mentions": 44,
+    "duplicateNames": [],
+    "missingMentions": [
+      {
+        "entry_id": "exicon-1763418741273-hustle-mosey",
+        "target_id": "exicon-1753308824847-mosey"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308433594-ao"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308434937-beat-down"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308442495-coupon"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1761331634402-pax"
+      }
+    ],
+    "sourceFingerprint": "b6cb2d51f43665b039339a8a42c887cda5a3a59c51f555205b083180399e0918",
+    "upstreamPermission": "unresolved",
+    "reuseBasis": "product-owner-interpretation",
+    "automaticPlanningClassification": false
+  },
+  "local": {
+    "count": 977,
+    "aliases": 131,
+    "tags": 26,
+    "tagLinks": 2172,
+    "mentions": 44,
+    "duplicateNames": [],
+    "missingMentions": [
+      {
+        "entry_id": "exicon-1763418741273-hustle-mosey",
+        "target_id": "exicon-1753308824847-mosey"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308433594-ao"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308434937-beat-down"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1753308442495-coupon"
+      },
+      {
+        "entry_id": "exicon-1774903027660-pbk-(patrick-brian-kenny)-",
+        "target_id": "lexicon-1761331634402-pax"
+      }
+    ],
+    "sourceFingerprint": "b6cb2d51f43665b039339a8a42c887cda5a3a59c51f555205b083180399e0918",
+    "upstreamPermission": "unresolved",
+    "reuseBasis": "product-owner-interpretation",
+    "automaticPlanningClassification": false,
+    "rows": [
+      {
+        "role": "anon",
+        "count": 977,
+        "allEntryAndRelationshipParity": true
+      },
+      {
+        "role": "authenticated",
+        "count": 977,
+        "allEntryAndRelationshipParity": true
+      }
+    ],
+    "repeat": {
+      "changed": 0,
+      "removed": 0,
+      "incoming": 977,
+      "conflicts": []
+    },
+    "rollback": true
+  },
+  "database": {
+    "mode": "database",
+    "count": 977,
+    "aliases": 131,
+    "tags": 26,
+    "allIdsMatchBaseline": true,
+    "fullSourceParity": true,
+    "deniedWrites": 18,
+    "aiCalls": 0
+  },
+  "remoteMigration": "20261104153712",
+  "productionApplicationDeployed": false
+}

@@ -1,3 +1,4 @@
+import { handleCodexReference } from "./codex-reference.ts";
 import { handleExicon } from "./exicon-intelligence.ts";
 import { handleAOIntelligence } from "./ao-intelligence.ts";
 import type { Plugin } from "vite";
@@ -23,9 +24,11 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     res.end(JSON.stringify({ error: message }));
   };
   async function serve(req: IncomingMessage, res: ServerResponse) {
-    const catalogRead = ["/api/ao-intelligence", "/api/exicon"].includes(
-      req.url?.split("?")[0] ?? "",
-    );
+    const catalogRead = [
+      "/api/ao-intelligence",
+      "/api/exicon",
+      "/api/codex",
+    ].includes(req.url?.split("?")[0] ?? "");
     const now = Date.now(),
       ip = req.socket.remoteAddress ?? "preview";
     for (const [key, value] of callers)
@@ -85,9 +88,11 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
     const response =
       url.pathname === "/api/ao-intelligence"
         ? await handleAOIntelligence(request, settings.catalog ?? {})
-        : url.pathname === "/api/exicon"
-          ? await handleExicon(request, settings.exicon ?? {})
-          : await handlePlanner(request, settings);
+        : url.pathname === "/api/codex"
+          ? await handleCodexReference(request, settings.exicon ?? {})
+          : url.pathname === "/api/exicon"
+            ? await handleExicon(request, settings.exicon ?? {})
+            : await handlePlanner(request, settings);
     res.writeHead(response.status, Object.fromEntries(response.headers));
     res.end(Buffer.from(await response.arrayBuffer()));
   }
@@ -101,6 +106,7 @@ export function plannerDevApi(env: AIEnvironment = {}): Plugin {
             "/api/plan-workout",
             "/api/ao-intelligence",
             "/api/exicon",
+            "/api/codex",
           ].includes(req.url?.split("?")[0] ?? "")
         ) {
           next();

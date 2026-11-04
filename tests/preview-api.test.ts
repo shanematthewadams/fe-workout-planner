@@ -80,6 +80,20 @@ describe("Studio preview uses the production planner API", () => {
       (await localApiFetch(base + "/api/exicon", { method: "POST" })).status,
     ).toBe(405);
   });
+  it("serves the shared Nation reference fallback without consuming planner calls", async () => {
+    for (let i = 0; i < 7; i++) {
+      const r = await localApiFetch(base + "/api/codex");
+      expect(await r.json()).toEqual({
+        version: 1,
+        source: "unavailable",
+        reference: null,
+      });
+    }
+    expect((await request(idea)).status).toBe(200);
+    expect(
+      (await localApiFetch(base + "/api/codex", { method: "POST" })).status,
+    ).toBe(405);
+  });
   it("limits preview requests too", async () => {
     for (let i = 0; i < 5; i++) expect((await request(idea)).status).toBe(200);
     expect((await request(idea)).status).toBe(429);

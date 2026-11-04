@@ -1,0 +1,11 @@
+{
+  "source_id": "f3-nation-codex-reference-v1",
+  "source_url": "https://codex.f3nation.com/api/exicon",
+  "decision_id": "shane-2026-11-04-codex",
+  "decided_by": "Shane Adams, product owner",
+  "decided_at": "2026-11-04T00:00:00.000Z",
+  "basis": "product-owner-interpretation",
+  "upstream_permission": "unresolved",
+  "rationale": "Shane directed implementation after emailing Roma and following up twice in F3 Nation Slack. His interpretation relies on the official public API, repository participation instructions and documented CSV exports for workout planning. No response or express upstream license has been recorded; silence is not permission.",
+  "attribution": "F3 Nation · F3 Codex"
+}

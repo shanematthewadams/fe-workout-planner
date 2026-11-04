@@ -86,6 +86,9 @@ jobs:
       - name: Verify deployed Exicon catalog without AI
         if: github.ref == 'refs/heads/studio/ux-streamline'
         run: node scripts/verify-exicon-staging.mjs
+      - name: Verify deployed Nation reference without AI
+        if: github.ref == 'refs/heads/studio/ux-streamline'
+        run: npm run catalog:codex-hosted -- --staging
       - name: Evaluate real free AI on staging
         if: github.ref == 'refs/heads/studio/ux-streamline' && (inputs.live_ai || contains(github.event.head_commit.message, '[verify ai]'))
         run: |

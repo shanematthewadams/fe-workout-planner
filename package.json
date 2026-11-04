@@ -26,13 +26,17 @@
     "catalog:exicon-prepare": "vite build --ssr scripts/prepare-exicon.ts --target node22 --outDir qa/exicon-build --emptyOutDir && node qa/exicon-build/prepare-exicon.js",
     "catalog:exicon-hosted": "vite build --ssr scripts/verify-exicon-hosted.ts --target node22 --outDir qa/exicon-hosted-build --emptyOutDir && node qa/exicon-hosted-build/verify-exicon-hosted.js",
     "catalog:codex-review": "vite build --ssr scripts/collect-codex.ts --target node22 --outDir qa/codex-build --emptyOutDir && node qa/codex-build/collect-codex.js",
-    "catalog:exicon-read": "vite build --ssr scripts/verify-exicon-reader.ts --target node22 --outDir qa/exicon-reader-build --emptyOutDir && node qa/exicon-reader-build/verify-exicon-reader.js"
+    "catalog:exicon-read": "vite build --ssr scripts/verify-exicon-reader.ts --target node22 --outDir qa/exicon-reader-build --emptyOutDir && node qa/exicon-reader-build/verify-exicon-reader.js",
+    "catalog:codex-prepare": "vite build --ssr scripts/prepare-codex-reference.ts --target node22 --outDir qa/codex-prepare-build --emptyOutDir && node qa/codex-prepare-build/prepare-codex-reference.js",
+    "catalog:codex-local": "vite build --ssr scripts/verify-codex-local.ts --target node22 --outDir qa/codex-local-build --emptyOutDir && node qa/codex-local-build/verify-codex-local.js",
+    "catalog:codex-hosted": "vite build --ssr scripts/verify-codex-hosted.ts --target node22 --outDir qa/codex-hosted-build --emptyOutDir && node qa/codex-hosted-build/verify-codex-hosted.js"
   },
   "dependencies": {
     "@fontsource/big-shoulders-display": "5.3.0",
     "@fontsource/manrope": "5.3.0",
     "@netlify/functions": "6.0.2",
     "@supabase/supabase-js": "2.118.0",
+    "htmlparser2": "10.0.0",
     "lucide-react": "0.468.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",

@@ -1,3 +1,5 @@
+import { CodexReferenceBrowser } from "./CodexReference";
+import { isStaging } from "./environment";
 import { useState } from "react";
 import {
   F3_LEXICON,
@@ -21,15 +23,23 @@ export function ExiconBrowser() {
         adaptations, not official benchmarks.
       </p>
       <div className="tabs" role="group" aria-label="Reference category">
-        {["exercises", "lexicon", "styles", "principles"].map((t) => (
+        {[
+          "exercises",
+          ...(isStaging() ? ["nation"] : []),
+          "lexicon",
+          "styles",
+          "principles",
+        ].map((t) => (
           <button key={t} aria-pressed={tab === t} onClick={() => setTab(t)}>
             {t === "exercises"
               ? `Exicon (${movements.length})`
-              : t === "lexicon"
-                ? "Lexicon"
-                : t === "styles"
-                  ? "F3 styles"
-                  : "Five principles"}
+              : t === "nation"
+                ? "Nation Exicon"
+                : t === "lexicon"
+                  ? "Lexicon"
+                  : t === "styles"
+                    ? "F3 styles"
+                    : "Five principles"}
           </button>
         ))}
       </div>
@@ -42,6 +52,7 @@ export function ExiconBrowser() {
         />
       </label>
       {tab === "exercises" && <MovementGuide query={query} />}
+      {tab === "nation" && <CodexReferenceBrowser query={query} />}
       <div className="cards">
         {tab === "lexicon" &&
           F3_LEXICON.filter(match).map((t) => (
