@@ -8,9 +8,20 @@ assert.equal(response.status, 200);
 const guide = await response.json();
 assert.equal(guide.version, 1);
 assert.equal(guide.source, "database");
-assert.equal(guide.databaseIds.length, 8);
+assert.equal(guide.databaseIds.length, 50);
 assert.equal(guide.movements.length, 50);
 assert.deepEqual(guide.blockedIds, []);
+assert.equal(guide.codexIds.length, 35);
+assert.equal(guide.codexFormats.length, 1);
+assert.equal(
+  guide.movements.find((m) => m.id === "merkin").codexReference.attribution,
+  "F3 Nation · F3 Codex",
+);
+assert.equal(
+  guide.movements.find((m) => m.id === "dying-cockroach").codexReference
+    .description,
+  null,
+);
 assert.match(
   guide.movements.find((m) => m.id === "mountain-climber").counting,
   /Q must choose/,
@@ -21,6 +32,8 @@ const report = {
   source: guide.source,
   databaseIds: guide.databaseIds,
   movementCount: guide.movements.length,
+  codexLinks: guide.codexIds.length,
+  formatLinks: guide.codexFormats.length,
   providerCheck: "not requested",
 };
 if (process.argv.includes("--ai")) {

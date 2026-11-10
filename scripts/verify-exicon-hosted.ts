@@ -1,6 +1,7 @@
 /** Read-only public catalog/RLS verification. Mutations target no rows; no secrets required. */
 import { writeFileSync, mkdirSync } from "node:fs";
-import { buildAppExicon, EXICON_TABLE_KEYS } from "./exicon-catalog.ts";
+import { EXICON_TABLE_KEYS } from "./exicon-catalog.ts";
+import { buildReviewedPlannerCatalog } from "./reviewed-planner.ts";
 const url = process.env.AO_CATALOG_URL,
   key = process.env.AO_CATALOG_PUBLISHABLE_KEY;
 if (!url || !key?.startsWith("sb_publishable_"))
@@ -14,7 +15,7 @@ if (
     process.env.AO_CATALOG_ALLOW_SHARED !== "true")
 )
   throw Error("Shared target needs explicit operator opt-in");
-const catalog = buildAppExicon();
+const catalog = buildReviewedPlannerCatalog();
 const results: unknown[] = [];
 for (const [table, keys] of Object.entries(EXICON_TABLE_KEYS)) {
   if (table === "ao_sources") continue;

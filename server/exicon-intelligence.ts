@@ -1,8 +1,12 @@
 import {
-  exiconCatalogSchema,
+  plannerExiconSchema,
+  type PlannerExiconCatalog,
+  type CodexPlanningReference,
+} from "../src/codex-planner.ts";
+import { codexEntryURL } from "../src/codex-reference.ts";
+import {
   normalizeExerciseName,
   resolveExercise,
-  type ExiconCatalog,
 } from "../src/exicon-catalog.ts";
 import { movements, type Movement } from "../src/movements.ts";
 import type { Feature } from "../src/site-contract.ts";
@@ -32,6 +36,13 @@ const equipment: Record<string, string> = {
 };
 export type MovementGuide = {
   source: "database" | "json";
+  codexIds?: string[];
+  codexFormats?: {
+    id: string;
+    name: string;
+    instructions: string;
+    reference: CodexPlanningReference;
+  }[];
   movements: Movement[];
   databaseIds: string[];
   blockedIds: string[];
@@ -48,7 +59,7 @@ export const bundledGuide = (): MovementGuide => ({
 });
 /** Canonical records merge by stable ID only; aliases never select a variation. */
 export function adaptExicon(
-  catalog: ExiconCatalog,
+  catalog: PlannerExiconCatalog,
   regionId?: string,
   selectedVariations: Record<string, string> = {},
 ): MovementGuide {
@@ -127,6 +138,43 @@ export function adaptExicon(
       alternative: e.alternative,
     });
   }
+  const referenceFor = (
+    link: NonNullable<PlannerExiconCatalog["codex_links"]>[number],
+  ): CodexPlanningReference => ({
+    officialId: link.entry_id,
+    name: link.entry_name,
+    url: codexEntryURL(link.entry_id),
+    description: link.description,
+    relation: link.relation,
+    reviewNote: link.review_note,
+    reviewedAt: link.reviewed_at,
+    attribution: "F3 Nation · F3 Codex",
+  });
+  const codexIds: string[] = [];
+  for (const link of catalog.codex_links ?? []) {
+    if (!link.exercise_id) continue;
+    const m = accepted.get(link.exercise_id);
+    if (m) {
+      accepted.set(m.id, { ...m, codexReference: referenceFor(link) });
+      codexIds.push(m.id);
+    }
+  }
+  const codexFormats = (catalog.codex_links ?? []).flatMap((link) => {
+    if (!link.format_id) return [];
+    const format = catalog.ex_formats.find(
+      (f) => f.id === link.format_id && published(f),
+    );
+    return format
+      ? [
+          {
+            id: format.id,
+            name: format.name,
+            instructions: format.instructions,
+            reference: referenceFor(link),
+          },
+        ]
+      : [];
+  });
   const merged = movements
     .filter((m) => !blockedIds.includes(m.id))
     .map((m) => accepted.get(m.id) ?? m);
@@ -144,6 +192,8 @@ export function adaptExicon(
     source: accepted.size || blockedIds.length ? "database" : "json",
     movements: merged,
     databaseIds: [...accepted.keys()],
+    codexIds,
+    codexFormats,
     blockedIds,
     blockedNames: catalog.ex_exercises
       .filter((e) => blockedIds.includes(e.id))
@@ -169,11 +219,14 @@ export function createExiconReader(
   now = Date.now,
   timeoutMs = 2000,
 ) {
-  const cache = new Map<string, { expires: number; value: ExiconCatalog }>(),
-    pending = new Map<string, Promise<ExiconCatalog | null>>();
+  const cache = new Map<
+      string,
+      { expires: number; value: PlannerExiconCatalog }
+    >(),
+    pending = new Map<string, Promise<PlannerExiconCatalog | null>>();
   return async (
     env: CatalogEnvironment = {},
-  ): Promise<ExiconCatalog | null> => {
+  ): Promise<PlannerExiconCatalog | null> => {
     if (
       env.enabled !== "true" ||
       !env.url ||
@@ -195,7 +248,7 @@ export function createExiconReader(
     const work = (async () => {
       try {
         const response = await (fetcher ?? fetch)(
-          new URL("/rest/v1/rpc/fe_exicon_catalog", base),
+          new URL("/rest/v1/rpc/fe_exicon_planner_catalog", base),
           {
             headers: { apikey: env.publishableKey! },
             signal: AbortSignal.timeout(timeoutMs),
@@ -204,7 +257,7 @@ export function createExiconReader(
         );
         if (!response.ok) return null;
         const body = await boundedText(response, 3_000_000);
-        const data = exiconCatalogSchema.parse(JSON.parse(body));
+        const data = plannerExiconSchema.parse(JSON.parse(body));
         for (const rows of Object.values(data))
           if (Array.isArray(rows) && rows.length > 5000)
             throw Error("Catalog exceeds read bound");

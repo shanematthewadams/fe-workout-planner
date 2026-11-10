@@ -99,6 +99,7 @@ export async function handlePlanner(
         ...headers,
         "X-F3-AO-Source": site.dataSource,
         "X-F3-Exicon-Source": guide.source,
+        "X-F3-Codex-Links": String(guide.codexIds?.length ?? 0),
       },
     });
   } catch (error) {

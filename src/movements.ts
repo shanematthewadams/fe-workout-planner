@@ -15,6 +15,7 @@ export type Movement = {
   features: Feature[];
   running: boolean;
   alternative: string;
+  codexReference?: import("./codex-planner").CodexPlanningReference;
 };
 type Rules = Pick<
   Movement,

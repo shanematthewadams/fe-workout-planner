@@ -1,6 +1,8 @@
 # The FE Workout Planner · Sprint 2 handoff
 
-Latest Exicon reference import: [Official Codex catalog and staging browser](exicon/CODEX_REFERENCE_HANDOFF.md). Shane authorized proceeding on his interpretation; upstream terms remain unresolved. The shared database has 977 reference entries, separate from planner mechanics.
+Latest planning integration: [Reviewed Codex context for generation](exicon/PLANNER_INTEGRATION_HANDOFF.md). All fifty app movements now have published database records; 35 exercise citations and one format citation are fingerprint-bound. Local mechanics and requirements are preserved.
+
+Historical Exicon reference import: [Official Codex catalog and staging browser](exicon/CODEX_REFERENCE_HANDOFF.md). Shane authorized proceeding on his interpretation; upstream terms remain unresolved. The shared database has 977 reference entries, separate from planner mechanics.
 
 Historical Exicon integration: [Cached staging read path and Codex intake](exicon/READ_PATH_HANDOFF.md). Published app-written exercises now feed staging generation through the existing safety checks. Codex descriptions remain unpublished pending reuse terms.
 

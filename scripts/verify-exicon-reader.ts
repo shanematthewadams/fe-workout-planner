@@ -29,7 +29,7 @@ if (!a || a !== b || calls !== 1)
   throw Error("Live snapshot/coalescing did not pass");
 const guide = adaptExicon(a, "the-fe");
 if (
-  guide.databaseIds.length !== 8 ||
+  guide.databaseIds.length !== 50 ||
   guide.movements.length !== 50 ||
   guide.source !== "database" ||
   guide.blockedIds.length
@@ -41,6 +41,8 @@ const report = {
   operatorTimeoutMs: 15000,
   source: guide.source,
   publishedExercises: a.ex_exercises.length,
+  codexLinks: guide.codexIds?.length,
+  formatLinks: guide.codexFormats?.length,
   publishedAliases: a.ex_aliases.length,
   mergedMovements: guide.movements.length,
   blockedIds: guide.blockedIds,

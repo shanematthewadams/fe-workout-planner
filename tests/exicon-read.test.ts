@@ -132,7 +132,9 @@ it("coalesces one snapshot, honors the TTL and never caches failure or malformed
     async () => new Response(JSON.stringify(buildAppExicon())),
   );
   expect(await read(env)).not.toBeNull();
-  expect(f.mock.calls[0][0].toString()).toContain("/rpc/fe_exicon_catalog");
+  expect(f.mock.calls[0][0].toString()).toContain(
+    "/rpc/fe_exicon_planner_catalog",
+  );
 });
 it("merges eight stable identities with all fifty fallback movements and preserves legacy names after a rename", () => {
   const c = buildAppExicon();

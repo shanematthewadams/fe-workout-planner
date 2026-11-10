@@ -1,0 +1,231 @@
+{
+  "review": {
+    "exercises": 50,
+    "newExercises": 42,
+    "links": 36,
+    "exerciseLinks": 35,
+    "formatLinks": 1,
+    "referenceDescriptions": 29,
+    "unmapped": [
+      {
+        "kind": "exercise",
+        "id": "hillbilly",
+        "reason": "Source Hillbilly Squats adds a sumo squat; source Hillbilly Climbers is a floor exercise. Neither is this standing side crunch."
+      },
+      {
+        "kind": "exercise",
+        "id": "daisy-picker",
+        "reason": "No exact mechanics-equivalent source entry established in the current catalog."
+      },
+      {
+        "kind": "exercise",
+        "id": "michael-phelps",
+        "reason": "No exact mechanics-equivalent source entry established in the current catalog."
+      },
+      {
+        "kind": "exercise",
+        "id": "good-morning",
+        "reason": "Good Morning Abby/Burpees/Squat are different combinations; no plain hinge entry established."
+      },
+      {
+        "kind": "exercise",
+        "id": "windmill",
+        "reason": "Same name, differing setup/rotation instructions; retain the current app implementation without merging."
+      },
+      {
+        "kind": "exercise",
+        "id": "erkin",
+        "reason": "No plain incline push-up source established; Stirkin adds step-ups and is not equivalent."
+      },
+      {
+        "kind": "exercise",
+        "id": "lunges",
+        "reason": "No plain forward-lunge source established; named lunge routines/variations differ."
+      },
+      {
+        "kind": "exercise",
+        "id": "big-boy-sit-up",
+        "reason": "App arms-folded sit-up and legacy WW1 aliases differ from source World War I overhead-arm instructions; no automatic alias merge."
+      },
+      {
+        "kind": "exercise",
+        "id": "chest-press-with-cindy",
+        "reason": "No exact floor coupon chest-press source established; military press is overhead and not equivalent."
+      },
+      {
+        "kind": "exercise",
+        "id": "farmer-carry",
+        "reason": "No exact loaded side carry source established; Aura Farmer is unrelated."
+      },
+      {
+        "kind": "exercise",
+        "id": "squat",
+        "reason": "No plain bodyweight squat source established; tempo/jump/loaded squats remain distinct."
+      },
+      {
+        "kind": "exercise",
+        "id": "plank",
+        "reason": "No plain static plank entry established; named combinations/routines are distinct."
+      },
+      {
+        "kind": "exercise",
+        "id": "bent-over-row",
+        "reason": "Single Arm Row requires one-sided support; Upright Row/NoHo Row differ. Retain bilateral app row."
+      },
+      {
+        "kind": "exercise",
+        "id": "ww3",
+        "reason": "No exact sit-up plus overhead coupon press source established. Do not infer from World War I/II or War Hammer."
+      },
+      {
+        "kind": "exercise",
+        "id": "pull-up",
+        "reason": "Pull-up Squats/Pullerama are combinations or routines; no plain pull-up entry established."
+      },
+      {
+        "kind": "format",
+        "id": "ladder",
+        "reason": "Named source ladders prescribe specific exercises/terrain; no generic ladder record established. Retain app typed parameters."
+      }
+    ],
+    "regionalCountingOverwritten": false,
+    "sourceAliasAutoMerge": false
+  },
+  "local": {
+    "exercises": 50,
+    "newExercises": 42,
+    "links": 36,
+    "exerciseLinks": 35,
+    "formatLinks": 1,
+    "referenceDescriptions": 29,
+    "unmapped": [
+      {
+        "kind": "exercise",
+        "id": "hillbilly",
+        "reason": "Source Hillbilly Squats adds a sumo squat; source Hillbilly Climbers is a floor exercise. Neither is this standing side crunch."
+      },
+      {
+        "kind": "exercise",
+        "id": "daisy-picker",
+        "reason": "No exact mechanics-equivalent source entry established in the current catalog."
+      },
+      {
+        "kind": "exercise",
+        "id": "michael-phelps",
+        "reason": "No exact mechanics-equivalent source entry established in the current catalog."
+      },
+      {
+        "kind": "exercise",
+        "id": "good-morning",
+        "reason": "Good Morning Abby/Burpees/Squat are different combinations; no plain hinge entry established."
+      },
+      {
+        "kind": "exercise",
+        "id": "windmill",
+        "reason": "Same name, differing setup/rotation instructions; retain the current app implementation without merging."
+      },
+      {
+        "kind": "exercise",
+        "id": "erkin",
+        "reason": "No plain incline push-up source established; Stirkin adds step-ups and is not equivalent."
+      },
+      {
+        "kind": "exercise",
+        "id": "lunges",
+        "reason": "No plain forward-lunge source established; named lunge routines/variations differ."
+      },
+      {
+        "kind": "exercise",
+        "id": "big-boy-sit-up",
+        "reason": "App arms-folded sit-up and legacy WW1 aliases differ from source World War I overhead-arm instructions; no automatic alias merge."
+      },
+      {
+        "kind": "exercise",
+        "id": "chest-press-with-cindy",
+        "reason": "No exact floor coupon chest-press source established; military press is overhead and not equivalent."
+      },
+      {
+        "kind": "exercise",
+        "id": "farmer-carry",
+        "reason": "No exact loaded side carry source established; Aura Farmer is unrelated."
+      },
+      {
+        "kind": "exercise",
+        "id": "squat",
+        "reason": "No plain bodyweight squat source established; tempo/jump/loaded squats remain distinct."
+      },
+      {
+        "kind": "exercise",
+        "id": "plank",
+        "reason": "No plain static plank entry established; named combinations/routines are distinct."
+      },
+      {
+        "kind": "exercise",
+        "id": "bent-over-row",
+        "reason": "Single Arm Row requires one-sided support; Upright Row/NoHo Row differ. Retain bilateral app row."
+      },
+      {
+        "kind": "exercise",
+        "id": "ww3",
+        "reason": "No exact sit-up plus overhead coupon press source established. Do not infer from World War I/II or War Hammer."
+      },
+      {
+        "kind": "exercise",
+        "id": "pull-up",
+        "reason": "Pull-up Squats/Pullerama are combinations or routines; no plain pull-up entry established."
+      },
+      {
+        "kind": "format",
+        "id": "ladder",
+        "reason": "Named source ladders prescribe specific exercises/terrain; no generic ladder record established. Retain app typed parameters."
+      }
+    ],
+    "regionalCountingOverwritten": false,
+    "sourceAliasAutoMerge": false,
+    "roles": [
+      {
+        "role": "anon",
+        "canonicalCount": 50,
+        "exerciseLinks": 35,
+        "formatLinks": 1,
+        "completeLocalPolicyAndSourceParity": true
+      },
+      {
+        "role": "authenticated",
+        "canonicalCount": 50,
+        "exerciseLinks": 35,
+        "formatLinks": 1,
+        "completeLocalPolicyAndSourceParity": true
+      }
+    ],
+    "repeatUnchanged": true,
+    "rollbackPreservesCanonicalRows": true,
+    "aiCalls": 0
+  },
+  "database": {
+    "canonicalCount": 50,
+    "exerciseLinks": 35,
+    "formatLinks": 1,
+    "allLocalPoliciesAndCountingPreserved": true,
+    "allReviewedSourceFieldsMatchDatabase": true,
+    "deniedMappingWrites": 3,
+    "aiCalls": 0,
+    "operatorTimeoutMs": 15000
+  },
+  "reader": {
+    "checkedAt": "2026-11-10T19:34:47.221Z",
+    "calls": 1,
+    "operatorTimeoutMs": 15000,
+    "source": "database",
+    "publishedExercises": 50,
+    "codexLinks": 35,
+    "formatLinks": 1,
+    "publishedAliases": 104,
+    "mergedMovements": 50,
+    "blockedIds": [],
+    "ambiguousAliases": []
+  },
+  "liveMigration": "20261110193401",
+  "userTableBeforeAfterChecksumsMatch": true,
+  "productionAppDeployed": false
+}
