@@ -11,7 +11,8 @@
       "entry_fingerprint": "eed4ec297bd09dfebde3fedd697ce56d63609621f062641cda7211c4704fa8c2",
       "relation": "equivalent",
       "notes": "Same jumping-jack mechanics; cadence remains an explicit app/Q convention.",
-      "app_fingerprint": "aaa9ca6f55069fe0eea771bf2ad5403798cb4e16f50fdc4dc7ba417feab56f61"
+      "app_fingerprint": "aaa9ca6f55069fe0eea771bf2ad5403798cb4e16f50fdc4dc7ba417feab56f61",
+      "entry_text_fingerprint": "50e757cf9a462d693b3180545886e2a7c0149cd86c5f11e095c124132a714231"
     },
     {
       "target_kind": "exercise",
@@ -21,7 +22,8 @@
       "entry_fingerprint": "7575ac3b28977427c3389a414494a418ff44624a4375c207536e419beb0431ee",
       "relation": "equivalent",
       "notes": "Opposite knee to elbow, alternating sides.",
-      "app_fingerprint": "b8e7fc3d6cbb230727827bba59a602ea7797b0f4fb90458d24a41492a5a5c70f"
+      "app_fingerprint": "b8e7fc3d6cbb230727827bba59a602ea7797b0f4fb90458d24a41492a5a5c70f",
+      "entry_text_fingerprint": "f097333a8427248a30f3329ef130c27abdea08f2b7c47a0cf8d11674e01d92cf"
     },
     {
       "target_kind": "exercise",
@@ -31,7 +33,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Source Hillbilly Squats adds a sumo squat; source Hillbilly Climbers is a floor exercise. Neither is this standing side crunch.",
-      "app_fingerprint": "f8479258af4dafeab611736095db6e869f4ee2c9c389d50bc9c3c357d55dff1b"
+      "app_fingerprint": "f8479258af4dafeab611736095db6e869f4ee2c9c389d50bc9c3c357d55dff1b",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -41,7 +44,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No exact mechanics-equivalent source entry established in the current catalog.",
-      "app_fingerprint": "eb71ecfe6cb292cee60aee0b4d5522f5c6ba7409a5e474e2750fb45505496f62"
+      "app_fingerprint": "eb71ecfe6cb292cee60aee0b4d5522f5c6ba7409a5e474e2750fb45505496f62",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -51,7 +55,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No exact mechanics-equivalent source entry established in the current catalog.",
-      "app_fingerprint": "3ef5800d4ed2129a94ca0c70500e76844435556cd38ddbe222bd036d46d7c2bf"
+      "app_fingerprint": "3ef5800d4ed2129a94ca0c70500e76844435556cd38ddbe222bd036d46d7c2bf",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -61,7 +66,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Good Morning Abby/Burpees/Squat are different combinations; no plain hinge entry established.",
-      "app_fingerprint": "c7c6e39463359535b32403323155423abdd1f6fc8df074935f1f23045387964d"
+      "app_fingerprint": "c7c6e39463359535b32403323155423abdd1f6fc8df074935f1f23045387964d",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -71,7 +77,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Same name, differing setup/rotation instructions; retain the current app implementation without merging.",
-      "app_fingerprint": "3a724495979e0a092bcc94035f4a44c8b0de425fb2afd2a0e527904e0e5ffd7f"
+      "app_fingerprint": "3a724495979e0a092bcc94035f4a44c8b0de425fb2afd2a0e527904e0e5ffd7f",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -81,7 +88,8 @@
       "entry_fingerprint": "ce6dc8252d2e15aa8e68ae74c1685c78385d9b62dff0249f3e3853ebe503f6d7",
       "relation": "equivalent",
       "notes": "Basic push-up; retain app form and counting guidance.",
-      "app_fingerprint": "b5b0e58daf5efd70e7c832e98e957ef85a135c4e8a9b56ee8c735b6c45cf5a4d"
+      "app_fingerprint": "b5b0e58daf5efd70e7c832e98e957ef85a135c4e8a9b56ee8c735b6c45cf5a4d",
+      "entry_text_fingerprint": "8585b58f742952b652a395dae39256fa8244042dff3ed65969bc3246027fe5d4"
     },
     {
       "target_kind": "exercise",
@@ -91,7 +99,8 @@
       "entry_fingerprint": "678ca65489c7162852af74ec5b9dd56c5c6511e41e4ec1d1c760a96985d06bcf",
       "relation": "equivalent",
       "notes": "Hips remain elevated while elbows bend.",
-      "app_fingerprint": "29a91547d9981eeddc51eff68ce6a4659b05df9417eb2aec9102e3454a06cff0"
+      "app_fingerprint": "29a91547d9981eeddc51eff68ce6a4659b05df9417eb2aec9102e3454a06cff0",
+      "entry_text_fingerprint": "3d32db4f2927ff5d8df1581b0d59e6bfb60147852620ce7fa0bf4572a77f0a97"
     },
     {
       "target_kind": "exercise",
@@ -101,7 +110,8 @@
       "entry_fingerprint": "7d1fd3c6ecffb7fa343306e1ce9ffba8f3c2436ad8a8387f17fc5eecb6036e96",
       "relation": "equivalent",
       "notes": "Narrow diamond hand placement.",
-      "app_fingerprint": "6f29681f7c5786d2304b85c965f7e520feb5205c109e2a1bcbd3e22761ba1d22"
+      "app_fingerprint": "6f29681f7c5786d2304b85c965f7e520feb5205c109e2a1bcbd3e22761ba1d22",
+      "entry_text_fingerprint": "d153612fc931c5190ac8118b445bd98ff5f9c1d3cf0010512df4022e9e6cf162"
     },
     {
       "target_kind": "exercise",
@@ -111,7 +121,8 @@
       "entry_fingerprint": "ae2e39c67f120b9544cde9b28430a2dc4990e2f41f78032750ec93c5586bc661",
       "relation": "equivalent",
       "notes": "Hands positioned back toward ribs, close elbows.",
-      "app_fingerprint": "2569beeac0eef7e0de00ec14286d881399bec67a81096a5b393f3ff84646ad98"
+      "app_fingerprint": "2569beeac0eef7e0de00ec14286d881399bec67a81096a5b393f3ff84646ad98",
+      "entry_text_fingerprint": "95238481d3a13e9831383ee56df7116df2e836576b4d6dbe85f29ad7dc70295c"
     },
     {
       "target_kind": "exercise",
@@ -121,7 +132,8 @@
       "entry_fingerprint": "5bc31de5ec5fcc6fdcc47642725c70cc754103f2eb58a0582e6b5d0a670a973d",
       "relation": "equivalent",
       "notes": "Wide-hand push-up; Q chooses counting.",
-      "app_fingerprint": "9a0ad97e8a89cd1f585620009533e38ff5afd086aa6aa16f371c811a2ea7a648"
+      "app_fingerprint": "9a0ad97e8a89cd1f585620009533e38ff5afd086aa6aa16f371c811a2ea7a648",
+      "entry_text_fingerprint": "3539a6ede7a33b1f879c46d02dfa1db023a0ffffbdfb178d9da7e54f5aedc98b"
     },
     {
       "target_kind": "exercise",
@@ -131,7 +143,8 @@
       "entry_fingerprint": "6e6fa411dfbe0a428a8ede479e44f314cfcaa70af25fa0cc64ddccbb5a36e0bf",
       "relation": "local-adaptation",
       "notes": "App includes a push-up; source lists that as a modification. Retain app version, cite without importing base-only instructions.",
-      "app_fingerprint": "0c515f34c6010c15f277de03bc2e206d22f874bdca39f9b754bad85b1d1c76a2"
+      "app_fingerprint": "0c515f34c6010c15f277de03bc2e206d22f874bdca39f9b754bad85b1d1c76a2",
+      "entry_text_fingerprint": "b3c3d6aba35f7239cc6ed48b18343693e2d7dbf6befa50fc1148ad81dbbed7ff"
     },
     {
       "target_kind": "exercise",
@@ -141,7 +154,8 @@
       "entry_fingerprint": "875152d3b88812ec59598da325d5094d79aecc1e1ccfecc4736f025c0b34ef77",
       "relation": "equivalent",
       "notes": "Supported dip; app conservatively requires confirmed bench/raised support.",
-      "app_fingerprint": "49e8a4b0ae518a0b7899b209ddc69708dee4ad02ec4292d4da798b6717b81322"
+      "app_fingerprint": "49e8a4b0ae518a0b7899b209ddc69708dee4ad02ec4292d4da798b6717b81322",
+      "entry_text_fingerprint": "e65ebd70d3172c734630eb0ad7bb9ea6c790c8855902a41863c7310a94159419"
     },
     {
       "target_kind": "exercise",
@@ -151,7 +165,8 @@
       "entry_fingerprint": "7250ab0dcb2dc045dab767080e1597814e3b10f7df9d365852e3ee3dd2ff41f1",
       "relation": "equivalent",
       "notes": "Feet elevated decline push-up; retain confirmed raised-support requirement.",
-      "app_fingerprint": "1a997a342a967961b5582ebf078865599732d860d5571d6ab652e49ef5017e71"
+      "app_fingerprint": "1a997a342a967961b5582ebf078865599732d860d5571d6ab652e49ef5017e71",
+      "entry_text_fingerprint": "2b771507cc81452fcd0bfe3fe9da43ed948df565e78e2a9256ccee363aa6b16b"
     },
     {
       "target_kind": "exercise",
@@ -161,7 +176,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No plain incline push-up source established; Stirkin adds step-ups and is not equivalent.",
-      "app_fingerprint": "6e5cf8c36f19444ea256f964af8b0bb2e40bd6160d0c55924d0f0c04f1464841"
+      "app_fingerprint": "6e5cf8c36f19444ea256f964af8b0bb2e40bd6160d0c55924d0f0c04f1464841",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -171,7 +187,8 @@
       "entry_fingerprint": "02443312366808bb43be5e99c7c3155b7719b206ad8d70496d1fb2c870c35673",
       "relation": "equivalent",
       "notes": "Squat/ground tap and jump-shot motion.",
-      "app_fingerprint": "512d322e92ea16581c3d12b74dac3b6b672fc6827172a837aa964d4fcd152b51"
+      "app_fingerprint": "512d322e92ea16581c3d12b74dac3b6b672fc6827172a837aa964d4fcd152b51",
+      "entry_text_fingerprint": "fb40f0e575c4fe6461978c5cdaf00a584e8b36f6e23eea6a7e6cb5e8ecd4bd73"
     },
     {
       "target_kind": "exercise",
@@ -181,7 +198,8 @@
       "entry_fingerprint": "e3a9302fafd9d661d20225d3720a142f84eb5f3f54f914f306ef21a778869e18",
       "relation": "equivalent",
       "notes": "Half squat while holding ankles; no invented cadence.",
-      "app_fingerprint": "320e44a10dc812e0d8bf058465cc62e96e8e7b5a4812a8ba065175e5d326b28b"
+      "app_fingerprint": "320e44a10dc812e0d8bf058465cc62e96e8e7b5a4812a8ba065175e5d326b28b",
+      "entry_text_fingerprint": "a0c56826c9d30a24a6f0529fe59c6c2625744c87e867f5dc1c8d287c79836e18"
     },
     {
       "target_kind": "exercise",
@@ -191,7 +209,8 @@
       "entry_fingerprint": "ff962b0910903f3f4887cd9083f37e7e08399b43c3ec7ad803d6957f54b5f132",
       "relation": "equivalent",
       "notes": "Unsupported squat hold, timed by Q.",
-      "app_fingerprint": "1603f79e6e98be785b5dce96de47c4830b206dc1204e16584fa3d9b394fef44e"
+      "app_fingerprint": "1603f79e6e98be785b5dce96de47c4830b206dc1204e16584fa3d9b394fef44e",
+      "entry_text_fingerprint": "3c7bb815c93ca181b4b3b1052962b51848d88a17e03f9314ae8f9af5706a531d"
     },
     {
       "target_kind": "exercise",
@@ -201,7 +220,8 @@
       "entry_fingerprint": "f5aad3226d400b86eae404317beced10865c48781d1e957cc2b5b102932c5148",
       "relation": "equivalent",
       "notes": "Three lowering counts and rise on fourth; app counting guidance retained.",
-      "app_fingerprint": "4d4b2fded5f33790c785028c0e556db8378aa2694e45b1d4729cf46c3463b903"
+      "app_fingerprint": "4d4b2fded5f33790c785028c0e556db8378aa2694e45b1d4729cf46c3463b903",
+      "entry_text_fingerprint": "c1ec66eb5ffcba314f6c3abdf9c0fc88dc43ab242a16c946e8c772e9933c24c4"
     },
     {
       "target_kind": "exercise",
@@ -211,7 +231,8 @@
       "entry_fingerprint": "eca1d8fb299935d39d1c90f7c303091f3b223499682156ebb636909d6e1f881a",
       "relation": "equivalent",
       "notes": "Jumping-jack foot action while remaining in squat.",
-      "app_fingerprint": "1e8ff7520b4092d5b7884d139a39f1670500928052e9f14d672d94f2763ec05c"
+      "app_fingerprint": "1e8ff7520b4092d5b7884d139a39f1670500928052e9f14d672d94f2763ec05c",
+      "entry_text_fingerprint": "d9dd3705e4cd0586165115a172aac4bf2a25afa6223bf715924ce50c79b88a7e"
     },
     {
       "target_kind": "exercise",
@@ -221,7 +242,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No plain forward-lunge source established; named lunge routines/variations differ.",
-      "app_fingerprint": "9869564eeaf7633ec025dc0f7fd76cdfa505776c290a0ae068d1be6b5c873b47"
+      "app_fingerprint": "9869564eeaf7633ec025dc0f7fd76cdfa505776c290a0ae068d1be6b5c873b47",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -231,7 +253,8 @@
       "entry_fingerprint": "aeb08aa5601525d70cc47f709d432df481716b480bfc814671b996230afc49d8",
       "relation": "equivalent",
       "notes": "Alternating seated torso twist. Coupon in source is optional; app remains bodyweight by default.",
-      "app_fingerprint": "3e906e642060eb804a89386c653c3668204416e83cca63d580012e3f88c225f0"
+      "app_fingerprint": "3e906e642060eb804a89386c653c3668204416e83cca63d580012e3f88c225f0",
+      "entry_text_fingerprint": "a98582af0a592f94b5df9541f41b437043295b728646355601ea01c550fe7b25"
     },
     {
       "target_kind": "exercise",
@@ -241,7 +264,8 @@
       "entry_fingerprint": "d2b8acc64726a636c5534c334690476f5968422ac0b4553be1634cd205b9bd15",
       "relation": "equivalent",
       "notes": "Alternating supine leg kicks; 1=1/2=1/cadence not inferred.",
-      "app_fingerprint": "a65fa73efa7549c4350079cf5a37b7fbe59e74d208e2daccdbb6ceb7466f141a"
+      "app_fingerprint": "a65fa73efa7549c4350079cf5a37b7fbe59e74d208e2daccdbb6ceb7466f141a",
+      "entry_text_fingerprint": "5f46dcff613b5f4940dd1396d01d64f433dcd76e542f2ff42b447a8f9dbf8b6d"
     },
     {
       "target_kind": "exercise",
@@ -251,7 +275,8 @@
       "entry_fingerprint": "df30e634f4dd2481719bfa8eb914a39461e9f88aca31eefabe2facc2c93c724a",
       "relation": "local-adaptation",
       "notes": "App permits 45 or 90 degree legs; source specifies 90. Keep app variant and source link only.",
-      "app_fingerprint": "b8997c21b3e2b60528f625f3eab836a103f5127e81d9764d8ebe69390bcc3f6c"
+      "app_fingerprint": "b8997c21b3e2b60528f625f3eab836a103f5127e81d9764d8ebe69390bcc3f6c",
+      "entry_text_fingerprint": "e6ff3939bdb9b1a808287d650d008702bd64187579bbfc9b3b25ed3e0e20a449"
     },
     {
       "target_kind": "exercise",
@@ -261,7 +286,8 @@
       "entry_fingerprint": "4b2f4cc36fa441fa08c327bed1cb0ce935227d8b3f24fddc3af5006e1bf9eef8",
       "relation": "equivalent",
       "notes": "Crunch; retain the app micro-crunch implementation and counting.",
-      "app_fingerprint": "e75bdb61a67e3cede81fa0f2b71b7382ff689fd202c2d33096493aba01e5b60d"
+      "app_fingerprint": "e75bdb61a67e3cede81fa0f2b71b7382ff689fd202c2d33096493aba01e5b60d",
+      "entry_text_fingerprint": "3592a8891f1029ddd166d9df542eb93480e764886728816ed350f53df4c21d0f"
     },
     {
       "target_kind": "exercise",
@@ -271,7 +297,8 @@
       "entry_fingerprint": "117d2c1f73068399e6d85d36072d9cde767f20587be90d53f151633d214dfd69",
       "relation": "equivalent",
       "notes": "Alternating bicycle core motion.",
-      "app_fingerprint": "33369b9b4cdabeefe14c84f0957b60bbafd1cb5a1fc0b68a027386fd848e0d31"
+      "app_fingerprint": "33369b9b4cdabeefe14c84f0957b60bbafd1cb5a1fc0b68a027386fd848e0d31",
+      "entry_text_fingerprint": "4d35a3f96cca9ebdbae882468b4e476be757c781d38904d7e604f945aabd4a4b"
     },
     {
       "target_kind": "exercise",
@@ -281,7 +308,8 @@
       "entry_fingerprint": "cc800149c720995b00e4bc75fe686757f5661b94475183544cc24890497259da",
       "relation": "equivalent",
       "notes": "Supine horizontal leg opening/closing, low heels.",
-      "app_fingerprint": "d0240ad09d14449b49d692f8227472657f49e7c10f3df29d5f980e5974c73916"
+      "app_fingerprint": "d0240ad09d14449b49d692f8227472657f49e7c10f3df29d5f980e5974c73916",
+      "entry_text_fingerprint": "9fb352df430d5155139daa97d059b6763820aa83719d4b5ee0ef222a08d9977b"
     },
     {
       "target_kind": "exercise",
@@ -291,7 +319,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "App arms-folded sit-up and legacy WW1 aliases differ from source World War I overhead-arm instructions; no automatic alias merge.",
-      "app_fingerprint": "6f910ffe1f00d10236ea1d00e76af61838f8dd71035de5eef4df37210558e4d0"
+      "app_fingerprint": "6f910ffe1f00d10236ea1d00e76af61838f8dd71035de5eef4df37210558e4d0",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -301,7 +330,8 @@
       "entry_fingerprint": "52c4afc7d6e4e479a71ef5ac893dd8620a1950e7ba02f617792b34f0eaf1d700",
       "relation": "local-adaptation",
       "notes": "App flutters raised limbs; source touches opposite hand/leg. Do not replace the app mechanics or import source instructions.",
-      "app_fingerprint": "11e4319c2fb267f2411cd721dcbd294e6dc5cddc31da489af19a3338abcbb54d"
+      "app_fingerprint": "11e4319c2fb267f2411cd721dcbd294e6dc5cddc31da489af19a3338abcbb54d",
+      "entry_text_fingerprint": "4f3838535d75c38c832771d442164efb03acf3c5757dca254d5f2976e2ebb2b2"
     },
     {
       "target_kind": "exercise",
@@ -311,7 +341,8 @@
       "entry_fingerprint": "3c89f9e3b9b809579f81dce3c9589f20bacd1c92f71d244a20011cdde5fbdfde",
       "relation": "local-adaptation",
       "notes": "App selects a concrete plank sequence; official entry is an open-ended routine, not a fixed movement.",
-      "app_fingerprint": "ca95cbb3922115560409e47cda7ef53a1dbf2a4e529e7eb574a0d4841912942c"
+      "app_fingerprint": "ca95cbb3922115560409e47cda7ef53a1dbf2a4e529e7eb574a0d4841912942c",
+      "entry_text_fingerprint": "fe295335444a95f80a279afca86e958043e90fbd4743a213c7cc5ce90be196ff"
     },
     {
       "target_kind": "exercise",
@@ -321,7 +352,8 @@
       "entry_fingerprint": "c11abe3280cbd1eb1b31730e13b9145e61b6e0b904d94e7766315d942eba30cb",
       "relation": "equivalent",
       "notes": "Floor/push-up/return/jump sequence; retain app alternatives.",
-      "app_fingerprint": "c53d79ede7fbd545a99027f79857cdeb2737eac01955dec7995a6c607606db0d"
+      "app_fingerprint": "c53d79ede7fbd545a99027f79857cdeb2737eac01955dec7995a6c607606db0d",
+      "entry_text_fingerprint": "7c5d25aa00c070e76d4cee0e061a02860c370ac3e8c02b1a6a8abacbc17a2b8d"
     },
     {
       "target_kind": "exercise",
@@ -331,7 +363,8 @@
       "entry_fingerprint": "b46466716a098b5936c42fa3b807385b69f132cd6b87e7fc0519c713921b9403",
       "relation": "equivalent",
       "notes": "Forward hands-and-feet crawl. Source field/route distances are not inferred.",
-      "app_fingerprint": "b7a7cc55fb71a75813baa445b8d24037fab4562d14cc4688ea3f969bd27fe9ff"
+      "app_fingerprint": "b7a7cc55fb71a75813baa445b8d24037fab4562d14cc4688ea3f969bd27fe9ff",
+      "entry_text_fingerprint": "a01b2621e98526b1b9694679351c5281402bbcbc899e15b202796087daeb16b3"
     },
     {
       "target_kind": "exercise",
@@ -341,7 +374,8 @@
       "entry_fingerprint": "67fa49ae80360a807f94a72e2d3645fb2f7ab19a8441234e64632fc028e03e2f",
       "relation": "equivalent",
       "notes": "Backward bear crawl, distinct canonical ID from forward crawl.",
-      "app_fingerprint": "2ffc03e73a23998ac64dcdffb6b807e48adc28ebf89ce47734d655c5d8be1323"
+      "app_fingerprint": "2ffc03e73a23998ac64dcdffb6b807e48adc28ebf89ce47734d655c5d8be1323",
+      "entry_text_fingerprint": "a2eadb76f0fde13b3d6c41c7bc34b56ab76325a383528c782d6157b0c58cc9ab"
     },
     {
       "target_kind": "exercise",
@@ -351,7 +385,8 @@
       "entry_fingerprint": "9009ea1eea3c555d721a666cab42fc36bd4ce10a0e28d316cb1135569d2d05c6",
       "relation": "equivalent",
       "notes": "Face-up supported walking.",
-      "app_fingerprint": "77d88e7314413ff64bf1143e4f002417842404ee568bba4b8ef60a6fb6030b3b"
+      "app_fingerprint": "77d88e7314413ff64bf1143e4f002417842404ee568bba4b8ef60a6fb6030b3b",
+      "entry_text_fingerprint": "c0df6870ebb5721b8fdf247543c8d49b9cbe3cf763677fa31093065bec888c0c"
     },
     {
       "target_kind": "exercise",
@@ -361,7 +396,8 @@
       "entry_fingerprint": "d8156e789977b4569bd77939da8e929297c6de02fdac01abf4b93a3c7cce0e93",
       "relation": "local-adaptation",
       "notes": "App uses Q-marked cones; official description uses court/field lines. Keep app route and running flag, cite only.",
-      "app_fingerprint": "c48d0e991ce07affe5667a79408a3727274fd7b5feda4450b641ea64e24676c2"
+      "app_fingerprint": "c48d0e991ce07affe5667a79408a3727274fd7b5feda4450b641ea64e24676c2",
+      "entry_text_fingerprint": "6e87aa1385fcab384b4c233e23115db13cd36f7500f9b4b55d85d4180051f2f9"
     },
     {
       "target_kind": "exercise",
@@ -371,7 +407,8 @@
       "entry_fingerprint": "c753ac722066511c68e49bfebadf851500ad0cbcad28e0fee94991bf4e8952a0",
       "relation": "equivalent",
       "notes": "Burpee/merkin on block followed by overhead press; app coupon requirement retained.",
-      "app_fingerprint": "bb32b2bade38bf11b60dc54aca60c54c8aa84610bf2d83fc05af0a9317dfb81c"
+      "app_fingerprint": "bb32b2bade38bf11b60dc54aca60c54c8aa84610bf2d83fc05af0a9317dfb81c",
+      "entry_text_fingerprint": "2dbdfa3cd79d530272078e10b98d45782f60bf8fdb6bbb485d7ba050214ac376"
     },
     {
       "target_kind": "exercise",
@@ -381,7 +418,8 @@
       "entry_fingerprint": "1c4024f403909a4e9c60b6ba27d016b78985b241ef696e44887540e2068b8bb5",
       "relation": "equivalent",
       "notes": "Biceps curl with a cinderblock; app coupon requirement retained.",
-      "app_fingerprint": "f91193d96b413da6a8ff96406004b8b58ce380b84234a120ce7367bdb222971f"
+      "app_fingerprint": "f91193d96b413da6a8ff96406004b8b58ce380b84234a120ce7367bdb222971f",
+      "entry_text_fingerprint": "642c572266a254c41bb302b817adfdcf490efde1e9845728c7cf740689dadeb1"
     },
     {
       "target_kind": "exercise",
@@ -391,7 +429,8 @@
       "entry_fingerprint": "5e5f87d5d23d8f620d0ab6be8624994cf1571598b50cbf0a2ce538dc3c63db6e",
       "relation": "equivalent",
       "notes": "Coupon shoulder-to-overhead press, not hanging curl-plus-press combination.",
-      "app_fingerprint": "166e700c57691cd33b00c4df423d8d973c510ffd3dcbbf50f0c5b0faf04f3c2b"
+      "app_fingerprint": "166e700c57691cd33b00c4df423d8d973c510ffd3dcbbf50f0c5b0faf04f3c2b",
+      "entry_text_fingerprint": "da1aa12a545d73dbeb9bd81696d6d3ef7f4cadd069c13ec39f7d876600b7b75b"
     },
     {
       "target_kind": "exercise",
@@ -401,7 +440,8 @@
       "entry_fingerprint": "6da92a0c1e4f962617e27f3588ca3e7a749fbdf98f453e15f7d27d3283eed00b",
       "relation": "equivalent",
       "notes": "Single-person hip-hinge swing; not partner coupon throwing/catching.",
-      "app_fingerprint": "2a4a0225d4d9e506d63de5edd9356911699f4cb2931bafb974de4697c51f1359"
+      "app_fingerprint": "2a4a0225d4d9e506d63de5edd9356911699f4cb2931bafb974de4697c51f1359",
+      "entry_text_fingerprint": "f0e3375c822b9aed4580430b551a3b6f786dca220bba7461c88b252fd63ab1d4"
     },
     {
       "target_kind": "exercise",
@@ -411,7 +451,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No exact floor coupon chest-press source established; military press is overhead and not equivalent.",
-      "app_fingerprint": "5d6e5ecd09ae15fae1988e0e78fbae2654e15ba946269d9f42c179b8b8509e48"
+      "app_fingerprint": "5d6e5ecd09ae15fae1988e0e78fbae2654e15ba946269d9f42c179b8b8509e48",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -421,7 +462,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No exact loaded side carry source established; Aura Farmer is unrelated.",
-      "app_fingerprint": "6d60fe59efa0344c7f78cf535a5d66b19f9b7faf63c550ec38eb29c74d57bd41"
+      "app_fingerprint": "6d60fe59efa0344c7f78cf535a5d66b19f9b7faf63c550ec38eb29c74d57bd41",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -431,7 +473,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No plain bodyweight squat source established; tempo/jump/loaded squats remain distinct.",
-      "app_fingerprint": "d07cc9982c901e8b3feeb370f6a3d5da48a81b2e28267518e9d5034297dd6195"
+      "app_fingerprint": "d07cc9982c901e8b3feeb370f6a3d5da48a81b2e28267518e9d5034297dd6195",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -441,7 +484,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No plain static plank entry established; named combinations/routines are distinct.",
-      "app_fingerprint": "149b4877266282d3b7e4fb790c76ecf94e0c795778f790cc7e028417695db396"
+      "app_fingerprint": "149b4877266282d3b7e4fb790c76ecf94e0c795778f790cc7e028417695db396",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -451,7 +495,8 @@
       "entry_fingerprint": "08455392be65c5c4088ad476865ebfb856e5e96a1bed4489498eba6ae67e829e",
       "relation": "equivalent",
       "notes": "Alternating knees from supported high plank; retain non-running classification and explicit counting choice.",
-      "app_fingerprint": "24047f1377d896965acbb84cf7843b29d357bc0361ff8a5a41c51a61db6a9799"
+      "app_fingerprint": "24047f1377d896965acbb84cf7843b29d357bc0361ff8a5a41c51a61db6a9799",
+      "entry_text_fingerprint": "30f5b0e48fb3eb5ee376d3ba58185d7cd1369d315c8814a851ddbe6deeaf8122"
     },
     {
       "target_kind": "exercise",
@@ -461,7 +506,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Single Arm Row requires one-sided support; Upright Row/NoHo Row differ. Retain bilateral app row.",
-      "app_fingerprint": "b5890605c705071b6ff41670ef8eb3f9521a80c9fcd04950a5392d89fc55b32c"
+      "app_fingerprint": "b5890605c705071b6ff41670ef8eb3f9521a80c9fcd04950a5392d89fc55b32c",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -471,7 +517,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "No exact sit-up plus overhead coupon press source established. Do not infer from World War I/II or War Hammer.",
-      "app_fingerprint": "c3da78464a4014068edac6a8e705b638b883040a84a2c4853be6b337cf30c91f"
+      "app_fingerprint": "c3da78464a4014068edac6a8e705b638b883040a84a2c4853be6b337cf30c91f",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "exercise",
@@ -481,7 +528,8 @@
       "entry_fingerprint": "193a7eb00c52be9ad4bcb6844a032bfa3ca20bf98c26939920a4d9ca3e0d4bec",
       "relation": "local-adaptation",
       "notes": "Official description specifies a block; app supports a portable weight. Preserve equipment guidance rather than silently requiring or claiming a coupon.",
-      "app_fingerprint": "3e9d07dfaa74beefbd8342e55693b7acef945aa9b887ca3add5f0966b160eb46"
+      "app_fingerprint": "3e9d07dfaa74beefbd8342e55693b7acef945aa9b887ca3add5f0966b160eb46",
+      "entry_text_fingerprint": "057db95574bafaa9249adf82d124c8fe4e2a117f8e28708ccf53db6635b1182f"
     },
     {
       "target_kind": "exercise",
@@ -491,7 +539,8 @@
       "entry_fingerprint": "cea6821e696af58f4a198824c7a3110ff7ca2e2ce5521a03f80b2e405267c9f5",
       "relation": "equivalent",
       "notes": "Timed supported squat hold; confirmed wall required.",
-      "app_fingerprint": "a8285ee5736ae8744f1e50c8c7cb3e7b59bc5ca6fcd6b220056103f38f2bf17c"
+      "app_fingerprint": "a8285ee5736ae8744f1e50c8c7cb3e7b59bc5ca6fcd6b220056103f38f2bf17c",
+      "entry_text_fingerprint": "345b8d97d2494166a5f179c01dbb2c3861d399fab0d4852e8b1acb3eafd4d5c8"
     },
     {
       "target_kind": "exercise",
@@ -501,7 +550,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Pull-up Squats/Pullerama are combinations or routines; no plain pull-up entry established.",
-      "app_fingerprint": "e0c46a5fd7610bbcc687ae3d7f61ad3a3764559a9e58e465d962d81acd0057bc"
+      "app_fingerprint": "e0c46a5fd7610bbcc687ae3d7f61ad3a3764559a9e58e465d962d81acd0057bc",
+      "entry_text_fingerprint": null
     },
     {
       "target_kind": "format",
@@ -511,7 +561,8 @@
       "entry_fingerprint": "d58fb2566591e2bcb7b2ae18a921a13b7de2ad4e1c74ff86f2cd9dc5bbb94469",
       "relation": "local-adaptation",
       "notes": "Official example counts upward from 1/10; app accepts Q-selected direction and endpoints. Preserve app parameters and stopping rule; reference link only.",
-      "app_fingerprint": "e45bb43dfe6d2a3fa668e515a04224ffe476526cfcfd97ab24703c2928f9a03a"
+      "app_fingerprint": "e45bb43dfe6d2a3fa668e515a04224ffe476526cfcfd97ab24703c2928f9a03a",
+      "entry_text_fingerprint": "484fc911e73e15ec473ab0520d4c295179d3edb083e43a3b564aae7a194c355c"
     },
     {
       "target_kind": "format",
@@ -521,7 +572,8 @@
       "entry_fingerprint": null,
       "relation": null,
       "notes": "Named source ladders prescribe specific exercises/terrain; no generic ladder record established. Retain app typed parameters.",
-      "app_fingerprint": "134fdbc406503d4bc1d8661b73fb22127d74edaad8fa147e7855d9f2be792228"
+      "app_fingerprint": "134fdbc406503d4bc1d8661b73fb22127d74edaad8fa147e7855d9f2be792228",
+      "entry_text_fingerprint": null
     }
   ]
 }

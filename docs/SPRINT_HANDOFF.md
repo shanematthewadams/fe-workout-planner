@@ -2,6 +2,8 @@
 
 Latest planning integration: [Reviewed Codex context for generation](exicon/PLANNER_INTEGRATION_HANDOFF.md). All fifty app movements now have published database records; 35 exercise citations and one format citation are fingerprint-bound. Local mechanics and requirements are preserved.
 
+November 10 release status: staging app `84c3929` passed CI and a live Gemini generation. Additional source-text fingerprint hardening is prepared and tested locally, but its shared-database migration remains unapplied after expired connector confirmations. Resume with the exact operation in the latest handoff before claiming that safeguard is live. Production application remains unchanged.
+
 Historical Exicon reference import: [Official Codex catalog and staging browser](exicon/CODEX_REFERENCE_HANDOFF.md). Shane authorized proceeding on his interpretation; upstream terms remain unresolved. The shared database has 977 reference entries, separate from planner mechanics.
 
 Historical Exicon integration: [Cached staging read path and Codex intake](exicon/READ_PATH_HANDOFF.md). Published app-written exercises now feed staging generation through the existing safety checks. Codex descriptions remain unpublished pending reuse terms.

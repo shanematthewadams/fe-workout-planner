@@ -36,6 +36,7 @@ try {
     "20261026143249_exicon_read_snapshot.sql",
     "20261104153007_codex_reference_catalog.sql",
     "20261110192426_reviewed_codex_planner_links.sql",
+    "20261110194102_bind_reviewed_source_text.sql",
   ])
     await db.exec(readFileSync("supabase/migrations/" + f, "utf8"));
   await db.exec(

@@ -2,6 +2,7 @@
 begin;
 drop function public.fe_exicon_planner_catalog();
 drop table public.ex_codex_planner_links;
+drop function if exists public.fe_codex_text_review_fingerprint(text);
 drop function public.fe_exicon_review_fingerprint(text,text);
 commit;
 -- To withdraw just the newly reviewed 42 movement rows instead, revoke their internal publication authorization:

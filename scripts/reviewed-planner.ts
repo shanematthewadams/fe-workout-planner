@@ -22,6 +22,10 @@ const decisionSchema = z
       .string()
       .regex(/^[a-f0-9]{64}$/)
       .nullable(),
+    entry_text_fingerprint: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .nullable(),
     relation: z.enum(["equivalent", "local-adaptation"]).nullable(),
     notes: z.string().min(10),
   })
@@ -189,11 +193,20 @@ export function prepareReviewedPlanner(
       throw Error("App definition changed; re-review " + key);
     if (d.state === "approved") {
       const source = sourceById.get(d.entry_id ?? "");
-      if (!source || source.fingerprint !== d.entry_fingerprint || !d.relation)
+      if (
+        !source ||
+        source.fingerprint !== d.entry_fingerprint ||
+        definitionFingerprint({
+          name: source.name,
+          description: source.description,
+        }) !== d.entry_text_fingerprint ||
+        !d.relation
+      )
         throw Error("Codex entry changed or missing; re-review " + key);
     } else if (
       d.entry_id !== null ||
       d.entry_fingerprint !== null ||
+      d.entry_text_fingerprint !== null ||
       d.relation !== null
     )
       throw Error("Unmapped targets cannot imply a source identity");
@@ -206,6 +219,10 @@ export function prepareReviewedPlanner(
   // Existing operator publication decisions/overrides are retained by the base importer.
   // Assert all expected canonical fields, requirements/counts/aliases before binding their review hash.
   let sql = exiconImportSQL(catalog).replace(/commit;\s*$/, "");
+  sql = sql.replace(
+    "begin;",
+    "begin;\nset local lock_timeout='5s';\nlock table public.ex_exercises,public.ex_aliases,public.ex_counting_conventions,public.ex_exercise_equipment,public.ex_exercise_facilities,public.ex_formats,public.ex_format_parameters,public.ex_codex_entries,public.ex_codex_planner_links in share row exclusive mode;",
+  );
   sql +=
     "\ncreate temporary table planner_review_assertions(ok boolean not null check(ok)) on commit drop;\n";
   for (const [table, keys] of Object.entries({
@@ -243,9 +260,10 @@ export function prepareReviewedPlanner(
   for (const d of approved) {
     const exercise = d.target_kind === "exercise" ? quote(d.target_id) : "null",
       format = d.target_kind === "format" ? quote(d.target_id) : "null";
-    sql += `insert into planner_review_assertions select exists(select 1 from public.ex_codex_entries e join public.ex_codex_reuse r on r.source_id=e.source_id where e.id=${quote(d.entry_id!)} and e.fingerprint=${quote(d.entry_fingerprint!)} and e.present and r.enabled);\n`;
-    sql += `insert into public.ex_codex_planner_links(id,exercise_id,format_id,entry_id,entry_fingerprint,planning_fingerprint,relation,reviewed_at,reviewed_by,notes) values(${quote(d.target_kind + ":" + d.target_id)},${exercise},${format},${quote(d.entry_id!)},${quote(d.entry_fingerprint!)},public.fe_exicon_review_fingerprint(${exercise},${format}),${quote(d.relation!)},${quote(review.reviewed_at)},${quote(review.reviewed_by)},${quote(d.notes)}) on conflict(id) do nothing;\n`;
-    sql += `insert into planner_review_assertions select exists(select 1 from public.ex_codex_planner_links l where l.id=${quote(d.target_kind + ":" + d.target_id)} and l.enabled and l.entry_id=${quote(d.entry_id!)} and l.entry_fingerprint=${quote(d.entry_fingerprint!)} and l.planning_fingerprint=public.fe_exicon_review_fingerprint(${exercise},${format}) and l.relation=${quote(d.relation!)});\n`;
+    const source = sourceById.get(d.entry_id!)!;
+    sql += `insert into planner_review_assertions select exists(select 1 from public.ex_codex_entries e join public.ex_codex_reuse r on r.source_id=e.source_id where e.id=${quote(d.entry_id!)} and e.fingerprint=${quote(d.entry_fingerprint!)} and e.name=${quote(source.name)} and e.description=${quote(source.description)} and e.present and r.enabled);\n`;
+    sql += `insert into public.ex_codex_planner_links(id,exercise_id,format_id,entry_id,entry_fingerprint,entry_text_fingerprint,planning_fingerprint,relation,reviewed_at,reviewed_by,notes) values(${quote(d.target_kind + ":" + d.target_id)},${exercise},${format},${quote(d.entry_id!)},${quote(d.entry_fingerprint!)},public.fe_codex_text_review_fingerprint(${quote(d.entry_id!)}),public.fe_exicon_review_fingerprint(${exercise},${format}),${quote(d.relation!)},${quote(review.reviewed_at)},${quote(review.reviewed_by)},${quote(d.notes)}) on conflict(id) do update set entry_text_fingerprint=excluded.entry_text_fingerprint where ex_codex_planner_links.entry_text_fingerprint is null and ex_codex_planner_links.enabled and ex_codex_planner_links.entry_id=excluded.entry_id and ex_codex_planner_links.entry_fingerprint=excluded.entry_fingerprint and ex_codex_planner_links.planning_fingerprint=excluded.planning_fingerprint and ex_codex_planner_links.relation=excluded.relation;\n`;
+    sql += `insert into planner_review_assertions select exists(select 1 from public.ex_codex_planner_links l where l.id=${quote(d.target_kind + ":" + d.target_id)} and l.enabled and l.entry_id=${quote(d.entry_id!)} and l.entry_fingerprint=${quote(d.entry_fingerprint!)} and l.entry_text_fingerprint=public.fe_codex_text_review_fingerprint(l.entry_id) and l.planning_fingerprint=public.fe_exicon_review_fingerprint(${exercise},${format}) and l.relation=${quote(d.relation!)});\n`;
   }
   sql +=
     "select jsonb_build_object('exercises',(select count(*) from public.ex_exercises),'reviewed_links',(select count(*) from public.ex_codex_planner_links)) as result;\ncommit;\n";

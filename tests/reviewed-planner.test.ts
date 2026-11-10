@@ -1,8 +1,11 @@
 import { expect, it, vi } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import { readFile } from "node:fs/promises";
-import review from "../data/codex-planner-review.json";
-import { prepareReviewedPlanner } from "../scripts/reviewed-planner.ts";
+import productionReview from "../data/codex-planner-review.json";
+import {
+  prepareReviewedPlanner,
+  definitionFingerprint,
+} from "../scripts/reviewed-planner.ts";
 import { buildAppExicon, exiconImportSQL } from "../scripts/exicon-catalog.ts";
 import { plannerExiconSchema } from "../src/codex-planner.ts";
 import { exiconCatalogSchema } from "../src/exicon-catalog.ts";
@@ -12,6 +15,13 @@ import { contextFor } from "../server/planner-context.ts";
 import { handlePlanner } from "../server/planner-handler.ts";
 import { fallbackPlan } from "../src/fallback.ts";
 import { plannerRequestSchema } from "../src/planner-contract.ts";
+const review = structuredClone(productionReview);
+for (const d of review.decisions)
+  if (d.state === "approved")
+    d.entry_text_fingerprint = definitionFingerprint({
+      name: "Source " + d.target_id,
+      description: "Reviewed official fixture " + d.target_id,
+    });
 const sources = () =>
   review.decisions
     .filter((d) => d.state === "approved")
@@ -33,6 +43,7 @@ async function setup(source = sources()) {
     "20261026143249_exicon_read_snapshot.sql",
     "20261104153007_codex_reference_catalog.sql",
     "20261110192426_reviewed_codex_planner_links.sql",
+    "20261110194102_bind_reviewed_source_text.sql",
   ])
     await db.exec(
       await readFile(
@@ -79,6 +90,11 @@ it("requires complete explicit fingerprint-bound review and never infers source 
     formatLinks: 1,
   });
   expect(ready.report.unmapped).toHaveLength(16);
+  const edited = sources();
+  edited[0].description = "Manual edit without a new upstream hash";
+  expect(() => prepareReviewedPlanner(review, edited)).toThrow(
+    /changed or missing/,
+  );
   const changed = structuredClone(review);
   changed.decisions[0].app_fingerprint = "a".repeat(64);
   expect(() => prepareReviewedPlanner(changed, sources())).toThrow(
@@ -123,6 +139,24 @@ it("publishes all fifty without changing the original eight, repeats safely and 
     const before = JSON.stringify(
       (await db.query("select * from ex_codex_planner_links order by id")).rows,
     );
+    await db.exec(prepared.sql);
+    expect(
+      JSON.stringify(
+        (await db.query("select * from ex_codex_planner_links order by id"))
+          .rows,
+      ),
+    ).toBe(before);
+    // Simulate the one-time upgrade: old links receive a null new review field.
+    await db.exec(
+      "update ex_codex_planner_links set entry_text_fingerprint=null",
+    );
+    expect(
+      (
+        await db.query<{ d: { codex_links: unknown[] } }>(
+          "select fe_exicon_planner_catalog() d",
+        )
+      ).rows[0].d.codex_links,
+    ).toHaveLength(0);
     await db.exec(prepared.sql);
     expect(
       JSON.stringify(
@@ -191,6 +225,12 @@ it("publishes all fifty without changing the original eight, repeats safely and 
         ?.officialId,
     ).toBe(review.decisions.find((d) => d.target_id === "merkin")!.entry_id);
     expect(context.formatGuide).toHaveLength(1);
+    await db.exec(
+      "begin;update ex_codex_entries set description='Manual source edit' where id=" +
+        q(review.decisions.find((d) => d.target_id === "merkin")!.entry_id!),
+    );
+    expect((await snapshot()).codex_links).toHaveLength(35);
+    await db.exec("rollback");
     // Source-only changes withdraw the reference, not local mechanics or saved names.
     const entry = review.decisions.find(
       (d) => d.target_id === "merkin",
@@ -250,16 +290,14 @@ it("sends reviewed source references through the shared generation handler in th
     await db.exec("reset role");
     const input = request(),
       good = fallbackPlan(input).plan;
-    const provider = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        new Response(
-          JSON.stringify({
-            model: "fixture:free",
-            choices: [{ message: { content: JSON.stringify(good) } }],
-          }),
-        ),
-      );
+    const provider = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          model: "fixture:free",
+          choices: [{ message: { content: JSON.stringify(good) } }],
+        }),
+      ),
+    );
     const read = vi.fn(async () => catalog);
     const result = await handlePlanner(
       new Request("https://app.invalid/api/plan-workout", {
