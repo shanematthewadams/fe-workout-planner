@@ -25,7 +25,14 @@ import {
   mentionsRestrictedNames,
   refinementConflicts,
 } from "../src/plan-constraints.ts";
-import { contextFor, F3_BRIEF, OUTPUT_SHAPE } from "./planner-context.ts";
+import { contextFor, F3_BRIEF } from "./planner-context.ts";
+import {
+  plannerOutputSchema,
+  scheduleInstructions,
+  parseProviderJSON,
+  ProviderOutputError,
+  type AttemptOutcome,
+} from "./planner-output.ts";
 export type AIEnvironment = {
   catalog?: CatalogEnvironment;
   exicon?: CatalogEnvironment;
@@ -37,6 +44,7 @@ export class PlannerError extends Error {
   constructor(
     public status: number,
     message: string,
+    public reason?: AttemptOutcome,
   ) {
     super(message);
   }
@@ -192,11 +200,6 @@ export function validatePlan(
   if (refinement.length) throw new PlannerError(422, refinement.join(" "));
   return p;
 }
-function parseJSON(text: string) {
-  return JSON.parse(
-    text.replace(/^\s*```(?:json)?\s*/i, "").replace(/\s*```\s*$/, ""),
-  );
-}
 export async function generatePlan(
   raw: unknown,
   env: AIEnvironment,
@@ -218,13 +221,14 @@ export async function generatePlan(
   let system =
     F3_BRIEF +
     "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions in EVERY section: when Rain or Snow / ice is selected, use only controlled standing exercises, including standing core work for Mary. Do not prescribe floor exercises or jumps merely because shelter is available. Never turn a covered garage into claimed indoor access. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
-    "\nReturn ONLY JSON matching this shape (example exercises are not a required plan): " +
-    JSON.stringify(OUTPUT_SHAPE) +
+    "\nReturn ONLY a JSON object matching the supplied response schema. Use concise but complete exercise instructions; avoid repeating source descriptions. " +
     "\nUse ONLY these case-sensitive enums: running None|Light|Moderate; format Circuit|11s|EMOM|AMRAP|Ladder|Partner|Stations|Chipper|Custom; exercise unit reps|seconds|minutes|meters|rounds|instructions; counting total|1=1|2=1|per side|cadence|time|distance|not applicable. amount MUST be a string. No extra top-level fields. " +
-    `\n${input.strictSchedule ? "STRICT SCHEDULE: 2 minutes welcome/disclaimer is reserved by the app outside these exercise sections. Warmup EXACTLY 8 minutes; The Thang EXACTLY " + (input.mary ? "29" : "35") + " minutes; Mary " + (input.mary ? "EXACTLY 6 minutes" : "OMITTED") + ". Fellowship/COT happens AFTER the 45-minute hard stop and must NOT appear in physical sections." : ""} All block minutes MUST sum to ${input.minutes - (input.strictSchedule ? 2 : 0)}. Required section order: ${input.mary ? "warmup, thang, mary" : "warmup, thang; OMIT Mary entirely"}. Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.`;
+    "\n" +
+    scheduleInstructions(input) +
+    " Every exercise requires amount/unit/counting/plain instructions. At most 10 exercises per block. Keep instructions concise. Never output ids, source metadata, raw notes or publication fields.";
   const routeSession = input.planning && input.planning.activity !== "Bootcamp";
   const routeInstructions = routeSession
-    ? `\nROUTE SESSION overrides bootcamp phase rules above: ${input.planning!.activity}. Required sections: ${input.mary ? "thang,mary" : "thang"}. No warmup section. ${input.strictSchedule ? `Thang exactly ${input.mary ? 37 : 43} minutes; ${input.mary ? "Mary exactly 6 minutes." : "No Mary."}` : "Fit the requested time."} Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
+    ? `\nROUTE SESSION: ${input.planning!.activity}. Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
     : "";
   system += routeInstructions;
   const message = JSON.stringify({ request: input, verifiedContext: context });
@@ -235,7 +239,8 @@ export async function generatePlan(
   let result: Plan | undefined,
     provider: "OpenRouter" | "Gemini" = "OpenRouter",
     model = "",
-    lastStatus = 503;
+    lastStatus = 503,
+    lastOutcome: AttemptOutcome = "response";
   // Gemini is opt-in only after the project tier is independently confirmed. A model name alone cannot enforce zero billing.
   const routes = [
     ...(input.provider !== "openrouter" &&
@@ -256,9 +261,28 @@ export async function generatePlan(
     // Reserve time for the second free provider when the first route stalls.
     const attempt = AbortSignal.any([
       deadline,
-      AbortSignal.timeout(routes.length > 1 ? 10000 : 20000),
+      AbortSignal.timeout(
+        routes.length > 1 && route === routes[0] ? 14000 : 20000,
+      ),
     ]);
+    const began = Date.now();
+    const report = (
+      outcome: AttemptOutcome,
+      extra: Record<string, unknown> = {},
+    ) => {
+      lastOutcome = outcome;
+      console.info(
+        "FE_PLANNER_ATTEMPT",
+        JSON.stringify({
+          provider: route,
+          outcome,
+          elapsedMs: Date.now() - began,
+          ...extra,
+        }),
+      );
+    };
     try {
+      attempt.throwIfAborted();
       let text = "";
       if (route === "openrouter") {
         // Dedicated free router plus an explicit zero price ceiling. Never retry on a paid model or gateway.
@@ -274,9 +298,17 @@ export async function generatePlan(
             },
             body: JSON.stringify({
               model: "openrouter/free",
-              provider: { max_price: { prompt: 0, completion: 0 } },
+              provider: {
+                max_price: { prompt: 0, completion: 0 },
+              },
               messages: [
-                { role: "system", content: system },
+                {
+                  role: "system",
+                  content:
+                    system +
+                    "\nResponse schema: " +
+                    JSON.stringify(plannerOutputSchema),
+                },
                 { role: "user", content: message },
               ],
               response_format: { type: "json_object" },
@@ -286,14 +318,19 @@ export async function generatePlan(
           },
         );
         if (!r.ok) {
-          console.info(
-            "FE_PLANNER_UPSTREAM",
-            JSON.stringify({ provider: route, status: r.status }),
-          );
+          report("http", { status: r.status });
           lastStatus = r.status === 429 ? 429 : 503;
           continue;
         }
         const data = await r.json();
+        if (data.error) throw new ProviderOutputError("response");
+        if (data.choices?.[0]?.finish_reason === "length")
+          throw new ProviderOutputError("truncated");
+        if (
+          data.choices?.[0]?.finish_reason === "content_filter" ||
+          data.choices?.[0]?.message?.refusal
+        )
+          throw new ProviderOutputError("blocked");
         text = data.choices?.[0]?.message?.content ?? "";
         model = String(data.model ?? "openrouter/free");
         provider = "OpenRouter";
@@ -313,6 +350,7 @@ export async function generatePlan(
               contents: [{ role: "user", parts: [{ text: message }] }],
               generationConfig: {
                 responseMimeType: "application/json",
+                responseJsonSchema: plannerOutputSchema,
                 maxOutputTokens: 4200,
                 temperature: 0.55,
                 thinkingConfig: { thinkingLevel: "minimal" },
@@ -321,14 +359,25 @@ export async function generatePlan(
           },
         );
         if (!r.ok) {
-          console.info(
-            "FE_PLANNER_UPSTREAM",
-            JSON.stringify({ provider: route, status: r.status }),
-          );
+          report("http", { status: r.status });
           lastStatus = r.status === 429 ? 429 : 503;
           continue;
         }
         const data = await r.json();
+        if (data.error) throw new ProviderOutputError("response");
+        if (data.candidates?.[0]?.finishReason === "MAX_TOKENS")
+          throw new ProviderOutputError("truncated");
+        if (
+          data.promptFeedback?.blockReason ||
+          [
+            "SAFETY",
+            "RECITATION",
+            "BLOCKLIST",
+            "PROHIBITED_CONTENT",
+            "SPII",
+          ].includes(data.candidates?.[0]?.finishReason)
+        )
+          throw new ProviderOutputError("blocked");
         text = (data.candidates?.[0]?.content?.parts ?? [])
           .filter((p: { thought?: boolean }) => !p.thought)
           .map((p: { text?: string }) => p.text ?? "")
@@ -336,41 +385,63 @@ export async function generatePlan(
         model = "gemini-3.5-flash-lite";
         provider = "Gemini";
       }
-      if (text.length > 35000)
-        throw new PlannerError(
-          422,
-          "The AI draft was too long. Try a simpler request.",
-        );
-      result = validatePlan(parseJSON(text), input, context.site, guide);
+      attempt.throwIfAborted();
+      result = validatePlan(
+        parseProviderJSON(text),
+        input,
+        context.site,
+        guide,
+      );
+      report("valid");
       break;
     } catch (error) {
-      if (deadline.aborted)
+      if (deadline.aborted) {
+        report(signal?.aborted ? "cancelled" : "timeout");
         throw new PlannerError(
-          504,
-          "Free AI took too long. Your previous draft is safe. Try again.",
+          signal?.aborted ? 499 : 504,
+          signal?.aborted
+            ? "Workout generation was cancelled."
+            : "Free AI took too long. Your previous draft is safe. Try again.",
+          signal?.aborted ? "cancelled" : "timeout",
         );
+      }
       if (attempt.aborted) {
+        report("timeout");
         lastStatus = 504;
         continue;
       }
       if (error instanceof PlannerError) {
         if (error.status === 422) {
+          report("constraints");
           lastStatus = 422;
           continue;
         }
         throw error;
       }
-      console.info(
-        "FE_PLANNER_INVALID",
-        JSON.stringify({
-          provider: route,
+      report(
+        error instanceof ProviderOutputError
+          ? error.outcome
+          : error instanceof ZodError
+            ? "schema"
+            : error instanceof SyntaxError
+              ? "invalid_json"
+              : "response",
+        {
           issues:
             error instanceof ZodError
-              ? error.issues.map((i) => ({ path: i.path, code: i.code }))
-              : [{ code: "invalid_json_or_response" }],
-        }),
+              ? error.issues
+                  .slice(0, 8)
+                  .map((i) => ({ path: i.path, code: i.code }))
+              : [],
+        },
       );
-      lastStatus = 422;
+      lastStatus =
+        (error instanceof ProviderOutputError &&
+          error.outcome !== "response") ||
+        error instanceof ZodError ||
+        error instanceof SyntaxError
+          ? 422
+          : 503;
     }
   }
   if (!result)
@@ -383,6 +454,7 @@ export async function generatePlan(
           : lastStatus === 422
             ? "The AI returned an incomplete draft. Your previous draft is safe. Try again."
             : "Free AI is busy or unavailable. Your previous draft is safe. Try later or edit manually.",
+      lastOutcome,
     );
   const references = context.references.map(({ id, title, url }) => ({
     id,

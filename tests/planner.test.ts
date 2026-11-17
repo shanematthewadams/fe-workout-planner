@@ -73,6 +73,45 @@ it("tries the next free provider when the first returns a timing violation", asy
   expect(response.provider).toBe("OpenRouter");
   expect(f).toHaveBeenCalledTimes(2);
 });
+it("sends Gemini the output contract and uses the next free provider for a truncated reply", async () => {
+  const complete = JSON.stringify(planFixture);
+  const f = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(
+      Response.json({
+        candidates: [
+          {
+            finishReason: "MAX_TOKENS",
+            content: { parts: [{ text: complete }] },
+          },
+        ],
+      }),
+    )
+    .mockResolvedValueOnce(
+      Response.json({ choices: [{ message: { content: complete } }] }),
+    );
+  const env = {
+    GEMINI_API_KEY: "fixture",
+    GEMINI_FREE_TIER_CONFIRMED: "true",
+    OPENROUTER_API_KEY: "fixture",
+  };
+  const result = await generatePlan(input(), env, f);
+  const gemini = JSON.parse(String(f.mock.calls[0][1]?.body));
+  const exercise =
+    gemini.generationConfig.responseJsonSchema.properties.sections.items
+      .properties.blocks.items.properties.exercises.items;
+  expect(exercise.properties.amount.type).toBe("string");
+  expect(exercise.required).toContain("counting");
+  expect(exercise.required).not.toContain("sets");
+  expect(result.provider).toBe("OpenRouter");
+  expect(f).toHaveBeenCalledTimes(2);
+
+  f.mockClear();
+  await expect(
+    generatePlan(input(), env, f, AbortSignal.abort()),
+  ).rejects.toMatchObject({ reason: "cancelled" });
+  expect(f).not.toHaveBeenCalled();
+});
 const fetchOK = () =>
   vi.fn<typeof fetch>().mockResolvedValue(
     new Response(

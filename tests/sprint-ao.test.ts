@@ -217,7 +217,9 @@ it("passes the route contract to the shared provider handler and accepts a one-s
   expect(result.workout.sections.map((section) => section.kind)).toEqual([
     "thang",
   ]);
-  expect(
-    JSON.parse(fetcher.mock.calls[0][1]!.body as string).messages[0].content,
-  ).toContain("ROUTE SESSION overrides bootcamp phase rules");
+  const system = JSON.parse(fetcher.mock.calls[0][1]!.body as string)
+    .messages[0].content;
+  expect(system).toContain("Required section order: thang.");
+  expect(system).toContain("The Thang exactly 43 minutes");
+  expect(system).not.toContain("Warmup exactly 8 minutes");
 });

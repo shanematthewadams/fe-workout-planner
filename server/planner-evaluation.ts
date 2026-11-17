@@ -146,7 +146,15 @@ export async function runEvaluation(
       const result = assessEvaluation(value, request);
       if (item.id === "coupon-partners" && result.outcome === "ai")
         original = plannerResponseSchema.parse(value);
-      results.push({ id: item.id, ...result, elapsedMs: Date.now() - began });
+      results.push({
+        id: item.id,
+        ...result,
+        elapsedMs: Date.now() - began,
+        failureCategory: response.headers.get("x-f3-planner-failure"),
+        aoSource: response.headers.get("x-f3-ao-source"),
+        exiconSource: response.headers.get("x-f3-exicon-source"),
+        codexLinks: response.headers.get("x-f3-codex-links"),
+      });
     } catch (error) {
       results.push({
         id: item.id,

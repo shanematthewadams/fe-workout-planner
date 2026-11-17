@@ -63,6 +63,7 @@ export async function handlePlanner(
       ),
     ]);
     let result;
+    let failure: string | undefined;
     try {
       result = await generatePlan(input, env, fetcher, req.signal, site, guide);
     } catch (error) {
@@ -77,6 +78,7 @@ export async function handlePlanner(
         error instanceof PlannerError
           ? error.message.slice(0, 500)
           : "Free AI could not complete this request.";
+      failure = error instanceof PlannerError ? error.reason : undefined;
       console.info(
         "FE_PLANNER_OUTCOME",
         JSON.stringify({
@@ -100,6 +102,9 @@ export async function handlePlanner(
         "X-F3-AO-Source": site.dataSource,
         "X-F3-Exicon-Source": guide.source,
         "X-F3-Codex-Links": String(guide.codexIds?.length ?? 0),
+        "X-F3-Planner-Outcome":
+          result.provider === "Template" ? "template" : "ai",
+        ...(failure ? { "X-F3-Planner-Failure": failure } : {}),
       },
     });
   } catch (error) {
