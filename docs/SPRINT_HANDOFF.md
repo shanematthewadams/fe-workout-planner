@@ -1,5 +1,7 @@
 # The FE Workout Planner · Sprint 2 handoff
 
+Latest generation release: [Workout generation reliability](GENERATION_RELIABILITY_HANDOFF.md). Staging returned AI drafts for all three new workout cases. Live refinement still timed out and the prepared source-text safeguard remains unapplied.
+
 Latest planning integration: [Reviewed Codex context for generation](exicon/PLANNER_INTEGRATION_HANDOFF.md). All fifty app movements now have published database records; 35 exercise citations and one format citation are fingerprint-bound. Local mechanics and requirements are preserved.
 
 November 10 release status: staging app `84c3929` passed CI and a live Gemini generation. Additional source-text fingerprint hardening is prepared and tested locally, but its shared-database migration remains unapplied after expired connector confirmations. Resume with the exact operation in the latest handoff before claiming that safeguard is live. Production application remains unchanged.
