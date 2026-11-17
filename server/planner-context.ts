@@ -48,7 +48,10 @@ export function contextFor(
   const selected: Movement[] = eligible.filter((movement) =>
     requestedMovements.includes(movement),
   );
-  // Bound prompt size while retaining a mix of warmup, main work, and core.
+  // Retain more examples for new plans. Revisions already have a draft to follow.
+  const movementLimit = input.current
+    ? Math.max(12, Math.min(selected.length, 24))
+    : 24;
   const groups = [
     ...new Set(eligible.map((movement) => movement.category)),
   ].map((category) =>
@@ -56,25 +59,27 @@ export function contextFor(
   );
   for (
     let index = 0;
-    index < eligible.length && selected.length < 24;
+    index < eligible.length && selected.length < movementLimit;
     index++
   ) {
     for (const group of groups) {
       const movement = group[index];
-      if (movement && !selected.includes(movement) && selected.length < 24)
+      if (
+        movement &&
+        !selected.includes(movement) &&
+        selected.length < movementLimit
+      )
         selected.push(movement);
     }
   }
-  const references = regional
+  const references = (input.current ? [] : regional)
     .map((value) => workoutSchema.parse(value))
     .filter((w) => w.provenance.status === "regional-reviewed")
     .map((w) => ({
       w,
       score:
         (aoKey(w.provenance.ao ?? "") === aoKey(ao?.name ?? "!") ? 20 : 0) +
-        (input.equipment === "Coupon" ||
-        /coupon|block/i.test(input.prompt) ||
-        input.current?.equipment.some((e) => /coupon|block/i.test(e))
+        (input.equipment === "Coupon" || /coupon|block/i.test(input.prompt)
           ? w.equipment.includes("Coupon")
             ? 8
             : 0

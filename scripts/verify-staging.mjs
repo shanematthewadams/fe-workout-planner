@@ -280,10 +280,26 @@ for (const [name, engine, device] of [
       await sheet
         .getByRole("button", { name: "Preview my Weinke", exact: true })
         .click();
+      const synced = sheet.waitForResponse((response) => {
+        const request = response.request();
+        return (
+          response.ok() &&
+          new URL(response.url()).pathname === "/rest/v1/rpc/fe_sync_plans" &&
+          request.method() === "POST" &&
+          request.postDataJSON()?.operation === "put"
+        );
+      });
       await sheet
         .getByRole("button", { name: "Save & open Weinke", exact: true })
         .click();
       await expect(sheet).toHaveURL(/#lead\//);
+      // Let the intercepted save finish before navigation cancels its fetch.
+      const savedWeinke = await (await synced).json();
+      assert.ok(
+        savedWeinke.workouts.some(
+          (workout) => workout.title === "Synthetic hosted Weinke",
+        ),
+      );
       await sheet.reload();
       await expect(
         sheet.getByLabel("Workout to lead", { exact: true }),

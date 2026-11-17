@@ -28,6 +28,8 @@ import {
 import { contextFor, F3_BRIEF } from "./planner-context.ts";
 import {
   plannerOutputSchema,
+  plannerRefinementSchema,
+  applyPlannerRefinement,
   scheduleInstructions,
   parseProviderJSON,
   ProviderOutputError,
@@ -231,6 +233,12 @@ export async function generatePlan(
     ? `\nROUTE SESSION: ${input.planning!.activity}. Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
     : "";
   system += routeInstructions;
+  const outputSchema = input.current
+    ? plannerRefinementSchema
+    : plannerOutputSchema;
+  if (input.current)
+    system +=
+      "\nEDIT RESPONSE: Return only changed top-level fields. For sections, return a complete replacement for each edited section, identified by its kind. Omit unchanged sections and fields. The server retains omitted fields and applies the requested phase order. If equipment, running, required features or notes change, return their updated values explicitly. Update both exercise and block directions wherever the old gear or movement was prescribed.";
   const message = JSON.stringify({ request: input, verifiedContext: context });
   const deadline = AbortSignal.any([
     AbortSignal.timeout(22000),
@@ -307,7 +315,7 @@ export async function generatePlan(
                   content:
                     system +
                     "\nResponse schema: " +
-                    JSON.stringify(plannerOutputSchema),
+                    JSON.stringify(outputSchema),
                 },
                 { role: "user", content: message },
               ],
@@ -350,7 +358,7 @@ export async function generatePlan(
               contents: [{ role: "user", parts: [{ text: message }] }],
               generationConfig: {
                 responseMimeType: "application/json",
-                responseJsonSchema: plannerOutputSchema,
+                responseJsonSchema: outputSchema,
                 maxOutputTokens: 4200,
                 temperature: 0.55,
                 thinkingConfig: { thinkingLevel: "minimal" },
@@ -386,8 +394,11 @@ export async function generatePlan(
         provider = "Gemini";
       }
       attempt.throwIfAborted();
+      const value = parseProviderJSON(text);
       result = validatePlan(
-        parseProviderJSON(text),
+        input.current
+          ? applyPlannerRefinement(value, input.current, input)
+          : value,
         input,
         context.site,
         guide,

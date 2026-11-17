@@ -252,7 +252,7 @@ it("verifies a pasted email code and opens the signed-in workout library", async
     return { data: { session }, error: null };
   });
   const input = await requestCode();
-  expect(input).toHaveFocus();
+  await waitFor(() => expect(input).toHaveFocus());
   expect(input).toHaveAttribute("autocomplete", "one-time-code");
   fireEvent.change(input, { target: { value: "12 34 56 78" } });
   fireEvent.click(screen.getByRole("button", { name: "Verify & sign in" }));
@@ -274,7 +274,7 @@ it("keeps the code form usable after a wrong or expired code and prevents short 
   fireEvent.change(input, { target: { value: "000000" } });
   fireEvent.click(screen.getByRole("button", { name: "Verify & sign in" }));
   await screen.findByText(/That code is incorrect or has expired/);
-  expect(input).toHaveFocus();
+  await waitFor(() => expect(input).toHaveFocus());
   expect(input).toHaveValue("000000");
   expect(verify).toHaveBeenCalledTimes(1);
   expect(
@@ -287,7 +287,7 @@ it("lets someone correct their email while preserving the resend limit", async (
     screen.getByRole("button", { name: "Use a different email" }),
   );
   const input = screen.getByLabelText("Email address");
-  expect(input).toHaveFocus();
+  await waitFor(() => expect(input).toHaveFocus());
   fireEvent.change(input, { target: { value: "correct@example.test" } });
   expect(screen.getByRole("button", { name: /Send again in/ })).toBeDisabled();
   expect(send).toHaveBeenCalledTimes(1);

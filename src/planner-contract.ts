@@ -146,7 +146,7 @@ export function resolveRequest(raw: unknown) {
     input.mary = true;
   if (
     input.running === "From prompt" &&
-    /\b(?:no|zero|without|skip|avoid)\s+(?:the\s+)?running\b/i.test(
+    /\b(?:no|zero|without|skip|avoid|remove)\s+(?:(?:all|any|the)\s+)?(?:(?:equipment|gear|coupons?)\s+(?:and|or)\s+)?running\b/i.test(
       input.prompt,
     )
   )
@@ -162,7 +162,7 @@ export function resolveRequest(raw: unknown) {
       : "Light";
   if (
     input.equipment === "From prompt" &&
-    /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:any\s+)?(?:coupons?|cinder blocks?|equipment)\b/i.test(
+    /\b(?:no|without|remove|skip|avoid|don.t want|do not want|don.t use|do not use)\s+(?:(?:all|any|the)\s+)?(?:(?:running)\s+(?:and|or)\s+)?(?:coupons?|cinder blocks?|equipment|gear)\b/i.test(
       input.prompt,
     )
   )

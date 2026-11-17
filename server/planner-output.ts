@@ -1,5 +1,9 @@
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { planSchema, type PlannerRequest } from "../src/planner-contract.ts";
+import {
+  planSchema,
+  type Plan,
+  type PlannerRequest,
+} from "../src/planner-contract.ts";
 
 // Provider grammars receive structural constraints derived from our real contract.
 // Length/count/range limits stay enforced by planSchema after generation. Omitting
@@ -35,15 +39,50 @@ export const plannerOutputSchema = structural(
   zodToJsonSchema(planSchema, { $refStrategy: "none" }),
 );
 
-export function scheduleInstructions(input: PlannerRequest) {
+const refinementSchema = planSchema.partial();
+export const plannerRefinementSchema = structural(
+  zodToJsonSchema(refinementSchema, { $refStrategy: "none" }),
+);
+
+export function applyPlannerRefinement(
+  value: unknown,
+  current: Plan,
+  input: PlannerRequest,
+) {
+  const patch = refinementSchema.parse(value);
+  const kinds = sectionOrder(input);
+  const replacements = new Map(patch.sections?.map((s) => [s.kind, s]));
+  if (
+    replacements.size !== (patch.sections?.length ?? 0) ||
+    patch.sections?.some((s) => !kinds.includes(s.kind))
+  )
+    throw new ProviderOutputError("constraints");
+  return {
+    ...current,
+    ...patch,
+    sections: kinds.map(
+      (kind) =>
+        replacements.get(kind) ?? current.sections.find((s) => s.kind === kind),
+    ),
+  };
+}
+
+function sectionOrder(
+  input: PlannerRequest,
+): Plan["sections"][number]["kind"][] {
   const route = input.planning && input.planning.activity !== "Bootcamp";
-  const kinds = route
+  return route
     ? input.mary
       ? ["thang", "mary"]
       : ["thang"]
     : input.mary
       ? ["warmup", "thang", "mary"]
       : ["warmup", "thang"];
+}
+
+export function scheduleInstructions(input: PlannerRequest) {
+  const route = input.planning && input.planning.activity !== "Bootcamp";
+  const kinds = sectionOrder(input);
   const total = input.minutes - (input.strictSchedule ? 2 : 0);
   return (
     `Required section order: ${kinds.join(",")}. Omit every other section. Block minutes must sum to ${total}. ` +

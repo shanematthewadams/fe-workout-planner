@@ -180,6 +180,57 @@ describe("F3 context and private draft boundary", () => {
     expect(task.request.current).toEqual(planFixture);
     expect(task.request.prompt).toContain("Less running");
     expect(body.messages[0].content).toContain("preserving its theme");
+    expect(task.verifiedContext.references).toEqual([]);
+  });
+
+  it("merges one edited section and rejects old gear still present after a partial edit", async () => {
+    const request = {
+      ...input(),
+      prompt: "Remove all equipment and running. Keep the gold theme.",
+      current: planFixture,
+    };
+    const patch = {
+      equipment: [],
+      running: "None",
+      sections: [
+        {
+          ...planFixture.sections[1],
+          blocks: [
+            {
+              ...planFixture.sections[1].blocks[0],
+              instructions:
+                "Take turns doing controlled squats while the other partner rests.",
+              exercises: planFixture.sections[0].blocks[0].exercises,
+            },
+          ],
+        },
+      ],
+    };
+    const reply = (value: unknown) =>
+      Response.json({
+        choices: [{ message: { content: JSON.stringify(value) } }],
+      });
+    const env = { OPENROUTER_API_KEY: "test-key" };
+    const good = await generatePlan(
+      request,
+      env,
+      vi.fn<typeof fetch>().mockResolvedValue(reply(patch)),
+    );
+    expect(good.plan.title).toBe(planFixture.title);
+    expect(good.plan.sections[0]).toEqual(planFixture.sections[0]);
+    expect(good.plan.sections[2]).toEqual(planFixture.sections[2]);
+    expect(good.plan.equipment).toEqual([]);
+    expect(good.plan.running).toBe("None");
+    await expect(
+      generatePlan(
+        request,
+        env,
+        vi
+          .fn<typeof fetch>()
+          .mockResolvedValue(reply({ equipment: [], running: "None" })),
+      ),
+    ).rejects.toMatchObject({ reason: "constraints" });
+    expect(planFixture.equipment).toEqual(["Coupon"]);
   });
 });
 describe("free-only routing and output checks", () => {
