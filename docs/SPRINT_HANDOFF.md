@@ -1,6 +1,6 @@
 # The FE Workout Planner · Sprint 2 handoff
 
-Latest generation release: [Workout generation reliability](GENERATION_RELIABILITY_HANDOFF.md). Staging returned AI drafts for all three new workout cases. The follow-up build also successfully refined the prior Gold Rush draft on staging. The prepared source-text safeguard remains unapplied.
+Latest generation release: [Workout generation reliability](GENERATION_RELIABILITY_HANDOFF.md). Staging passed the rainy solo and refinement cases and the complete automated browser gate. The unknown seasonal venue still used the template after an AI site-access rejection. The prepared source-text safeguard remains unapplied.
 
 Latest planning integration: [Reviewed Codex context for generation](exicon/PLANNER_INTEGRATION_HANDOFF.md). All fifty app movements now have published database records; 35 exercise citations and one format citation are fingerprint-bound. Local mechanics and requirements are preserved.
 
