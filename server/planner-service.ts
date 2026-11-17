@@ -47,6 +47,18 @@ export class PlannerError extends Error {
     public status: number,
     message: string,
     public reason?: AttemptOutcome,
+    public constraint?:
+      | "exercise-name"
+      | "movement-limits"
+      | "site-access"
+      | "indoor-access"
+      | "partner-required"
+      | "section-order"
+      | "phase-timing"
+      | "total-timing"
+      | "running"
+      | "equipment"
+      | "refinement",
   ) {
     super(message);
   }
@@ -70,8 +82,16 @@ export function enforceMovementGuide(
     throw new PlannerError(
       422,
       "The draft uses an ambiguous exercise name or an unsupported facility requirement. Confirm the exercise before leading.",
+      "constraints",
+      "exercise-name",
     );
-  if (conflicts.length) throw new PlannerError(422, conflicts.join(" "));
+  if (conflicts.length)
+    throw new PlannerError(
+      422,
+      conflicts.join(" "),
+      "constraints",
+      "movement-limits",
+    );
   const blocked = guide
     ? requiredMovementFeatures(plan, guide.movements).filter(
         (f) => site.features[f] !== "available",
@@ -83,6 +103,8 @@ export function enforceMovementGuide(
       "The draft needs unconfirmed or unavailable site features: " +
         blocked.join(", ") +
         ". Your previous draft is safe.",
+      "constraints",
+      "site-access",
     );
 }
 
@@ -104,6 +126,8 @@ export function validatePlan(
     throw new PlannerError(
       422,
       "The AI claimed unconfirmed indoor workout access. A covered shelter does not establish indoor permission.",
+      "constraints",
+      "indoor-access",
     );
   if (
     (input.planning?.pax === 1 || input.planning?.grouping === "Individual") &&
@@ -119,6 +143,8 @@ export function validatePlan(
     throw new PlannerError(
       422,
       "The draft requires a partner despite your individual-work setup.",
+      "constraints",
+      "partner-required",
     );
   const routeSession = input.planning && input.planning.activity !== "Bootcamp";
   if (
@@ -134,6 +160,8 @@ export function validatePlan(
     throw new PlannerError(
       422,
       "The AI left out or reordered a section. Your previous draft is safe. Try again.",
+      "constraints",
+      "section-order",
     );
   const minutes = p.sections
     .flatMap((s) => s.blocks)
@@ -152,6 +180,8 @@ export function validatePlan(
       throw new PlannerError(
         422,
         "The AI did not fit the strict phase schedule.",
+        "constraints",
+        "phase-timing",
       );
   }
   if (
@@ -161,16 +191,22 @@ export function validatePlan(
     throw new PlannerError(
       422,
       "The AI timing did not fit your session. Your previous draft is safe. Try again.",
+      "constraints",
+      "total-timing",
     );
   if (input.running !== "From prompt" && p.running !== input.running)
     throw new PlannerError(
       422,
       "The AI did not follow the running preference. Try again.",
+      "constraints",
+      "running",
     );
   if (input.equipment === "None" && p.equipment.length)
     throw new PlannerError(
       422,
       "The AI added equipment to a no-equipment plan. Try again.",
+      "constraints",
+      "equipment",
     );
   enforceMovementGuide(
     p,
@@ -184,7 +220,12 @@ export function validatePlan(
         /coupon|cinder block/i.test(input.prompt))) &&
     !p.equipment.some((e) => /coupon|cinder block/i.test(e))
   )
-    throw new PlannerError(422, "The AI left out your coupons. Try again.");
+    throw new PlannerError(
+      422,
+      "The AI left out your coupons. Try again.",
+      "constraints",
+      "equipment",
+    );
   {
     // Terrain safety applies to every caller, including non-strict API requests.
     const site =
@@ -196,10 +237,18 @@ export function validatePlan(
         "The draft needs unconfirmed or unavailable site features: " +
           blocked.join(", ") +
           ". Your previous draft is safe.",
+        "constraints",
+        "site-access",
       );
   }
   const refinement = refinementConflicts(p, input);
-  if (refinement.length) throw new PlannerError(422, refinement.join(" "));
+  if (refinement.length)
+    throw new PlannerError(
+      422,
+      refinement.join(" "),
+      "constraints",
+      "refinement",
+    );
   return p;
 }
 export async function generatePlan(
@@ -233,6 +282,17 @@ export async function generatePlan(
     ? `\nROUTE SESSION: ${input.planning!.activity}. Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
     : "";
   system += routeInstructions;
+  const { planning } = context;
+  if (planning.pax === 1 || planning.grouping === "Individual")
+    system +=
+      "\nSOLO PLAN: every instruction must be executable by one person. Use an individual format such as Circuit. Avoid partner cues, even as optional directions.";
+  if (
+    planning.activity === "Bootcamp" &&
+    planning.weather.some((w) => w === "Rain" || w === "Snow / ice")
+  )
+    system +=
+      "\nWET-WEATHER BOOTCAMP: use a small flat outdoor working area with checked footing. Use controlled standing movements such as slow cross-body knee raises, standing knee drives, air squats, and standing bracing holds. Keep closed or unconfirmed facilities out of exercise directions, even when explaining what to avoid. Describe shelter as outdoor cover only if confirmed and used. State restrictions or footing checks in notes. A plan using only a generic standing area should return an empty requiredFeatures list.";
+
   const outputSchema = input.current
     ? plannerRefinementSchema
     : plannerOutputSchema;
@@ -423,7 +483,7 @@ export async function generatePlan(
       }
       if (error instanceof PlannerError) {
         if (error.status === 422) {
-          report("constraints");
+          report("constraints", { constraint: error.constraint });
           lastStatus = 422;
           continue;
         }

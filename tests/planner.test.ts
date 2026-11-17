@@ -26,9 +26,19 @@ it("does not treat a covered AO garage as confirmed indoor workout access", () =
     planning: { weather: ["Rain"], focus: "Core" },
   });
   const plan = fallbackPlan(request).plan;
-  expect(contextFor(request).site.features.shelter).toBe("available");
+  const context = contextFor(request);
+  expect(context.site.features.shelter).toBe("available");
+  expect(context.references).toEqual([]);
+  expect(context.exercises.map((exercise) => exercise.name)).toContain(
+    "Imperial Walker",
+  );
+  expect(context.exercises.map((exercise) => exercise.name)).not.toContain(
+    "Merkin",
+  );
   plan.title = "Core Focus Indoor Shelter Circuit";
-  expect(() => validatePlan(plan, request)).toThrow("unconfirmed indoor");
+  expect(() => validatePlan(plan, request)).toThrow(
+    expect.objectContaining({ constraint: "indoor-access" }),
+  );
   plan.title = "Standing Core Circuit";
   plan.summary = "An indoor-sheltered workout under the garage.";
   expect(() => validatePlan(plan, request)).toThrow("unconfirmed indoor");

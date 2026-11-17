@@ -237,14 +237,28 @@ for (const [name, engine, device] of [
       name +
         ": hosted saved-ID, bookmark reload, My Workouts and 43:45 timer recovery passed; no page errors or overflow.",
     );
-    // A second fresh context verifies direct authoring without touching cloud records.
+    // Direct authoring tests local recovery with cloud sync offline.
+    // The preceding hosted journey verifies the intercepted online cloud save.
     const direct = await browser.newContext({
       ...device,
       ignoreHTTPSErrors: true,
       serviceWorkers: "block",
     });
     try {
+      // Keep the hosted document reachable while simulating loss of connectivity
+      // for the app. This exercises the real local-save behavior across reloads.
+      await direct.addInitScript(() => {
+        Object.defineProperty(navigator, "onLine", {
+          configurable: true,
+          get: () => false,
+        });
+      });
       const sheet = await direct.newPage();
+      let cloudRequests = 0;
+      sheet.on("request", (request) => {
+        if (new URL(request.url()).pathname === "/rest/v1/rpc/fe_sync_plans")
+          cloudRequests++;
+      });
       const directErrors = [];
       sheet.on("pageerror", (error) => directErrors.push(error.message));
       await sheet.route("**/*", isolateServices);
@@ -280,26 +294,10 @@ for (const [name, engine, device] of [
       await sheet
         .getByRole("button", { name: "Preview my Weinke", exact: true })
         .click();
-      const synced = sheet.waitForResponse((response) => {
-        const request = response.request();
-        return (
-          response.ok() &&
-          new URL(response.url()).pathname === "/rest/v1/rpc/fe_sync_plans" &&
-          request.method() === "POST" &&
-          request.postDataJSON()?.operation === "put"
-        );
-      });
       await sheet
         .getByRole("button", { name: "Save & open Weinke", exact: true })
         .click();
       await expect(sheet).toHaveURL(/#lead\//);
-      // Let the intercepted save finish before navigation cancels its fetch.
-      const savedWeinke = await (await synced).json();
-      assert.ok(
-        savedWeinke.workouts.some(
-          (workout) => workout.title === "Synthetic hosted Weinke",
-        ),
-      );
       await sheet.reload();
       await expect(
         sheet.getByLabel("Workout to lead", { exact: true }),
@@ -383,6 +381,7 @@ for (const [name, engine, device] of [
       await expect(sheet.getByLabel("The Thang", { exact: true })).toHaveValue(
         "",
       );
+      assert.equal(cloudRequests, 0);
       assert.deepEqual(directErrors, []);
       console.log(
         name +
