@@ -269,6 +269,9 @@ export async function generatePlan(
       ),
   ]);
   const context = contextFor(input, site, guide);
+  const availableFeatures = Object.entries(site.features)
+    .filter(([, state]) => state === "available")
+    .map(([feature]) => feature);
   let system =
     F3_BRIEF +
     "\nWORKOUT DETAILS: verifiedContext.planning contains the Q's selected participant count, grouping, body focus, date, expected weather and expected light. Use groupingInstructions for workable roles, odd numbers and shared versus individual totals. Prioritize the selected body focus in The Thang while keeping an appropriate warmup and optional Mary. Follow conditionsInstructions in EVERY section: when Rain or Snow / ice is selected, use only controlled standing exercises, including standing core work for Mary. Do not prescribe floor exercises or jumps merely because shelter is available. Never turn a covered garage into claimed indoor access. The selections are expectations, not a fetched forecast. Never claim to have checked weather or sunrise/sunset. A date alone does not establish daylight. Darkness never proves lights or shelter are available. Explicit new refinement instructions override earlier preferences; preserve unmentioned conditions. These details do not override closures or create site features. In notes, briefly identify the requested body focus, grouping and selected conditions so they remain visible in the saved workout." +
@@ -282,6 +285,13 @@ export async function generatePlan(
     ? `\nROUTE SESSION: ${input.planning!.activity}. Route is Q supplied; do not invent turns, distances, landmarks, permission or pace. Use route/distance/pace from verifiedContext.planning, set a time-based turnaround and regrouping plan, note COT after hard stop. Optional exercise stops only when requested. For rucking use Ruck equipment, and no running unless explicitly requested. For running use running Moderate unless Q requested no running. Clearly label target distance unmeasured unless verified. Return format Custom.`
     : "";
   system += routeInstructions;
+  system +=
+    "\nFACILITY PLAN: The confirmed available feature identifiers for this session are " +
+    JSON.stringify(availableFeatures) +
+    ". Exercise and block directions should name only facilities actually used from that list. Put reminders about closures and access checks in notes. For work needing only a generic flat area, use requiredFeatures: []. " +
+    (availableFeatures.length === 0
+      ? "Build around in-place bodyweight exercises or the requested portable equipment, with timed rests and rounds. Keep requiredFeatures empty. Q checks a suitable working area before starting."
+      : "Use a confirmed feature only when it helps the requested workout.");
   const { planning } = context;
   if (planning.pax === 1 || planning.grouping === "Individual")
     system +=

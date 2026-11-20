@@ -7,7 +7,7 @@ import {
   catalogEnvironment,
   handleAOIntelligence,
 } from "../server/ao-intelligence";
-import { siteContext } from "../src/ao-context";
+import { siteContext, blockedFeatures } from "../src/ao-context";
 import {
   resolveRequest,
   generatePlan,
@@ -17,6 +17,8 @@ import { contextFor } from "../server/planner-context";
 import { handlePlanner } from "../server/planner-handler";
 import { fallbackPlan } from "../src/fallback";
 import { parseBackup } from "../src/model";
+import regional from "../data/regional-workouts.json";
+import { workoutSchema } from "../src/model";
 const env = {
   enabled: "true",
   url: "https://isolated.supabase.co",
@@ -31,6 +33,46 @@ const request = () =>
     strictSchedule: true,
   });
 const reader = async (id: string) => catalogAO(id);
+it("excludes facility-dependent workout examples for unknown venues and temporary closures", async () => {
+  for (const input of [
+    resolveRequest({
+      ao: "South Park",
+      prompt: "Bodyweight circuit",
+      site: { venueId: "brougham-elementary" },
+    }),
+    resolveRequest({
+      ao: "Gold Rush",
+      prompt: "The stairs and track are closed today.",
+      site: { overrides: { stairs: "unavailable", track: "unavailable" } },
+    }),
+  ]) {
+    const site = await resolvePlannerSite(input, env, reader);
+    const context = contextFor(input, site);
+    const reviewed = regional
+      .map((w) => workoutSchema.parse(w))
+      .filter((w) => w.provenance.status === "regional-reviewed");
+    const excluded = reviewed.filter(
+      (w) =>
+        blockedFeatures(
+          { ...w, requiredFeatures: w.schedule?.requiredFeatures },
+          site,
+        ).length,
+    );
+    expect(excluded.length).toBeGreaterThan(0);
+    expect(
+      context.references.every(
+        (reference) => !excluded.some((workout) => workout.id === reference.id),
+      ),
+    ).toBe(true);
+    expect(
+      context.exercises.every((exercise) =>
+        exercise.requiredFeatures.every(
+          (feature) => site.features[feature] === "available",
+        ),
+      ),
+    ).toBe(true);
+  }
+});
 it("uses database absence in prompt eligibility, validation and saved summaries instead of bundled facts", async () => {
   const input = request(),
     data = catalogAO("fe-ao-gold-rush");

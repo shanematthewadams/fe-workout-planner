@@ -1,4 +1,4 @@
-import { siteContext } from "../src/ao-context.ts";
+import { siteContext, blockedFeatures } from "../src/ao-context.ts";
 import { aoProfiles } from "../src/discovery.ts";
 import {
   movements,
@@ -92,6 +92,13 @@ export function contextFor(
   const references = (input.current || wetBootcamp ? [] : regional)
     .map((value) => workoutSchema.parse(value))
     .filter((w) => w.provenance.status === "regional-reviewed")
+    .filter(
+      (w) =>
+        blockedFeatures(
+          { ...w, requiredFeatures: w.schedule?.requiredFeatures },
+          site,
+        ).length === 0,
+    )
     .map((w) => ({
       w,
       score:
