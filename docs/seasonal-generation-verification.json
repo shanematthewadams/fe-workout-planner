@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-11-20T13:49:30.955Z",
+  "applicationCommit": "4a62ee4e356c33e095cdab3e0da4e05c6020df95",
+  "applicationTree": "923f846eb6cd6f6afd883d097d4a8880d79a6e0c",
+  "deployId": "6b004f8c80fefbca09887fef",
+  "passed": false,
+  "results": [
+    {
+      "id": "coupon-partners",
+      "outcome": "template",
+      "provider": "Template",
+      "elapsedMs": 26752,
+      "reason": "Free AI took too long. Your previous draft is safe. Try again.",
+      "failureCategory": "timeout",
+      "aoSource": "database",
+      "exiconSource": "database",
+      "codexLinks": "35"
+    },
+    {
+      "id": "unknown-seasonal-venue",
+      "outcome": "ai",
+      "provider": "Gemini",
+      "model": "gemini-3.5-flash-lite",
+      "elapsedMs": 11259,
+      "failureCategory": null,
+      "aoSource": "database",
+      "exiconSource": "database",
+      "codexLinks": "35",
+      "equipment": [],
+      "running": "None",
+      "requiredFeatures": [],
+      "sectionMinutes": [
+        8,
+        29,
+        6
+      ]
+    },
+    {
+      "id": "individual-core-rain",
+      "outcome": "template",
+      "provider": "Template",
+      "elapsedMs": 22237,
+      "reason": "Free AI took too long. Your previous draft is safe. Try again.",
+      "failureCategory": "timeout",
+      "aoSource": "database",
+      "exiconSource": "database",
+      "codexLinks": "35"
+    },
+    {
+      "id": "targeted-refinement",
+      "outcome": "skipped",
+      "reason": "No validated AI draft to refine"
+    }
+  ],
+  "identity": {
+    "info": {
+      "commit": "4a62ee4e356c33e095cdab3e0da4e05c6020df95",
+      "environment": "staging"
+    },
+    "asset": "/assets/index-DM6vQncw.js",
+    "sha256": "3bedcb3a84e28362f3c8ba518f7a57f8ffb360149f80d4186c96d81837e7fd37",
+    "byteParity": true
+  },
+  "local": {
+    "tests": 482,
+    "files": 64,
+    "lint": true,
+    "typecheck": true,
+    "build": true
+  },
+  "productionAppDeployed": false,
+  "newDatabaseWrites": false,
+  "ci": {
+    "run": 44747478906,
+    "job": 136326419792,
+    "conclusion": "success",
+    "unitTests": 482,
+    "unitFiles": 64,
+    "browserPassed": 136,
+    "browserSkipped": 4,
+    "hostedDesktopAndMobileWebkitJourneys": true,
+    "catalogChecks": true,
+    "artifactId": 14633852980,
+    "artifactSha256": "5bbfe21fe26c72056e43ef9227252df7f3cc0e396655e13db8cbda4a49801b57"
+  }
+}
